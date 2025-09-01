@@ -19,7 +19,7 @@ Battito is a simple Sonant-based music tracker.
 - You can select multiple sequencer rows and columns for **playback**, but you can only have one row and one column selected while **editing** notes on the piano.
 - Supports 4 octaves from C3 through C6, 9 patterns per track, 8 tracks, and 8 phrases. Each phrase is the length of a pattern, which is 32, so the maximum length of a song is 8 × 32.
 - Edit the first value in the textarea to change tempo.
-- When pasting JSON into the textarea, you will be asked if you want to import the whole song or only the instruments.
+- When pasting JSON into the textarea, you will be asked if you want to import the whole **song** or only the **instruments**.
 - For an example of music in a game, see [Bike](https://github.com/bacionejs/bike).
 
 ## Example Song
