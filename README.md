@@ -1,4 +1,10 @@
-# Battito
+
+<h1><a href="//bacionejs.github.io/battito/index.html" style="text-decoration: none; color: inherit;">Play</a></h1>
+
+<a href="//bacionejs.github.io/battito/index.html" target="_blank">
+    <img src="README.jpg" width="33%" />
+</a>
+
 
 Battito is a simple Sonant-based music tracker.
 
