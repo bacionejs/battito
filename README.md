@@ -15,7 +15,7 @@ Battito is a simple Sonant-based music tracker.
 
 - There are eight default instruments, or you can import any Sonant JSON.
 - To enter a note on the piano, first click ONLY one track and ONLY one row in the sequencer and click on the intersecting cell to select a pattern ID. Then you can edit that pattern on the piano. You can reuse a pattern ID.
-- The song constantly loops over the selected sequencer rows and columns. To toggle the whole song, click the upper left of the sequencer.
+- The song constantly loops over the **selected** sequencer rows and columns. To toggle the whole song, click the upper left of the sequencer.
 - You can select multiple sequencer rows and columns, but you can only have one row and one column selected when adding notes to the piano.
 - Supports 9 patterns per track, 8 tracks, and 8 phrases. Each phrase is the length of a pattern, which is 32, so the maximum length of a song is 8 × 32.
 - Edit the first value in the textarea to change tempo.
@@ -31,5 +31,5 @@ You can paste this into the textarea to try a demo song:
 ```
 
 ## Credits
-- Player engine: [pl_synth](https://github.com/phoboslab/pl_synth)
-- Example song: Simplified version of Beatnic by mBitsnBites
+- Music Player: [pl_synth](https://github.com/phoboslab/pl_synth)
+- Song: Beatnic by mBitsnBites (simplified)
