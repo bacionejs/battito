@@ -13,7 +13,7 @@ Battito is a simple Sonant-based music tracker.
 
 ## Guide
 
-- There are eight default instruments, or import from any Sonant-formatted data.
+- There are eight default instruments, or you can import any Sonant JSON.
 - To enter a note on the piano, first click ONLY one track and ONLY one row in the sequencer and click on the intersecting cell to select a pattern ID. Then you can edit that pattern on the piano. You can reuse a pattern ID.
 - The song constantly loops over the selected sequencer rows and columns. To toggle the whole song, click the upper left of the sequencer.
 - Supports 9 patterns per track, 8 tracks, and 8 phrases. Each phrase is the length of a pattern, which is 32, so the maximum length of a song is 8 × 32.
