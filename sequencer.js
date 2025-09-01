@@ -57,13 +57,33 @@ songTextarea.addEventListener('input', () => {
 /********* SONG TEXTAREA SYNC *********/
 function refreshSongTextarea() {
   if (songTextarea) {
-    songTextarea.value = JSON.stringify(song, null, 2);
+    songTextarea.value = sparseArrayToString(song);
   }
 }
 
 
 
 
+
+
+function sparseArrayToString(a) {
+let str = '[';
+for (let i = 0; i < a.length; i++) {
+  if (i > 0) str += ',';
+  if (i in a) {
+    if (Array.isArray(a[i])) {
+      str += "\n" + sparseArrayToString(a[i]);
+    } else {
+      str += a[i];
+    }
+  } else {
+    // Hole case
+    str += '0';
+  }
+}
+str += ']';
+return str;
+}
 
 
 
