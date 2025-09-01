@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Battito</title>
+<style>
+body { margin: 0; display: flex; flex-direction: column; height: 100vh; background: #fafafa; overflow: hidden; }
+#toolbar { display: flex; align-items: flex-start; background: #ddd; padding: 5px; box-sizing: border-box; }
+#sequencer-container { margin-right: auto; }
+#sequencer-widget { display: grid; background: #fff; border: 1px solid #ccc; box-sizing: border-box; }
+#piano-container { flex: 1; display: flex; justify-content: center; align-items: start; background: #f8f8f8; overflow: hidden; }
+#piano-widget { display: grid; }
+.cell { display: flex; align-items: center; justify-content: center; box-sizing: border-box; user-select: none; cursor: pointer; border: 1px solid #ccc; }
+.header,
+.row-header { font-weight: bold; background: white; }
+.header { z-index: 2; }
+.row-header { z-index: 1; }
+.active { background-color: #007BFF; color: white; }
+/* Column/row selection */
+.col-selected,
+.row-selected { background-color: #808080; }
+/* Track headers (A–H): text = track color, bg = white unless selected */
+.header[data-col] { background: white; }
+.header[data-col].col-selected { background-color: #808080 !important; }
+/* Highlight row being played */
+.row-playing { border-left: 3px solid limegreen !important; }
+#song-textarea {
+  flex: 1;               /* expand to fill remaining space */
+  height: calc(100% - 10px); 
+  margin-left: 5px;
+  resize: none;          /* prevent manual resize */
+  font-family: monospace; 
+  font-size: 12px;
+  white-space: pre;      /* keep formatting */
+  overflow: auto;
+}
+</style>
+</head>
+<body>
+
+<div id="toolbar">
+  <div id="sequencer-container">
+    <div id="sequencer-widget"></div>
+  </div>
+
+  <!-- Song Data Textarea -->
+  <textarea id="song-textarea"></textarea>
+</div>
+
+<div id="piano-container">
+  <div id="piano-widget"></div>
+</div>
+
+<script src="pl_synth_wasm.min.js"></script>
+
+<script>
+/********* CONFIGURATION *********/
+const sequencerCols=8, sequencerRows=8, toolbarHeight=innerWidth/2;
+const sequencerWidget=document.getElementById('sequencer-widget');
+const pianoWidget=document.getElementById('piano-widget');
+const pianoRows=32, pianoCols=48;
+
+function getTrackColor(trackIndex) {
+  const hue = (trackIndex * 360) / sequencerRows; // evenly spread hues
+  return `hsl(${hue}, 70%, 50%)`;
+}
+
+</script>
+
+<script src="song.js"></script>
+<script src="piano.js"></script>
+<script src="sequencer.js"></script>
+
+</body>
+</html>
