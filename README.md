@@ -1,5 +1,5 @@
 
-<h1><a href="//bacionejs.github.io/battito/index.html" style="text-decoration: none; color: inherit;">Play</a></h1>
+<h1><a href="//bacionejs.github.io/battito/index.html" style="text-decoration: none; color: inherit;">Run</a></h1>
 
 <a href="//bacionejs.github.io/battito/index.html" target="_blank">
     <img src="README.jpg" width="33%" />
