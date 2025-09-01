@@ -30,5 +30,5 @@ You can paste this into the textarea to try a demo song:
 ```
 
 ## Credits
-- Player engine: [pl_synth engine](https://github.com/phoboslab/pl_synth)
+- Player engine: [pl_synth](https://github.com/phoboslab/pl_synth)
 - Example song: Simplified version of Beatnic by mBitsnBites
