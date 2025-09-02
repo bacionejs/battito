@@ -21,6 +21,7 @@ Battito is a simple Sonant-based music tracker.
 - Edit the first value in the textarea to change tempo.
 - When pasting JSON into the textarea, you will be asked if you want to import the whole **song** or only the **instruments**.
 - Click on the column headers in the sequencer to hear what the instruments sound like.
+- Supports nine patterns per track. To advance the Pattern ID number just keep clicking in the Sequencer cell.
 - For an example of music in a game, see [Bike](https://github.com/bacionejs/bike).
 
 ## Example Song
