@@ -55,7 +55,7 @@ Liver by mBitsnBites
 - Music Player: [pl_synth](https://github.com/phoboslab/pl_synth)
 
 ## Footnotes
-[^1]:
+[^1]: Several music editors
 - https://www.pouet.net/prod.php?which=53615
 - https://gitlab.com/mbitsnbites/js-sonant
 - https://github.com/mbitsnbites/soundbox
