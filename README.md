@@ -46,7 +46,7 @@ Liver by mBitsnBites
 
 ## Notes
 
-- For the pattern editor, this uses a 2D grid (4 octaves), whereas other apps use a 1D grid (value column), making this **less flexible**, but requires **less clicks** and allows **simultaneous spacial visualization of note relationships and of multiple tracks (color coded)**. 
+- For the pattern editor, this uses a 2D grid (4 octaves), whereas other apps use a 1D grid (value column), making this **less flexible**, but requiring **less clicks** and providing **simultaneous spacial visualization of note relationships and of multiple tracks (color coded)**. 
 - No instrument designer, but you can import existing songs which have instruments that you like and when prompted after pasting into the textarea, answer yes to import only instruments.
 - Only 8 tracks (instruments), 8 phrases, 9 patterns per track, 32 step patterns, 4 octaves (c3-c6)
 
