@@ -56,10 +56,10 @@ Liver by mBitsnBites
 
 ## Footnotes
 [^1]:
-https://www.pouet.net/prod.php?which=53615
-https://gitlab.com/mbitsnbites/js-sonant
-https://github.com/mbitsnbites/soundbox
-https://github.com/nicolas-van/sonant-x
-https://github.com/phoboslab/pl_synth
-https://github.com/keithclark/ZzFXM
-https://www.stef.be/bassoontracker
+- https://www.pouet.net/prod.php?which=53615
+- https://gitlab.com/mbitsnbites/js-sonant
+- https://github.com/mbitsnbites/soundbox
+- https://github.com/nicolas-van/sonant-x
+- https://github.com/phoboslab/pl_synth
+- https://github.com/keithclark/ZzFXM
+- https://www.stef.be/bassoontracker
