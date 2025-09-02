@@ -54,5 +54,4 @@ Liver by mBitsnBites
 ## Credits
 - Music Player: [pl_synth](https://github.com/phoboslab/pl_synth)
 
-## Footnotes
 [^1]: Several music trackers: sonant, soundbox, sonant-x, pl_synth, zzfxm, bassoontracker
