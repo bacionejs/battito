@@ -358,6 +358,27 @@ function samplesToBPM(samplesPerStep, sampleRate = 44100, stepsPerBeat = 4) {
 function beatsToSeconds(beats, bpm) {
   return (60 / bpm) * beats;
 }
+
+
+
+
+
+
+function highlightRow(stepNumber) {
+  for (let r = 0; r < 32; r++) {
+    const firstCell = pianoWidget.querySelector(`.cell[data-row="${r}"][data-col="0"]`);
+    if (firstCell) {
+      if (r === stepNumber) {
+        firstCell.style.borderLeft = "3px solid lime";
+      } else {
+        firstCell.style.borderLeft = "1px solid black";
+      }
+    }
+  }
+}
+
+
+
 let isPlaying = false;
 let playRAF;
 
@@ -379,28 +400,47 @@ pl_synth_wasm_init(audioContext, synth => {
   function sequencerPointer() {
   try {
     if (!source || !buffer) return;
-    const elapsed = (audioContext.currentTime - source.startTime) % buffer.duration;
-    const activeSequencerRows = song.y.map((on, i) => on ? i : -1).filter(i => i !== -1);
-    if (activeSequencerRows.length === 0) return; // nothing to highlight
 
+    // how far into the loop are we?
+    const elapsed = (audioContext.currentTime - source.startTime) % buffer.duration;
+
+    // active sequencer rows
+    const activeSequencerRows = song.y.map((on, i) => on ? i : -1).filter(i => i !== -1);
+    if (activeSequencerRows.length === 0) return;
+
+    // how long each sequencer row lasts
     const sequencerRowDuration = beatsToSeconds(sequencerRows, bpm);
-    const sequencerActiveIndex = Math.floor(elapsed / sequencerRowDuration) % activeSequencerRows.length;
+
+    // which sequencer row are we on?
+    const sequencerActiveIndex =
+      Math.floor(elapsed / sequencerRowDuration) % activeSequencerRows.length;
     currentSequencerRow = activeSequencerRows[sequencerActiveIndex];
 
+    // highlight sequencer row (existing logic)
     if (currentSequencerRow !== sequencerLastRow) {
       if (sequencerLastRow !== null) {
-        const prev = sequencerWidget.querySelector(`.row-header[data-row="${sequencerLastRow}"]`);
+        const prev = sequencerWidget.querySelector(
+          `.row-header[data-row="${sequencerLastRow}"]`
+        );
         if (prev) prev.classList.remove("row-playing");
       }
-      const sequencerRowHeader = sequencerWidget.querySelector(`.row-header[data-row="${currentSequencerRow}"]`);
+      const sequencerRowHeader = sequencerWidget.querySelector(
+        `.row-header[data-row="${currentSequencerRow}"]`
+      );
       if (sequencerRowHeader) sequencerRowHeader.classList.add("row-playing");
       sequencerLastRow = currentSequencerRow;
 
-      // render piano only when the active sequencer row actually changes
       renderSongToPiano(currentSequencerRow);
     }
+
+    // 🔹 NEW: piano sub-steps (32 per sequencer row)
+    const pianoStepDuration = sequencerRowDuration / 32;
+    const pianoStepIndex = Math.floor(elapsed / pianoStepDuration) % 32;
+
+    highlightRow(pianoStepIndex);
+
   } catch (err) {
-    console.error('sequencerPointer error:', err);
+    console.error("sequencerPointer error:", err);
   } finally {
     playRAF = requestAnimationFrame(sequencerPointer);
   }
