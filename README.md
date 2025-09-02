@@ -9,7 +9,7 @@
 Battito is a simple Sonant-based music tracker.
 
 ## Purpose
-- Why another tracker, when there are several[^1] already out there?
+- Why another tracker, when there are several already out there[^1]
 - The trackers I found were either too simple or too complex. This app tries to find a middle ground.
 
 ## Guide
