@@ -9,7 +9,7 @@
 Battito is a simple Sonant-based music tracker.
 
 ## Purpose
-- Why another tracker, when there are several already out there (note1 zzfxm, sonant, soundbox, pl_synth, other that they reference)
+- Why another tracker, when there are several[^1] already out there?
 - The trackers I found were either too simple or too complex. This app tries to find a middle ground.
 
 ## Guide
@@ -55,4 +55,11 @@ Liver by mBitsnBites
 - Music Player: [pl_synth](https://github.com/phoboslab/pl_synth)
 
 
-
+[^1]:
+https://www.pouet.net/prod.php?which=53615
+https://gitlab.com/mbitsnbites/js-sonant
+https://github.com/mbitsnbites/soundbox
+https://github.com/nicolas-van/sonant-x
+https://github.com/phoboslab/pl_synth
+https://github.com/keithclark/ZzFXM
+https://www.stef.be/bassoontracker
