@@ -44,27 +44,15 @@ Liver by mBitsnBites
 
 
 
-## Credits
-- Music Player: [pl_synth](https://github.com/phoboslab/pl_synth)
-
-
-
 ## Notes
 
 - For the pattern editor, **Battito** uses a 2D grid (4 octaves), whereas **others** use a 1D grid (value column). The Battito solution is **less flexible**, but requires **less clicks** and allows **simultaneous spacial visualization of note relationships and of multiple tracks (color coded)**. 
-Step | Others | Battito
--------------------------------------------------
-1    | C4       | x . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
-2    | C3       | . . . . . . . . . . . . x . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
-3    | C5       | . . . . . . . . . . . . . . . . . . . . . . . . x . . . . . . . . . . . . . . . . . . . . . . . 
-4    | C6       | . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . x . . . . . . . . . . . 
+- No instrument designer, but you can import existing songs which have instruments that you like and when prompted after pasting into the textarea, answer yes to import only instruments.
+- Only 8 tracks (instruments), 8 phrases, 9 patterns per track, 32 step patterns, 4 octaves (c3-c6)
 
 
+## Credits
+- Music Player: [pl_synth](https://github.com/phoboslab/pl_synth)
 
-
-
-- Limitations
--- No instrument designer, but you can import existing songs which have instruments that you like and when prompted after pasting into the textarea, answer yes to import only instruments.
--- Only 8 tracks (instruments), 8 phrases, 9 patterns per track, 32 step patterns, 4 octaves (c3-c6)
 
 
