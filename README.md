@@ -18,7 +18,7 @@ Battito is a simple Sonant-based music tracker.
 - To enter a note on the piano, first click ONLY one row and ONLY one column in the **sequencer** and click on the intersecting cell to select a pattern ID. Then you can edit that pattern on the **piano**. You can reuse a pattern ID.
 - The song constantly loops over the **selected** sequencer rows and columns. To toggle the whole song, click the upper left of the sequencer.
 - You can select multiple sequencer rows and columns for **playback**, but you can only have one row and one column selected while **editing** notes on the piano.
-- Supports 4 octaves from C3 through C6, 9 patterns per track, 8 tracks, and 8 phrases. Each phrase is the length of a pattern, which is 32, so the maximum length of a song is 8 × 32.
+- Supports 4 octaves from C3 through C6, 8 patterns per track, 8 tracks, and 8 phrases. Each phrase is the length of a pattern, which is 32, so the maximum length of a song is 8 × 32.
 - Edit the first value in the textarea to change tempo.
 - When pasting JSON into the textarea, you will be asked if you want to import the whole **song** or only the **instruments**.
 - Click on the column headers in the sequencer to hear what the instruments sound like.
@@ -48,7 +48,7 @@ Liver by mBitsnBites
 
 - For the pattern editor, this uses a 2D grid (4 octaves), whereas other apps use a 1D grid (value column), making this **less flexible**, but requiring **less clicks** and providing **simultaneous spacial visualization of note relationships and of multiple tracks (color coded)**. 
 - No instrument designer, but you can import existing songs which have instruments that you like and when prompted after pasting into the textarea, answer yes to import only instruments.
-- Only 8 tracks (instruments), 8 phrases, 9 patterns per track, 32 step patterns, 4 octaves (c3-c6)
+- Only 8 tracks (instruments), 8 phrases, 8 patterns per track, 32 step patterns, 4 octaves (c3-c6)
 
 
 ## Credits
