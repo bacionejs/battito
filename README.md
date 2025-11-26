@@ -18,7 +18,7 @@
 Components
 - **sequencer**: has 8 columns (tracks/instuments), 8 rows (phrases) and cells where you can toggle through pattern IDs (8 per track).
 - **piano** (pattern editor): is 48 notes wide (4 octaves from C3 through C6) and 32 beats tall. 
-- **textarea**: is for import/export and manual edits of the tempo (first value), instruments and song.
+- **textarea**: is for import/export and manual edits of the tempo, instruments and song.
 
 Steps
 1. Click on the column headers in the **sequencer** to hear what the instruments sound like. You can select multiple columns/rows in the **sequencer** for playback, but you can only have one column/row selected while editing notes on the **piano**. The **sequencer** constantly loops over the selected **sequencer** columns/rows. Click the upper-left corner cell in the **sequencer** to toggle the whole song.
