@@ -8,27 +8,27 @@
 
 Battito is a simple Sonant-based music tracker.
 
-## Purpose
+## Purpose/Features/Limitations
 - Why another tracker, when there are several already out there[^1]
 - The trackers I found were either too simple or too complex. This app tries to find a middle ground.
+- For the pattern editor (**piano**), this uses a 2D grid (4 octaves), whereas other apps use a 1D grid (value column), making this **less flexible**, but requiring **less clicks** and providing **simultaneous spacial visualization of note relationships and of multiple tracks (color coded)**. 
+- Supports 4 octaves from C3 through C6, 8 tracks (instuments), 8 phrases, 8 patterns, 32 beats. Each phrase is the length of a pattern, which is 32, so the maximum length of a song is 8 × 32.
+- There are 8 default instruments, but there is no instrument designer, but you can import existing Sonant compatible songs which have instruments that you like and when prompted after pasting into the **textarea**, answer yes to import only instruments.
 
 ## Guide
 
-- There are 8 default instruments, or you can import any Sonant compatible JSON.
-- To enter a note on the piano, first click ONLY one row and ONLY one column in the **sequencer** and click on the intersecting cell to select a pattern ID. Then you can edit that pattern on the **piano**. You can reuse a pattern ID.
-- The song constantly loops over the **selected** sequencer rows and columns. To toggle the whole song, click the upper left of the sequencer.
-- You can select multiple sequencer rows and columns for **playback**, but you can only have one row and one column selected while **editing** notes on the piano.
-- Supports 4 octaves from C3 through C6, 8 patterns per track, 8 tracks, and 8 phrases. Each phrase is the length of a pattern, which is 32, so the maximum length of a song is 8 × 32.
-- Edit the first value in the textarea to change tempo.
-- When pasting JSON into the textarea, you will be asked if you want to import the whole **song** or only the **instruments**.
-- Click on the column headers in the sequencer to hear what the instruments sound like.
-- Supports 8 patterns per track. To advance the Pattern ID number just keep clicking in the Sequencer cell.
-- You can also edit the JSON song data directly in the textarea.
+- There are 3 components: sequencer, piano and textarea. 
+  - The sequencer has 8 columns (tracks/instuments), 8 rows (phrases), cells (8 pattern IDs) and a toggle (upper-left). 
+  - The piano (pattern editor) is 48 notes wide and 32 beats tall.
+  - The textarea is for import/export and manually edits: tempo (first value), instruments and song.
+- Click on the column headers in the **sequencer** to hear what the instruments sound like.
+- You can select multiple rows/columns in the **sequencer** for playback, but you can only have one row/column selected while editing notes on the **piano**.
+- To enter a note on the **piano**, select a row/column in the **sequencer** and click the intersecting cell to select a pattern ID. Then you can edit that pattern on the **piano**. The **sequencer** constantly loops over the selected sequencer rows/columns. To toggle the whole song, click the upper-left of the sequencer. Supports 8 patterns per track. To advance the pattern ID number just keep clicking in the **sequencer** cell. You can reuse a pattern ID. When coming back to edit a pattern, don't click the **sequencer** cell as that will advance the pattern ID, just select a row/column.
 - For an example of music in a game, see [Bike](https://github.com/bacionejs/bike).
 
 ## Example Songs
 
-You can paste these songs into the textarea.
+You can paste these songs into the **textarea**.
 
 Beatnic by mBitsnBites (simplified)
 
@@ -43,12 +43,6 @@ Liver by mBitsnBites
 ```
 
 
-
-## Notes
-
-- For the pattern editor, this uses a 2D grid (4 octaves), whereas other apps use a 1D grid (value column), making this **less flexible**, but requiring **less clicks** and providing **simultaneous spacial visualization of note relationships and of multiple tracks (color coded)**. 
-- No instrument designer, but you can import existing songs which have instruments that you like and when prompted after pasting into the textarea, answer yes to import only instruments.
-- Only 8 tracks (instruments), 8 phrases, 8 patterns per track, 32 step patterns, 4 octaves (c3-c6)
 
 
 ## Credits
