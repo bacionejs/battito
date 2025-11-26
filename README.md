@@ -16,7 +16,7 @@
 ## Guide
 
 - There are 3 components: sequencer, piano and textarea. 
-  - The **sequencer** has 8 columns (tracks/instuments), 8 rows (phrases) and 64 cells where you can toggle through 8 pattern IDs.
+  - The **sequencer** has 8 columns (tracks/instuments), 8 rows (phrases) and cells where you can toggle through pattern IDs (8 per track).
   - The **piano** (pattern editor) is 48 notes wide and 32 beats tall.
   - The **textarea** is for import/export and manually edits of the tempo (first value), instruments and song.
 - Click on the column headers in the **sequencer** to hear what the instruments sound like.
