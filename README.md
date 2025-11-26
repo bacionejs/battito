@@ -22,8 +22,8 @@ Battito is a simple Sonant-based music tracker.
   - The piano (pattern editor) is 48 notes wide and 32 beats tall.
   - The textarea is for import/export and manually edits: tempo (first value), instruments and song.
 - Click on the column headers in the **sequencer** to hear what the instruments sound like.
-- You can select multiple rows/columns in the **sequencer** for playback, but you can only have one row/column selected while editing notes on the **piano**.
-- To enter a note on the **piano**, select a row/column in the **sequencer** and click the intersecting cell to select a pattern ID. Then you can edit that pattern on the **piano**. The **sequencer** constantly loops over the selected sequencer rows/columns. To toggle the whole song, click the upper-left of the sequencer. Supports 8 patterns per track. To advance the pattern ID number just keep clicking in the **sequencer** cell. You can reuse a pattern ID. When coming back to edit a pattern, don't click the **sequencer** cell as that will advance the pattern ID, just select a row/column.
+- You can select multiple columns/rows in the **sequencer** for playback, but you can only have one column/row selected while editing notes on the **piano**.
+- To enter a note on the **piano**, select a column/row in the **sequencer** and click the intersecting cell to select a pattern ID. Then you can edit that pattern on the **piano**. The **sequencer** constantly loops over the selected sequencer columns/rows. To toggle the whole song, click the upper-left of the sequencer. Supports 8 patterns per track. To advance the pattern ID number just keep clicking in the **sequencer** cell. You can reuse a pattern ID. When coming back to edit a pattern, don't click the **sequencer** cell as that will advance the pattern ID, just select a column/row.
 - For an example of music in a game, see [Bike](https://github.com/bacionejs/bike).
 
 ## Example Songs
