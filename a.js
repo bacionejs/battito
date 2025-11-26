@@ -1,3 +1,4 @@
+```javascript
 document.title="Battito";
 document.body.style.margin = "0";
 document.body.style.display = "flex";
@@ -80,7 +81,17 @@ let M=pl_synth_wasm_init;
 
 // let song=[5088,[[[7,0,0,1,255,0,7,0,0,1,255,0,0,100,0,5970,171,2,500,254,1,31,4,21],[1,1,1,1],[[147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147]]],[[7,0,0,0,255,2,7,0,4,0,255,2,0,88,2000,7505,255,2,3144,51,6,60,4,64,0,1,7,179],[1,1,1,1],[[0,0,123,0,0,0,0,0,0,0,0,0,0,0,123,0,123]]],[[7,0,0,0,192,2,7,0,0,0,201,3,0,100,150,7505,191,2,5839,254,6,121,6,147,0,1,6,195],[1,1,2,3],[[135,0,0,0,0,0,0,0,159,0,157,0,159,0,0,0,0,0,0,0,0,0,0,0,147,154,0,159],[138,0,0,0,0,0,0,0,150,0,159,0,162,0,0,0,0,0,0,0,0,0,150,0,162,150,0,159],[149,0,0,0,0,0,0,0,149,0,150,0,154,0,0,0,0,0,0,0,0,0,0,0,147,157,0,159]]]]];//beatnic
 
-// /*
+
+
+
+
+
+// let song=[5088,[[[7,0,0,1,255,0,7,0,0,1,255,0,0,100,0,5970,171,2,500,254,1,31,4,21],[1,1,1,1],[[147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147]]],[[7,0,0,0,255,2,7,0,4,0,255,2,0,88,2000,7505,255,2,3144,51,6,60,4,64,0,1,7,179],[1,1,1,1],[[0,0,123,0,0,0,0,0,0,0,0,0,0,0,123,0,123]]],[[7,0,0,0,192,2,7,0,0,0,201,3,0,100,150,7505,191,2,5839,254,6,121,6,147,0,1,6,195],[1,1,2,3],[[135,0,0,0,0,0,0,0,159,0,157,0,159,0,0,0,0,0,0,0,0,0,0,0,147,154,0,159],[138,0,0,0,0,0,0,0,150,0,159,0,162,0,0,0,0,0,0,0,0,0,150,0,162,150,0,159],[149,0,0,0,0,0,0,0,149,0,150,0,154,0,0,0,0,0,0,0,0,0,0,0,147,157,0,159]]]]];
+
+
+
+
+/*
 let song=[5513,[
 [[7,0,0,1,255,0,7,0,0,1,255,0,0,100,0,5970,171,2,500,254,1,31,4,21],[],[]],
 [[7,0,0,0,255,2,7,0,4,0,255,2,0,88,2000,7505,255,2,3144,51,6,60,4,64,0,1,7,179],[],[]],
@@ -94,7 +105,27 @@ let song=[5513,[
 // [[7,0,0,0,216,1,7,0,11,0,235,1,0,789,1234,14259,144,2,8029,116,3,113,1,105,0,1,3,158,1],[],[]],
 // [[7,0,0,0,192,1,6,0,9,0,192,1,0,137,2000,4611,192,1,982,89,6,25,6,77,0,1,3,69],[],[]],
 ]];
+*/
+
+
+// /*
+let song=[5513,[
+[[7,0,0,1,255,0,7,0,0,1,255,0,0,100,0,5970,171,2,500,254,1,31,4,21],[],[]],
+[[7,0,0,0,255,2,7,0,4,0,255,2,0,88,2000,7505,255,2,3144,51,6,60,4,64,0,1,7,179],[],[]],
+[[7,0,0,0,192,2,7,0,0,0,201,3,0,100,150,7505,191,2,5839,254,6,121,6,147,0,1,6,195],[],[]],
+[[9,0,0,0,255,0,9,0,12,0,255,0,0,100,0,14545,70,0,0,240,2,157,3,47,0,0,0,0,0],[],[]],
+[[7,0,0,0,255,3,8,0,0,0,255,0,127,22,22,2193,255,3,4067,176,4,12,2,84,0,1,3,96,0],[],[]],
+[[7,0,0,0,255,2,7,0,9,0,154,2,0,2418,1075,10614,240,3,2962,255,6,117,3,73,0,1,5,124,0],[],[]],
+[[7,0,0,0,192,3,7,0,7,0,201,3,0,789,1234,13636,191,2,5839,254,6,121,6,147,0,1,6,195,0],[],[]],
+[[7,0,0,0,192,2,7,0,0,0,192,2,0,0,0,20000,192,0,0,0,0,121,0,0,0,0,0,0,0],[],[]]
+]];
 // */
+
+
+
+
+
+
 
 
 song.x=[0,0,0,0,0,0,0,0]; song.y=[0,0,0,0,0,0,0,0];
@@ -278,11 +309,32 @@ updateText();
 updatePiano();
 });
 
-T.addEventListener("paste",(e)=>{e.preventDefault();//import
+//import
+T.addEventListener("paste",(e)=>{e.preventDefault();
 let s,pastedText=(e.clipboardData).getData("text"),yes=confirm("Delete song and keep only the instruments?");
-pastedText=fillholes(pastedText);
+
+
+
+
+
+//fix holes so it is valid json
+let prevText;
+do {
+    prevText = pastedText;
+    pastedText = pastedText.replace(/,\s*,/g, ',0,') // Middle holes: ,, -> ,0,
+                         .replace(/\[\s*,/g, '[0,') // Start holes: [, -> [0,
+                         .replace(/,\s*\]/g, ',0]'); // End holes: ,] -> ,0]
+} while (pastedText !== prevText);
+
+
+
+
 try{s=JSON.parse(pastedText);}catch(err){alert("Invalid JSON! Paste failed.");return;}if(yes){s=stripSong(s);}
-song[0]=s[0];bpm=samplesToBPM(song[0]);song[1]=s[1];
+song[0]=s[0];
+
+bpm = samplesToBPM(song[0]); // FIX: Recalculate BPM after import
+
+song[1]=s[1];
 song.x=song.x||Array(song.x?.length||8).fill(0);
 song.y=song.y||Array(song.y?.length||8).fill(0);
 let sequencerCells=S.querySelectorAll(".cell:not(.header):not(.row-header)");
@@ -300,7 +352,7 @@ function samplesToBPM(samplesPerStep,sampleRate=44100,stepsPerBeat=4){return (sa
 function beatsToSeconds(beats,bpm){return (60/bpm)*beats;}
 function initTrackColor(){S.querySelectorAll(".header[data-col]").forEach(h=>{h.style.color=trackColor(parseInt(h.dataset.col));});}
 function trackColor(trackIndex){let hue=(trackIndex*360)/sequencerRows;return "hsl("+hue+", 70%, 50%)";}
-function updateText(){if(T){T.value=fillholes(songToString(song));}}
+function updateText(){if(T){T.value=songToString(song);}}
 function sound(track){M(A,m=>{let s=A.createBufferSource();s.buffer=m.sound(song[1][parseInt(track)][0]);s.connect(A.destination);s.start();});}
 function div(){return document.createElement("div");}
-function fillholes(c){let p;do{p=c;c=c.replace(/,\s*,/g,',0,').replace(/\[\s*,/g,'[0,').replace(/,\s*\]/g,',0]');}while(c!==p);return c;}
+```
