@@ -10,8 +10,7 @@ Battito is a simple Sonant-based music tracker.
 
 ## Purpose/Features/Limitations
 - Sonant based synth is designed to be small, for size constrained demos or games (player/song is 2k).
-- Why another tracker, when there are several already out there[^1]
-- The trackers I found were either too simple or too complex. This app tries to find a middle ground.
+- Why another tracker, when there are several already out there? The trackers I found were either too simple or too complex. This app tries to find a middle ground.[^1]
 - For the pattern editor (**piano**), this uses a 2D grid (4 octaves), whereas other apps use a 1D grid (value column), making this **less flexible**, but requiring **less clicks** and providing **simultaneous spacial visualization of note relationships and of multiple tracks (color coded)**. 
 - Supports 4 octaves from C3 through C6, 8 tracks (instuments), 8 phrases, 8 patterns, 32 beats. Each phrase is the length of a pattern, which is 32, so the maximum length of a song is 8 × 32.
 - There are 8 default instruments, but there is no instrument designer, but you can import existing Sonant compatible songs which have instruments that you like and when prompted after pasting into the **textarea**, answer yes to import only instruments.
