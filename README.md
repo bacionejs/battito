@@ -17,7 +17,7 @@ To open the tracker, click ↴
 
 </details><details><summary>Guide</summary>
 
-<details><summary>Components</summary>
+    <details><summary>Components</summary>
 
 
 - **sequencer**: has 8 columns (tracks/instuments), 8 rows (phrases) and cells where you can toggle through pattern IDs (8 per track).
@@ -25,7 +25,7 @@ To open the tracker, click ↴
 - **textarea**: is for import/export and manual edits of the tempo, instruments and song.
 
 
-</details>
+    </details>
 
 ---
 
