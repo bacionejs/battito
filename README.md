@@ -7,34 +7,36 @@ To open the tracker, click ↴
 
 <details><summary>Purpose/Features/Limitations</summary>
 
-
 - This music tracker produces Sonant formatted JSON. Sonant based synth is designed to be small, for size constrained demos or games (player+song is 2k).
 - Why another tracker, when there are several already out there? The trackers I found were either too simple or too complex. This app tries to find a middle ground.
 - For the pattern editor, this uses a 2D grid, whereas other apps use a 1D grid, making this **less flexible**, but requiring **less clicks** and providing **simultaneous spacial visualization of note relationships and of multiple tracks (color coded)**. 
 - There are 8 default instruments, but there is no instrument designer, but you can import existing Sonant compatible songs which have instruments that you like and when prompted after pasting into the **textarea**, answer yes to import only instruments.
 - Song length: 8 phrases x 32 beats
 
-
 </details><details><summary>Guide</summary>
 
-<details><summary>Components</summary>
+---
 
-
+Components
 - **sequencer**: has 8 columns (tracks/instuments), 8 rows (phrases) and cells where you can toggle through pattern IDs (8 per track).
 - **piano** (pattern editor): is 48 notes wide (4 octaves from C3 through C6) and 32 beats tall. 
 - **textarea**: is for import/export and manual edits of the tempo, instruments and song.
 
 
-</details><details><summary>Steps</summary>
+---
 
+Steps
 1. Click on the column headers in the **sequencer** to hear what the instruments sound like. You can select multiple columns/rows in the **sequencer** for playback, but you can only have one column/row selected while editing notes on the **piano**. The **sequencer** constantly loops over the selected **sequencer** columns/rows. Click the upper-left corner cell in the **sequencer** to toggle the whole song.
 1. To enter a note on the **piano**, select a column/row in the **sequencer** and click the intersecting cell to select a pattern ID. Then you can edit that pattern on the **piano**. To advance the pattern ID number just keep clicking in the **sequencer** cell. You can reuse a pattern ID. When coming back to edit a pattern, don't click the **sequencer** cell as that will advance the pattern ID, just select a column/row.
 
-</details><details><summary>Usage</summary>
 
+---
+
+Usage
 - For an example of music in a game, see [Bike](https://github.com/bacionejs/bike).
 
-</details>
+
+---
 
 </details><details><summary>Example Songs</summary>
 
