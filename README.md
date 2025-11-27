@@ -7,7 +7,7 @@
 
 
 ## Purpose/Features/Limitations
-- This music tracker produces Sonant-like formatted JSON. Sonant based synth is designed to be small, for size constrained demos or games (player+song is 2k).
+- This music tracker produces Sonant formatted JSON. Sonant based synth is designed to be small, for size constrained demos or games (player+song is 2k).
 - Why another tracker, when there are several already out there? The trackers I found were either too simple or too complex. This app tries to find a middle ground.[^1]
 - For the pattern editor, this uses a 2D grid, whereas other apps use a 1D grid, making this **less flexible**, but requiring **less clicks** and providing **simultaneous spacial visualization of note relationships and of multiple tracks (color coded)**. 
 - There are 8 default instruments, but there is no instrument designer, but you can import existing Sonant compatible songs which have instruments that you like and when prompted after pasting into the **textarea**, answer yes to import only instruments.
