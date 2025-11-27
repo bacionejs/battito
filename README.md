@@ -14,6 +14,7 @@ To open the tracker, click ↴
 - Song length: 8 phrases x 32 beats
 
 </details><details><summary>Guide</summary>
+
 Components
 - **sequencer**: has 8 columns (tracks/instuments), 8 rows (phrases) and cells where you can toggle through pattern IDs (8 per track).
 - **piano** (pattern editor): is 48 notes wide (4 octaves from C3 through C6) and 32 beats tall. 
@@ -27,6 +28,7 @@ Usage
 - For an example of music in a game, see [Bike](https://github.com/bacionejs/bike).
 
 </details><details><summary>Example Songs</summary>
+
 You can paste these songs into the **textarea**.
 
 Beatnic by mBitsnBites (simplified)
@@ -43,6 +45,7 @@ Liver by mBitsnBites
 
 
 </details><details><summary>Credits</summary>
+
 - Music Player: [pl_synth](https://github.com/phoboslab/pl_synth)
 </details>
 
