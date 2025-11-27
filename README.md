@@ -35,6 +35,9 @@ Steps
 Usage
 - For an example of music in a game, see [Bike](https://github.com/bacionejs/bike).
 
+
+---
+
 </details><details><summary>Example Songs</summary>
 
 You can paste these songs into the **textarea**.
