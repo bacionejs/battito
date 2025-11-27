@@ -1,69 +1,19 @@
-document.title="Battito";
-document.body.style.margin = "0";
-document.body.style.display = "flex";
-document.body.style.flexDirection = "column";
-document.body.style.height = "100vh";
-document.body.style.background = "#fafafa";
-document.body.style.overflow = "hidden";
+function element(e,p){
+if(p) return             p.appendChild(document.createElement(e));
+else  return document.body.appendChild(document.createElement(e));
+}
 
-// Toolbar
-const toolbar = document.createElement("div");
-toolbar.id = "toolbar";
-toolbar.style.display = "flex";
-toolbar.style.alignItems = "flex-start";
-toolbar.style.background = "#ddd";
-toolbar.style.padding = "5px";
-toolbar.style.boxSizing = "border-box";
-document.body.appendChild(toolbar);
-
-// Sequencer container
-const sequencerContainer = document.createElement("div");
-sequencerContainer.id = "sequencer-container";
-sequencerContainer.style.marginRight = "auto";
-toolbar.appendChild(sequencerContainer);
-
-// Sequencer widget
-const S = document.createElement("div");
-S.id = "sequencer-widget";
-S.style.display = "grid";
-S.style.background = "#fff";
-S.style.border = "1px solid #ccc";
-S.style.boxSizing = "border-box";
-sequencerContainer.appendChild(S);
-
-// Song textarea
-const T = document.createElement("textarea");
-T.id = "song-textarea";
-T.style.flex = "1";
-T.style.height = "calc(100% - 10px)";
-T.style.marginLeft = "5px";
-T.style.resize = "none";
-T.style.fontFamily = "monospace";
-T.style.fontSize = "12px";
-T.style.whiteSpace = "pre";
-T.style.overflow = "auto";
-toolbar.appendChild(T);
-
-// Piano container
-const pianoContainer = document.createElement("div");
-pianoContainer.id = "piano-container";
-pianoContainer.style.flex = "1";
-pianoContainer.style.display = "flex";
-pianoContainer.style.justifyContent = "center";
-pianoContainer.style.alignItems = "start";
-pianoContainer.style.background = "#f8f8f8";
-pianoContainer.style.overflow = "hidden";
-document.body.appendChild(pianoContainer);
-
-// Piano widget
-const P = document.createElement("div");
-P.id = "piano-widget";
-P.style.display = "grid";
-pianoContainer.appendChild(P);
-
-const style = document.createElement("style");
-style.textContent = `
-.cell { display: flex; align-items: center; justify-content: center; box-sizing: border-box; user-select: none; cursor: pointer; border: 1px solid #ccc; }
+element("style").textContent=`
+body{
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+  background:white;
+  overflow:hidden;
+  box-sizing:border-box;
+}
+.cell { display: flex; align-items: center; justify-content: center;  user-select: none;  border: 1px solid #ccc; }
 .header, .row-header { font-weight: bold; background: white; }
 .header { z-index: 2; }
 .row-header { z-index: 1; }
@@ -73,14 +23,53 @@ style.textContent = `
 .header[data-col].col-selected { background-color: #808080 !important; }
 .row-playing { border-left: 3px solid limegreen !important; }
 `;
-document.head.appendChild(style);
 
+
+document.title="Battito";
+let style;
+
+// Toolbar
+let toolbar = element("div");
+style=toolbar.style;
+style.display = "flex";
+style.alignItems = "flex-start";
+
+// Sequencer
+let S = element("div",toolbar);
+style=S.style;
+style.display = "grid";
+
+// Song textarea
+let T = element("textarea",toolbar);
+style=T.style;
+style.flex = "1";
+style.height = "100%";
+style.padding = "5px";
+style.resize = "none";
+style.fontFamily = "monospace";
+style.fontSize = "12px";
+style.whiteSpace = "pre";
+style.overflow = "auto";
+T.placeholder="Paste JSON here to import song";
+
+// Piano container
+let pianoContainer = element("div");
+style=pianoContainer.style;
+style.flex = "1";
+style.display = "flex";
+style.justifyContent = "center";
+style.alignItems = "start";
+style.marginTop="10px";
+
+// Piano
+let P = element("div",pianoContainer);
+P.style.display = "grid";
 
 let M=pl_synth_wasm_init;
 
-// let song=[5088,[[[7,0,0,1,255,0,7,0,0,1,255,0,0,100,0,5970,171,2,500,254,1,31,4,21],[1,1,1,1],[[147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147]]],[[7,0,0,0,255,2,7,0,4,0,255,2,0,88,2000,7505,255,2,3144,51,6,60,4,64,0,1,7,179],[1,1,1,1],[[0,0,123,0,0,0,0,0,0,0,0,0,0,0,123,0,123]]],[[7,0,0,0,192,2,7,0,0,0,201,3,0,100,150,7505,191,2,5839,254,6,121,6,147,0,1,6,195],[1,1,2,3],[[135,0,0,0,0,0,0,0,159,0,157,0,159,0,0,0,0,0,0,0,0,0,0,0,147,154,0,159],[138,0,0,0,0,0,0,0,150,0,159,0,162,0,0,0,0,0,0,0,0,0,150,0,162,150,0,159],[149,0,0,0,0,0,0,0,149,0,150,0,154,0,0,0,0,0,0,0,0,0,0,0,147,157,0,159]]]]];//beatnic
+let song=[5088,[[[7,0,0,1,255,0,7,0,0,1,255,0,0,100,0,5970,171,2,500,254,1,31,4,21],[1,1,1,1],[[147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147]]],[[7,0,0,0,255,2,7,0,4,0,255,2,0,88,2000,7505,255,2,3144,51,6,60,4,64,0,1,7,179],[1,1,1,1],[[0,0,123,0,0,0,0,0,0,0,0,0,0,0,123,0,123]]],[[7,0,0,0,192,2,7,0,0,0,201,3,0,100,150,7505,191,2,5839,254,6,121,6,147,0,1,6,195],[1,1,2,3],[[135,0,0,0,0,0,0,0,159,0,157,0,159,0,0,0,0,0,0,0,0,0,0,0,147,154,0,159],[138,0,0,0,0,0,0,0,150,0,159,0,162,0,0,0,0,0,0,0,0,0,150,0,162,150,0,159],[149,0,0,0,0,0,0,0,149,0,150,0,154,0,0,0,0,0,0,0,0,0,0,0,147,157,0,159]]]]];//beatnic
 
-// /*
+/*
 let song=[5513,[
 [[7,0,0,1,255,0,7,0,0,1,255,0,0,100,0,5970,171,2,500,254,1,31,4,21],[],[]],
 [[7,0,0,0,255,2,7,0,4,0,255,2,0,88,2000,7505,255,2,3144,51,6,60,4,64,0,1,7,179],[],[]],
@@ -94,7 +83,7 @@ let song=[5513,[
 // [[7,0,0,0,216,1,7,0,11,0,235,1,0,789,1234,14259,144,2,8029,116,3,113,1,105,0,1,3,158,1],[],[]],
 // [[7,0,0,0,192,1,6,0,9,0,192,1,0,137,2000,4611,192,1,982,89,6,25,6,77,0,1,3,69],[],[]],
 ]];
-// */
+*/
 
 
 song.x=[0,0,0,0,0,0,0,0]; song.y=[0,0,0,0,0,0,0,0];
@@ -302,5 +291,5 @@ function initTrackColor(){S.querySelectorAll(".header[data-col]").forEach(h=>{h.
 function trackColor(trackIndex){let hue=(trackIndex*360)/sequencerRows;return "hsl("+hue+", 70%, 50%)";}
 function updateText(){if(T){T.value=fillholes(songToString(song));}}
 function sound(track){M(A,m=>{let s=A.createBufferSource();s.buffer=m.sound(song[1][parseInt(track)][0]);s.connect(A.destination);s.start();});}
-function div(){return document.createElement("div");}
+function div(){return element("div");}
 function fillholes(c){let p;do{p=c;c=c.replace(/,\s*,/g,',0,').replace(/\[\s*,/g,'[0,').replace(/,\s*\]/g,',0]');}while(c!==p);return c;}
