@@ -97,9 +97,9 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 `m` Modulator
 
-`w` Waveform - The shape of the LFO's modulation signal (0:Sin,1:Sqr,2:Saw,3:Tri). Sine/Triangle gives smooth modulation (vibrato). Square gives an abrupt on/off effect (trills). Saw gives a repeating ramp.  
-`s` Speed - The frequency/rate of the LFO. Low values = slow, evolving changes. High values = fast, aggressive modulation (FM-like sounds).  
-`a` Amount - The overall intensity or depth of the LFO's effect. At 0, the LFO has no effect, regardless of its routing.  
+`w` Waveform - The shape of the modulation signal (0:Sin,1:Sqr,2:Saw,3:Tri). Sine/Triangle gives smooth modulation (vibrato). Square gives an abrupt on/off effect (trills). Saw gives a repeating ramp.  
+`s` Speed - Low values = slow, evolving changes. High values = fast, aggressive modulation.  
+`a` Amount - The overall intensity.
 `1` Modulate the pitch of Oscillator 1. A slow sine wave creates vibrato. A fast square wave creates a trill.  
 `c` Modulate the cutoff frequency. A slow sine wave creates a gentle sweep. A speed-synced sawtooth or square wave creates a rhythmic wobble or wah effect.  
 
