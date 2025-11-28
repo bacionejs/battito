@@ -87,9 +87,7 @@ The final volume control for the entire instrument patch.
 
 Blends white noise with the oscillators. Essential for percussion (snares, hats) and effects (wind, static).  
 
-Oscillators
-
-`1/2`
+`1/2` Oscillators
 
 `v` Volume - The volume of the individual oscillator.
 `w` Waveform - Selects the basic timbre: 0=Sine, 1=Square, 2=Saw, 3=Triangle.  
@@ -97,42 +95,42 @@ Oscillators
 `s` Semitone - Fine-tunes the pitch in semitone (half-step) increments. Useful for creating musical intervals between the two oscillators (e.g., set `2s` to 7 for a perfect fifth).  
 `d` Detune - Fine-tunes the pitch by a very small amount. When Osc 1 and Osc 2 have slightly different detune values, they create a rich, thick "chorus" effect. This is key for pads and big leads.  
 
-Envelope
+`e` Envelope
 
-`ea` Attack - The time it takes for the note to fade in. 0 = instant, percussive. High values = slow, swelling sound (pads).  
-`es` Sustain - The time the note is held at full volume. 0 = the note immediately starts releasing. High values = the note is held for longer. A percussive "pluck" sound would have low `ea`, `es`, and `er`.  
-`er` Release - The time it takes for the note to fade out after the sustain period. Low values = abrupt stop. High values = long, echoing tail.  
+`a` Attack - The time it takes for the note to fade in. 0 = instant, percussive. High values = slow, swelling sound (pads).  
+`s` Sustain - The time the note is held at full volume. 0 = the note immediately starts releasing. High values = the note is held for longer. A percussive "pluck" sound would have low `ea`, `es`, and `er`.  
+`r` Release - The time it takes for the note to fade out after the sustain period. Low values = abrupt stop. High values = long, echoing tail.  
 
 Envelope Toggles
 
 `e1`/`e2` Routes the envelope to modulate the pitch of oscillator 1 or 2. Essential for creating kick drums, toms, and laser/zap sound effects. The attack time (`ea`) controls the speed of the pitch drop.  
 
-Modulator
+`m` Modulator
 
-`mw` Waveform - The shape of the LFO's modulation signal (0:Sin,1:Sqr,2:Saw,3:Tri). Sine/Triangle gives smooth modulation (vibrato). Square gives an abrupt on/off effect (trills). Saw gives a repeating ramp.  
-`ms` Speed - The frequency/rate of the LFO. Low values = slow, evolving changes. High values = fast, aggressive modulation (FM-like sounds).  
-`ma` Amount - The overall intensity or depth of the LFO's effect. At 0, the LFO has no effect, regardless of its routing.  
+`w` Waveform - The shape of the LFO's modulation signal (0:Sin,1:Sqr,2:Saw,3:Tri). Sine/Triangle gives smooth modulation (vibrato). Square gives an abrupt on/off effect (trills). Saw gives a repeating ramp.  
+`s` Speed - The frequency/rate of the LFO. Low values = slow, evolving changes. High values = fast, aggressive modulation (FM-like sounds).  
+`a` Amount - The overall intensity or depth of the LFO's effect. At 0, the LFO has no effect, regardless of its routing.  
 
 Modulator Toggles
 
 `m1` Modulate the pitch of Oscillator 1. A slow sine wave creates vibrato. A fast square wave creates a trill.  
 `mc` Modulate the cutoff frequency. A slow sine wave creates a gentle sweep. A speed-synced sawtooth or square wave creates a rhythmic wobble or wah effect.  
 
-Cutoff
+`c` Cutoff
 
-`ct` Type -  0:Off, 1:High-Pass, 2:Low-Pass, 3:Band-Pass, 4:Notch. Set to 2 (LP) for most classic synth sounds. Use 1 (HP) for hi-hats or thinning out a sound.  
-`ca` Amount -  The frequency where the filter starts working. For a Low-Pass filter, lowering `ca` makes the sound darker and more muffled.  
-`cr` Resonance - Emphasizes the frequencies around the cutoff point. Low values are subtle. High values give a sharp, ringing, "squelchy" sound.  
+`t` Type -  0:Off, 1:High-Pass, 2:Low-Pass, 3:Band-Pass, 4:Notch. Set to 2 (LP) for most classic synth sounds. Use 1 (HP) for hi-hats or thinning out a sound.  
+`a` Amount -  The frequency where the filter starts working. For a Low-Pass filter, lowering `ca` makes the sound darker and more muffled.  
+`r` Resonance - Emphasizes the frequencies around the cutoff point. Low values are subtle. High values give a sharp, ringing, "squelchy" sound.  
 
-Delay
+`d` Delay
 
-`ds` Speed - The time between echoes for the delay effect.  
-`da` Amount - The volume/feedback of the echoes. Higher values mean more echoes that last longer.  
+`s` Speed - The time between echoes for the delay effect.  
+`a` Amount - The volume/feedback of the echoes. Higher values mean more echoes that last longer.  
 
-Pan
+`p` Pan
 
-`ps` Speed - Moves the sound left and right.  
-`pa` Amount - The depth.  
+`s` Speed - Moves the sound left and right.  
+`a` Amount - The depth.  
 
 ---
 
