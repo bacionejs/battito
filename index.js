@@ -1,295 +1,647 @@
-function element(e,p){
-if(p) return             p.appendChild(document.createElement(e));
-else  return document.body.appendChild(document.createElement(e));
-}
 
-element("style").textContent=`
-body{
-  margin:0;
-  display:flex;
-  flex-direction:column;
-  height:100vh;
-  background:white;
-  overflow:hidden;
-  box-sizing:border-box;
-}
-.cell { display: flex; align-items: center; justify-content: center;  user-select: none;  border: 1px solid #ccc; }
-.header, .row-header { font-weight: bold; background: white; }
-.header { z-index: 2; }
-.row-header { z-index: 1; }
-.active { background-color: #007BFF; color: white; }
-.col-selected, .row-selected { background-color: #808080; }
-.header[data-col] { background: white; }
-.header[data-col].col-selected { background-color: #808080 !important; }
-.row-playing { border-left: 3px solid limegreen !important; }
+const SR = 8;
+const SC = 8;
+const PR = 32;
+const PC = 48;
+const WASM_SYNTH_INITIALIZER = pl_synth_wasm_init;
+
+// --- Instrument Parameter Definitions ---
+const PARAM_MAP = [
+    { label: 'v', index: 16, min: 0, max: 255, description: 'Master Volume' },
+    { label: '1v', index: 4, min: 0, max: 255, description: 'Oscillator 1: Volume' },
+    { label: '1w', index: 5, min: 0, max: 3, description: 'Oscillator 1: Waveform (0:Sin,1:Sqr,2:Saw,3:Tri)' },
+    { label: '1o', index: 0, min: 0, max: 16, description: 'Oscillator 1: Octave' },
+    { label: '1s', index: 1, min: 0, max: 11, description: 'Oscillator 1: Semitone' },
+    { label: '1d', index: 2, min: 0, max: 255, description: 'Oscillator 1: Detune' },
+    { label: '2v', index: 10, min: 0, max: 255, description: 'Oscillator 2: Volume' },
+    { label: '2w', index: 11, min: 0, max: 3, description: 'Oscillator 2: Waveform (0:Sin,1:Sqr,2:Saw,3:Tri)' },
+    { label: '2o', index: 6, min: 0, max: 16, description: 'Oscillator 2: Octave' },
+    { label: '2s', index: 7, min: 0, max: 11, description: 'Oscillator 2: Semitone' },
+    { label: '2d', index: 8, min: 0, max: 255, description: 'Oscillator 2: Detune' },
+    { label: 'ea', index: 13, min: 0, max: 200000, description: 'Envelope: Attack' },
+    { label: 'es', index: 14, min: 0, max: 200000, description: 'Envelope: Sustain' },
+    { label: 'er', index: 15, min: 0, max: 200000, description: 'Envelope: Release' },
+    { label: 'e1', index: 3, min: 0, max: 1, description: 'Oscillator 1: Env > Pitch' },
+    { label: 'e2', index: 9, min: 0, max: 1, description: 'Oscillator 2: Env > Pitch' },
+    { label: 'mw', index: 28, min: 0, max: 3, description: 'LFO: Waveform (0:Sin,1:Sqr,2:Saw,3:Tri)' },
+    { label: 'ms', index: 26, min: 0, max: 16, description: 'LFO: Speed' },
+    { label: 'ma', index: 27, min: 0, max: 255, description: 'LFO: Amount' },
+    { label: 'm1', index: 24, min: 0, max: 1, description: 'LFO > Osc 1 Pitch' },
+    { label: 'mc', index: 25, min: 0, max: 1, description: 'LFO > Filter Cutoff' },
+    { label: 'ct', index: 17, min: 0, max: 4, description: 'Filter: Type (0:Off,1:HP,2:LP,3:BP,4:Notch)' },
+    { label: 'ca', index: 18, min: 0, max: 11025, description: 'Filter: Cutoff' },
+    { label: 'cr', index: 19, min: 0, max: 255, description: 'Filter: Resonance' },
+    { label: 'ds', index: 20, min: 0, max: 16, description: 'Delay: Time' },
+    { label: 'da', index: 21, min: 0, max: 248, description: 'Delay: Amount' },
+    { label: 'ps', index: 22, min: 0, max: 16, description: 'Pan: Speed' },
+    { label: 'pa', index: 23, min: 0, max: 255, description: 'Pan: Amount' },
+    { label: 'n', index: 12, min: 0, max: 255, description: 'Noise Generator Volume' }
+];
+
+
+// --- STYLES ---
+const STYLES = `
+    body {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        background: white;
+        overflow: hidden;
+        box-sizing: border-box;
+        font-family: sans-serif;
+    }
+    .cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+    .header, .row-header {
+        font-weight: bold;
+        background: white;
+    }
+    .header { z-index: 2; }
+    .row-header { z-index: 1; }
+    .active { background-color: #007BFF; color: white; }
+    .col-selected, .row-selected { background-color: #e0e0e0; }
+    .row-playing { border-left: 3px solid limegreen !important; }
+    #instrument-controls-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-end;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border-top: 1px solid #ccc;
+        height: 150px;
+        box-sizing: border-box;
+        overflow-x: auto;
+    }
+    .slider-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: monospace;
+        font-size: 11px;
+        width: 20px;
+    }
+    .instrument-slider {
+        writing-mode: bt-lr; /* For vertical slider */
+        -webkit-appearance: slider-vertical; /* For WebKit browsers */
+        width: 10px;
+        height: 100px;
+        padding: 0;
+        margin: 0;
+    }
+    .instrument-slider:disabled {
+        opacity: 0.3;
+    }
 `;
+document.head.appendChild(document.createElement("style")).textContent = STYLES;
+// --- GLOBAL STATE ---
+let audioContext = new AudioContext();
+let audioBufferSource = null;
+let audioBuffer = null;
+let previewAudioSource = null;
 
-
-document.title="Battito";
-let style;
-
-// Toolbar
-let toolbar = element("div");
-style=toolbar.style;
-style.display = "flex";
-style.alignItems = "flex-start";
-
-// Sequencer
-let S = element("div",toolbar);
-style=S.style;
-style.display = "grid";
-
-// Song textarea
-let T = element("textarea",toolbar);
-style=T.style;
-style.flex = "1";
-style.height = "100%";
-style.padding = "5px";
-style.resize = "none";
-style.fontFamily = "monospace";
-style.fontSize = "12px";
-style.whiteSpace = "pre";
-style.overflow = "auto";
-T.placeholder="Paste JSON here to import song";
-
-// Piano container
-let pianoContainer = element("div");
-style=pianoContainer.style;
-style.flex = "1";
-style.display = "flex";
-style.justifyContent = "center";
-style.alignItems = "start";
-style.marginTop="10px";
-
-// Piano
-let P = element("div",pianoContainer);
-P.style.display = "grid";
-
-let M=pl_synth_wasm_init;
-
-let song=[5088,[[[7,0,0,1,255,0,7,0,0,1,255,0,0,100,0,5970,171,2,500,254,1,31,4,21],[1,1,1,1],[[147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147]]],[[7,0,0,0,255,2,7,0,4,0,255,2,0,88,2000,7505,255,2,3144,51,6,60,4,64,0,1,7,179],[1,1,1,1],[[0,0,123,0,0,0,0,0,0,0,0,0,0,0,123,0,123]]],[[7,0,0,0,192,2,7,0,0,0,201,3,0,100,150,7505,191,2,5839,254,6,121,6,147,0,1,6,195],[1,1,2,3],[[135,0,0,0,0,0,0,0,159,0,157,0,159,0,0,0,0,0,0,0,0,0,0,0,147,154,0,159],[138,0,0,0,0,0,0,0,150,0,159,0,162,0,0,0,0,0,0,0,0,0,150,0,162,150,0,159],[149,0,0,0,0,0,0,0,149,0,150,0,154,0,0,0,0,0,0,0,0,0,0,0,147,157,0,159]]]]];//beatnic
-
-/*
-let song=[5513,[
-[[7,0,0,1,255,0,7,0,0,1,255,0,0,100,0,5970,171,2,500,254,1,31,4,21],[],[]],
-[[7,0,0,0,255,2,7,0,4,0,255,2,0,88,2000,7505,255,2,3144,51,6,60,4,64,0,1,7,179],[],[]],
-[[7,0,0,0,192,2,7,0,0,0,201,3,0,100,150,7505,191,2,5839,254,6,121,6,147,0,1,6,195],[],[]],
-[[9,0,0,0,255,0,9,0,12,0,255,0,0,100,0,14545,70,0,0,240,2,157,3,47,0,0,0,0,0],[],[]],
-[[7,0,0,0,255,3,8,0,0,0,255,0,127,22,22,2193,255,3,4067,176,4,12,2,84,0,1,3,96,0],[],[]],
-[[7,0,0,0,255,2,7,0,9,0,154,2,0,2418,1075,10614,240,3,2962,255,6,117,3,73,0,1,5,124,0],[],[]],
-[[7,0,0,0,192,3,7,0,7,0,201,3,0,789,1234,13636,191,2,5839,254,6,121,6,147,0,1,6,195,0],[],[]],
-[[7,0,0,0,192,2,7,0,0,0,192,2,0,0,0,20000,192,0,0,0,0,121,0,0,0,0,0,0,0],[],[]],//piano
-// [[7,0,0,0,192,2,7,0,0,0,192,2,0,0,0,20000,192,0,0,0,0,121,0,0,0,0,0,0,0],[],[]],
-// [[7,0,0,0,216,1,7,0,11,0,235,1,0,789,1234,14259,144,2,8029,116,3,113,1,105,0,1,3,158,1],[],[]],
-// [[7,0,0,0,192,1,6,0,9,0,192,1,0,137,2000,4611,192,1,982,89,6,25,6,77,0,1,3,69],[],[]],
+let song = [5513, [
+  [[7, 0, 0, 1, 255, 0, 7, 0, 0, 1, 255, 0, 0, 100, 0, 5970, 171, 2, 500, 254, 1, 31, 4, 21], [], []],
+  [[7, 0, 0, 0, 255, 2, 7, 0, 4, 0, 255, 2, 0, 88, 2000, 7505, 255, 2, 3144, 51, 6, 60, 4, 64, 0, 1, 7, 179], [], []],
+  [[7, 0, 0, 0, 192, 2, 7, 0, 0, 0, 201, 3, 0, 100, 150, 7505, 191, 2, 5839, 254, 6, 121, 6, 147, 0, 1, 6, 195], [], []],
+  [[9, 0, 0, 0, 255, 0, 9, 0, 12, 0, 255, 0, 0, 100, 0, 14545, 70, 0, 0, 240, 2, 157, 3, 47, 0, 0, 0, 0, 0], [], []],
+  [[7, 0, 0, 0, 255, 3, 8, 0, 0, 0, 255, 0, 127, 22, 22, 2193, 255, 3, 4067, 176, 4, 12, 2, 84, 0, 1, 3, 96, 0], [], []],
+  [[7, 0, 0, 0, 255, 2, 7, 0, 9, 0, 154, 2, 0, 2418, 1075, 10614, 240, 3, 2962, 255, 6, 117, 3, 73, 0, 1, 5, 124, 0], [], []],
+  [[7, 0, 0, 0, 192, 3, 7, 0, 7, 0, 201, 3, 0, 789, 1234, 13636, 191, 2, 5839, 254, 6, 121, 6, 147, 0, 1, 6, 195, 0], [], []],
+  [[7, 0, 0, 0, 192, 2, 7, 0, 0, 0, 192, 2, 0, 0, 0, 20000, 192, 0, 0, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0], [], []],//piano
 ]];
-*/
 
+song.activeTracks = Array(SC).fill(0);
+song.activeSequences = Array(SR).fill(0);
+let bpm = samplesToBPM(song[0]);
+let playbackAnimationId = null;
+let currentSequence = null;
+let prevSequence = null;
 
-song.x=[0,0,0,0,0,0,0,0]; song.y=[0,0,0,0,0,0,0,0];
-let pianoRows=32,pianoCols=48;let sequencerCols=8,sequencerRows=8,toolbarHeight=innerWidth/2;
-let raf; let prevSequence=null;let currSequence; let A=new AudioContext(),C,B=null; let bpm=samplesToBPM(song[0]);
+// --- UI ELEMENT CREATION ---
+document.title = "Battito";
 
-/*********INIT*********/
-initSequencer();initPiano();
-
-function initSequencer(){
-let size=toolbarHeight/(sequencerRows+1);
-S.style.width=S.style.height=toolbarHeight+"px";
-S.style.gridTemplateColumns=size+"px repeat("+sequencerCols+", "+size+"px)";
-S.style.gridTemplateRows=size+"px repeat("+sequencerRows+", "+size+"px)";
-//Top-left
-let topLeft=div();topLeft.className="cell header";S.appendChild(topLeft);
-//Columnheaders
-for(let c=0;c<sequencerCols;c++){
-  let chead=div();
-  chead.className="cell header";
-  chead.textContent=String.fromCharCode(65+c);
-  chead.dataset.col=c;
-  S.appendChild(chead);
+function element(tagName, parent = document.body, className = '') {
+  const el = document.createElement(tagName);
+  if (className) el.className = className;
+  parent.appendChild(el);
+  return el;
 }
-//Rows+cells
-for(let r=0;r<sequencerRows;r++){
-  let rhead=div();rhead.className="cell row-header";
-  rhead.textContent=r+1;rhead.dataset.row=r;S.appendChild(rhead);
-  for(let c=0;c<sequencerCols;c++){
-    let cell=div();cell.className="cell";
-    cell.dataset.row=r;cell.dataset.col=c;
-    if(song[1][c]&&song[1][c][1][r]!==undefined)cell.textContent=song[1][c][1][r];
-    S.appendChild(cell);
-  }
-}
-initTrackColor();
+// Main layout containers
+const toolbar = element("div");
+const instrumentControlsContainer = element("div");
+const pianoRollContainer = element("div");
+// Toolbar components
+const sequencerGrid = element("div", toolbar);
+const songTextarea = element("textarea", toolbar);
+// Piano Roll
+const pianoGrid = element("div", pianoRollContainer);
+
+// --- UI STYLING & LAYOUT ---
+
+function applyStyles() {
+  Object.assign(toolbar.style, {
+    display: "flex",
+    alignItems: "flex-start",
+  });
+  Object.assign(sequencerGrid.style, {
+    display: "grid",
+  });
+  Object.assign(songTextarea.style, {
+    flex: "1",
+    height: "100%",
+    padding: "5px",
+    resize: "none",
+    fontFamily: "monospace",
+    fontSize: "12px",
+    whiteSpace: "pre",
+    overflow: "auto",
+    border: "1px solid #ccc",
+    borderLeft: "none"
+  });
+  songTextarea.placeholder = "Paste song JSON here to import";
+  Object.assign(pianoRollContainer.style, {
+    flex: "1",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "start",
+    marginTop: "10px",
+    overflow: "auto",
+  });
+  pianoGrid.style.display = "grid";
+  instrumentControlsContainer.id = "instrument-controls-container";
 }
 
-function initPiano(){P.innerHTML="";
-let size=Math.floor(Math.min(P.parentElement.clientWidth/pianoCols,P.parentElement.clientHeight/pianoRows));
-P.style.gridTemplateColumns="repeat("+pianoCols+", "+size+"px)";
-P.style.gridTemplateRows="repeat("+pianoRows+", "+size+"px)";
-for(let r=0;r<pianoRows;r++){
-  for(let c=0;c<pianoCols;c++){
-    let cell=div();
-    cell.className="cell";
-    cell.dataset.row=r;cell.dataset.col=c;
-    cell.style.border="1px solid #ccc";
-    if(c%12===0)cell.style.borderLeft="1px solid #333";
-    if(r%4===0)cell.style.borderTop="1px solid #666";
-    P.appendChild(cell);
-  }
-}
-}
+// --- INITIALIZATION ---
 
-function updateSequencerSelection(){
-let cells=S.querySelectorAll(".cell");
-let anyRowOn=song.y.some(y=>y);
-let anyColOn=song.x.some(x=>x);
-cells.forEach(cell=>{
-  let row=cell.dataset.row,col=cell.dataset.col;
-  cell.classList.remove("active","row-selected","col-selected");
-  if(row===undefined&&col===undefined)return;
-  if(row===undefined&&col!==undefined){
-    let c=parseInt(col);
-    if(song.x[c]){
-      cell.classList.add("col-selected");
-      cell.style.background="silver";
-    }else{
-      cell.style.background="white";
+function initSequencer() {
+  const h = window.innerWidth / 2;
+  const c = h / (SR + 1);
+  Object.assign(sequencerGrid.style, {width: `${h}px`, height: `${h}px`, gridTemplateColumns: `${c}px repeat(${SC}, ${c}px)`, gridTemplateRows: `${c}px repeat(${SR}, ${c}px)`, });
+  // Top-left corner cell
+  element("div", sequencerGrid, "cell header");
+  // Column headers
+  for (let c = 0; c < SC; c++) {const header = element("div", sequencerGrid, "cell header"); header.textContent = String.fromCharCode(65 + c); header.dataset.col = c;}
+  // Row headers and cells
+  for (let r = 0; r < SR; r++) {
+    const rowHeader = element("div", sequencerGrid, "cell row-header");
+    rowHeader.textContent = r + 1;
+    rowHeader.dataset.row = r;
+    for (let c = 0; c < SC; c++) {
+      const cell = element("div", sequencerGrid, "cell");
+      cell.dataset.row = r;
+      cell.dataset.col = c;
+      if (song[1][c] && song[1][c][1] && song[1][c][1][r] !== undefined) {cell.textContent = song[1][c][1][r] || '';}
     }
   }
-  else if(col===undefined&&row!==undefined){
-    if(song.y[row])cell.classList.add("row-selected");
-  }
-  else{
-    let r=parseInt(row),c=parseInt(col);
-    if(song[1][c]&&song[1][c][1][r]!==undefined){
-      let val=song[1][c][1][r];
-      let rowOn=song.y[r],colOn=song.x[c];
-      if((rowOn&&colOn)||(rowOn&&!anyColOn)||(colOn&&!anyRowOn))cell.classList.add("active");
-      cell.textContent=val===0?"":val;
-    }
-  }
-});
+  initTrackColors();
 }
 
-function updatePiano(){
-P.querySelectorAll(".cell").forEach(cell=>{cell.style.background="";});
-let tracks=song[1];
-if(!Array.isArray(tracks))return;
-song.x.forEach((trackActive,sx)=>{
-  if(!trackActive)return;
-  let track=tracks[sx];
-  if(!track||!Array.isArray(track[1])||!Array.isArray(track[2]))return;
-  if(currSequence!==null){
-    let patId=track[1][currSequence];
-    if(!patId)return;
-    let patIndex=patId-1;
-    let pattern=track[2][patIndex];
-    if(!pattern)return;
-    pattern.forEach((note,row)=>{
-      if(!note)return;
-      let col=note-123;
-      let cell=P.querySelector("[data-col='"+col+"'][data-row='"+row+"']");
-      if(cell){
-        let color=(typeof trackColor==="function")?trackColor(sx):"#88f";
-        cell.style.background=color;
+function initPianoRoll() {
+  pianoGrid.innerHTML = "";
+  const container = pianoGrid.parentElement;
+  const cellSize = Math.floor(Math.min(
+    container.clientWidth / PC,
+    container.clientHeight / PR
+  ));
+  Object.assign(pianoGrid.style, { gridTemplateColumns: `repeat(${PC}, ${cellSize}px)`, gridTemplateRows: `repeat(${PR}, ${cellSize}px)`, });
+  for (let r = 0; r < PR; r++) {
+    for (let c = 0; c < PC; c++) {
+      const cell = element("div", pianoGrid, "cell");
+      cell.dataset.row = r;
+      cell.dataset.col = c;
+      if (c % 12 === 0) cell.style.borderLeft = "1px solid #333";
+      if (r % 4 === 0) cell.style.borderTop = "1px solid #666";
+    }
+  }
+}
+
+function initInstrumentControls() {
+    instrumentControlsContainer.innerHTML = '';
+    PARAM_MAP.forEach(param => {
+        const group = element("div", instrumentControlsContainer, "slider-group");
+        group.title = param.description;
+
+        const label = element("label", group);
+        label.textContent = param.label;
+
+        const slider = element("input", group, "instrument-slider");
+        slider.type = "range";
+        slider.min = param.min;
+        slider.max = param.max;
+        slider.dataset.index = param.index;
+        slider.disabled = true;
+    });
+}
+
+// --- UI UPDATE FUNCTIONS ---
+
+function updateSequencerSelection() {
+  const cells = sequencerGrid.querySelectorAll(".cell");
+  const anyRowActive = song.activeSequences.some(y => y);
+  const anyColActive = song.activeTracks.some(x => x);
+  cells.forEach(cell => {
+    cell.classList.remove("active", "row-selected", "col-selected");
+    const {row, col} = cell.dataset;
+    if (row === undefined && col === undefined) return; // Top-left corner
+    // Column Header
+    if (row === undefined) {
+      if (song.activeTracks[col]) cell.classList.add("col-selected");
+    }
+    // Row Header
+    else if (col === undefined) {
+      // Stop any previously playing preview note
+      if (previewAudioSource) {
+          previewAudioSource.stop();
+          previewAudioSource = null;
       }
+      if (song.activeSequences[row]) cell.classList.add("row-selected");
+    }
+    // Grid Cell
+    else {
+      const r = parseInt(row), c = parseInt(col);
+      const track = song[1][c];
+      if (track && track[1]?.[r] !== undefined) {
+        const patternId = track[1][r];
+        const isRowActive = song.activeSequences[r];
+        const isColActive = song.activeTracks[c];
+        if ((isRowActive && isColActive) || (isRowActive && !anyColActive) || (isColActive && !anyRowActive)) {
+          cell.classList.add("active");
+        }
+        cell.textContent = patternId === 0 ? "" : patternId;
+      }
+    }
+  });
+}
+
+function updatePianoRoll() {
+  pianoGrid.querySelectorAll(".cell").forEach(cell => {cell.style.background = "";});
+  const tracks = song[1];
+  if (!Array.isArray(tracks)) return;
+  song.activeTracks.forEach((isActive, trackIndex) => {
+    if (!isActive) return;
+    const track = tracks[trackIndex];
+    if (!track || !Array.isArray(track[1]) || !Array.isArray(track[2])) return;
+    if (currentSequence !== null) {
+      const patternId = track[1][currentSequence];
+      if (!patternId) return;
+      const pattern = track[2][patternId - 1];
+      if (!pattern) return;
+      pattern.forEach((note, row) => {
+        if (!note) return;
+        const col = note - 123; // Note value to column index
+        const cell = pianoGrid.querySelector(`[data-col='${col}'][data-row='${row}']`);
+        if (cell) {
+          cell.style.background = getTrackColor(trackIndex);
+        }
+      });
+    }
+  });
+}
+
+function updateSongTextarea() {
+  if (songTextarea) {
+    songTextarea.value = formatSongDataForDisplay(song);
+  }
+}
+
+function updateInstrumentSliders() {
+    const trackIndex = getActiveTrackIndex();
+    const sliders = instrumentControlsContainer.querySelectorAll('.instrument-slider');
+
+    if (trackIndex !== null) {
+        const instrument = song[1][trackIndex]?.[0];
+        sliders.forEach(slider => {
+            const paramIndex = slider.dataset.index;
+            // Use instrument value if it exists, otherwise default to 0.
+            slider.value = instrument?.[paramIndex] ?? 0;
+            slider.disabled = false;
+        });
+    } else {
+        sliders.forEach(slider => {
+            slider.disabled = true;
+            slider.value = slider.min; // Reset to min value when disabled
+        });
+    }
+}
+
+// --- AUDIO PLAYBACK ---
+
+function stopPlayback() {
+  if (playbackAnimationId) {
+    cancelAnimationFrame(playbackAnimationId);
+    playbackAnimationId = null;
+  }
+  sequencerGrid.querySelectorAll(".row-header").forEach(h => h.classList.remove("row-playing"));
+  if (audioBufferSource) {
+    audioBufferSource.onended = null;
+    audioBufferSource.stop();
+    audioBufferSource.disconnect();
+    audioBufferSource = null;
+  }
+}
+
+function startPlayback() {
+  WASM_SYNTH_INITIALIZER(audioContext, synth => {
+    const activeSongParts = getActiveSongDataForPlayback();
+    audioBuffer = synth.song(activeSongParts);
+    audioBufferSource = audioContext.createBufferSource();
+    audioBufferSource.buffer = audioBuffer;
+    audioBufferSource.connect(audioContext.destination);
+    // Loop playback
+    audioBufferSource.onended = () => {startPlayback();};
+    const startTime = audioContext.currentTime;
+    audioBufferSource.start(startTime);
+    audioBufferSource.startTime = startTime; // Store start time for animation sync
+    playbackAnimationId = requestAnimationFrame(updatePlaybackPointers);
+  });
+}
+
+function updatePlaybackPointers() {
+  try {
+    if (!audioBufferSource || !audioBuffer) return;
+    const elapsed = (audioContext.currentTime - audioBufferSource.startTime) % audioBuffer.duration;
+    const activeSequences = song.activeSequences
+      .map((isOn, i) => isOn ? i : -1)
+      .filter(i => i !== -1);
+    if (activeSequences.length === 0) return;
+    const sequenceDuration = beatsToSeconds(SR, bpm);
+    const pianoRowDuration = sequenceDuration / PR;
+    // Stop if playback has somehow gone past the rendered audio data
+    if ((elapsed / sequenceDuration) > activeSequences.length) {
+      if (playbackAnimationId) cancelAnimationFrame(playbackAnimationId);
+      return;
+    }
+    const currentSequenceIndex = Math.floor(elapsed / sequenceDuration) % activeSequences.length;
+    currentSequence = activeSequences[currentSequenceIndex];
+    const pianoRowIndex = Math.floor(elapsed / pianoRowDuration) % PR;
+    updateSequencerPointer(currentSequence);
+    updatePianoRollPointer(pianoRowIndex);
+  } catch (err) {
+    console.error("Playback pointer error:", err);
+  } finally {
+    playbackAnimationId = requestAnimationFrame(updatePlaybackPointers);
+  }
+}
+
+function updateSequencerPointer(rowIndex) {
+  if (rowIndex === prevSequence) return;
+  updateGridPointer(sequencerGrid, SR, rowIndex);
+  prevSequence = rowIndex;
+  updatePianoRoll();
+}
+
+function updatePianoRollPointer(rowIndex) {
+  updateGridPointer(pianoGrid, PR, rowIndex);
+}
+
+function updateGridPointer(grid, totalRows, activeRow) {
+  for (let r = 0; r < totalRows; r++) {
+    const rowHeader = grid.querySelector(`.row-header[data-row='${r}'], .cell[data-row='${r}'][data-col='0']`);
+    if (rowHeader) rowHeader.classList.toggle('row-playing', r === activeRow);
+  }
+}
+
+// --- EVENT HANDLERS ---
+
+function handleSequencerClick(event) {
+  const cell = event.target;
+  if (!cell.classList.contains("cell")) return;
+  const {row, col} = cell.dataset;
+  if (row === undefined && col === undefined) { // Top-left corner: Toggle all
+    const allOn = song.activeTracks.every(x => x) && song.activeSequences.every(y => y);
+    const toggleValue = allOn ? 0 : 1;
+    song.activeTracks.fill(toggleValue);
+    song.activeSequences.fill(toggleValue);
+  } else if (row === undefined) { // Column header: Toggle track
+    song.activeTracks[col] = song.activeTracks[col] ? 0 : 1;
+    previewTrackSound(col);
+  } else if (col === undefined) { // Row header: Toggle sequence
+    song.activeSequences[row] = song.activeSequences[row] ? 0 : 1;
+  } else { // Grid cell: Cycle pattern ID
+    const r = parseInt(row), c = parseInt(col);
+    if (!song[1][c]) song[1][c] = [[], [], []];
+    if (!song[1][c][1]) song[1][c][1] = [];
+    const currentPatternId = song[1][c][1][r] ?? 0;
+    song[1][c][1][r] = (currentPatternId + 1) % 9; // Cycle 0-8
+  }
+  updateSequencerSelection();
+  updateSongTextarea();
+  updatePianoRoll();
+  updateInstrumentSliders();
+  const isAnyTrackActive = song.activeTracks.some(x => x);
+  const isAnySequenceActive = song.activeSequences.some(y => y);
+  if (isAnyTrackActive && isAnySequenceActive) {
+    stopPlayback();
+    startPlayback();
+  } else {
+    stopPlayback();
+  }
+}
+
+function handlePianoRollClick(event) {
+  const activeTrackCount = song.activeTracks.reduce((a, b) => a + b, 0);
+  const activeSequenceCount = song.activeSequences.reduce((a, b) => a + b, 0);
+  // Allow editing only when exactly one track and one sequence are selected
+  if (activeTrackCount !== 1 || activeSequenceCount !== 1) return;
+  const pianoCol = parseInt(event.target.dataset.col);
+  const pianoRow = parseInt(event.target.dataset.row);
+  const trackIndex = song.activeTracks.indexOf(1);
+  const sequenceIndex = song.activeSequences.indexOf(1);
+  const patternId = song[1][trackIndex][1][sequenceIndex];
+  if (!patternId) return; // No pattern selected for this cell
+  const patternIndex = patternId - 1;
+  if (!song[1][trackIndex][2][patternIndex]) {
+    song[1][trackIndex][2][patternIndex] = [];
+  }
+  const pattern = song[1][trackIndex][2][patternIndex];
+  const noteValue = pianoCol + 123;
+  // Toggle note on/off
+  pattern[pianoRow] = (pattern[pianoRow] === noteValue) ? 0 : noteValue;
+  updateSongTextarea();
+  updatePianoRoll();
+}
+
+function handleSongPaste(event) {
+  event.preventDefault();
+  const pastedText = (event.clipboardData).getData("text");
+  const keepInstrumentsOnly = confirm("Delete song patterns and keep only the instruments?");
+  let newSongData;
+  try {
+    const sanitizedJson = fillEmptyArrayValues(pastedText);
+    newSongData = JSON.parse(sanitizedJson);
+  } catch (err) {
+    alert("Invalid JSON! Paste failed.");
+    return;
+  }
+  if (keepInstrumentsOnly) {
+    newSongData = stripSongData(newSongData);
+  }
+  // Update song state
+  song[0] = newSongData[0];
+  song[1] = newSongData[1];
+  bpm = samplesToBPM(song[0]);
+  // Reset UI
+  updateSongTextarea();
+  updateSequencerSelection();
+  updateInstrumentSliders();
+}
+
+function handleSongInput() {
+  try {
+    const newSong = JSON.parse(songTextarea.value);
+    // Preserve active track/sequence state
+    newSong.activeTracks = song.activeTracks;
+    newSong.activeSequences = song.activeSequences;
+    song = newSong;
+  } catch (e) {
+    // Ignore invalid JSON while typing
+  }
+}
+
+function handleSliderInput(event) {
+    if (!event.target.classList.contains('instrument-slider')) return;
+    if (previewAudioSource) {
+        previewAudioSource.stop();
+        previewAudioSource = null;
+    }
+    const trackIndex = getActiveTrackIndex();
+    if (trackIndex === null) return;
+    const slider = event.target;
+    const paramIndex = parseInt(slider.dataset.index);
+    const value = parseInt(slider.value);
+    if (!song[1][trackIndex]) song[1][trackIndex] = [[], [], []];
+    const instrument = song[1][trackIndex][0];
+    while (instrument.length <= paramIndex) { instrument.push(0); }
+    instrument[paramIndex] = value;
+    updateSongTextarea();
+}
+function handleSliderChange(event) {
+    if (!event.target.classList.contains('instrument-slider')) return;
+    const trackIndex = getActiveTrackIndex();
+    if (trackIndex !== null) {
+        previewTrackSound(trackIndex);
+    }
+}
+
+function addEventListeners() {
+  sequencerGrid.addEventListener("click", handleSequencerClick);
+  pianoGrid.addEventListener("click", handlePianoRollClick);
+  songTextarea.addEventListener("paste", handleSongPaste);
+  songTextarea.addEventListener("input", handleSongInput);
+  instrumentControlsContainer.addEventListener('input', handleSliderInput);
+  instrumentControlsContainer.addEventListener('change', handleSliderChange);
+}
+
+// --- UTILITY FUNCTIONS ---
+
+function getActiveTrackIndex() {
+    const activeIndices = song.activeTracks
+        .map((isActive, index) => isActive ? index : -1)
+        .filter(index => index !== -1);
+    return activeIndices.length === 1 ? activeIndices[0] : null;
+}
+
+function getActiveSongDataForPlayback() {
+  let songCopy = JSON.parse(JSON.stringify(song));
+  songCopy.activeTracks = [...song.activeTracks];
+  songCopy.activeSequences = [...song.activeSequences];
+  // Filter out inactive tracks
+  for (let t = songCopy[1].length - 1; t >= 0; t--) {
+    if (!songCopy.activeTracks[t]) {
+      songCopy[1].splice(t, 1);
+    } else {
+      // Filter out inactive sequences within the active track
+      for (let s = songCopy[1][t][1].length - 1; s >= 0; s--) {
+        if (!songCopy.activeSequences[s]) {
+          songCopy[1][t][1].splice(s, 1);
+        }
+      }
+    }
+  }
+  return songCopy;
+}
+
+function formatSongDataForDisplay(songData) {
+  function stringify(arr) { return "[" + arr.map(x => Array.isArray(x) ? "\n" + stringify(x) : x || 0).join(",") + "]"; }
+  const jsonString = stringify(songData);
+  return fillEmptyArrayValues(jsonString);
+}
+
+function stripSongData(songData) {
+  let songCopy = JSON.parse(JSON.stringify(songData));
+  const instruments = songCopy[1].map(track => [track[0], [], []]);
+  return [songCopy[0], instruments];
+}
+
+function fillEmptyArrayValues(jsonString) {
+  let prev;
+  do {
+    prev = jsonString;
+    jsonString = jsonString.replace(/,\s*,/g, ',0,').replace(/\[\s*,/g, '[0,').replace(/,\s*\]/g, ',0]');
+  } while (jsonString !== prev);
+  return jsonString;
+}
+
+function samplesToBPM(samplesPerStep, sampleRate = 44100, stepsPerBeat = 4) {
+  return (sampleRate * 60) / (samplesPerStep * stepsPerBeat);
+}
+
+function beatsToSeconds(beats, bpm) {
+  return (60 / bpm) * beats;
+}
+
+function initTrackColors() {
+  sequencerGrid.querySelectorAll(".header[data-col]").forEach(header => {
+    header.style.color = getTrackColor(parseInt(header.dataset.col));
+  });
+}
+
+function getTrackColor(trackIndex) {
+  const hue = (trackIndex * 360) / SC;
+  return `hsl(${hue}, 70%, 50%)`;
+}
+
+function previewTrackSound(trackIndex) {
+  // Stop any previously playing preview note
+  if (previewAudioSource) {
+      previewAudioSource.stop();
+      previewAudioSource = null;
+  }
+
+  if (song[1][trackIndex]?.[0]) {
+    WASM_SYNTH_INITIALIZER(audioContext, synth => {
+        const source = audioContext.createBufferSource();
+        source.buffer = synth.sound(song[1][parseInt(trackIndex)][0]);
+        source.connect(audioContext.destination);
+        source.start();
+
+        // Store the new source and clean it up when it ends
+        previewAudioSource = source;
+        source.onended = () => {
+            if (previewAudioSource === source) {
+                previewAudioSource = null;
+            }
+        };
     });
   }
-});
 }
+// --- MAIN EXECUTION ---
 
-function stopPlayback(){
-if(raf){cancelAnimationFrame(raf);raf=null;}
-S.querySelectorAll(".row-header").forEach(h=>h.classList.remove("row-playing"));
-if(C){C.onended=null;C.stop();C.disconnect();C=null;}
+function main() {
+  applyStyles();
+  initSequencer();
+  initPianoRoll();
+  initInstrumentControls();
+  addEventListeners();
+  updateSongTextarea();
+  updateInstrumentSliders();
 }
-
-function startPlayback(){M(A,m=>{
-C=A.createBufferSource(); B=m.song(songParts()); C.buffer=B; C.connect(A.destination);
-C.onended=()=>{startPlayback();};
-let t=A.currentTime; C.start(t); C.startTime=t;
-raf=requestAnimationFrame(pointers);
-});}
-
-function pointers(){try{if(!C||!B)return;
-let elapsed=(A.currentTime-C.startTime)%B.duration;
-let sequences=song.y.map((on,i)=>on?i:-1).filter(i=>i!==-1);
-if(sequences.length===0)return;
-let time=beatsToSeconds(sequencerRows,bpm);
-if((elapsed/time)>sequences.length){cancelAnimationFrame(raf);return;}
-currSequence=sequences[Math.floor(elapsed/time)%sequences.length];
-sequencerPointer();
-pianoPointer(Math.floor(elapsed/(time/pianoRows))%pianoRows);
-}catch(err){console.error("error:",err);}finally{raf=requestAnimationFrame(pointers);}
-}
-
-function sequencerPointer(){if(currSequence===prevSequence)return;point(S,sequencerRows,currSequence);prevSequence=currSequence;updatePiano();}
-function pianoPointer(i){point(P,pianoRows,i)}
-function point(o,rows,i){for(let r=0;r<rows;r++){o.querySelector(".cell[data-row='"+r+"'][data-col='0']").style.borderLeft=(r===i)?"3px solid lime":"1px solid black";}}
-
-function songParts(){let c=JSON.parse(JSON.stringify(song));c.x=[...song.x];c.y=[...song.y];
-for(let t=c[1].length-1;t>=0;t--)if(!c.x[t])c[1].splice(t,1),c.x.splice(t,1);
-else for(let j=c[1][t][1].length-1;j>=0;j--)if(!c.y[j])c[1][t][1].splice(j,1);
-return c;
-}
-
-S.addEventListener("click",e=>{let cell=e.target;if(!cell.classList.contains("cell"))return;let row=cell.dataset.row,col=cell.dataset.col;
-if(row===undefined&&col===undefined){//top-left
-  let allon=song.x.every(x=>x)&&song.y.every(y=>y);
-  song.x=song.x.map(()=>allon?0:1);song.y=song.y.map(()=>allon?0:1);
-}
-else if(row===undefined&&col!==undefined){//column
-  let c=parseInt(col);
-  song.x[c]=song.x[c]?0:1;
-  sound(col);
-}
-else if(col===undefined&&row!==undefined){//row
-  let r=parseInt(row);
-  song.y[r]=song.y[r]?0:1;
-}
-else{//cell
-  let r=parseInt(row),c=parseInt(col);
-  if(!song[1][c])song[1][c]=[[],[],[]];
-  song[1][c][1][r]=((song[1][c][1][r]??0)+1)%9;
-}
-updateSequencerSelection();updateText();updatePiano();
-if(song.x.some(x=>x)&&song.y.some(y=>y)){stopPlayback();startPlayback();}else{stopPlayback();}
-});
-
-P.addEventListener("click",e=>{
-if(song.x.reduce((a,b)=>a+b,0)!==1||song.y.reduce((a,b)=>a+b,0)!==1)return;//one
-let px=parseInt(e.target.dataset.col);let py=parseInt(e.target.dataset.row);//pianoxy
-let sx=song.x.indexOf(1);let sy=song.y.indexOf(1);//sequencerxy
-sy=song[1][sx][1][sy];sy=sy-1;//patternid
-if(!song[1][sx][2][sy])song[1][sx][2][sy]=[];//pattern
-song[1][sx][2][sy][py]=(song[1][sx][2][sy][py]==px+123)?0:px+123;//patternnote
-updateText();
-updatePiano();
-});
-
-T.addEventListener("paste",(e)=>{e.preventDefault();//import
-let s,pastedText=(e.clipboardData).getData("text"),yes=confirm("Delete song and keep only the instruments?");
-pastedText=fillholes(pastedText);
-try{s=JSON.parse(pastedText);}catch(err){alert("Invalid JSON! Paste failed.");return;}if(yes){s=stripSong(s);}
-song[0]=s[0];bpm=samplesToBPM(song[0]);song[1]=s[1];
-song.x=song.x||Array(song.x?.length||8).fill(0);
-song.y=song.y||Array(song.y?.length||8).fill(0);
-let sequencerCells=S.querySelectorAll(".cell:not(.header):not(.row-header)");
-sequencerCells.forEach(cell=>{cell.textContent="";});
-let pianoCells=P.querySelectorAll(".cell");pianoCells.forEach(cell=>{cell.style.background="";});
-updateText();
-updateSequencerSelection();
-});
-
-T.addEventListener("input",()=>{try{let newSong=JSON.parse(T.value);newSong.x=song.x;newSong.y=song.y;song=newSong;}catch(e){/*bad*/}});
-
-function songToString(a){return "["+a.map(x=>Array.isArray(x)?"\n"+songToString(x):x||0).join(",")+"]";}
-function stripSong(s){let c=JSON.parse(JSON.stringify(s));return [c[0],c[1].map(t=>{return [t[0],[],[]];})];}
-function samplesToBPM(samplesPerStep,sampleRate=44100,stepsPerBeat=4){return (sampleRate*60)/(samplesPerStep*stepsPerBeat);}
-function beatsToSeconds(beats,bpm){return (60/bpm)*beats;}
-function initTrackColor(){S.querySelectorAll(".header[data-col]").forEach(h=>{h.style.color=trackColor(parseInt(h.dataset.col));});}
-function trackColor(trackIndex){let hue=(trackIndex*360)/sequencerRows;return "hsl("+hue+", 70%, 50%)";}
-function updateText(){if(T){T.value=fillholes(songToString(song));}}
-function sound(track){M(A,m=>{let s=A.createBufferSource();s.buffer=m.sound(song[1][parseInt(track)][0]);s.connect(A.destination);s.start();});}
-function div(){return element("div");}
-function fillholes(c){let p;do{p=c;c=c.replace(/,\s*,/g,',0,').replace(/\[\s*,/g,'[0,').replace(/,\s*\]/g,',0]');}while(c!==p);return c;}
+main();
