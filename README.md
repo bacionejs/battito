@@ -93,7 +93,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 ---
 
-`m` Modulator
+`m` Modulate
 
 `w` Waveform - The shape of the modulation signal (0:Sin,1:Sqr,2:Saw,3:Tri). Sine/Triangle gives smooth modulation (vibrato). Square gives an abrupt on/off effect (trills). Saw gives a repeating ramp.  
 `s` Speed - Low values = slow, evolving changes. High values = fast, aggressive modulation.  
