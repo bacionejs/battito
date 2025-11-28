@@ -90,7 +90,7 @@ Oscillators
 
 `1/2`
 
-`v` Volume - The volume of the individual oscillator. Use this to mix the levels of Osc 1 and Osc 2.  
+`v` Volume - The volume of the individual oscillator.
 `w` Waveform - Selects the basic timbre: 0=Sine, 1=Square, 2=Saw, 3=Triangle.  
 `o` Octave - Shifts the oscillator's pitch up or down in octaves. A value of 7 or 8 is often a good middle C starting point. Setting `2o` one octave below `1o` can create a sub-bass.  
 `s` Semitone - Fine-tunes the pitch in semitone (half-step) increments. Useful for creating musical intervals between the two oscillators (e.g., set `2s` to 7 for a perfect fifth).  
