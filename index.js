@@ -52,7 +52,7 @@ const PARAM_MAP = [
   {color:"pink", label:'pa', index:23, min:0, max:255, description:'Pan: Amount'},
 
   // Noise
-  {color:"yellow", label:'ng', index:12, min:0, max:255, description:'Noise Generator Volume'},
+  {color:"yellow", label:'nv', index:12, min:0, max:255, description:'Noise Generator Volume'},
 
   // Master Volume
   {color:"#ffffff", label:'vm', index:16, min:0, max:255, description:'Master Volume'}
