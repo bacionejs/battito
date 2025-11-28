@@ -78,13 +78,14 @@ This synth is a **2-oscillator subtractive synthesizer**. This means it starts w
 ---
 
 
-Volumn Master
 
-`vm` The final volume control for the entire instrument patch.  
+`vm` Volumn Master
 
-Noise Volumn
+The final volume control for the entire instrument patch.  
 
-`nv` Blends white noise with the oscillators. Essential for percussion (snares, hats) and effects (wind, static).  
+`nv` Noise Volumn
+
+Blends white noise with the oscillators. Essential for percussion (snares, hats) and effects (wind, static).  
 
 Oscillators
 
