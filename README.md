@@ -71,7 +71,7 @@ Liver by mBitsnBites
 
 ---
 
-This section provides a comprehensive guide to the instrument parameters used in the synthesizer. Understanding these settings is the key to sound design, allowing you to create everything from deep basses and soaring leads to percussive hits and evolving soundscapes.
+Understanding these settings is the key to sound design, allowing you to create everything from deep basses and soaring leads to percussive hits and evolving soundscapes.
 
 This synth is a **2-oscillator subtractive synthesizer**. This means it starts with harmonically rich sounds (from oscillators) and then carves away parts of the sound to shape the final timbre.
 
