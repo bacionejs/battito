@@ -7,35 +7,54 @@ const WASM_SYNTH_INITIALIZER = pl_synth_wasm_init;
 
 // --- Instrument Parameter Definitions ---
 const PARAM_MAP = [
-  {label: 'v', index: 16, min: 0, max: 255, description: 'Master Volume'},
-  {label: '1v', index: 4, min: 0, max: 255, description: 'Oscillator 1: Volume'},
-  {label: '1w', index: 5, min: 0, max: 3, description: 'Oscillator 1: Waveform (0:Sin,1:Sqr,2:Saw,3:Tri)'},
-  {label: '1o', index: 0, min: 0, max: 16, description: 'Oscillator 1: Octave'},
-  {label: '1s', index: 1, min: 0, max: 11, description: 'Oscillator 1: Semitone'},
-  {label: '1d', index: 2, min: 0, max: 255, description: 'Oscillator 1: Detune'},
-  {label: '2v', index: 10, min: 0, max: 255, description: 'Oscillator 2: Volume'},
-  {label: '2w', index: 11, min: 0, max: 3, description: 'Oscillator 2: Waveform (0:Sin,1:Sqr,2:Saw,3:Tri)'},
-  {label: '2o', index: 6, min: 0, max: 16, description: 'Oscillator 2: Octave'},
-  {label: '2s', index: 7, min: 0, max: 11, description: 'Oscillator 2: Semitone'},
-  {label: '2d', index: 8, min: 0, max: 255, description: 'Oscillator 2: Detune'},
-  {label: 'ea', index: 13, min: 0, max: 200000, description: 'Envelope: Attack'},
-  {label: 'es', index: 14, min: 0, max: 200000, description: 'Envelope: Sustain'},
-  {label: 'er', index: 15, min: 0, max: 200000, description: 'Envelope: Release'},
-  {label: 'e1', index: 3, min: 0, max: 1, description: 'Oscillator 1: Env > Pitch'},
-  {label: 'e2', index: 9, min: 0, max: 1, description: 'Oscillator 2: Env > Pitch'},
-  {label: 'mw', index: 28, min: 0, max: 3, description: 'LFO: Waveform (0:Sin,1:Sqr,2:Saw,3:Tri)'},
-  {label: 'ms', index: 26, min: 0, max: 16, description: 'LFO: Speed'},
-  {label: 'ma', index: 27, min: 0, max: 255, description: 'LFO: Amount'},
-  {label: 'm1', index: 24, min: 0, max: 1, description: 'LFO > Osc 1 Pitch'},
-  {label: 'mc', index: 25, min: 0, max: 1, description: 'LFO > Filter Cutoff'},
-  {label: 'ct', index: 17, min: 0, max: 4, description: 'Filter: Type (0:Off,1:HP,2:LP,3:BP,4:Notch)'},
-  {label: 'ca', index: 18, min: 0, max: 11025, description: 'Filter: Cutoff'},
-  {label: 'cr', index: 19, min: 0, max: 255, description: 'Filter: Resonance'},
-  {label: 'ds', index: 20, min: 0, max: 16, description: 'Delay: Time'},
-  {label: 'da', index: 21, min: 0, max: 248, description: 'Delay: Amount'},
-  {label: 'ps', index: 22, min: 0, max: 16, description: 'Pan: Speed'},
-  {label: 'pa', index: 23, min: 0, max: 255, description: 'Pan: Amount'},
-  {label: 'n', index: 12, min: 0, max: 255, description: 'Noise Generator Volume'}
+  // Oscillator 1
+  {color:"#ff8080", label:'1v', index:4, min:0, max:255, description:'Oscillator 1: Volume'},
+  {color:"#ff8080", label:'1w', index:5, min:0, max:3, description:'Oscillator 1: Waveform (0:Sin,1:Sqr,2:Saw,3:Tri)'},
+  {color:"#ff8080", label:'1o', index:0, min:0, max:16, description:'Oscillator 1: Octave'},
+  {color:"#ff8080", label:'1s', index:1, min:0, max:11, description:'Oscillator 1: Semitone'},
+  {color:"#ff8080", label:'1d', index:2, min:0, max:255, description:'Oscillator 1: Detune'},
+
+  // Oscillator 2
+  {color:"#80a0ff", label:'2v', index:10, min:0, max:255, description:'Oscillator 2: Volume'},
+  {color:"#80a0ff", label:'2w', index:11, min:0, max:3, description:'Oscillator 2: Waveform (0:Sin,1:Sqr,2:Saw,3:Tri)'},
+  {color:"#80a0ff", label:'2o', index:6, min:0, max:16, description:'Oscillator 2: Octave'},
+  {color:"#80a0ff", label:'2s', index:7, min:0, max:11, description:'Oscillator 2: Semitone'},
+  {color:"#80a0ff", label:'2d', index:8, min:0, max:255, description:'Oscillator 2: Detune'},
+
+  // Envelope
+  {color:"#ffd27f", label:'ea', index:13, min:0, max:200000, description:'Envelope: Attack'},
+  {color:"#ffd27f", label:'es', index:14, min:0, max:200000, description:'Envelope: Sustain'},
+  {color:"#ffd27f", label:'er', index:15, min:0, max:200000, description:'Envelope: Release'},
+
+  // Envelope -> Pitch
+  {color:"#ffb3ff", label:'e1', index:3, min:0, max:1, description:'Oscillator 1: Env > Pitch'},
+  {color:"#ffb3ff", label:'e2', index:9, min:0, max:1, description:'Oscillator 2: Env > Pitch'},
+
+  // LFO
+  {color:"#7fffd4", label:'mw', index:28, min:0, max:3, description:'LFO: Waveform (0:Sin,1:Sqr,2:Saw,3:Tri)'},
+  {color:"#7fffd4", label:'ms', index:26, min:0, max:16, description:'LFO: Speed'},
+  {color:"#7fffd4", label:'ma', index:27, min:0, max:255, description:'LFO: Amount'},
+  {color:"#7fffd4", label:'m1', index:24, min:0, max:1, description:'LFO > Osc 1 Pitch'},
+  {color:"#7fffd4", label:'mc', index:25, min:0, max:1, description:'LFO > Filter Cutoff'},
+
+  // Filter
+  {color:"#a0ff80", label:'ct', index:17, min:0, max:4, description:'Filter: Type (0:Off,1:HP,2:LP,3:BP,4:Notch)'},
+  {color:"#a0ff80", label:'ca', index:18, min:0, max:11025, description:'Filter: Cutoff'},
+  {color:"#a0ff80", label:'cr', index:19, min:0, max:255, description:'Filter: Resonance'},
+
+  // Delay
+  {color:"#d0b0ff", label:'ds', index:20, min:0, max:16, description:'Delay: Time'},
+  {color:"#d0b0ff", label:'da', index:21, min:0, max:248, description:'Delay: Amount'},
+
+  // Pan
+  {color:"pink", label:'ps', index:22, min:0, max:16, description:'Pan: Speed'},
+  {color:"pink", label:'pa', index:23, min:0, max:255, description:'Pan: Amount'},
+
+  // Noise
+  {color:"yellow", label:'ng', index:12, min:0, max:255, description:'Noise Generator Volume'},
+
+  // Master Volume
+  {color:"#ffffff", label:'vm', index:16, min:0, max:255, description:'Master Volume'}
 ];
 
 
@@ -75,7 +94,7 @@ display: flex;
 flex-wrap: wrap;
 justify-content: space-evenly;
 align-items: flex-end;
-background-color: #f0f0f0;
+background-color: black;
 border-top: 1px solid #ccc;
 overflow-x: auto;
 }
@@ -224,10 +243,10 @@ function initInstrumentControls() {
   instrumentControlsContainer.innerHTML = '';
   PARAM_MAP.forEach(param => {
     const group = element("div", instrumentControlsContainer, "slider-group");
-    group.title = param.description;
 
     const label = element("label", group);
     label.textContent = param.label;
+    label.style.color=param.color;
 
     const slider = element("input", group, "instrument-slider");
     slider.type = "range";
