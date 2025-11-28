@@ -44,6 +44,8 @@ Optional
 Usage
 - For an example of music in a game, see [Bike](https://github.com/bacionejs/bike).
 
+---
+
 </details><details><summary>Instrument Parameters</summary>
 
 ---
