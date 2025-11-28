@@ -7,9 +7,7 @@ To open the app, click ↴
     <img src="README.jpg" width="33%" />
 </a>
 
-
 ---
-
 
 <details><summary>Purpose/Features/Limitations</summary>
 
@@ -34,7 +32,6 @@ Steps
 1. Click on the column headers in the **sequencer** to hear what the default instruments sound like. You can select multiple columns/rows in the **sequencer** for playback, but you can only have one column/row selected while editing notes on the **piano**. The **sequencer** constantly loops over the selected **sequencer** columns/rows. Click the upper-left corner cell in the **sequencer** to toggle the whole song.
 1. To enter a note on the **piano**, select a column/row in the **sequencer** and click the intersecting cell to select a pattern ID. Then you can edit that pattern on the **piano**. To advance the pattern ID number just keep clicking in the **sequencer** cell. You can reuse a pattern ID. When coming back to edit a pattern, don't click the **sequencer** cell as that will advance the pattern ID, just select a column/row.
 
-
 ---
 
 Optional
@@ -49,7 +46,6 @@ Usage
 
 </details><details><summary>Instrument Parameters</summary>
 
-
 ---
 
 Understanding these settings is the key to sound design, allowing you to create everything from deep basses and soaring leads to percussive hits and evolving soundscapes.
@@ -58,19 +54,15 @@ This synth is a **2-oscillator subtractive synthesizer**. This means it starts w
 
 ---
 
-
-
 `vm` Volumn Master
 
 The final volume control for the entire instrument patch.  
-
 
 ---
 
 `nv` Noise Volumn
 
 Blends white noise with the oscillators. Essential for percussion (snares, hats) and effects (wind, static).  
-
 
 ---
 
@@ -82,7 +74,6 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 `s` Semitone - Fine-tunes the pitch in semitone (half-step) increments. Useful for creating musical intervals between the two oscillators (e.g., set `2s` to 7 for a perfect fifth).  
 `d` Detune - Fine-tunes the pitch by a very small amount. When `1` and `2` have slightly different detune values, they create a rich, thick "chorus" effect. This is key for pads and big leads.  
 
-
 ---
 
 `e` Envelope
@@ -92,6 +83,13 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 `r` Release - The time it takes for the note to fade out after the sustain period. Low values = abrupt stop. High values = long, echoing tail.  
 `1`/`2` Routes the envelope to modulate the pitch of oscillator 1 or 2. Essential for creating kick drums, toms, and laser/zap sound effects. The attack time (`ea`) controls the speed of the pitch drop.  
 
+---
+
+`c` Cutoff
+
+`t` Type -  0:Off, 1:High-Pass, 2:Low-Pass, 3:Band-Pass, 4:Notch. Set to 2 for most classic synth sounds. Use 1 for hi-hats or thinning out a sound.  
+`a` Amount -  The frequency where the filter starts working. For a Low-Pass filter, lowering `a` makes the sound darker and more muffled.  
+`r` Resonance - Emphasizes the frequencies around the cutoff point. Low values are subtle. High values give a sharp, ringing, "squelchy" sound. Bug: `r` must be used when using `t` or there will be no sound.  
 
 ---
 
@@ -103,23 +101,12 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 `1` Modulate the pitch of Oscillator 1. A slow sine wave creates vibrato. A fast square wave creates a trill.  
 `c` Modulate the cutoff frequency. A slow sine wave creates a gentle sweep. A speed-synced sawtooth or square wave creates a rhythmic wobble or wah effect.  
 
-
----
-
-`c` Cutoff
-
-`t` Type -  0:Off, 1:High-Pass, 2:Low-Pass, 3:Band-Pass, 4:Notch. Set to 2 for most classic synth sounds. Use 1 for hi-hats or thinning out a sound.  
-`a` Amount -  The frequency where the filter starts working. For a Low-Pass filter, lowering `a` makes the sound darker and more muffled.  
-`r` Resonance - Emphasizes the frequencies around the cutoff point. Low values are subtle. High values give a sharp, ringing, "squelchy" sound. Bug: `r` must be used when using `t` or there will be no sound.  
-
-
 ---
 
 `d` Delay
 
 `s` Speed - The time between echoes for the delay effect.  
 `a` Amount - The volume/feedback of the echoes. Higher values mean more echoes that last longer.  
-
 
 ---
 
@@ -146,9 +133,7 @@ Liver by mBitsnBites
 [5513,[[[7,0,0,0,192,3,7,0,7,0,201,3,0,789,1234,13636,191,2,5839,254,6,121,6,147,0,1,6,195],[1,2,0,0,1,2,1,2],[[154,0,154,0,152,0,147,0,0,0,0,0,0,0,0,0,154,0,154,0,152,0,157,0,0,0,156],[154,0,154,0,152,0,147,0,0,0,0,0,0,0,0,0,154,0,154,0,152,0,157,0,0,0,159]]],[[7,0,0,0,255,2,8,0,18,1,191,2,0,3997,56363,100000,255,2,392,255,8,69,5,67,0,1,4,57,3],[1,2,1,2,1,2,1,2],[[130],[123]]],[[8,0,0,0,0,0,8,0,0,0,0,0,60,50,419,4607,130,1,10332,120,4,16,5,108,0,0,5,187],[0,0,0,0,1,1],[[0,0,147,0,0,0,147,147,0,0,147,0,0,147,0,147,0,0,147,0,0,0,147,147,0,0,147,0,0,147,0,147]]],[[7,0,0,1,255,0,7,0,0,1,255,0,0,50,150,4800,200,2,600,254],[1,1,1,1,1,1],[[147,0,0,0,0,0,0,0,147,0,0,0,0,0,0,0,147,0,0,0,0,0,0,0,147]]],[[7,0,0,0,255,2,7,0,9,0,154,2,0,2418,1075,10614,240,3,2962,255,6,117,3,73,0,1,5,124],[0,0,0,0,1,2,1,2],[[154,0,154,0,152,0,147,0,0,0,0,0,0,0,0,0,154,0,154,0,152,0,157,0,0,0,156],[154,0,154,0,152,0,147,0,0,0,0,0,0,0,0,0,154,0,147,0,152,0,157,0,0,0,159]]],[[7,0,0,0,192,1,6,0,9,0,192,1,0,137,2000,4611,192,1,982,89,6,25,6,77,0,1,3,69],[1,2,1,3,1,3],[[130,0,130,0,142,0,130,130,0,142,130,0,142,0,130,0,130,0,130,0,142,0,130,130,0,142,130,0,142,0,130],[123,0,123,0,135,0,123,123,0,135,123,0,135,0,123,0,123,0,123,0,135,0,123,123,0,135,123,0,135,0,123],[135,0,135,0,147,0,135,135,0,147,135,0,147,0,135,0,135,0,135,0,147,0,135,135,0,147,135,0,147,0,135]]],[[7,0,0,0,255,3,8,0,0,0,255,0,127,22,88,3997,255,3,4067,234,4,33,2,84,0,1,3,28],[0,0,1,2,1,2,1,3],[[0,0,142,0,154,0,0,0,142,0,0,0,154,0,0,0,0,0,142,0,154,0,0,0,142,0,0,0,154],[0,0,147,0,154,0,0,0,147,0,0,0,154,0,0,0,0,0,147,0,154,0,147,0,0,0,154,0,0,0,154],[0,0,147,0,154,0,0,0,147,0,0,0,154,0,0,0,0,0,147,0,154,0,0,0,147]]],[[8,0,0,0,0,0,8,0,0,0,0,0,255,140347,9216,133417,208,2,2500,16,2,157,8,207,0,1,2,51],[0,0,1,1,1,1,1,1],[[147]]]]]
 ```
 
-
 ---
-
 
 </details><details><summary>Alternatives</summary>
 

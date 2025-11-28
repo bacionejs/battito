@@ -30,6 +30,11 @@ const PARAM_MAP = [
   {color:"#ffb3ff", label:'e1', index:3, min:0, max:1, description:'Oscillator 1: Env > Pitch'},
   {color:"#ffb3ff", label:'e2', index:9, min:0, max:1, description:'Oscillator 2: Env > Pitch'},
 
+  // Filter
+  {color:"#a0ff80", label:'ct', index:17, min:0, max:4, description:'Filter: Type (0:Off,1:HP,2:LP,3:BP,4:Notch)'},
+  {color:"#a0ff80", label:'ca', index:18, min:0, max:11025, description:'Filter: Cutoff'},
+  {color:"#a0ff80", label:'cr', index:19, min:0, max:255, description:'Filter: Resonance'},
+
   // LFO
   {color:"#7fffd4", label:'mw', index:28, min:0, max:3, description:'LFO: Waveform (0:Sin,1:Sqr,2:Saw,3:Tri)'},
   {color:"#7fffd4", label:'ms', index:26, min:0, max:16, description:'LFO: Speed'},
@@ -37,11 +42,6 @@ const PARAM_MAP = [
 
   {color:"skyblue", label:'m1', index:24, min:0, max:1, description:'LFO > Osc 1 Pitch'},
   {color:"skyblue", label:'mc', index:25, min:0, max:1, description:'LFO > Filter Cutoff'},
-
-  // Filter
-  {color:"#a0ff80", label:'ct', index:17, min:0, max:4, description:'Filter: Type (0:Off,1:HP,2:LP,3:BP,4:Notch)'},
-  {color:"#a0ff80", label:'ca', index:18, min:0, max:11025, description:'Filter: Cutoff'},
-  {color:"#a0ff80", label:'cr', index:19, min:0, max:255, description:'Filter: Resonance'},
 
   // Delay
   {color:"#d0b0ff", label:'ds', index:20, min:0, max:16, description:'Delay: Time'},
