@@ -5,6 +5,9 @@ To open the tracker, click ↴
 </a>
 
 
+---
+
+
 <details><summary>Purpose/Features/Limitations</summary>
 
 - This music tracker produces Sonant formatted JSON. Sonant based synth is designed to be small, for size constrained demos or games (player+song is 2k).
@@ -60,28 +63,6 @@ Liver by mBitsnBites
 ```
 
 
-</details><details><summary>Credits</summary>
-
-- Music Player: [pl_synth](https://github.com/phoboslab/pl_synth)
-
-</details><details><summary>Alternatives</summary>
-
-- https://github.com/phoboslab/pl_synth
-- https://github.com/nicolas-van/sonant-x-live
-- https://github.com/mbitsnbites/soundbox
-- https://github.com/keithclark/ZzFXM
-- https://github.com/steffest/BassoonTracker
-- https://www.pouet.net/prod.php?which=53615 (original sonant)
-
-</details>
-
-
-
-
-
-
-
----
 </details><details><summary>Instrument Parameter Deep Dive</summary>
 
 This document provides a comprehensive guide to the instrument parameters used in the synthesizer. Understanding these settings is the key to sound design, allowing you to create everything from deep basses and soaring leads to percussive hits and evolving soundscapes.
@@ -233,7 +214,20 @@ A simple workflow for creating a sound from scratch (an "init" patch):
 6.  **Add Space:** Add a touch of Delay (`da`) or Pan (`pa`) for ambience and width.
 7.  **Finalize:** Adjust the master Volume (`v`).
 
----
+</details><details><summary>Alternatives</summary>
 
+- https://github.com/phoboslab/pl_synth
+- https://github.com/nicolas-van/sonant-x-live
+- https://github.com/mbitsnbites/soundbox
+- https://github.com/keithclark/ZzFXM
+- https://github.com/steffest/BassoonTracker
+- https://www.pouet.net/prod.php?which=53615 (original sonant)
+
+</details><details><summary>Credits</summary>
+
+- Music Player: [pl_synth](https://github.com/phoboslab/pl_synth)
 
 </details>
+
+---
+
