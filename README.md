@@ -83,9 +83,15 @@ This synth is a **2-oscillator subtractive synthesizer**. This means it starts w
 
 The final volume control for the entire instrument patch.  
 
+
+---
+
 `nv` Noise Volumn
 
 Blends white noise with the oscillators. Essential for percussion (snares, hats) and effects (wind, static).  
+
+
+---
 
 `1/2` Oscillators
 
@@ -94,6 +100,9 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 `o` Octave - Shifts the oscillator's pitch up or down in octaves. A value of 7 or 8 is often a good middle C starting point. Setting `2o` one octave below `1o` can create a sub-bass.  
 `s` Semitone - Fine-tunes the pitch in semitone (half-step) increments. Useful for creating musical intervals between the two oscillators (e.g., set `2s` to 7 for a perfect fifth).  
 `d` Detune - Fine-tunes the pitch by a very small amount. When `1` and `2` have slightly different detune values, they create a rich, thick "chorus" effect. This is key for pads and big leads.  
+
+
+---
 
 `e` Envelope
 
@@ -104,6 +113,9 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 Envelope Toggles
 
 `e1`/`e2` Routes the envelope to modulate the pitch of oscillator 1 or 2. Essential for creating kick drums, toms, and laser/zap sound effects. The attack time (`ea`) controls the speed of the pitch drop.  
+
+
+---
 
 `m` Modulator
 
@@ -116,16 +128,25 @@ Modulator Toggles
 `m1` Modulate the pitch of Oscillator 1. A slow sine wave creates vibrato. A fast square wave creates a trill.  
 `mc` Modulate the cutoff frequency. A slow sine wave creates a gentle sweep. A speed-synced sawtooth or square wave creates a rhythmic wobble or wah effect.  
 
+
+---
+
 `c` Cutoff
 
 `t` Type -  0:Off, 1:High-Pass, 2:Low-Pass, 3:Band-Pass, 4:Notch. Set to 2 (LP) for most classic synth sounds. Use 1 (HP) for hi-hats or thinning out a sound.  
 `a` Amount -  The frequency where the filter starts working. For a Low-Pass filter, lowering `a` makes the sound darker and more muffled.  
 `r` Resonance - Emphasizes the frequencies around the cutoff point. Low values are subtle. High values give a sharp, ringing, "squelchy" sound.  
 
+
+---
+
 `d` Delay
 
 `s` Speed - The time between echoes for the delay effect.  
 `a` Amount - The volume/feedback of the echoes. Higher values mean more echoes that last longer.  
+
+
+---
 
 `p` Pan
 
