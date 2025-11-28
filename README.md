@@ -66,7 +66,7 @@ Liver by mBitsnBites
 ```
 
 
-</details><details><summary>Instrument Parameter</summary>
+</details><details><summary>Instrument Parameters</summary>
 
 
 ---
