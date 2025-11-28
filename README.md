@@ -27,19 +27,19 @@ Components
 Steps
 1. Click on the column headers in the **sequencer** to hear what the instruments sound like. You can select multiple columns/rows in the **sequencer** for playback, but you can only have one column/row selected while editing notes on the **piano**. The **sequencer** constantly loops over the selected **sequencer** columns/rows. Click the upper-left corner cell in the **sequencer** to toggle the whole song.
 1. To enter a note on the **piano**, select a column/row in the **sequencer** and click the intersecting cell to select a pattern ID. Then you can edit that pattern on the **piano**. To advance the pattern ID number just keep clicking in the **sequencer** cell. You can reuse a pattern ID. When coming back to edit a pattern, don't click the **sequencer** cell as that will advance the pattern ID, just select a column/row.
-- There are 8 default instruments and an instrument designer, but you can import existing Sonant compatible songs which have instruments that you like and when prompted after pasting into the **textarea**, answer yes to import only instruments.
 
 
 ---
 
 Optional
-- Select a track and configure the instrument
+- There are 8 default instruments, but you can also:
+  - select a track and configure the instrument
+  - or import existing Sonant compatible songs which have instruments that you like and when prompted after pasting into the **textarea**, answer yes to import only instruments
 
 ---
 
 Usage
 - For an example of music in a game, see [Bike](https://github.com/bacionejs/bike).
-
 
 ---
 
