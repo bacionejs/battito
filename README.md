@@ -84,7 +84,7 @@ A simplified view of how sound travels through the synth:
 
 Volumn Master
 
-`vm` The final volume control for the entire instrument patch.
+`vm` The final volume control for the entire instrument patch.  
 
 Noise Volumn
 
@@ -94,10 +94,10 @@ Oscillators
 
 `1v`/`2v` Volume - The volume of the individual oscillator. Use this to mix the levels of Osc 1 and Osc 2. 
 `1w`/`2w` Waveform - Selects the basic timbre: 0=Sine, 1=Square, 2=Saw, 3=Triangle. 
-   - Sine (0): The purest tone, with no overtones. Smooth, round, and gentle. Great for sub-basses and flute-like sounds.
-   - Square (1): Contains only odd-numbered harmonics. Sounds hollow, reedy, or like a clarinet. Great for retro video game sounds and sharp basses.
-   - Sawtooth (2): Contains all harmonics. Sounds bright, buzzy, and rich. The workhorse of synthesis, perfect for leads, pads, and basses.
-   - Triangle (3): Also contains only odd harmonics, but they roll off much faster than a square wave. Softer and more mellow than a square, like a gentle flute or bell.
+   - Sine (0): The purest tone, with no overtones. Smooth, round, and gentle. Great for sub-basses and flute-like sounds.  
+   - Square (1): Contains only odd-numbered harmonics. Sounds hollow, reedy, or like a clarinet. Great for retro video game sounds and sharp basses.  
+   - Sawtooth (2): Contains all harmonics. Sounds bright, buzzy, and rich. The workhorse of synthesis, perfect for leads, pads, and basses.  
+   - Triangle (3): Also contains only odd harmonics, but they roll off much faster than a square wave. Softer and more mellow than a square, like a gentle flute or bell.  
 `1o`/`2o` Octave - Shifts the oscillator's pitch up or down in octaves. A value of 7 or 8 is often a good middle C starting point. Setting `2o` one octave below `1o` can create a sub-bass. 
 `1s`/`2s` Semitone - Fine-tunes the pitch in semitone (half-step) increments. Useful for creating musical intervals between the two oscillators (e.g., set `2s` to 7 for a perfect fifth). 
 `1d`/`2d` Detune - Fine-tunes the pitch by a very small amount. When Osc 1 and Osc 2 have slightly different detune values, they create a rich, thick "chorus" effect. This is key for pads and big leads. 
@@ -127,17 +127,17 @@ Cutoff
 
 `ct` Type -  0:Off, 1:High-Pass, 2:Low-Pass, 3:Band-Pass, 4:Notch. Set to 2 (LP) for most classic synth sounds. Use 1 (HP) for hi-hats or thinning out a sound. 
 `ca` Amount -  The frequency where the filter starts working. For a Low-Pass filter, lowering `ca` makes the sound darker and more muffled. 
-`cr` Resonance - Emphasizes the frequencies around the cutoff point. Low values are subtle. High values give a sharp, ringing, "squelchy" sound.
+`cr` Resonance - Emphasizes the frequencies around the cutoff point. Low values are subtle. High values give a sharp, ringing, "squelchy" sound.  
 
 Delay
 
-`ds` Speed - The time between echoes for the delay effect.
-`da` Amount - The volume/feedback of the echoes. Higher values mean more echoes that last longer.
+`ds` Speed - The time between echoes for the delay effect.  
+`da` Amount - The volume/feedback of the echoes. Higher values mean more echoes that last longer.  
 
 Pan
 
-`ps` Speed - Moves the sound left and right.
-`pa` Amount - The depth.
+`ps` Speed - Moves the sound left and right.  
+`pa` Amount - The depth.  
 
 ---
 
