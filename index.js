@@ -7,100 +7,131 @@ const WASM_SYNTH_INITIALIZER = pl_synth_wasm_init;
 
 // --- Instrument Parameter Definitions ---
 const PARAM_MAP = [
-    { label: 'v', index: 16, min: 0, max: 255, description: 'Master Volume' },
-    { label: '1v', index: 4, min: 0, max: 255, description: 'Oscillator 1: Volume' },
-    { label: '1w', index: 5, min: 0, max: 3, description: 'Oscillator 1: Waveform (0:Sin,1:Sqr,2:Saw,3:Tri)' },
-    { label: '1o', index: 0, min: 0, max: 16, description: 'Oscillator 1: Octave' },
-    { label: '1s', index: 1, min: 0, max: 11, description: 'Oscillator 1: Semitone' },
-    { label: '1d', index: 2, min: 0, max: 255, description: 'Oscillator 1: Detune' },
-    { label: '2v', index: 10, min: 0, max: 255, description: 'Oscillator 2: Volume' },
-    { label: '2w', index: 11, min: 0, max: 3, description: 'Oscillator 2: Waveform (0:Sin,1:Sqr,2:Saw,3:Tri)' },
-    { label: '2o', index: 6, min: 0, max: 16, description: 'Oscillator 2: Octave' },
-    { label: '2s', index: 7, min: 0, max: 11, description: 'Oscillator 2: Semitone' },
-    { label: '2d', index: 8, min: 0, max: 255, description: 'Oscillator 2: Detune' },
-    { label: 'ea', index: 13, min: 0, max: 200000, description: 'Envelope: Attack' },
-    { label: 'es', index: 14, min: 0, max: 200000, description: 'Envelope: Sustain' },
-    { label: 'er', index: 15, min: 0, max: 200000, description: 'Envelope: Release' },
-    { label: 'e1', index: 3, min: 0, max: 1, description: 'Oscillator 1: Env > Pitch' },
-    { label: 'e2', index: 9, min: 0, max: 1, description: 'Oscillator 2: Env > Pitch' },
-    { label: 'mw', index: 28, min: 0, max: 3, description: 'LFO: Waveform (0:Sin,1:Sqr,2:Saw,3:Tri)' },
-    { label: 'ms', index: 26, min: 0, max: 16, description: 'LFO: Speed' },
-    { label: 'ma', index: 27, min: 0, max: 255, description: 'LFO: Amount' },
-    { label: 'm1', index: 24, min: 0, max: 1, description: 'LFO > Osc 1 Pitch' },
-    { label: 'mc', index: 25, min: 0, max: 1, description: 'LFO > Filter Cutoff' },
-    { label: 'ct', index: 17, min: 0, max: 4, description: 'Filter: Type (0:Off,1:HP,2:LP,3:BP,4:Notch)' },
-    { label: 'ca', index: 18, min: 0, max: 11025, description: 'Filter: Cutoff' },
-    { label: 'cr', index: 19, min: 0, max: 255, description: 'Filter: Resonance' },
-    { label: 'ds', index: 20, min: 0, max: 16, description: 'Delay: Time' },
-    { label: 'da', index: 21, min: 0, max: 248, description: 'Delay: Amount' },
-    { label: 'ps', index: 22, min: 0, max: 16, description: 'Pan: Speed' },
-    { label: 'pa', index: 23, min: 0, max: 255, description: 'Pan: Amount' },
-    { label: 'n', index: 12, min: 0, max: 255, description: 'Noise Generator Volume' }
+  {label: 'v', index: 16, min: 0, max: 255, description: 'Master Volume'},
+  {label: '1v', index: 4, min: 0, max: 255, description: 'Oscillator 1: Volume'},
+  {label: '1w', index: 5, min: 0, max: 3, description: 'Oscillator 1: Waveform (0:Sin,1:Sqr,2:Saw,3:Tri)'},
+  {label: '1o', index: 0, min: 0, max: 16, description: 'Oscillator 1: Octave'},
+  {label: '1s', index: 1, min: 0, max: 11, description: 'Oscillator 1: Semitone'},
+  {label: '1d', index: 2, min: 0, max: 255, description: 'Oscillator 1: Detune'},
+  {label: '2v', index: 10, min: 0, max: 255, description: 'Oscillator 2: Volume'},
+  {label: '2w', index: 11, min: 0, max: 3, description: 'Oscillator 2: Waveform (0:Sin,1:Sqr,2:Saw,3:Tri)'},
+  {label: '2o', index: 6, min: 0, max: 16, description: 'Oscillator 2: Octave'},
+  {label: '2s', index: 7, min: 0, max: 11, description: 'Oscillator 2: Semitone'},
+  {label: '2d', index: 8, min: 0, max: 255, description: 'Oscillator 2: Detune'},
+  {label: 'ea', index: 13, min: 0, max: 200000, description: 'Envelope: Attack'},
+  {label: 'es', index: 14, min: 0, max: 200000, description: 'Envelope: Sustain'},
+  {label: 'er', index: 15, min: 0, max: 200000, description: 'Envelope: Release'},
+  {label: 'e1', index: 3, min: 0, max: 1, description: 'Oscillator 1: Env > Pitch'},
+  {label: 'e2', index: 9, min: 0, max: 1, description: 'Oscillator 2: Env > Pitch'},
+  {label: 'mw', index: 28, min: 0, max: 3, description: 'LFO: Waveform (0:Sin,1:Sqr,2:Saw,3:Tri)'},
+  {label: 'ms', index: 26, min: 0, max: 16, description: 'LFO: Speed'},
+  {label: 'ma', index: 27, min: 0, max: 255, description: 'LFO: Amount'},
+  {label: 'm1', index: 24, min: 0, max: 1, description: 'LFO > Osc 1 Pitch'},
+  {label: 'mc', index: 25, min: 0, max: 1, description: 'LFO > Filter Cutoff'},
+  {label: 'ct', index: 17, min: 0, max: 4, description: 'Filter: Type (0:Off,1:HP,2:LP,3:BP,4:Notch)'},
+  {label: 'ca', index: 18, min: 0, max: 11025, description: 'Filter: Cutoff'},
+  {label: 'cr', index: 19, min: 0, max: 255, description: 'Filter: Resonance'},
+  {label: 'ds', index: 20, min: 0, max: 16, description: 'Delay: Time'},
+  {label: 'da', index: 21, min: 0, max: 248, description: 'Delay: Amount'},
+  {label: 'ps', index: 22, min: 0, max: 16, description: 'Pan: Speed'},
+  {label: 'pa', index: 23, min: 0, max: 255, description: 'Pan: Amount'},
+  {label: 'n', index: 12, min: 0, max: 255, description: 'Noise Generator Volume'}
 ];
 
 
-// --- STYLES ---
-const STYLES = `
-    body {
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-        background: white;
-        overflow: hidden;
-        box-sizing: border-box;
-        font-family: sans-serif;
-    }
-    .cell {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        user-select: none;
-        border: 1px solid #ccc;
-        box-sizing: border-box;
-    }
-    .header, .row-header {
-        font-weight: bold;
-        background: white;
-    }
-    .header { z-index: 2; }
-    .row-header { z-index: 1; }
-    .active { background-color: #007BFF; color: white; }
-    .col-selected, .row-selected { background-color: #e0e0e0; }
-    .row-playing { border-left: 3px solid limegreen !important; }
-    #instrument-controls-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: flex-end;
-        padding: 10px;
-        background-color: #f0f0f0;
-        border-top: 1px solid #ccc;
-        height: 150px;
-        box-sizing: border-box;
-        overflow-x: auto;
-    }
-    .slider-group {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        font-family: monospace;
-        font-size: 11px;
-        width: 20px;
-    }
-    .instrument-slider {
-        writing-mode: bt-lr; /* For vertical slider */
-        -webkit-appearance: slider-vertical; /* For WebKit browsers */
-        width: 10px;
-        height: 100px;
-        padding: 0;
-        margin: 0;
-    }
-    .instrument-slider:disabled {
-        opacity: 0.3;
-    }
+element("style").textContent=`
+
+body {
+margin: 0;
+padding: 0;
+display: flex;
+flex-direction: column;
+height: 100vh;
+background: white;
+overflow: hidden;
+}
+
+.cell {
+display: flex;
+align-items: center;
+justify-content: center;
+user-select: none;
+border: 1px solid #ccc;
+}
+
+.header, .row-header {
+font-weight: bold;
+background: white;
+}
+
+.header { z-index: 2; }
+.row-header { z-index: 1; }
+.active { background-color: #007BFF; color: white; }
+.col-selected, .row-selected { background-color: #e0e0e0; }
+.row-playing { border-left: 3px solid limegreen !important; }
+
+.instrumentControlsContainer{
+display: flex;
+flex-wrap: wrap;
+justify-content: space-evenly;
+align-items: flex-end;
+background-color: #f0f0f0;
+border-top: 1px solid #ccc;
+overflow-x: auto;
+}
+
+.slider-group {
+display: flex;
+flex-direction: column;
+align-items: center;
+font-family: monospace;
+}
+
+.instrument-slider {
+writing-mode: bt-lr; /* For vertical slider */
+-webkit-appearance: slider-vertical; /* For WebKit browsers */
+width: 1px;
+}
+
+.instrument-slider:disabled {
+opacity: 0.3;
+}
+
+.toolbar{
+display: flex;
+alignItems: flex-start;
+}
+
+.sequencerGrid{
+display: grid;
+}
+
+.songTextarea{
+flex: 1;
+height: 100%;
+padding: 5px;
+resize: none;
+font-family: monospace;
+font-size: 12px;
+white-space: pre;
+overflow: auto;
+}
+
+.pianoRollContainer{
+flex: 1;
+display: flex;
+justify-content: center;
+align-items: start;
+margin-top: 10px;
+overflow: auto;
+}
+
+.pianoGrid{
+display:grid;
+}
+
 `;
-document.head.appendChild(document.createElement("style")).textContent = STYLES;
+
 // --- GLOBAL STATE ---
 let audioContext = new AudioContext();
 let audioBufferSource = null;
@@ -135,49 +166,15 @@ function element(tagName, parent = document.body, className = '') {
   return el;
 }
 // Main layout containers
-const toolbar = element("div");
-const instrumentControlsContainer = element("div");
-const pianoRollContainer = element("div");
+const toolbar = element("div", document.body, "toolbar");
+const instrumentControlsContainer = element("div", document.body, "instrumentControlsContainer");
+const pianoRollContainer = element("div", document.body, "pianoRollContainer");
 // Toolbar components
-const sequencerGrid = element("div", toolbar);
-const songTextarea = element("textarea", toolbar);
+const sequencerGrid = element("div", toolbar, "sequencerGrid");
+const songTextarea = element("textarea", toolbar, "songTextarea");
+songTextarea.placeholder = "Paste song JSON here to import";
 // Piano Roll
-const pianoGrid = element("div", pianoRollContainer);
-
-// --- UI STYLING & LAYOUT ---
-
-function applyStyles() {
-  Object.assign(toolbar.style, {
-    display: "flex",
-    alignItems: "flex-start",
-  });
-  Object.assign(sequencerGrid.style, {
-    display: "grid",
-  });
-  Object.assign(songTextarea.style, {
-    flex: "1",
-    height: "100%",
-    padding: "5px",
-    resize: "none",
-    fontFamily: "monospace",
-    fontSize: "12px",
-    whiteSpace: "pre",
-    overflow: "auto",
-    border: "1px solid #ccc",
-    borderLeft: "none"
-  });
-  songTextarea.placeholder = "Paste song JSON here to import";
-  Object.assign(pianoRollContainer.style, {
-    flex: "1",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "start",
-    marginTop: "10px",
-    overflow: "auto",
-  });
-  pianoGrid.style.display = "grid";
-  instrumentControlsContainer.id = "instrument-controls-container";
-}
+const pianoGrid = element("div", pianoRollContainer, "pianoGrid");
 
 // --- INITIALIZATION ---
 
@@ -211,7 +208,7 @@ function initPianoRoll() {
     container.clientWidth / PC,
     container.clientHeight / PR
   ));
-  Object.assign(pianoGrid.style, { gridTemplateColumns: `repeat(${PC}, ${cellSize}px)`, gridTemplateRows: `repeat(${PR}, ${cellSize}px)`, });
+  Object.assign(pianoGrid.style, {gridTemplateColumns: `repeat(${PC}, ${cellSize}px)`, gridTemplateRows: `repeat(${PR}, ${cellSize}px)`, });
   for (let r = 0; r < PR; r++) {
     for (let c = 0; c < PC; c++) {
       const cell = element("div", pianoGrid, "cell");
@@ -224,21 +221,21 @@ function initPianoRoll() {
 }
 
 function initInstrumentControls() {
-    instrumentControlsContainer.innerHTML = '';
-    PARAM_MAP.forEach(param => {
-        const group = element("div", instrumentControlsContainer, "slider-group");
-        group.title = param.description;
+  instrumentControlsContainer.innerHTML = '';
+  PARAM_MAP.forEach(param => {
+    const group = element("div", instrumentControlsContainer, "slider-group");
+    group.title = param.description;
 
-        const label = element("label", group);
-        label.textContent = param.label;
+    const label = element("label", group);
+    label.textContent = param.label;
 
-        const slider = element("input", group, "instrument-slider");
-        slider.type = "range";
-        slider.min = param.min;
-        slider.max = param.max;
-        slider.dataset.index = param.index;
-        slider.disabled = true;
-    });
+    const slider = element("input", group, "instrument-slider");
+    slider.type = "range";
+    slider.min = param.min;
+    slider.max = param.max;
+    slider.dataset.index = param.index;
+    slider.disabled = true;
+  });
 }
 
 // --- UI UPDATE FUNCTIONS ---
@@ -259,8 +256,8 @@ function updateSequencerSelection() {
     else if (col === undefined) {
       // Stop any previously playing preview note
       if (previewAudioSource) {
-          previewAudioSource.stop();
-          previewAudioSource = null;
+        previewAudioSource.stop();
+        previewAudioSource = null;
       }
       if (song.activeSequences[row]) cell.classList.add("row-selected");
     }
@@ -313,23 +310,23 @@ function updateSongTextarea() {
 }
 
 function updateInstrumentSliders() {
-    const trackIndex = getActiveTrackIndex();
-    const sliders = instrumentControlsContainer.querySelectorAll('.instrument-slider');
+  const trackIndex = getActiveTrackIndex();
+  const sliders = instrumentControlsContainer.querySelectorAll('.instrument-slider');
 
-    if (trackIndex !== null) {
-        const instrument = song[1][trackIndex]?.[0];
-        sliders.forEach(slider => {
-            const paramIndex = slider.dataset.index;
-            // Use instrument value if it exists, otherwise default to 0.
-            slider.value = instrument?.[paramIndex] ?? 0;
-            slider.disabled = false;
-        });
-    } else {
-        sliders.forEach(slider => {
-            slider.disabled = true;
-            slider.value = slider.min; // Reset to min value when disabled
-        });
-    }
+  if (trackIndex !== null) {
+    const instrument = song[1][trackIndex]?.[0];
+    sliders.forEach(slider => {
+      const paramIndex = slider.dataset.index;
+      // Use instrument value if it exists, otherwise default to 0.
+      slider.value = instrument?.[paramIndex] ?? 0;
+      slider.disabled = false;
+    });
+  } else {
+    sliders.forEach(slider => {
+      slider.disabled = true;
+      slider.value = slider.min; // Reset to min value when disabled
+    });
+  }
 }
 
 // --- AUDIO PLAYBACK ---
@@ -507,28 +504,28 @@ function handleSongInput() {
 }
 
 function handleSliderInput(event) {
-    if (!event.target.classList.contains('instrument-slider')) return;
-    if (previewAudioSource) {
-        previewAudioSource.stop();
-        previewAudioSource = null;
-    }
-    const trackIndex = getActiveTrackIndex();
-    if (trackIndex === null) return;
-    const slider = event.target;
-    const paramIndex = parseInt(slider.dataset.index);
-    const value = parseInt(slider.value);
-    if (!song[1][trackIndex]) song[1][trackIndex] = [[], [], []];
-    const instrument = song[1][trackIndex][0];
-    while (instrument.length <= paramIndex) { instrument.push(0); }
-    instrument[paramIndex] = value;
-    updateSongTextarea();
+  if (!event.target.classList.contains('instrument-slider')) return;
+  if (previewAudioSource) {
+    previewAudioSource.stop();
+    previewAudioSource = null;
+  }
+  const trackIndex = getActiveTrackIndex();
+  if (trackIndex === null) return;
+  const slider = event.target;
+  const paramIndex = parseInt(slider.dataset.index);
+  const value = parseInt(slider.value);
+  if (!song[1][trackIndex]) song[1][trackIndex] = [[], [], []];
+  const instrument = song[1][trackIndex][0];
+  while (instrument.length <= paramIndex) {instrument.push(0);}
+  instrument[paramIndex] = value;
+  updateSongTextarea();
 }
 function handleSliderChange(event) {
-    if (!event.target.classList.contains('instrument-slider')) return;
-    const trackIndex = getActiveTrackIndex();
-    if (trackIndex !== null) {
-        previewTrackSound(trackIndex);
-    }
+  if (!event.target.classList.contains('instrument-slider')) return;
+  const trackIndex = getActiveTrackIndex();
+  if (trackIndex !== null) {
+    previewTrackSound(trackIndex);
+  }
 }
 
 function addEventListeners() {
@@ -543,10 +540,10 @@ function addEventListeners() {
 // --- UTILITY FUNCTIONS ---
 
 function getActiveTrackIndex() {
-    const activeIndices = song.activeTracks
-        .map((isActive, index) => isActive ? index : -1)
-        .filter(index => index !== -1);
-    return activeIndices.length === 1 ? activeIndices[0] : null;
+  const activeIndices = song.activeTracks
+    .map((isActive, index) => isActive ? index : -1)
+    .filter(index => index !== -1);
+  return activeIndices.length === 1 ? activeIndices[0] : null;
 }
 
 function getActiveSongDataForPlayback() {
@@ -570,7 +567,7 @@ function getActiveSongDataForPlayback() {
 }
 
 function formatSongDataForDisplay(songData) {
-  function stringify(arr) { return "[" + arr.map(x => Array.isArray(x) ? "\n" + stringify(x) : x || 0).join(",") + "]"; }
+  function stringify(arr) {return "[" + arr.map(x => Array.isArray(x) ? "\n" + stringify(x) : x || 0).join(",") + "]";}
   const jsonString = stringify(songData);
   return fillEmptyArrayValues(jsonString);
 }
@@ -612,31 +609,30 @@ function getTrackColor(trackIndex) {
 function previewTrackSound(trackIndex) {
   // Stop any previously playing preview note
   if (previewAudioSource) {
-      previewAudioSource.stop();
-      previewAudioSource = null;
+    previewAudioSource.stop();
+    previewAudioSource = null;
   }
 
   if (song[1][trackIndex]?.[0]) {
     WASM_SYNTH_INITIALIZER(audioContext, synth => {
-        const source = audioContext.createBufferSource();
-        source.buffer = synth.sound(song[1][parseInt(trackIndex)][0]);
-        source.connect(audioContext.destination);
-        source.start();
+      const source = audioContext.createBufferSource();
+      source.buffer = synth.sound(song[1][parseInt(trackIndex)][0]);
+      source.connect(audioContext.destination);
+      source.start();
 
-        // Store the new source and clean it up when it ends
-        previewAudioSource = source;
-        source.onended = () => {
-            if (previewAudioSource === source) {
-                previewAudioSource = null;
-            }
-        };
+      // Store the new source and clean it up when it ends
+      previewAudioSource = source;
+      source.onended = () => {
+        if (previewAudioSource === source) {
+          previewAudioSource = null;
+        }
+      };
     });
   }
 }
 // --- MAIN EXECUTION ---
 
 function main() {
-  applyStyles();
   initSequencer();
   initPianoRoll();
   initInstrumentControls();
