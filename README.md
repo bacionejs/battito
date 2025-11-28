@@ -63,5 +63,14 @@ Liver by mBitsnBites
 </details><details><summary>Credits</summary>
 
 - Music Player: [pl_synth](https://github.com/phoboslab/pl_synth)
-</details>
 
+</details><details><summary>Alternatives</summary>
+
+https://github.com/phoboslab/pl_synth
+https://github.com/nicolas-van/sonant-x-live
+https://github.com/mbitsnbites/soundbox
+https://github.com/keithclark/ZzFXM
+https://github.com/steffest/BassoonTracker
+https://www.pouet.net/prod.php?which=53615 (original sonant)
+
+</details>
