@@ -89,7 +89,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 `1/2` Oscillators
 
-`v` Volume - The volume of the individual oscillator.
+`v` Volume - The volume of the individual oscillator.  
 `w` Waveform - Selects the basic timbre: 0=Sine, 1=Square, 2=Saw, 3=Triangle.  
 `o` Octave - Shifts the oscillator's pitch up or down in octaves. A value of 7 or 8 is often a good middle C starting point. Setting `2o` one octave below `1o` can create a sub-bass.  
 `s` Semitone - Fine-tunes the pitch in semitone (half-step) increments. Useful for creating musical intervals between the two oscillators (e.g., set `2s` to 7 for a perfect fifth).  
@@ -98,7 +98,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 `e` Envelope
 
 `a` Attack - The time it takes for the note to fade in. 0 = instant, percussive. High values = slow, swelling sound (pads).  
-`s` Sustain - The time the note is held at full volume. 0 = the note immediately starts releasing. High values = the note is held for longer. A percussive "pluck" sound would have low `ea`, `es`, and `er`.  
+`s` Sustain - The time the note is held at full volume. 0 = the note immediately starts releasing. High values = the note is held for longer. A percussive "pluck" sound would have low `a`, `s`, and `r`.  
 `r` Release - The time it takes for the note to fade out after the sustain period. Low values = abrupt stop. High values = long, echoing tail.  
 
 Envelope Toggles
@@ -119,7 +119,7 @@ Modulator Toggles
 `c` Cutoff
 
 `t` Type -  0:Off, 1:High-Pass, 2:Low-Pass, 3:Band-Pass, 4:Notch. Set to 2 (LP) for most classic synth sounds. Use 1 (HP) for hi-hats or thinning out a sound.  
-`a` Amount -  The frequency where the filter starts working. For a Low-Pass filter, lowering `ca` makes the sound darker and more muffled.  
+`a` Amount -  The frequency where the filter starts working. For a Low-Pass filter, lowering `a` makes the sound darker and more muffled.  
 `r` Resonance - Emphasizes the frequencies around the cutoff point. Low values are subtle. High values give a sharp, ringing, "squelchy" sound.  
 
 `d` Delay
