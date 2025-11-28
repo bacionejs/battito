@@ -87,7 +87,9 @@ Noise Volumn
 `nv` Blends white noise with the oscillators. Essential for percussion (snares, hats) and effects (wind, static).  
 
 Oscillators
+
 `1/2`
+
 `v` Volume - The volume of the individual oscillator. Use this to mix the levels of Osc 1 and Osc 2.  
 `w` Waveform - Selects the basic timbre: 0=Sine, 1=Square, 2=Saw, 3=Triangle.  
 `o` Octave - Shifts the oscillator's pitch up or down in octaves. A value of 7 or 8 is often a good middle C starting point. Setting `2o` one octave below `1o` can create a sub-bass.  
