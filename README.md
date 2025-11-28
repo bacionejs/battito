@@ -33,7 +33,7 @@ Steps
 
 Optional
 - There are 8 default instruments, but you can also:
-  - select a track and configure the instrument
+  - select a track and configure the **synth**
   - or import existing Sonant compatible songs which have instruments that you like and when prompted after pasting into the **textarea**, answer yes to import only instruments
 
 ---
