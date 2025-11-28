@@ -93,7 +93,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 `w` Waveform - Selects the basic timbre: 0=Sine, 1=Square, 2=Saw, 3=Triangle.  
 `o` Octave - Shifts the oscillator's pitch up or down in octaves. A value of 7 or 8 is often a good middle C starting point. Setting `2o` one octave below `1o` can create a sub-bass.  
 `s` Semitone - Fine-tunes the pitch in semitone (half-step) increments. Useful for creating musical intervals between the two oscillators (e.g., set `2s` to 7 for a perfect fifth).  
-`d` Detune - Fine-tunes the pitch by a very small amount. When Osc 1 and Osc 2 have slightly different detune values, they create a rich, thick "chorus" effect. This is key for pads and big leads.  
+`d` Detune - Fine-tunes the pitch by a very small amount. When `1` and `2` have slightly different detune values, they create a rich, thick "chorus" effect. This is key for pads and big leads.  
 
 `e` Envelope
 
