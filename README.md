@@ -66,11 +66,11 @@ Liver by mBitsnBites
 
 </details><details><summary>Alternatives</summary>
 
-https://github.com/phoboslab/pl_synth
-https://github.com/nicolas-van/sonant-x-live
-https://github.com/mbitsnbites/soundbox
-https://github.com/keithclark/ZzFXM
-https://github.com/steffest/BassoonTracker
-https://www.pouet.net/prod.php?which=53615 (original sonant)
+- https://github.com/phoboslab/pl_synth
+- https://github.com/nicolas-van/sonant-x-live
+- https://github.com/mbitsnbites/soundbox
+- https://github.com/keithclark/ZzFXM
+- https://github.com/steffest/BassoonTracker
+- https://www.pouet.net/prod.php?which=53615 (original sonant)
 
 </details>
