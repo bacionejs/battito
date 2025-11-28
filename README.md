@@ -127,9 +127,9 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 `c` Cutoff
 
-`t` Type -  0:Off, 1:High-Pass, 2:Low-Pass, 3:Band-Pass, 4:Notch. Set to 2 (LP) for most classic synth sounds. Use 1 (HP) for hi-hats or thinning out a sound.  
+`t` Type -  0:Off, 1:High-Pass, 2:Low-Pass, 3:Band-Pass, 4:Notch. Set to 2 for most classic synth sounds. Use 1 for hi-hats or thinning out a sound.  
 `a` Amount -  The frequency where the filter starts working. For a Low-Pass filter, lowering `a` makes the sound darker and more muffled.  
-`r` Resonance - Emphasizes the frequencies around the cutoff point. Low values are subtle. High values give a sharp, ringing, "squelchy" sound.  
+`r` Resonance - Emphasizes the frequencies around the cutoff point. Low values are subtle. High values give a sharp, ringing, "squelchy" sound. Bug: `r` must be used when using `t` or there will be no sound.  
 
 
 ---
