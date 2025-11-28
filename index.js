@@ -34,8 +34,9 @@ const PARAM_MAP = [
   {color:"#7fffd4", label:'mw', index:28, min:0, max:3, description:'LFO: Waveform (0:Sin,1:Sqr,2:Saw,3:Tri)'},
   {color:"#7fffd4", label:'ms', index:26, min:0, max:16, description:'LFO: Speed'},
   {color:"#7fffd4", label:'ma', index:27, min:0, max:255, description:'LFO: Amount'},
-  {color:"#7fffd4", label:'m1', index:24, min:0, max:1, description:'LFO > Osc 1 Pitch'},
-  {color:"#7fffd4", label:'mc', index:25, min:0, max:1, description:'LFO > Filter Cutoff'},
+
+  {color:"skyblue", label:'m1', index:24, min:0, max:1, description:'LFO > Osc 1 Pitch'},
+  {color:"skyblue", label:'mc', index:25, min:0, max:1, description:'LFO > Filter Cutoff'},
 
   // Filter
   {color:"#a0ff80", label:'ct', index:17, min:0, max:4, description:'Filter: Type (0:Off,1:HP,2:LP,3:BP,4:Notch)'},
