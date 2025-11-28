@@ -197,7 +197,6 @@ Both oscillators have identical parameters. Using both allows for richer, more c
 | **`ea`** | 13 | 0-200000 | Attack | The time it takes for the note to fade in. **0** = instant, percussive. **High values** = slow, swelling sound (pads). |
 | **`es`** | 14 | 0-200000 | Sustain | The time the note is held at full volume. **0** = the note immediately starts releasing. **High values** = the note is held for longer. A percussive "pluck" sound would have low `ea`, `es`, and `er`. |
 | **`er`** | 15 | 0-200000 | Release | The time it takes for the note to fade out after the sustain period. **Low values** = abrupt stop. **High values** = long, echoing tail. |
-> **Note:** The envelope time values are large numbers, likely representing samples or a similar internal time unit. Experimentation is key. A value around 10,000-50,000 often corresponds to a medium-length release.
 
 ### Low-Frequency Oscillator (LFO)
 
@@ -221,7 +220,7 @@ Both oscillators have identical parameters. Using both allows for richer, more c
 
 | Label | Index | Range | Description | In-Depth Explanation |
 | :--- | :---: | :--- | :--- | :--- |
-| **`ds`** | 20 | 0-16 | Delay Time | The time between echoes. This is likely a step-based value, so it syncs to the song's tempo. |
+| **`ds`** | 20 | 0-16 | Delay Time | The time between echoes for the delay effect. The value corresponds to a musical subdivision (e.g., 8 is an 8th note delay). |
 | **`da`** | 21 | 0-248 | Delay Amount | The volume/feedback of the echoes. Higher values mean more echoes that last longer. |
 | **`ps`** | 22 | 0-16 | Pan Speed | The speed of the auto-panner LFO. Moves the sound left and right. |
 | **`pa`** | 23 | 0-255 | Pan Amount | The depth of the auto-pan effect. 0 = no panning. 255 = hard left-to-right panning. |
