@@ -109,10 +109,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 `a` Attack - The time it takes for the note to fade in. 0 = instant, percussive. High values = slow, swelling sound (pads).  
 `s` Sustain - The time the note is held at full volume. 0 = the note immediately starts releasing. High values = the note is held for longer. A percussive "pluck" sound would have low `a`, `s`, and `r`.  
 `r` Release - The time it takes for the note to fade out after the sustain period. Low values = abrupt stop. High values = long, echoing tail.  
-
-Envelope Toggles
-
-`e1`/`e2` Routes the envelope to modulate the pitch of oscillator 1 or 2. Essential for creating kick drums, toms, and laser/zap sound effects. The attack time (`ea`) controls the speed of the pitch drop.  
+`1`/`2` Routes the envelope to modulate the pitch of oscillator 1 or 2. Essential for creating kick drums, toms, and laser/zap sound effects. The attack time (`ea`) controls the speed of the pitch drop.  
 
 
 ---
@@ -122,11 +119,8 @@ Envelope Toggles
 `w` Waveform - The shape of the LFO's modulation signal (0:Sin,1:Sqr,2:Saw,3:Tri). Sine/Triangle gives smooth modulation (vibrato). Square gives an abrupt on/off effect (trills). Saw gives a repeating ramp.  
 `s` Speed - The frequency/rate of the LFO. Low values = slow, evolving changes. High values = fast, aggressive modulation (FM-like sounds).  
 `a` Amount - The overall intensity or depth of the LFO's effect. At 0, the LFO has no effect, regardless of its routing.  
-
-Modulator Toggles
-
-`m1` Modulate the pitch of Oscillator 1. A slow sine wave creates vibrato. A fast square wave creates a trill.  
-`mc` Modulate the cutoff frequency. A slow sine wave creates a gentle sweep. A speed-synced sawtooth or square wave creates a rhythmic wobble or wah effect.  
+`1` Modulate the pitch of Oscillator 1. A slow sine wave creates vibrato. A fast square wave creates a trill.  
+`c` Modulate the cutoff frequency. A slow sine wave creates a gentle sweep. A speed-synced sawtooth or square wave creates a rhythmic wobble or wah effect.  
 
 
 ---
