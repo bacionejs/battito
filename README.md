@@ -88,45 +88,45 @@ Volumn Master
 
 Noise Volumn
 
-`nv` Blends white noise with the oscillators. Essential for percussion (snares, hats) and effects (wind, static). 
+`nv` Blends white noise with the oscillators. Essential for percussion (snares, hats) and effects (wind, static).  
 
 Oscillators
 
-`1v`/`2v` Volume - The volume of the individual oscillator. Use this to mix the levels of Osc 1 and Osc 2. 
-`1w`/`2w` Waveform - Selects the basic timbre: 0=Sine, 1=Square, 2=Saw, 3=Triangle. 
+`1v`/`2v` Volume - The volume of the individual oscillator. Use this to mix the levels of Osc 1 and Osc 2.  
+`1w`/`2w` Waveform - Selects the basic timbre: 0=Sine, 1=Square, 2=Saw, 3=Triangle.  
    - Sine (0): The purest tone, with no overtones. Smooth, round, and gentle. Great for sub-basses and flute-like sounds.  
    - Square (1): Contains only odd-numbered harmonics. Sounds hollow, reedy, or like a clarinet. Great for retro video game sounds and sharp basses.  
    - Sawtooth (2): Contains all harmonics. Sounds bright, buzzy, and rich. The workhorse of synthesis, perfect for leads, pads, and basses.  
    - Triangle (3): Also contains only odd harmonics, but they roll off much faster than a square wave. Softer and more mellow than a square, like a gentle flute or bell.  
-`1o`/`2o` Octave - Shifts the oscillator's pitch up or down in octaves. A value of 7 or 8 is often a good middle C starting point. Setting `2o` one octave below `1o` can create a sub-bass. 
-`1s`/`2s` Semitone - Fine-tunes the pitch in semitone (half-step) increments. Useful for creating musical intervals between the two oscillators (e.g., set `2s` to 7 for a perfect fifth). 
-`1d`/`2d` Detune - Fine-tunes the pitch by a very small amount. When Osc 1 and Osc 2 have slightly different detune values, they create a rich, thick "chorus" effect. This is key for pads and big leads. 
+`1o`/`2o` Octave - Shifts the oscillator's pitch up or down in octaves. A value of 7 or 8 is often a good middle C starting point. Setting `2o` one octave below `1o` can create a sub-bass.  
+`1s`/`2s` Semitone - Fine-tunes the pitch in semitone (half-step) increments. Useful for creating musical intervals between the two oscillators (e.g., set `2s` to 7 for a perfect fifth).  
+`1d`/`2d` Detune - Fine-tunes the pitch by a very small amount. When Osc 1 and Osc 2 have slightly different detune values, they create a rich, thick "chorus" effect. This is key for pads and big leads.  
 
 Envelope
 
-`ea` Attack - The time it takes for the note to fade in. 0 = instant, percussive. High values = slow, swelling sound (pads). 
-`es` Sustain - The time the note is held at full volume. 0 = the note immediately starts releasing. High values = the note is held for longer. A percussive "pluck" sound would have low `ea`, `es`, and `er`. 
-`er` Release - The time it takes for the note to fade out after the sustain period. Low values = abrupt stop. High values = long, echoing tail. 
+`ea` Attack - The time it takes for the note to fade in. 0 = instant, percussive. High values = slow, swelling sound (pads).  
+`es` Sustain - The time the note is held at full volume. 0 = the note immediately starts releasing. High values = the note is held for longer. A percussive "pluck" sound would have low `ea`, `es`, and `er`.  
+`er` Release - The time it takes for the note to fade out after the sustain period. Low values = abrupt stop. High values = long, echoing tail.  
 
 Envelope Toggles
 
-`e1`/`e2` Routes the envelope to modulate the pitch of oscillator 1 or 2. Essential for creating kick drums, toms, and laser/zap sound effects. The attack time (`ea`) controls the speed of the pitch drop. 
+`e1`/`e2` Routes the envelope to modulate the pitch of oscillator 1 or 2. Essential for creating kick drums, toms, and laser/zap sound effects. The attack time (`ea`) controls the speed of the pitch drop.  
 
 Modulator
 
-`mw` Waveform - The shape of the LFO's modulation signal (0:Sin,1:Sqr,2:Saw,3:Tri). Sine/Triangle gives smooth modulation (vibrato). Square gives an abrupt on/off effect (trills). Saw gives a repeating ramp. 
-`ms` Speed - The frequency/rate of the LFO. Low values = slow, evolving changes. High values = fast, aggressive modulation (FM-like sounds). 
-`ma` Amount - The overall intensity or depth of the LFO's effect. At 0, the LFO has no effect, regardless of its routing. 
+`mw` Waveform - The shape of the LFO's modulation signal (0:Sin,1:Sqr,2:Saw,3:Tri). Sine/Triangle gives smooth modulation (vibrato). Square gives an abrupt on/off effect (trills). Saw gives a repeating ramp.  
+`ms` Speed - The frequency/rate of the LFO. Low values = slow, evolving changes. High values = fast, aggressive modulation (FM-like sounds).  
+`ma` Amount - The overall intensity or depth of the LFO's effect. At 0, the LFO has no effect, regardless of its routing.  
 
 Modulator Toggles
 
-`m1` Modulate the pitch of Oscillator 1. A slow sine wave creates vibrato. A fast square wave creates a trill. 
-`mc` Modulate the cutoff frequency. A slow sine wave creates a gentle sweep. A speed-synced sawtooth or square wave creates a rhythmic wobble or wah effect. 
+`m1` Modulate the pitch of Oscillator 1. A slow sine wave creates vibrato. A fast square wave creates a trill.  
+`mc` Modulate the cutoff frequency. A slow sine wave creates a gentle sweep. A speed-synced sawtooth or square wave creates a rhythmic wobble or wah effect.  
 
 Cutoff
 
-`ct` Type -  0:Off, 1:High-Pass, 2:Low-Pass, 3:Band-Pass, 4:Notch. Set to 2 (LP) for most classic synth sounds. Use 1 (HP) for hi-hats or thinning out a sound. 
-`ca` Amount -  The frequency where the filter starts working. For a Low-Pass filter, lowering `ca` makes the sound darker and more muffled. 
+`ct` Type -  0:Off, 1:High-Pass, 2:Low-Pass, 3:Band-Pass, 4:Notch. Set to 2 (LP) for most classic synth sounds. Use 1 (HP) for hi-hats or thinning out a sound.  
+`ca` Amount -  The frequency where the filter starts working. For a Low-Pass filter, lowering `ca` makes the sound darker and more muffled.  
 `cr` Resonance - Emphasizes the frequencies around the cutoff point. Low values are subtle. High values give a sharp, ringing, "squelchy" sound.  
 
 Delay
