@@ -60,15 +60,15 @@ const PARAM_MAP = [
 
 
 element("style").textContent=`
+*{font-family:monospace;margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;
+
+user-select: none;
+}
 
 body {
 margin: 0;
 padding: 0;
 display: flex;
-flex-direction: column;
-height: 100vh;
-background: white;
-overflow: hidden;
 }
 
 .cell {
@@ -90,36 +90,28 @@ background: white;
 .col-selected, .row-selected { background-color: #e0e0e0; }
 .row-playing { border-left: 3px solid limegreen !important; }
 
-.instrumentControlsContainer{
-display: flex;
-flex-wrap: wrap;
-justify-content: space-evenly;
-align-items: flex-end;
-background-color: black;
-border-top: 1px solid #ccc;
-overflow-x: auto;
-}
-
 .slider-group {
 display: flex;
 flex-direction: column;
 align-items: center;
 font-family: monospace;
+font-size: 6px;
 }
 
 .instrument-slider {
-writing-mode: bt-lr; /* For vertical slider */
--webkit-appearance: slider-vertical; /* For WebKit browsers */
-width: 1px;
+height: 1px;
+}
+
+input[type="range"]::-webkit-slider-thumb{
+  clip-path: polygon(50% 12.5%, 25% 87.5%, 75% 87.5%);
 }
 
 .instrument-slider:disabled {
 opacity: 0.3;
 }
 
-.toolbar{
-display: flex;
-alignItems: flex-start;
+.pianoGrid{
+display:grid;
 }
 
 .sequencerGrid{
@@ -127,27 +119,19 @@ display: grid;
 }
 
 .songTextarea{
-flex: 1;
-height: 100%;
-padding: 5px;
-resize: none;
+padding: 10px;
 font-family: monospace;
-font-size: 12px;
+font-size: 5px;
 white-space: pre;
 overflow: auto;
+border: 1px solid black;
 }
 
-.pianoRollContainer{
-flex: 1;
+.instrumentControlsContainer{
 display: flex;
-justify-content: center;
-align-items: start;
-margin-top: 10px;
-overflow: auto;
-}
-
-.pianoGrid{
-display:grid;
+flex-direction: column;
+justify-content: space-evenly;
+background-color: black;
 }
 
 `;
@@ -159,14 +143,21 @@ let audioBuffer = null;
 let previewAudioSource = null;
 
 let song = [5513, [
-  [[7, 0, 0, 1, 255, 0, 7, 0, 0, 1, 255, 0, 0, 100, 0, 5970, 171, 2, 500, 254, 1, 31, 4, 21], [], []],
-  [[7, 0, 0, 0, 255, 2, 7, 0, 4, 0, 255, 2, 0, 88, 2000, 7505, 255, 2, 3144, 51, 6, 60, 4, 64, 0, 1, 7, 179], [], []],
-  [[7, 0, 0, 0, 192, 2, 7, 0, 0, 0, 201, 3, 0, 100, 150, 7505, 191, 2, 5839, 254, 6, 121, 6, 147, 0, 1, 6, 195], [], []],
-  [[9, 0, 0, 0, 255, 0, 9, 0, 12, 0, 255, 0, 0, 100, 0, 14545, 70, 0, 0, 240, 2, 157, 3, 47, 0, 0, 0, 0, 0], [], []],
-  [[7, 0, 0, 0, 255, 3, 8, 0, 0, 0, 255, 0, 127, 22, 22, 2193, 255, 3, 4067, 176, 4, 12, 2, 84, 0, 1, 3, 96, 0], [], []],
-  [[7, 0, 0, 0, 255, 2, 7, 0, 9, 0, 154, 2, 0, 2418, 1075, 10614, 240, 3, 2962, 255, 6, 117, 3, 73, 0, 1, 5, 124, 0], [], []],
-  [[7, 0, 0, 0, 192, 3, 7, 0, 7, 0, 201, 3, 0, 789, 1234, 13636, 191, 2, 5839, 254, 6, 121, 6, 147, 0, 1, 6, 195, 0], [], []],
-  [[7, 0, 0, 0, 192, 2, 7, 0, 0, 0, 192, 2, 0, 0, 0, 20000, 192, 0, 0, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0], [], []],//piano
+  [[ 7, 0, 0, 1, 255, 0, 7, 0, 0, 1, 255, 0,   0,  100,    0,  5970, 171, 2,  500, 254, 1,  31, 4,  21,   0, 0, 0, 0, 0], [], []],
+
+  [[ 7, 0, 0, 0, 255, 2, 7, 0, 4, 0, 255, 2,   0,   88, 2000,  7505, 255, 2, 3144,  51, 6,  60, 4,  64,   0, 1, 7, 179, 0], [], []],
+
+  [[ 7, 0, 0, 0, 192, 2, 7, 0, 0, 0, 201, 3,   0,  100,  150,  7505, 191, 2, 5839, 254, 6, 121, 6, 147,   0, 1, 6, 195, 0], [], []],
+
+  [[ 9, 0, 0, 0, 255, 0, 9, 0,12, 0, 255, 0,   0,  100,    0, 14545,  70, 0,    0, 240, 2, 157, 3,  47,   0, 0, 0, 0, 0], [], []],
+
+  [[ 7, 0, 0, 0, 255, 3, 8, 0, 0, 0, 255, 0, 127,   22,   22,  2193, 255, 3, 4067, 176, 4,  12, 2,  84,   0, 1, 3,  96, 0], [], []],
+
+  [[ 7, 0, 0, 0, 255, 2, 7, 0, 9, 0, 154, 2,   0, 2418, 1075, 10614, 240, 3, 2962, 255, 6, 117, 3,  73,   0, 1, 5, 124, 0], [], []],
+
+  [[ 7, 0, 0, 0, 192, 3, 7, 0, 7, 0, 201, 3,   0,  789, 1234, 13636, 191, 2, 5839, 254, 6, 121, 6, 147,   0, 1, 6, 195, 0], [], []],
+
+  [[ 7, 0, 0, 0, 192, 2, 7, 0, 0, 0, 192, 2,   0,    0,    0, 20000, 192, 0,    0,   0, 0, 121, 0,   0,   0, 0, 0,   0, 0], [], []]
 ]];
 
 song.activeTracks = Array(SC).fill(0);
@@ -186,22 +177,22 @@ function element(tagName, parent = document.body, className = '') {
   return el;
 }
 // Main layout containers
-const toolbar = element("div", document.body, "toolbar");
+const pianoGrid = element("div", document.body, "pianoGrid");
 const instrumentControlsContainer = element("div", document.body, "instrumentControlsContainer");
-const pianoRollContainer = element("div", document.body, "pianoRollContainer");
-// Toolbar components
-const sequencerGrid = element("div", toolbar, "sequencerGrid");
-const songTextarea = element("textarea", toolbar, "songTextarea");
-songTextarea.placeholder = "Paste song JSON here to import";
-// Piano Roll
-const pianoGrid = element("div", pianoRollContainer, "pianoGrid");
+
+let side=element("div",document.body, "side");
+const sequencerGrid = element("div", side, "sequencerGrid");
+sequencerGrid.style.width=document.body.clientHeight/2;
+sequencerGrid.style.aspectRatio=1/1;
+const songTextarea = element("div", side, "songTextarea");
+songTextarea.style.width=document.body.clientHeight/2;
+songTextarea.style.aspectRatio=1/1;
+songTextarea.contentEditable=true;
 
 // --- INITIALIZATION ---
 
 function initSequencer() {
-  const h = window.innerWidth / 2;
-  const c = h / (SR + 1);
-  Object.assign(sequencerGrid.style, {width: `${h}px`, height: `${h}px`, gridTemplateColumns: `${c}px repeat(${SC}, ${c}px)`, gridTemplateRows: `${c}px repeat(${SR}, ${c}px)`, });
+  Object.assign(sequencerGrid.style, {gridTemplateColumns: `repeat(${SC+1},1fr)`, gridTemplateRows: `repeat(${SR+1},1fr)` });
   // Top-left corner cell
   element("div", sequencerGrid, "cell header");
   // Column headers
@@ -224,10 +215,10 @@ function initSequencer() {
 function initPianoRoll() {
   pianoGrid.innerHTML = "";
   const container = pianoGrid.parentElement;
-  const cellSize = Math.floor(Math.min(
+  const cellSize = Math.min(
     container.clientWidth / PC,
     container.clientHeight / PR
-  ));
+  );
   Object.assign(pianoGrid.style, {gridTemplateColumns: `repeat(${PC}, ${cellSize}px)`, gridTemplateRows: `repeat(${PR}, ${cellSize}px)`, });
   for (let r = 0; r < PR; r++) {
     for (let c = 0; c < PC; c++) {
@@ -325,7 +316,7 @@ function updatePianoRoll() {
 
 function updateSongTextarea() {
   if (songTextarea) {
-    songTextarea.value = formatSongDataForDisplay(song);
+    songTextarea.textContent = formatSongDataForDisplay(song);
   }
 }
 
@@ -498,6 +489,18 @@ function handleSongPaste(event) {
     alert("Invalid JSON! Paste failed.");
     return;
   }
+
+  // Pad instruments to 29 elements
+  if (newSongData && Array.isArray(newSongData[1])) {
+    newSongData[1].forEach(track => {
+      if (track && Array.isArray(track[0])) {
+        while (track[0].length < 29) {
+          track[0].push(0);
+        }
+      }
+    });
+  }
+
   if (keepInstrumentsOnly) {
     newSongData = stripSongData(newSongData);
   }
@@ -513,7 +516,7 @@ function handleSongPaste(event) {
 
 function handleSongInput() {
   try {
-    const newSong = JSON.parse(songTextarea.value);
+    const newSong = JSON.parse(songTextarea.textContent);
     // Preserve active track/sequence state
     newSong.activeTracks = song.activeTracks;
     newSong.activeSequences = song.activeSequences;
@@ -653,6 +656,7 @@ function previewTrackSound(trackIndex) {
 // --- MAIN EXECUTION ---
 
 function main() {
+// if(innerWidth>innerHeight){alert("Only supports portrait mode");document.body.innerHTML="";return;}
   initSequencer();
   initPianoRoll();
   initInstrumentControls();
@@ -660,4 +664,5 @@ function main() {
   updateSongTextarea();
   updateInstrumentSliders();
 }
+
 main();
