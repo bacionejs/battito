@@ -506,7 +506,7 @@ return el;
 function grid(el,cols,rows){ Object.assign(el.style, {gridTemplateColumns: "repeat("+cols+",1fr)", gridTemplateRows: "repeat("+rows+",1fr)" }); }
 function samplesToBPM(samplesPerStep, sampleRate = 44100, stepsPerBeat = 4) { return (sampleRate * 60) / (samplesPerStep * stepsPerBeat); }
 function beatsToSeconds(beats, bpm) { return (60 / bpm) * beats; }
-function initTrackColors() { sequencer.querySelectorAll(".header[data-col]").forEach(header => { header.style.color = getTrackColor(parseInt(header.dataset.col)); }); }
+function initTrackColors() { sequencer.querySelectorAll(".col-header[data-col]").forEach(header => { header.style.color = getTrackColor(parseInt(header.dataset.col)); }); }
 function getTrackColor(trackIndex) { let hue = (trackIndex * 360) / SC; return "hsl("+hue+", 70%, 50%)"; }
 
 
