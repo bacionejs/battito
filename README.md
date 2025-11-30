@@ -4,7 +4,7 @@
 To open the app, click ↴  
 
 <a href="//bacionejs.github.io/battito/index.html" target="_blank">
-    <img src="README.jpg" width="33%" />
+    <img src="README.jpg" width="50%" />
 </a>
 
 ---
