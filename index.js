@@ -474,7 +474,7 @@ return [5513,[
 
 function applystyle(){
 element("style").textContent=`
-*{font-family:monospace;margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select: none;}
+*{font-family:monospace;margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select: none;touch-action:none;}
 body { display: flex; }
 .piano, .sequencer{ display:grid; }
 .cell { display: flex; align-items: center; justify-content: center; border: 1px solid silver; aspect-ratio:1/1; }
