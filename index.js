@@ -145,7 +145,7 @@ cells.forEach(cell=>{
 });
 }
 
-function updateText(){text.textContent=formatSongDataForDisplay(song);}
+function updateText(){text.textContent=fillEmptyArrayValues(formatSongDataForDisplay(song));}
 
 
 
@@ -293,7 +293,6 @@ song[1]=newSongData[1];
 bpm=samplesToBPM(song[0]);
 updateText();
 updateSequencer();
-updateSliders();
 }
 
 function handleSongInput(){
@@ -302,6 +301,10 @@ let newSong=JSON.parse(text.textContent);
 newSong.activeTracks=song.activeTracks;
 newSong.activeSequences=song.activeSequences;
 song=newSong;
+bpm=samplesToBPM(song[0]);
+updateSequencer();
+updateSliders();
+updatePiano();
 }catch(e){}
 }
 
@@ -368,14 +371,9 @@ for(let t=songCopy[1].length-1;t>=0;t--){
 return songCopy;
 }
 
-function formatSongDataForDisplay(songData){
-const subArrays=songData[1];
-const lines=subArrays.map(sub=>{
-  return '['+sub.map(inner=>{
-    return '['+inner.join(',')+']';
-  }).join(',')+']';
-});
-return '['+songData[0]+',[\n'+lines.join(',\n')+'\n]]';
+function formatSongDataForDisplay(songData) {
+  function stringify(arr) {return "[" + arr.map(x => Array.isArray(x) ? "\n" + stringify(x) : x || 0).join(",") + "]";}
+  return fillEmptyArrayValues(stringify(songData));
 }
 
 function stripSongData(songData){
