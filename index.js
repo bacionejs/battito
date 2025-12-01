@@ -474,7 +474,7 @@ return [5513,[
 
 function applystyle(){
 element("style").textContent=`
-*{font-family:monospace;margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select: none;touch-action:none;}
+*{font-family:monospace;margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select: none;touch-action:manipulation;}
 body { display: flex; }
 .piano, .sequencer{ display:grid; }
 .cell { display: flex; align-items: center; justify-content: center; border: 1px solid silver; aspect-ratio:1/1; }
@@ -486,7 +486,7 @@ body { display: flex; }
 .sliders > * { display: flex; flex-direction: column; align-items: center; }
 .sliders .slider { height: 1px; }
 .sliders input[type="range"]::-webkit-slider-thumb { opacity: 0; }
-.text{ padding: 10px; font-size: 5px; white-space: pre; overflow: auto; border: 1px solid black;}
+.text{ padding: 10px; font-size: 5px; white-space: pre; overflow: auto;}
 .sequencer { height:50dvh; aspect-ratio:1/1; }
 .text{ height:25dvh; aspect-ratio:2/1; }
 .canvas{ height:25dvh; aspect-ratio:2/1; }
