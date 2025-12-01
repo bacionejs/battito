@@ -1,3 +1,4 @@
+```javascript
 document.title="Battito";
 
 let PLAYER=pl_synth_wasm_init;
@@ -337,29 +338,29 @@ fullscreenButton.style.display="none";
 }
 
 function handleTouchStart(e) {
-if (e.touches.length === 2) {
-  e.preventDefault();
-  initialPinchDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-  initialFontSize = parseFloat(window.getComputedStyle(text).fontSize);
-}
+  if (e.touches.length === 2) {
+    e.preventDefault();
+    initialPinchDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+    initialFontSize = parseFloat(window.getComputedStyle(text).fontSize);
+  }
 }
 
 function handleTouchMove(e) {
-if (e.touches.length === 2 && initialPinchDistance) {
-  e.preventDefault();
-  let currentDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-  let scale = currentDist / initialPinchDistance;
-  let newSize = initialFontSize * scale;
-  if (newSize > 3 && newSize < 50) {
-    text.style.fontSize = newSize + 'px';
+  if (e.touches.length === 2 && initialPinchDistance) {
+    e.preventDefault();
+    let currentDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+    let scale = currentDist / initialPinchDistance;
+    let newSize = initialFontSize * scale;
+    if (newSize > 3 && newSize < 50) {
+      text.style.fontSize = newSize + 'px';
+    }
   }
-}
 }
 
 function handleTouchEnd(e) {
-if (e.touches.length < 2) {
-  initialPinchDistance = null;
-}
+  if (e.touches.length < 2) {
+    initialPinchDistance = null;
+  }
 }
 
 
@@ -560,3 +561,4 @@ addEventListeners();
 }
 
 main();
+```
