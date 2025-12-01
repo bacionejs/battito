@@ -30,6 +30,10 @@ fullscreenButton.textContent = "\u26F6";
 
 
 
+
+
+
+
 function initSequencer(){
 grid(sequencer,SC+1,SR+1);
 element("div",sequencer,"cell col-header");
@@ -101,7 +105,6 @@ song.activeTracks.forEach((isActive,trackIndex)=>{
   }
 });
 }
-
 
 function updateSliders(){
 let ss=sliders.querySelectorAll(".slider");
