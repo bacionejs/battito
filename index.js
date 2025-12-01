@@ -608,12 +608,12 @@ body { display: flex; }
 // --- MAIN EXECUTION ---
 
 function main() {
-if(innerWidth<innerHeight){alert("landscape mode only");document.body.innerHTML="";return;}
+// if(innerWidth<innerHeight){alert("landscape mode only");document.body.innerHTML="";return;}
   initPiano();
   initSliders();
   initSequencer();
-  updateSliders();
-  updateText();
+//   updateSliders();
+//   updateText();
   addEventListeners();
 }
 
