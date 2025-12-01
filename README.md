@@ -46,7 +46,7 @@ Usage
 
 ---
 
-</details><details><summary>Instrument Parameters</summary>
+</details><details><summary>Instruments</summary>
 
 ---
 
