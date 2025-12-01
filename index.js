@@ -1,4 +1,3 @@
-
 document.title="Battito";
 
 let PLAYER=pl_synth_wasm_init;
@@ -22,10 +21,8 @@ let sequencer=element("div",side,"sequencer");
 let text=element("div",side,"text");
 let canvas=element("canvas",side,"canvas");
 text.contentEditable=true;
-
-
-
-
+let fullscreenButton=element("div",document.body,"fullscreen");
+fullscreenButton.textContent = "\u26F6";
 
 
 
@@ -328,6 +325,22 @@ let trackIndex=getActiveTrackIndex();
 if(trackIndex!==null){previewTrackSound(trackIndex);}
 }
 
+function handleFullscreenToggle() {
+let el=document.documentElement;
+if(el.requestFullscreen)el.requestFullscreen();
+fullscreenButton.style.display="none";
+}
+
+
+
+
+
+
+
+
+
+
+
 function addEventListeners(){
 sequencer.addEventListener("click",handleSequencerClick);
 piano.addEventListener("click",handlePianoClick);
@@ -335,6 +348,8 @@ text.addEventListener("paste",handleSongPaste);
 text.addEventListener("input",handleSongInput);
 sliders.addEventListener("input",handleSliderInput);
 sliders.addEventListener("change",handleSliderChange);
+fullscreenButton.addEventListener("click", handleFullscreenToggle);
+document.addEventListener("fullscreenchange",()=>{ if(!document.fullscreenElement){ fullscreenButton.style.display="block"; } });
 }
 
 
@@ -487,6 +502,7 @@ body { display: flex; }
 .sequencer { height:50dvh; aspect-ratio:1/1; }
 .text{ height:25dvh; aspect-ratio:2/1; }
 .canvas{ height:25dvh; aspect-ratio:2/1; }
+.fullscreen{position:fixed;bottom:5px;right:5px;color:orange;z-index:1000;font-size:20px;}
 `;
 }
 
