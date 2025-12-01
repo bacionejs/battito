@@ -9,7 +9,7 @@ To open the app, click ↴
 
 ---
 
-<details><summary>Purpose/Features/Limitations</summary>
+<details><summary>Purpose</summary>
 
 - This music tracker produces Sonant formatted JSON. Sonant based synth is designed to be small, for size constrained demos or games (player+song is 2k).
 - Why another tracker, when there are several already out there? The trackers I found were either too simple or too complex. This app tries to find a middle ground.
