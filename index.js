@@ -144,7 +144,7 @@ cells.forEach(cell=>{
 });
 }
 
-function updateText(){text.textContent=fillEmptyArrayValues(formatSongDataForDisplay(song));}
+function updateText(){text.textContent=formatSongDataForDisplay(song);}
 
 
 
@@ -370,15 +370,15 @@ for(let t=songCopy[1].length-1;t>=0;t--){
 return songCopy;
 }
 
-function formatSongDataForDisplay(songData) {
-  function stringify(arr) {return "[" + arr.map(x => Array.isArray(x) ? "\n" + stringify(x) : x || 0).join(",") + "]";}
-  return fillEmptyArrayValues(stringify(songData));
-}
-
 function stripSongData(songData){
 let songCopy=JSON.parse(JSON.stringify(songData));
 let instruments=songCopy[1].map(track=>[track[0],[],[]]);
 return [songCopy[0],instruments];
+}
+
+function formatSongDataForDisplay(songData) {
+  function stringify(arr) {return "[" + arr.map(x => Array.isArray(x) ? "\n" + stringify(x) : x || 0).join(",") + "]";}
+  return fillEmptyArrayValues(stringify(songData));
 }
 
 function fillEmptyArrayValues(s){
