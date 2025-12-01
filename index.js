@@ -113,7 +113,6 @@ if(i!==null){
   ss.forEach(s=>{s.value=song[1][i]?.[0]?.[s.dataset.index]??0;s.disabled=false;});
 }else{
   ss.forEach(s=>{s.disabled=true;s.value=0;});
-  drawWaveform(null,null);
 }
 }
 
@@ -505,6 +504,8 @@ function main(){
 initPiano();
 initSliders();
 initSequencer();
+updateText();
+previewTrackSound(0);
 addEventListeners();
 }
 
