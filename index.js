@@ -20,7 +20,7 @@ let sliders=element("div",document.body,"sliders");
 let side=element("div",document.body,"side");
 let sequencer=element("div",side,"sequencer");
 let text=element("div",side,"text");
-let canvas=element("canvas",side,"wave");
+let canvas=element("canvas",side,"canvas");
 text.contentEditable=true;
 
 
@@ -489,7 +489,7 @@ body { display: flex; }
 .sliders .slider { height: 1px; }
 .sliders input[type="range"]::-webkit-slider-thumb { opacity: 0; }
 .text{ padding: 10px; font-size: 5px; white-space: pre; overflow: auto; border: 1px solid black;}
-.wave{ height:25dvh; aspect-ratio:2/1; }
+.canvas{ height:25dvh; aspect-ratio:2/1; }
 `;
 }
 
