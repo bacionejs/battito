@@ -422,10 +422,6 @@ do{prev=s;s=s.replace(/,\s*,/g,",0,").replace(/\[\s*,/g,"[0,").replace(/,\s*\]/g
 return s;
 }
 
-window.addEventListener("error",(ev)=>{
-alert(ev.message);
-});
-
 function previewTrackSound(trackIndex){
 if(previewAudioSource){previewAudioSource.stop();previewAudioSource=null;}
 let instrument=song[1][trackIndex]?.[0];
