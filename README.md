@@ -3,10 +3,11 @@
 
 To open the app, click ↴  
 
+<div style="border:2px solid #444;padding:12px;border-radius:8px;">
 <a href="//bacionejs.github.io/battito/index.html" target="_blank">
-    <img src="README.jpg" width="70%" />
+  <img src="README.jpg" width="70%" />
 </a>
-
+</div>
 ---
 
 <details><summary>Purpose</summary>
