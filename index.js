@@ -36,7 +36,7 @@ fullscreenButton.textContent = "\u26F6";
 
 function initSequencer(){
 grid(sequencer,SC+1,SR+1);
-element("div",sequencer,"cell col-header corner");
+element("div",sequencer,"cell col-header");
 for(let c=0;c<SC;c++){let header=element("div",sequencer,"cell col-header");header.textContent=String.fromCharCode(65+c);header.dataset.col=c;}
 for(let r=0;r<SR;r++){
   let header=element("div",sequencer,"cell row-header");
@@ -119,8 +119,6 @@ if(i!==null){
 function updateSequencer(){
 let cells=sequencer.querySelectorAll(".cell");
 let anyColActive=song.activeTracks.some(x=>x);
-let anyRowActive = song.activeSequences.some(x => x);
-sequencer.querySelector(".corner").style.backgroundColor = (anyColActive || anyRowActive) ? "black" : "gray";
 cells.forEach(cell=>{
   cell.classList.remove("active","row-selected","col-selected");
   let {row,col}=cell.dataset;
@@ -510,7 +508,7 @@ body { display: flex; background:black; color:white;font-weight: bold;font-famil
 .piano, .sequencer{ display:grid; }
 .cell { display: flex; align-items: center; justify-content: center; border: 1px solid silver; aspect-ratio:1/1; }
 .active { background: blue;}
-.corner, .col-selected, .row-selected { background: gray; }
+.col-selected, .row-selected { background: gray; }
 .row-playing { border-left: 3px solid orange !important; }
 .sliders{ display: flex; flex-direction: column; justify-content: space-evenly;  font-size: 8px; }
 .sliders > * { display: flex; flex-direction: column; align-items: center; }

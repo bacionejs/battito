@@ -38,6 +38,8 @@ Optional
 - There are 8 default instruments, but you can also:
   - select a track and configure the **synth**
   - or import existing Sonant compatible songs which have instruments that you like and when prompted after pasting into the **textarea**, answer yes to import only instruments
+- To clear everything, delete the text in the textarea, which will then automatically refresh with the volume set and the octave set, but nothing else. To produce a sound, you need to select a track and at least select one of the envelope settings: `ea`, `es`, `er`.
+- To save your work for future use, copy the textarea to a separate text editor.
 
 ---
 
