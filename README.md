@@ -8,6 +8,7 @@ To open the app, click ↴
   <img src="README.jpg" width="70%" />
 </a>
 </div>
+
 ---
 
 <details><summary>Purpose</summary>
