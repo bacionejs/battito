@@ -500,7 +500,7 @@ body { display: flex; background:black; color:white;font-weight: bold;font-famil
 .row-playing { border-left: 3px solid orange !important; }
 .sliders{ display: flex; flex-direction: column; justify-content: space-evenly;  font-size: 8px; }
 .sliders > * { display: flex; flex-direction: column; align-items: center; }
-.sliders .slider { height: 1px; }
+.sliders .slider { height: 2px; }
 .sliders input[type="range"]::-webkit-slider-thumb { opacity: 0; }
 .text{ padding: 10px; font-size: 5px; white-space: pre; overflow: auto; }
 .sequencer { height:50dvh; aspect-ratio:1/1; }
