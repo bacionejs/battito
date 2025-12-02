@@ -36,7 +36,7 @@ fullscreenButton.textContent = "\u26F6";
 
 function initSequencer(){
 grid(sequencer,SC+1,SR+1);
-element("div",sequencer,"cell col-header");
+element("div",sequencer,"cell col-header corner");
 for(let c=0;c<SC;c++){let header=element("div",sequencer,"cell col-header");header.textContent=String.fromCharCode(65+c);header.dataset.col=c;}
 for(let r=0;r<SR;r++){
   let header=element("div",sequencer,"cell row-header");
@@ -119,6 +119,8 @@ if(i!==null){
 function updateSequencer(){
 let cells=sequencer.querySelectorAll(".cell");
 let anyColActive=song.activeTracks.some(x=>x);
+let anyRowActive = song.activeSequences.some(x => x);
+sequencer.querySelector(".corner").style.backgroundColor = (anyColActive || anyRowActive) ? "black" : "gray";
 cells.forEach(cell=>{
   cell.classList.remove("active","row-selected","col-selected");
   let {row,col}=cell.dataset;
@@ -297,15 +299,28 @@ updateSequencer();
 }
 
 function handleSongInput(){
+if(text.textContent==""){
+  let s=[];
+  s.push(5000);
+  s.push([]);
+  for(let i=0;i<8;i++){ 
+    s[1].push([[7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[],[]]); 
+    s[1][i][0][0]=7;
+    s[1][i][0][4]=255;
+    s[1][i][0][16]=255;
+  }
+  text.textContent=formatSongDataForDisplay(s);
+}
 try{
-let newSong=JSON.parse(text.textContent);
-newSong.activeTracks=song.activeTracks;
-newSong.activeSequences=song.activeSequences;
-song=newSong;
+let s=JSON.parse(text.textContent);
+s.activeTracks=song.activeTracks;
+s.activeSequences=song.activeSequences;
+song=s;
 bpm=samplesToBPM(song[0]);
 updateSequencer();
 updateSliders();
 updatePiano();
+previewTrackSound(getActiveTrackIndex());
 }catch(e){}
 }
 
@@ -407,18 +422,22 @@ do{prev=s;s=s.replace(/,\s*,/g,",0,").replace(/\[\s*,/g,"[0,").replace(/,\s*\]/g
 return s;
 }
 
+window.addEventListener("error",(ev)=>{
+alert(ev.message);
+});
+
 function previewTrackSound(trackIndex){
 if(previewAudioSource){previewAudioSource.stop();previewAudioSource=null;}
 let instrument=song[1][trackIndex]?.[0];
 PLAYER(audioContext,synth=>{
 let source=audioContext.createBufferSource();
-source.buffer=synth.sound(instrument);
+if(instrument===undefined)return;
+try{ source.buffer=synth.sound(instrument); }catch(e){drawWaveform(null);return;}
 source.connect(audioContext.destination);
 source.start();
 previewAudioSource=source;
 source.onended=()=>{if(previewAudioSource===source){previewAudioSource=null;}};
 let instrumentForWave=JSON.parse(JSON.stringify(instrument));
-while(instrumentForWave.length<22){instrumentForWave.push(0);}
 instrumentForWave[20]=0;
 instrumentForWave[21]=0;
 let waveBuffer=synth.sound(instrumentForWave);
@@ -427,10 +446,10 @@ drawWaveform(waveBuffer,instrumentForWave);
 }
 
 function drawWaveform(buffer,t){
-if(!buffer||!t){return;}
 let c=canvas.getContext("2d"),m=canvas.height/2;
-let d=buffer.getChannelData(0),p=d.length/canvas.width,v=t[16]/255,a=t[13]/p,s=t[14]/p,r=t[15]/p;
 c.fillStyle="#0A0F0A";c.fillRect(0,0,canvas.width,canvas.height);
+if(!buffer||!t){ c.strokeStyle="#39FF14"; c.beginPath();c.moveTo(0,m);c.lineTo(canvas.width,m);c.stroke(); return; }
+let d=buffer.getChannelData(0),p=d.length/canvas.width,v=t[16]/255,a=t[13]/p,s=t[14]/p,r=t[15]/p;
 c.fillStyle="#003300";c.beginPath();c.moveTo(0,m);
 [[a,m-(m*v)],[a+s,m-(m*v)],[a+s+r,m],[a+s,m+(m*v)],[a,m+(m*v)]].forEach(p=>c.lineTo(p[0],p[1]));
 c.closePath();c.fill();c.beginPath();c.moveTo(0,m);
@@ -450,7 +469,6 @@ function grid(el,cols,rows){Object.assign(el.style,{gridTemplateColumns:"repeat(
 function samplesToBPM(samplesPerStep,sampleRate=44100,stepsPerBeat=4){return (sampleRate*60)/(samplesPerStep*stepsPerBeat);}
 function beatsToSeconds(beats,bpm){return (60/bpm)*beats;}
 function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+", 70%, 50%)";}
-// function getColor(trackIndex){let hue=(trackIndex*137.508)%360;return "hsl("+hue+", 70%, 50%)";}
 
 
 
@@ -496,7 +514,7 @@ body { display: flex; background:black; color:white;font-weight: bold;font-famil
 .piano, .sequencer{ display:grid; }
 .cell { display: flex; align-items: center; justify-content: center; border: 1px solid silver; aspect-ratio:1/1; }
 .active { background: blue;}
-.col-selected, .row-selected { background: gray; }
+.corner, .col-selected, .row-selected { background: gray; }
 .row-playing { border-left: 3px solid orange !important; }
 .sliders{ display: flex; flex-direction: column; justify-content: space-evenly;  font-size: 8px; }
 .sliders > * { display: flex; flex-direction: column; align-items: center; }
