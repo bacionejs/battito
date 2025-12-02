@@ -14,7 +14,6 @@ To open the app, click ↴
 - This music tracker produces Sonant formatted JSON. Sonant based synth is designed to be small, for size constrained demos or games (player+song is 2k).
 - Why another tracker, when there are several already out there? The trackers I found were either too simple or too complex. This app tries to find a middle ground.
 - For the pattern editor, this uses a 2D grid, whereas other apps use a 1D grid, making this **less flexible**, but requiring **less clicks** and providing **simultaneous spacial visualization of note relationships and of multiple tracks (color coded)**. 
-- Song length: 8 phrases x 32 beats
 
 </details><details><summary>Guide</summary>
 
