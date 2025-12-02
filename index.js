@@ -56,7 +56,7 @@ for(let r=0;r<PR;r++){
   for(let c=0;c<PC;c++){
     let cell=element("div",piano,"cell");
     cell.dataset.row=r;cell.dataset.col=c;
-    if(c%12===0)cell.style.borderLeft="1px solid blue";if(r%4===0)cell.style.borderTop="1px solid blue";
+    if(c%12===0)cell.style.borderLeft="1px solid black";if(r%4===0)cell.style.borderTop="1px solid black";
   }
 }
 }
