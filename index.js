@@ -507,7 +507,7 @@ body { display: flex; background:black; color:white;font-weight: bold;font-famil
 .text{ height:25dvh; aspect-ratio:2/1; }
 .canvas{ height:25dvh; aspect-ratio:2/1; }
 .fullscreen{position:fixed;bottom:5px;right:5px;color:orange;z-index:1000;font-size:20px;}
-.side, .canvas {border:1px solid silver;}
+.text, .canvas {border:1px solid silver; border-top:none;}
 `;
 }
 
