@@ -11,9 +11,8 @@ To open the app, click ↴
 
 <details><summary>Purpose</summary>  
 
-ℹ️ This music tracker produces Sonant formatted JSON. Sonant based synth is designed to be small, for size constrained games (player+song = 2k).  
-
-💋 What makes this app unique from other Sonant based trackers is the use of a piano-roll to reduce clicks and enhance visualization of note relationships.  
+- This music tracker produces Sonant formatted JSON. Sonant based synth is designed to be small, for size constrained games (player+song = 2k).  
+- What makes this app unique from other Sonant based trackers is the use of a piano-roll to reduce clicks and enhance visualization of note relationships.  
 
 </details><details><summary>Features</summary>
 
