@@ -546,6 +546,7 @@ body { display: flex; background:black; color:white;font-weight: bold;font-famil
 .canvas{ height:25dvh; aspect-ratio:2/1; }
 .fullscreen{position:fixed;bottom:5px;right:5px;color:orange;z-index:1000;font-size:20px;}
 .text, .canvas {border:1px solid silver; border-top:none;}
+.orientation-lock { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; color: white; display: none; justify-content: center; align-items: center; text-align: center; font-family: monospace; padding: 20px; z-index: 9999; }
 `;
 }
 
@@ -561,27 +562,49 @@ body { display: flex; background:black; color:white;font-weight: bold;font-famil
 
 function main(){
   if (!window.chrome) {
-    document.body.innerHTML = '';
-    document.body.style.cssText = `
-      background: black;
-      color: white;
-      font-family: monospace;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      padding: 3em;
-      text-align: center;
-    `;
+    document.body.innerHTML = "";
+    document.body.style.cssText = " background: black; color: white; font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; padding: 3em; text-align: center; ";
     document.body.textContent = tested;
     return;
   }
-  initPiano();
-  initSliders();
-  initSequencer();
-  updateText();
-  previewTrackSound(0);
-  addEventListeners();
+
+  const orientationLock = element("div", document.body, "orientation-lock");
+  orientationLock.textContent = "Please rotate your device to landscape orientation.";
+  
+  const mainContent = [piano, sliders, side, fullscreenButton];
+  let isInitialized = false;
+
+  function initApp() {
+    if (isInitialized) return;
+    isInitialized = true;
+    initPiano();
+    initSliders();
+    initSequencer();
+    updateText();
+    previewTrackSound(0);
+    addEventListeners();
+  }
+
+  function checkOrientation() {
+    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+    
+    if (isPortrait) {
+        orientationLock.style.display = 'flex';
+        mainContent.forEach(el => el.style.display = 'none');
+    } else {
+        orientationLock.style.display = 'none';
+        piano.style.display = 'grid';
+        sliders.style.display = 'flex';
+        side.style.display = 'block';
+        fullscreenButton.style.display = document.fullscreenElement ? 'none' : 'block';
+        
+        initApp();
+    }
+  }
+
+  window.addEventListener('resize', checkOrientation);
+  window.addEventListener('orientationchange', checkOrientation);
+  checkOrientation();
 }
 
 main();
