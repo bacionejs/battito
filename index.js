@@ -1,7 +1,7 @@
 document.title="Battito";
 
 let PLAYER=pl_synth_wasm_init;
-let SR=8,SC=8,PR=32,PC=48;
+let SR=500,SC=8,PR=32,PC=48;
 let audioContext=new AudioContext();
 let audioBuffer=null;
 let A=null;
@@ -35,7 +35,7 @@ fullscreenButton.textContent = "\u26F6";
 
 
 function initSequencer(){
-grid(sequencer,SC+1,SR+1);
+sequencer.style.gridTemplateColumns="repeat("+(SC+1)+",1fr)";
 element("div",sequencer,"cell col-header");
 for(let c=0;c<SC;c++){let header=element("div",sequencer,"cell col-header");header.textContent=String.fromCharCode(65+c);header.dataset.col=c;}
 for(let r=0;r<SR;r++){
@@ -183,7 +183,7 @@ if(!A||!audioBuffer)return;
 let elapsed=(audioContext.currentTime-A.startTime)%audioBuffer.duration;
 let activeSequences=song.activeSequences.map((isOn,i)=>isOn?i:-1).filter(i=>i!==-1);
 if(activeSequences.length===0)return;
-let sequenceDuration=beatsToSeconds(SR,bpm);
+let sequenceDuration=beatsToSeconds(PR/4,bpm);
 let pianoRowDuration=sequenceDuration/PR;
 if((elapsed/sequenceDuration)>activeSequences.length){
   if(playbackAnimationId)cancelAnimationFrame(playbackAnimationId);
@@ -193,6 +193,7 @@ currSequence=activeSequences[Math.floor(elapsed/sequenceDuration)%activeSequence
 let pianoRowIndex=Math.floor(elapsed/pianoRowDuration)%PR;
 if(currSequence!==prevSequence){
   updateGridPointer(sequencer,SR,currSequence);
+  sequencer.querySelector(".row-header[data-row='"+currSequence+"']")?.scrollIntoView({block: "nearest"});
   prevSequence=currSequence;
   updatePiano();
 }
@@ -539,7 +540,7 @@ body { display: flex; background:black; color:white;font-weight: bold;font-famil
 .sliders .slider { height: 2px; }
 .sliders input[type="range"]::-webkit-slider-thumb { opacity: 0; }
 .text{ padding: 10px; font-size: 5px; white-space: pre; overflow: auto; }
-.sequencer { height:50dvh; aspect-ratio:1/1; }
+.sequencer { height:50dvh; aspect-ratio:1/1; overflow-y: scroll; }
 .text{ height:25dvh; aspect-ratio:2/1; }
 .canvas{ height:25dvh; aspect-ratio:2/1; }
 .fullscreen{position:fixed;bottom:5px;right:5px;color:orange;z-index:1000;font-size:20px;}

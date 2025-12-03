@@ -23,14 +23,15 @@ To open the app, click ↴
 - export/import JSON: song/instruments
 - export .wav: song/range
 - presets
+- live looping
 
 </details><details><summary>Guide</summary>
 
 ---
 
 Components
-- **sequencer (phrase editor)**: 8 columns (tracks/instuments), 8 rows (phrases) and cells where you can toggle through pattern IDs (8 per track).
-- **piano (pattern editor, aka piano-roll)**: 48 notes wide (4 octaves from C3 through C6) and 32 beats tall. 
+- **sequencer (phrase editor)**: 8 columns (tracks/instuments), 500 rows (30 minute songs at 120 BPM) and cells where you can toggle through pattern IDs (8 per track).
+- **piano (pattern editor, aka piano-roll)**: 48 notes wide (4 octaves from C3 through C6) and 32 steps tall. 
 - **textarea**: import/export and manual edits of the tempo, instruments and song.
 - **synth (instrument editor )**: oscillators, detune, envelope, modulation, cutoff, delay, etc.
 - **waveform visualizer**
@@ -51,6 +52,10 @@ Optional
 - To save your work for future use, copy the **textarea** JSON to a separate text editor. To import, paste the JSON in the **textarea**.
 - Normally, the JSON output is used with a `player`, but it can also be exported to `.wav` by long-pressing on the wave visualizer. It will export whatever is selected: tracks/phrases or whole song.
 - Although, not recommended, the **textarea** can be edited. Changes are live.
+- Change beat rate by editing the first value in the **textarea** (5513=120 BPM).
+
+Notes  
+- Looping is **live**, meaning it regenerates every time, so changes you make to notes/sequence/synth, are reflected in the next loop. This is helpful when evaluating a single pattern, as the changes are almost immediate.
 
 ---
 
