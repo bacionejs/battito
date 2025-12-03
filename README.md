@@ -11,7 +11,7 @@ To open the app, click ↴
 
 <details><summary>Purpose</summary>
 
-This music tracker
+This music tracker:
 - produces Sonant formatted JSON. Sonant based synth is designed to be small, for size constrained games (player+song is 2k).
 - uses a piano-roll to reduce clicks and enhance visualization of note relationships.
 
@@ -19,7 +19,7 @@ This music tracker
 
 - pattern editor (piano-roll 💋)
 - phrase editor (sequencer)
-- instrument editor: oscillators, detune, envelope, modulation, cutoff, delay, pan, ...
+- instrument editor: oscillators, detune, envelope, modulation, cutoff, delay, etc.
 - play/stop/loop: song/range
 - export/import JSON: song/instruments
 - export .wav: song/range
@@ -30,26 +30,26 @@ This music tracker
 ---
 
 Components
-- **sequencer**: has 8 columns (tracks/instuments), 8 rows (phrases) and cells where you can toggle through pattern IDs (8 per track).
-- **piano (pattern editor, aka piano-roll)**: is 48 notes wide (4 octaves from C3 through C6) and 32 beats tall. 
-- **textarea**: is for import/export and manual edits of the tempo, instruments and song.
-- **synth**: the instrument editor supports oscillators, detune, envelope, modulation, cutoff, delay, pan, ...
+- **sequencer**: 8 columns (tracks/instuments), 8 rows (phrases) and cells where you can toggle through pattern IDs (8 per track).
+- **piano (pattern editor, aka piano-roll)**: 48 notes wide (4 octaves from C3 through C6) and 32 beats tall. 
+- **textarea**: import/export and manual edits of the tempo, instruments and song.
+- **synth (instrument editor )**: oscillators, detune, envelope, modulation, cutoff, delay, pan, ...
 
 ---
 
 Steps
-1. Click on the column headers in the **sequencer** to hear what the default instruments sound like. You can select multiple columns/rows in the **sequencer** for playback, but you can only have one column/row selected while editing notes on the **piano**. The **sequencer** constantly loops over the selected **sequencer** columns/rows. Click the upper-left corner cell in the **sequencer** to toggle the whole song.
+1. Click on the column headers in the **sequencer** to hear what the preset instruments sound like. You can select multiple columns/rows in the **sequencer** for playback, but you can only have one column/row selected while editing notes on the **piano**. The **sequencer** constantly loops over the selected **sequencer** columns/rows. Click the upper-left corner cell in the **sequencer** to toggle the whole song.
 1. To enter a note on the **piano**, select a column/row in the **sequencer** and click the intersecting cell to select a pattern ID. Then you can edit that pattern on the **piano**. To advance the pattern ID number just keep clicking in the **sequencer** cell. You can reuse a pattern ID. When coming back to edit a pattern, don't click the **sequencer** cell as that will advance the pattern ID, just select a column/row.
 
 ---
 
 Optional
-- There are 8 default instruments (presets), but you can also:
+- There are 8 preset instruments, but you can also:
   - select a track and configure the **synth**
   - or import existing Sonant compatible songs which have instruments that you like and when prompted after pasting into the **textarea**, answer yes to import only instruments
-- To clear everything, delete the text in the textarea, which will then automatically refresh with the volume/octave set, but nothing else. To produce a sound, you need to select a track and at least select one of the envelope settings: `ea`, `es`, `er`.
+- To clear everything, delete the text in the textarea, which will then automatically refresh with volume/octave set, but nothing else. To produce a sound, you need to select a track and at least select one of the envelope settings: `ea`, `es`, `er`.
 - To save your work for future use, copy the textarea to a separate text editor.
-- Normally, you use the JSON output with a `player`, but you can also export to .wav by long-press on the wave visualizer. It will export whatever is selected, tracks/phrases or whole song.
+- Normally, the JSON output is used with a `player`, but it can also be exported to .wav by long-press on the wave visualizer. It will export whatever is selected: tracks/phrases or whole song.
 - Although, not recommended, the textarea can be edited. Changes are live.
 
 ---
