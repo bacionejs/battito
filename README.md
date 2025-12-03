@@ -33,7 +33,7 @@ Components
 - **sequencer**: 8 columns (tracks/instuments), 8 rows (phrases) and cells where you can toggle through pattern IDs (8 per track).
 - **piano (pattern editor, aka piano-roll)**: 48 notes wide (4 octaves from C3 through C6) and 32 beats tall. 
 - **textarea**: import/export and manual edits of the tempo, instruments and song.
-- **synth (instrument editor )**: oscillators, detune, envelope, modulation, cutoff, delay, pan, ...
+- **synth (instrument editor )**: oscillators, detune, envelope, modulation, cutoff, delay, etc.
 
 ---
 
@@ -49,8 +49,8 @@ Optional
   - or import existing Sonant compatible songs which have instruments that you like and when prompted after pasting into the **textarea**, answer yes to import only instruments
 - To clear everything, delete the text in the textarea, which will then automatically refresh with volume/octave set, but nothing else. To produce a sound, you need to select a track and at least select one of the envelope settings: `ea`, `es`, `er`.
 - To save your work for future use, copy the textarea to a separate text editor.
-- Normally, the JSON output is used with a `player`, but it can also be exported to .wav by long-press on the wave visualizer. It will export whatever is selected: tracks/phrases or whole song.
-- Although, not recommended, the textarea can be edited. Changes are live.
+- Normally, the JSON output is used with a `player`, but it can also be exported to .wav by long-pressing on the wave visualizer. It will export whatever is selected: tracks/phrases or whole song.
+- Although, not recommended, the **textarea** can be edited. Changes are live.
 
 ---
 
