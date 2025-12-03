@@ -21,7 +21,7 @@ To open the app, click ↴
 - sequence editor
 - pattern editor
 - play/stop/loop
-- export/import
+- import/export
 - presets
 
 </details><details><summary>Guide</summary>
@@ -155,15 +155,15 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 </details><details><summary>Alternatives</summary>
 
-Sonant
-- Original - 2008 Jake Taylor
-- js-sonant/soundbox - 2011 Marcus Geelnard
-- sonant-x - 2014 Nicolas Van
-- pl_synth - 2024 Dominic Szablewski
+- Sonant
+  - Original - 2008 Jake Taylor
+  - js-sonant/soundbox - 2011 Marcus Geelnard
+  - sonant-x - 2014 Nicolas Van
+  - pl_synth - 2024 Dominic Szablewski
 
-Others
-- https://github.com/keithclark/ZzFXM
-- https://github.com/steffest/BassoonTracker
+- Others
+  - ZzFXM
+  - BassoonTracker
 
 </details><details><summary>Credits</summary>
 
