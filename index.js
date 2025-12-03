@@ -1,4 +1,5 @@
 document.title="Battito";
+let tested="Requires Chrome browser";
 
 let PLAYER=pl_synth_wasm_init;
 let SR=500,SC=8,PR=32,PC=48;
@@ -559,12 +560,28 @@ body { display: flex; background:black; color:white;font-weight: bold;font-famil
 
 
 function main(){
-initPiano();
-initSliders();
-initSequencer();
-updateText();
-previewTrackSound(0);
-addEventListeners();
+  if (!window.chrome) {
+    document.body.innerHTML = '';
+    document.body.style.cssText = `
+      background: black;
+      color: white;
+      font-family: monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 3em;
+      text-align: center;
+    `;
+    document.body.textContent = tested;
+    return;
+  }
+  initPiano();
+  initSliders();
+  initSequencer();
+  updateText();
+  previewTrackSound(0);
+  addEventListeners();
 }
 
 main();
