@@ -28,7 +28,6 @@ To open the app, click ↴
 
 ---
 
-Components
 | Component   | Description |
 |-------------|-------------|
 | **synth** | Edit instrument oscillators, detune, envelope, modulation, cutoff, delay, etc. |
