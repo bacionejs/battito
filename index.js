@@ -1,13 +1,13 @@
 document.title="Battito";
 let tested="Requires Chrome browser";
 
+applystyle();
 let PLAYER=pl_synth_wasm_init;
 let SR=500,SC=8,PR=32,PC=48;
 let audioContext=new AudioContext();
 let audioBuffer=null;
 let A=null;
 let previewAudioSource=null;
-applystyle();
 let song=getsong();
 song.activeTracks=Array(SC).fill(0);
 song.activeSequences=Array(SR).fill(0);
@@ -561,50 +561,44 @@ body { display: flex; background:black; color:white;font-weight: bold;font-famil
 
 
 function main(){
-  if (!window.chrome) {
-    document.body.innerHTML = "";
-    document.body.style.cssText = " background: black; color: white; font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; padding: 3em; text-align: center; ";
-    document.body.textContent = tested;
-    return;
-  }
+if (!window.chrome) {
+  document.body.innerHTML = "";
+  document.body.style.cssText = " background: black; color: white; font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; padding: 3em; text-align: center; ";
+  document.body.textContent = tested;
+  return;
+}
+let orientationLock = element("div", document.body, "orientation-lock");
+orientationLock.textContent = "Please rotate your device to landscape orientation.";
+let isInitialized = false,mainContent = [piano, sliders, side, fullscreenButton];
 
-  const orientationLock = element("div", document.body, "orientation-lock");
-  orientationLock.textContent = "Please rotate your device to landscape orientation.";
-  
-  const mainContent = [piano, sliders, side, fullscreenButton];
-  let isInitialized = false;
+function initApp() {
+if (isInitialized) return; isInitialized = true;
+initPiano();
+initSliders();
+initSequencer();
+updateText();
+previewTrackSound(0);
+addEventListeners();
+}
 
-  function initApp() {
-    if (isInitialized) return;
-    isInitialized = true;
-    initPiano();
-    initSliders();
-    initSequencer();
-    updateText();
-    previewTrackSound(0);
-    addEventListeners();
-  }
+function checkOrientation() {
+let isPortrait = window.matchMedia("(orientation: portrait)").matches;
+if (isPortrait) {
+  orientationLock.style.display = 'flex';
+  mainContent.forEach(el => el.style.display = 'none');
+} else {
+  orientationLock.style.display = 'none';
+  piano.style.display = 'grid';
+  sliders.style.display = 'flex';
+  side.style.display = 'block';
+  fullscreenButton.style.display = document.fullscreenElement ? 'none' : 'block';
+  initApp();
+}
+}
 
-  function checkOrientation() {
-    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-    
-    if (isPortrait) {
-        orientationLock.style.display = 'flex';
-        mainContent.forEach(el => el.style.display = 'none');
-    } else {
-        orientationLock.style.display = 'none';
-        piano.style.display = 'grid';
-        sliders.style.display = 'flex';
-        side.style.display = 'block';
-        fullscreenButton.style.display = document.fullscreenElement ? 'none' : 'block';
-        
-        initApp();
-    }
-  }
-
-  window.addEventListener('resize', checkOrientation);
-  window.addEventListener('orientationchange', checkOrientation);
-  checkOrientation();
+window.addEventListener('resize', checkOrientation);
+window.addEventListener('orientationchange', checkOrientation);
+checkOrientation();
 }
 
 main();
