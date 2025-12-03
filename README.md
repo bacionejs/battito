@@ -11,9 +11,19 @@ To open the app, click ↴
 
 <details><summary>Purpose</summary>
 
-- This music tracker produces Sonant formatted JSON. Sonant based synth is designed to be small, for size constrained demos or games (player+song is 2k).
-- Why another tracker, when there are several already out there? The trackers I found were either too simple or too complex. This app tries to find a middle ground.
-- For the pattern editor, this uses a 2D grid, whereas other apps use a 1D grid, making this **less flexible**, but requiring **less clicks** and providing **simultaneous spacial visualization of note relationships and of multiple tracks (color coded)**. 
+This music tracker
+- produces Sonant formatted JSON. Sonant based synth is designed to be small, for size constrained games (player+song is 2k).
+- uses a piano-roll to reduce clicks and enhance visualization of note relationships.
+
+</details><details><summary>Features</summary>
+
+- pattern editor (piano-roll 💋)
+- phrase editor (sequencer)
+- instrument editor: oscillators, detune, envelope, modulation, cutoff, delay, pan, ...
+- play/stop/loop: song/range
+- export/import JSON: song/instruments
+- export .wav: song/range
+- presets
 
 </details><details><summary>Guide</summary>
 
@@ -34,15 +44,22 @@ Steps
 ---
 
 Optional
-- There are 8 default instruments, but you can also:
+- There are 8 default instruments (presets), but you can also:
   - select a track and configure the **synth**
   - or import existing Sonant compatible songs which have instruments that you like and when prompted after pasting into the **textarea**, answer yes to import only instruments
-- To clear everything, delete the text in the textarea, which will then automatically refresh with the volume set and the octave set, but nothing else. To produce a sound, you need to select a track and at least select one of the envelope settings: `ea`, `es`, `er`.
+- To clear everything, delete the text in the textarea, which will then automatically refresh with the volume/octave set, but nothing else. To produce a sound, you need to select a track and at least select one of the envelope settings: `ea`, `es`, `er`.
 - To save your work for future use, copy the textarea to a separate text editor.
+- Normally, you use the JSON output with a `player`, but you can also export to .wav by long-press on the wave visualizer. It will export whatever is selected, tracks/phrases or whole song.
+- Although, not recommended, the textarea can be edited. Changes are live.
 
 ---
 
-Example songs
+Usage
+- For an example of music in a game, see [Bike](https://github.com/bacionejs/bike).
+
+---
+
+</details><details><summary>Songs</summary>
 
 You can paste these songs into the **textarea**.
 
@@ -57,13 +74,6 @@ Liver by mBitsnBites
 ```json
 [5513,[[[7,0,0,0,192,3,7,0,7,0,201,3,0,789,1234,13636,191,2,5839,254,6,121,6,147,0,1,6,195],[1,2,0,0,1,2,1,2],[[154,0,154,0,152,0,147,0,0,0,0,0,0,0,0,0,154,0,154,0,152,0,157,0,0,0,156],[154,0,154,0,152,0,147,0,0,0,0,0,0,0,0,0,154,0,154,0,152,0,157,0,0,0,159]]],[[7,0,0,0,255,2,8,0,18,1,191,2,0,3997,56363,100000,255,2,392,255,8,69,5,67,0,1,4,57,3],[1,2,1,2,1,2,1,2],[[130],[123]]],[[8,0,0,0,0,0,8,0,0,0,0,0,60,50,419,4607,130,1,10332,120,4,16,5,108,0,0,5,187],[0,0,0,0,1,1],[[0,0,147,0,0,0,147,147,0,0,147,0,0,147,0,147,0,0,147,0,0,0,147,147,0,0,147,0,0,147,0,147]]],[[7,0,0,1,255,0,7,0,0,1,255,0,0,50,150,4800,200,2,600,254],[1,1,1,1,1,1],[[147,0,0,0,0,0,0,0,147,0,0,0,0,0,0,0,147,0,0,0,0,0,0,0,147]]],[[7,0,0,0,255,2,7,0,9,0,154,2,0,2418,1075,10614,240,3,2962,255,6,117,3,73,0,1,5,124],[0,0,0,0,1,2,1,2],[[154,0,154,0,152,0,147,0,0,0,0,0,0,0,0,0,154,0,154,0,152,0,157,0,0,0,156],[154,0,154,0,152,0,147,0,0,0,0,0,0,0,0,0,154,0,147,0,152,0,157,0,0,0,159]]],[[7,0,0,0,192,1,6,0,9,0,192,1,0,137,2000,4611,192,1,982,89,6,25,6,77,0,1,3,69],[1,2,1,3,1,3],[[130,0,130,0,142,0,130,130,0,142,130,0,142,0,130,0,130,0,130,0,142,0,130,130,0,142,130,0,142,0,130],[123,0,123,0,135,0,123,123,0,135,123,0,135,0,123,0,123,0,123,0,135,0,123,123,0,135,123,0,135,0,123],[135,0,135,0,147,0,135,135,0,147,135,0,147,0,135,0,135,0,135,0,147,0,135,135,0,147,135,0,147,0,135]]],[[7,0,0,0,255,3,8,0,0,0,255,0,127,22,88,3997,255,3,4067,234,4,33,2,84,0,1,3,28],[0,0,1,2,1,2,1,3],[[0,0,142,0,154,0,0,0,142,0,0,0,154,0,0,0,0,0,142,0,154,0,0,0,142,0,0,0,154],[0,0,147,0,154,0,0,0,147,0,0,0,154,0,0,0,0,0,147,0,154,0,147,0,0,0,154,0,0,0,154],[0,0,147,0,154,0,0,0,147,0,0,0,154,0,0,0,0,0,147,0,154,0,0,0,147]]],[[8,0,0,0,0,0,8,0,0,0,0,0,255,140347,9216,133417,208,2,2500,16,2,157,8,207,0,1,2,51],[0,0,1,1,1,1,1,1],[[147]]]]]
 ```
-
----
-
-Usage
-- For an example of music in a game, see [Bike](https://github.com/bacionejs/bike).
-
----
 
 </details><details><summary>Instruments</summary>
 

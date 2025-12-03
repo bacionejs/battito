@@ -349,6 +349,13 @@ if(el.requestFullscreen)el.requestFullscreen();
 fullscreenButton.style.display="none";
 }
 
+function handleDownloadRequest() {
+PLAYER(audioContext,synth=>{try{
+let b=synth.song(getActiveSongDataForPlayback());if(!b||b.length==0){return; }
+let url=URL.createObjectURL(bufferToWav(b)); let a=element("a");a.href=url;a.download="battito_"+Date.now()+".wav"; a.click();URL.revokeObjectURL(a.href);a.remove();
+}catch(e){}});
+}
+
 
 
 
@@ -368,6 +375,7 @@ sliders.addEventListener("input",handleSliderInput);
 sliders.addEventListener("change",handleSliderChange);
 fullscreenButton.addEventListener("click", handleFullscreenToggle);
 document.addEventListener("fullscreenchange",()=>{ if(!document.fullscreenElement){ fullscreenButton.style.display="block"; } });
+makeLongPress(canvas,handleDownloadRequest);
 }
 
 
@@ -379,6 +387,14 @@ document.addEventListener("fullscreenchange",()=>{ if(!document.fullscreenElemen
 
 
 
+
+function makeLongPress(o,callback){
+ let t=null,lp={
+  down(e){e.preventDefault();if(t!==null)clearTimeout(t);t=setTimeout(()=>{t=null;callback(e);},800);},
+  up(e){e.preventDefault();if(t!==null){clearTimeout(t);t=null;}}
+ };
+ o.addEventListener("pointerdown",lp.down); o.addEventListener("pointerup",lp.up); o.addEventListener("pointerleave",lp.up);
+}
 
 function getActiveTrackIndex(){
 let activeIndices=song.activeTracks.map((isActive,index)=>isActive?index:-1).filter(index=>index!==-1);
@@ -450,6 +466,14 @@ c.closePath();c.fill();c.beginPath();c.moveTo(0,m);
 for(let x=0;x<canvas.width&&x*p<d.length;x++){c.lineTo(x,m+d[Math.floor(x*p)]*m);}
 c.strokeStyle="#39FF14";
 c.stroke();
+}
+
+function bufferToWav(b){
+ let c=b.numberOfChannels,l=b.length*c*2+44,o=new ArrayBuffer(l),v=new DataView(o),a=[],p=0,f=x=>{v.setUint16(p,x,1);p+=2;},F=x=>{v.setUint32(p,x,1);p+=4;};
+ F(0x46464952);F(l-8);F(0x45564157);F(0x20746d66);F(16);f(1);f(c);F(b.sampleRate);F(b.sampleRate*c*2);f(c*2);f(16);F(0x61746164);F(l-p-4);
+ for(let i=0;i<c;i++)a.push(b.getChannelData(i));
+ for(let i=0,j=0;p<l;j++)for(i=0;i<c;i++){let s=a[i][j];s=s<-1?-1:s>1?1:s;s=(s<0?s*32768:s*32767)|0;v.setInt16(p,s,1);p+=2;}
+ return new Blob([o],{type:'audio/wav'});
 }
 
 function element(tagName,parent=document.body,className=""){
