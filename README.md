@@ -17,14 +17,12 @@ To open the app, click ↴
 
 </details><details><summary>Features</summary>
 
-- pattern editor (piano-roll)
-- phrase editor (sequencer)
-- instrument editor (synth): oscillators, detune, envelope, modulation, cutoff, delay, etc.
-- play/stop/loop: song/range
-- export/import JSON: song/instruments
-- export .wav: song/range
+- pattern editor
+- phrase editor
+- instrument editor
+- play/stop/loop
+- export/import
 - presets
-- live looping
 
 </details><details><summary>Guide</summary>
 
