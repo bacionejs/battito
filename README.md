@@ -53,6 +53,8 @@ Optional
 - Although, not recommended, the **textarea** can be edited. Changes are live.
 - Change the tempo by editing the first value in the **textarea** (5513=120 BPM).
 
+---
+
 Notes  
 - Looping is **live**, meaning it regenerates every time, so changes you make to notes/sequence/synth, are reflected in the next loop. This is helpful when evaluating a small section, as the changes are almost immediate.
 
