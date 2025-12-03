@@ -29,10 +29,11 @@ To open the app, click ↴
 ---
 
 Components
-- **sequencer**: 8 columns (tracks/instuments), 8 rows (phrases) and cells where you can toggle through pattern IDs (8 per track).
+- **sequencer (phrase editor)**: 8 columns (tracks/instuments), 8 rows (phrases) and cells where you can toggle through pattern IDs (8 per track).
 - **piano (pattern editor, aka piano-roll)**: 48 notes wide (4 octaves from C3 through C6) and 32 beats tall. 
 - **textarea**: import/export and manual edits of the tempo, instruments and song.
 - **synth (instrument editor )**: oscillators, detune, envelope, modulation, cutoff, delay, etc.
+- **waveform visualizer**
 
 ---
 
