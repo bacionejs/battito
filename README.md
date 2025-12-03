@@ -18,7 +18,7 @@ To open the app, click ↴
 
 - pattern editor (piano-roll)
 - phrase editor (sequencer)
-- instrument editor: oscillators, detune, envelope, modulation, cutoff, delay, etc.
+- instrument editor (synth): oscillators, detune, envelope, modulation, cutoff, delay, etc.
 - play/stop/loop: song/range
 - export/import JSON: song/instruments
 - export .wav: song/range
@@ -33,7 +33,7 @@ Components
 - **sequencer (phrase editor)**: 8 columns (tracks/instuments), 500 rows (30 minute songs at 120 BPM) and cells where you can toggle through pattern IDs (8 per track).
 - **piano (pattern editor, aka piano-roll)**: 48 notes wide (4 octaves from C3 through C6) and 32 steps tall. 
 - **textarea**: import/export and manual edits of the tempo, instruments and song.
-- **synth (instrument editor )**: oscillators, detune, envelope, modulation, cutoff, delay, etc.
+- **synth (instrument editor)**: oscillators, detune, envelope, modulation, cutoff, delay, etc.
 - **waveform visualizer**
 
 ---
@@ -50,12 +50,12 @@ Optional
   - or import existing Sonant compatible song JSON which have instruments that you like and when prompted after pasting into the **textarea**, answer yes to import only instruments
 - To clear everything, delete the text in the **textarea**, which will then automatically refresh with volume/octave set, but nothing else. To produce a sound, you need to select a track and at least select one of the envelope settings: `ea`, `es`, `er`.
 - To save your work for future use, copy the **textarea** JSON to a separate text editor. To import, paste the JSON in the **textarea**.
-- Normally, the JSON output is used with a `player`, but it can also be exported to `.wav` by long-pressing on the wave visualizer. It will export whatever is selected: tracks/phrases or whole song.
+- Normally, the JSON output is used with a `player`, but it can also be exported to `.wav` by long-pressing on the waveform visualizer. It will export whatever is selected: tracks/phrases or whole song.
 - Although, not recommended, the **textarea** can be edited. Changes are live.
-- Change beat rate by editing the first value in the **textarea** (5513=120 BPM).
+- Change the tempo by editing the first value in the **textarea** (5513=120 BPM).
 
 Notes  
-- Looping is **live**, meaning it regenerates every time, so changes you make to notes/sequence/synth, are reflected in the next loop. This is helpful when evaluating a single pattern, as the changes are almost immediate.
+- Looping is **live**, meaning it regenerates every time, so changes you make to notes/sequence/synth, are reflected in the next loop. This is helpful when evaluating a small section, as the changes are almost immediate.
 
 ---
 
@@ -155,12 +155,15 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 </details><details><summary>Alternatives</summary>
 
-- https://github.com/phoboslab/pl_synth
-- https://github.com/nicolas-van/sonant-x-live
-- https://github.com/mbitsnbites/soundbox
+Sonant
+- Original - 2008 Jake Taylor
+- js-sonant/soundbox - 2011 Marcus Geelnard
+- sonant-x - 2014 Nicolas Van
+- pl_synth - 2024 Dominic Szablewski
+
+Others
 - https://github.com/keithclark/ZzFXM
 - https://github.com/steffest/BassoonTracker
-- https://www.pouet.net/prod.php?which=53615 (original sonant)
 
 </details><details><summary>Credits</summary>
 
