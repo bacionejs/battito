@@ -48,7 +48,7 @@ Optional
 - There are 8 preset instruments, but you can also:
   - select a track and configure the **synth**
   - or import existing Sonant compatible song JSON which have instruments that you like and when prompted after pasting into the **textarea**, answer yes to import only instruments
-- To clear everything, delete the text in the **textarea**, which will then automatically refresh with volume/octave set, but nothing else. To produce a sound, you need to select a track and at least select one of the envelope settings: `ea`, `es`, `er`.
+- To clear everything, delete the text in the **textarea**, which will then automatically refresh with volume/octave set, but nothing else. To produce a sound, you need to select a track and select at least one of the envelope settings: `ea`, `es`, `er`.
 - To save your work for future use, copy the **textarea** JSON to a separate text editor. To import, paste the JSON in the **textarea**.
 - Normally, the song is output as JSON to use with a `sonant player`, but it can also be exported to `.wav` by long-pressing on the **waveform** visualizer. It will export whatever is selected: ranges or whole song.
 - Although, not recommended, the **textarea** can be edited. Changes are live.
