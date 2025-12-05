@@ -195,21 +195,6 @@ return {getcurr,stopPlayback,startPlayback,audioContext,setbpm, getSong, setSong
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function addEventListeners(){
 sequencer.addEventListener("click",handleSequencerClick);
 piano.addEventListener("click",e=>{handlePianoClick(e.target.dataset);});
@@ -220,16 +205,6 @@ fullscreenButton.addEventListener("click", handleFullscreenToggle);
 document.addEventListener("fullscreenchange",()=>{ if(!document.fullscreenElement){ fullscreenButton.style.display="block"; } });
 makeLongPress(canvas,handleDownloadRequest);
 }
-
-
-
-
-
-
-
-
-
-
 
 function handlePianoClick({row,col}){
 let p=getActive("pattern"); if(p==null)return;
@@ -352,6 +327,8 @@ let el=document.documentElement;
 if(el.requestFullscreen)el.requestFullscreen();
 fullscreenButton.style.display="none";
 }
+
+
 
 
 
@@ -491,6 +468,7 @@ function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+", 70%, 50%)";}
 
 
 
+
 function presets(){
 return [5513,[
 [[7,0,0,1,255,0,7,0,0,1,255,0,0,100,0,5970,171,2,500,254,1,31,4,21,0,0,0,0,0],[],[]],
@@ -536,10 +514,54 @@ body { display: flex; background:black; color:white;font-weight: bold;font-famil
 .canvas{ height:25dvh; aspect-ratio:2/1; }
 .fullscreen{position:fixed;bottom:5px;right:5px;color:orange;z-index:1000;font-size:20px;}
 .text, .canvas {border:1px solid silver; border-top:none;}
-.orientation-lock { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; color: white; display: none; justify-content: center; align-items: center; text-align: center; font-family: monospace; padding: 20px; z-index: 9999; }
+/* Tutorial Styles */
+.tutorial-pointer {
+    position: fixed;
+    width: 30px;
+    height: 30px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="rgba(255,165,0,0.8)" stroke="white" stroke-width="1.5"><path d="M8.83,18.32a2,2,0,0,1-2.24.42l-2.43-.81a2,2,0,0,1-1.42-2.61L4.2,11.47a2,2,0,0,1,2.61-1.42l1.6,.53V6.5a2,2,0,0,1,2-2h3.5a2,2,0,0,1,2,2v5.5a2,2,0,0,1,2,2v1a2,2,0,0,1-2,2H10.83a2,2,0,0,0-2,2Z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 10001;
+    transform: translate(-70%, -10%);
+    transition: all 0.3s ease-in-out;
+    pointer-events: none;
+    filter: drop-shadow(0 0 5px orange);
+}
+.tutorial-pointer.clicking {
+    transform: translate(-70%, -10%) scale(0.8);
+    transition: all 0.1s ease-in-out;
+}
+.tutorial-message {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 165, 0, 0.9);
+    color: black;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-family: monospace;
+    font-size: 16px;
+    z-index: 10002;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    max-width: 90%;
+}
+.tutorial-skip {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background: gray;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    z-index: 10003;
+    font-size: 14px;
+}
 `;
 }
-
 
 
 
@@ -558,48 +580,159 @@ initSequencer();
 update();
 previewTrackSound(0);
 addEventListeners();
-return;
-if (!window.chrome) {
-  document.body.innerHTML = "";
-  document.body.style.cssText = " background: black; color: white; font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; padding: 3em; text-align: center; ";
-  document.body.textContent = tested;
-  return;
-}
-let orientationLock = element("div", document.body, "orientation-lock");
-orientationLock.textContent = "Please rotate your device to landscape orientation.";
-let isInitialized = false,mainContent = [piano, sliders, side, fullscreenButton];
-
-function initApp() {
-if (isInitialized) return; isInitialized = true;
-initPiano();
-initSliders();
-initSequencer();
-update();
-previewTrackSound(0);
-addEventListeners();
-}
-
-function checkOrientation() {
-let isPortrait = window.matchMedia("(orientation: portrait)").matches;
-if (isPortrait) {
-  orientationLock.style.display = 'flex';
-  mainContent.forEach(el => el.style.display = 'none');
-} else {
-  orientationLock.style.display = 'none';
-  piano.style.display = 'grid';
-  sliders.style.display = 'flex';
-  side.style.display = 'block';
-  fullscreenButton.style.display = document.fullscreenElement ? 'none' : 'block';
-  initApp();
-}
-}
-
-window.addEventListener('resize', checkOrientation);
-window.addEventListener('orientationchange', checkOrientation);
-checkOrientation();
+runTutorial();
 }
 
 main();
+
+
+
+
+
+
+
+
+
+
+
+function runTutorial() {
+// If the user has completed it before, don't run.
+if (localStorage.getItem('battitoTutorialComplete')) {
+//         return;
+}
+
+const pointer = element("div", document.body, "tutorial-pointer");
+const messageBox = element("div", document.body, "tutorial-message");
+const skipButton = element("div", document.body, "tutorial-skip");
+skipButton.textContent = "Skip Tutorial";
+let currentStep = -1;
+let tutorialActive = true;
+
+function cleanup() {
+if (!tutorialActive) return;
+tutorialActive = false;
+pointer.remove();
+messageBox.remove();
+skipButton.remove();
+localStorage.setItem('battitoTutorialComplete', 'true');
+}
+
+skipButton.addEventListener("click", cleanup);
+
+// The song data to be used for generating the tutorial clicks.
+const tutorialSong = [5088,[[[7,0,0,1,255,0,7,0,0,1,255,0,0,100,0,5970,171,2,500,254,1,31,4,21],[1,1,1,1],[[147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147]]],[[7,0,0,0,255,2,7,0,4,0,255,2,0,88,2000,7505,255,2,3144,51,6,60,4,64,0,1,7,179],[1,1,1,1],[[0,0,123,0,0,0,0,0,0,0,0,0,0,0,123,0,123]]],[[7,0,0,0,192,2,7,0,0,0,201,3,0,100,150,7505,191,2,5839,254,6,121,6,147,0,1,6,195],[1,1,2,3],[[135,0,0,0,0,0,0,0,159,0,157,0,159,0,0,0,0,0,0,0,0,0,0,0,147,154,0,159],[138,0,0,0,0,0,0,0,150,0,159,0,162,0,0,0,0,0,0,0,0,0,150,0,162,150,0,159],[149,0,0,0,0,0,0,0,149,0,150,0,154,0,0,0,0,0,0,0,0,0,0,0,147,157,0,159]]]]];
+
+function generateTutorialFromSong(song) {
+const steps = [];
+const patternsToDefine = {}; // Use to avoid re-defining notes for the same pattern
+song[1].forEach((track, trackIndex) => {
+  if (track && track[1]) {
+    track[1].forEach((patternId, rowIndex) => {
+      if (patternId > 0) {
+        // Add N clicks to the sequencer cell to set its pattern number
+        for (let i = 0; i < patternId; i++) {
+          steps.push({
+            target: () => sequencer.querySelector(`[data-col="${trackIndex}"][data-row="${rowIndex}"]`),
+            action: 'click'
+          });
+        }
+        // Mark this pattern for note entry if it's the first time we've seen it
+        const key = `${trackIndex}-${patternId}`;
+        if (!patternsToDefine[key] && track[2] && track[2][patternId - 1]) {
+          patternsToDefine[key] = { trackIndex, patternId, definingRow: rowIndex };
+        }
+      }
+    });
+  }
+});
+
+// Pass 2: Generate clicks for the piano roll for each unique pattern
+for (const key in patternsToDefine) {
+  const { trackIndex, patternId, definingRow } = patternsToDefine[key];
+  const patternData = song[1][trackIndex][2][patternId - 1];
+
+  // Select the track and row to activate the piano roll
+  steps.push({ target: () => sequencer.querySelector(`[data-col="${trackIndex}"][data-row="-1"]`), action: 'click' });
+  steps.push({ target: () => sequencer.querySelector(`[data-col="-1"][data-row="${definingRow}"]`), action: 'click' });
+
+  // Add clicks for each note in the pattern
+  if (patternData) {
+    patternData.forEach((note, pianoRowIndex) => {
+      if (note > 0) {
+        const pianoCol = note - 123;
+        steps.push({ target: () => piano.querySelector(`[data-col="${pianoCol}"][data-row="${pianoRowIndex}"]`), action: 'click' });
+      }
+    });
+  }
+
+  // Deselect the track and row
+  steps.push({ target: () => sequencer.querySelector(`[data-col="-1"][data-row="${definingRow}"]`), action: 'click' });
+  steps.push({ target: () => sequencer.querySelector(`[data-col="${trackIndex}"][data-row="-1"]`), action: 'click' });
+}
+
+// Final click to select everything for playback
+steps.push({ target: () => sequencer.querySelector('[data-col="-1"][data-row="-1"]'), action: 'click' });
+
+return steps;
+}
+
+// Combine the intro message with the dynamically generated clicks
+const clickSteps = generateTutorialFromSong(tutorialSong);
+const steps = [
+  { msg: "Welcome to Battito! Watch how this song is made.", wait: 3000 },
+  { msg: "Click anywhere once to enable audio.", wait: 5000 },
+    ...clickSteps,
+];
+
+function nextStep() {
+if (!tutorialActive) return;
+currentStep++;
+if (currentStep >= steps.length) { cleanup(); return; }
+
+const step = steps[currentStep];
+messageBox.textContent = step.msg || ""; // Only show message if it exists
+if(step.msg) messageBox.style.display = 'block';
+else messageBox.style.display = 'none';
+
+
+const performAction = (targetElement) => {
+  const rect = targetElement.getBoundingClientRect();
+  pointer.style.top = `${rect.top + rect.height / 2}px`;
+  pointer.style.left = `${rect.left + rect.width / 2}px`;
+
+  setTimeout(() => {
+    if (!tutorialActive) return;
+    const clickAndProceed = (delay = 100) => { // Reduced delay for faster clicks
+      pointer.classList.add('clicking');
+      setTimeout(() => {
+        targetElement.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+        pointer.classList.remove('clicking');
+        setTimeout(nextStep, delay/2); // Further reduced delay post-click
+      }, 100);
+    };
+    if (step.action === 'click') {
+      clickAndProceed();
+    }
+  }, 200); // Reduced pre-click delay
+};
+
+if (step.target) {
+  const targetElement = step.target();
+  if (targetElement) {
+    performAction(targetElement);
+  } else {
+    // If target not found, skip to next step
+    setTimeout(nextStep, 100);
+  }
+} else if (step.wait) {
+  // This handles the initial message wait time
+  setTimeout(nextStep, step.wait);
+}
+}
+
+setTimeout(nextStep, 1000); // Initial delay before starting
+
+}
 
 
 
