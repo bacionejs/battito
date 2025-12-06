@@ -35,7 +35,7 @@ Or download and open from your file manager
 | **sequencer** | 8 columns (tracks/instruments), 500 rows (30-minute songs at 120 BPM), and cells where you can toggle through pattern IDs (8 per track). |
 | **piano** | Edit patterns on a piano roll — 48 notes wide (4 octaves from C3 through C6) and 32 steps tall. |
 | **textarea** | Import/export and manually edit tempo, instruments, and song. |
-| **waveform** | Instrument waveform visualizer. |
+| **waveform** | Instrument waveform analyzer. |
 
 ---
 
