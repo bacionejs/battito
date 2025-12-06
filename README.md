@@ -22,6 +22,8 @@ Or download and open from your file manager
 - play/stop/loop
 - import/export
 - presets
+- waveform visualizer
+- spectrum analyzer
 
 </details><details><summary>Guide</summary>
 
