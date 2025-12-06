@@ -151,7 +151,7 @@ currSequence=activeSequences[Math.floor(elapsed/sequenceDuration)%activeSequence
 let pianoRowIndex=Math.floor(elapsed/pianoRowDuration)%PR;
 if(currSequence!==prevSequence){
   updateGridPointer(sequencer,SR+1,SC+1,currSequence,1);
-  sequencer.children[currSequence*(SC+1)].scrollIntoView({block: "nearest"});
+  sequencer.children[(currSequence+1)*(SC+1)].scrollIntoView({block:"nearest"});
   prevSequence=currSequence;
   updatePiano();
 }
