@@ -43,6 +43,13 @@ metaSliders().forEach((group,i)=>{
 
 function initSequencer() {
 grid(sequencer, SC + 1, SR + 1, true);
+const cornerCell = sequencer.querySelector('[data-row="-1"][data-col="-1"]');
+if (cornerCell) {
+  // Create 8 bars for the new visualizer
+  for (let i = 0; i < 8; i++) {
+    element('div', cornerCell, 'vu-meter-bar');
+  }
+}
 for(let i=1;i<SC+1;i++){
   let cell=sequencer.children[i];
   cell.textContent = String.fromCharCode(65 + i-1);
@@ -115,6 +122,9 @@ let playbackAnimationId=null;
 let currSequence=null;
 let prevSequence=null;
 let audioContext=new AudioContext();
+let analyser = audioContext.createAnalyser();
+analyser.fftSize = 32; // This gives us 16 frequency bins
+let vuDataArray = new Uint8Array(analyser.frequencyBinCount);
 let bpm=samplesToBPM(SONG[0]);
 function samplesToBPM(samplesPerStep,sampleRate=44100,stepsPerBeat=4){return (sampleRate*60)/(samplesPerStep*stepsPerBeat);}
 function beatsToSeconds(beats,bpm){return (60/bpm)*beats;}
@@ -123,13 +133,17 @@ function stopPlayback(){
 if(playbackAnimationId){cancelAnimationFrame(playbackAnimationId);playbackAnimationId=null;}
 sequencer.querySelectorAll(".row-header").forEach(h=>h.classList.remove("row-playing"));
 if(A){A.onended=null;A.stop();A.disconnect();A=null;}
+const vuBars = document.querySelectorAll('.vu-meter-bar');
+if (vuBars) vuBars.forEach(bar => bar.style.height = '0%');
 }
 
 function startPlayback(){
 PLAYER(audioContext,synth=>{
   let activeSongParts=getActiveSongDataForPlayback();
   audioBuffer=synth.song(activeSongParts); A=audioContext.createBufferSource(); A.buffer=audioBuffer;
-  A.connect(audioContext.destination); A.onended=()=>{startPlayback();};
+  A.connect(analyser);
+  analyser.connect(audioContext.destination);
+  A.onended=()=>{startPlayback();};
   let startTime=audioContext.currentTime; A.start(startTime); A.startTime=startTime;
   playbackAnimationId=requestAnimationFrame(updatePlaybackPointers);
 });
@@ -137,6 +151,19 @@ PLAYER(audioContext,synth=>{
 
 function updatePlaybackPointers(){
 try{
+// Updated VU Meter logic
+const vuBars = document.querySelectorAll('.vu-meter-bar');
+if (vuBars.length > 0) {
+    analyser.getByteFrequencyData(vuDataArray); // Use frequency data
+    const step = Math.floor(vuDataArray.length / vuBars.length);
+    for (let i = 0; i < vuBars.length; i++) {
+        // Use the value from one of the frequency bins for each bar
+        const value = vuDataArray[i * step];
+        const level = value / 255.0;
+        vuBars[i].style.height = `${level * 100}%`;
+    }
+}
+
 if(!A||!audioBuffer)return;
 let elapsed=(audioContext.currentTime-A.startTime)%audioBuffer.duration;
 let activeSequences=active.rows.map((isOn,i)=>isOn?i:-1).filter(i=>i!==-1);
@@ -508,6 +535,23 @@ body { display: flex; background:black; color:white;font-weight: bold;font-famil
 .fullscreen{position:fixed;bottom:5px;right:5px;color:orange;z-index:1000;font-size:20px;}
 .text, .canvas {border:1px solid silver; border-top:none;}
 .col-header { position: sticky; top: 0; background: black; z-index: 1; }
+.sequencer .cell[data-row="-1"][data-col="-1"] {
+  padding: 2px;
+  background: #222;
+  /* Style the container for the new visualizer */
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+  overflow: hidden;
+}
+.vu-meter-bar {
+  flex: 1;
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(to top, #39FF14, orange 60%, red 90%);
+  transition: height 50ms linear;
+  pointer-events: none;
+}
 `;
 }
 
