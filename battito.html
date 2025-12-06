@@ -122,8 +122,7 @@ function stopPlayback(){
 if(playbackAnimationId){cancelAnimationFrame(playbackAnimationId);playbackAnimationId=null;}
 sequencer.querySelectorAll(".row-header").forEach(h=>h.classList.remove("row-playing"));
 if(A){A.onended=null;A.stop();A.disconnect();A=null;}
-let bars = document.querySelectorAll(".meter");
-if (bars) bars.forEach(bar => bar.style.height = "0%");
+[...sequencer.children[0].children].forEach(bar => bar.style.height = "0%");
 }
 
 function startPlayback(){
@@ -141,7 +140,8 @@ PLAYER(audioContext,synth=>{
 function updatePlaybackPointers(){
 try{
 analyser.getByteFrequencyData(meter);
-[...sequencer.children[0].children].forEach((b,i,a)=>{b.style.height=((meter[i*Math.floor(meter.length/a.length)]/255)*100)+"%";});
+analyser.smoothingTimeConstant = 0.7;
+[...sequencer.children[0].children].forEach((b,i,a)=>{b.style.height=(meter[Math.floor(i*(meter.length/a.length))]/255*100)+"%";});
 if(!A||!audioBuffer)return;
 let elapsed=(audioContext.currentTime-A.startTime)%audioBuffer.duration;
 let activeSequences=active.rows.map((isOn,i)=>isOn?i:-1).filter(i=>i!==-1);
