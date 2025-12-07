@@ -301,9 +301,11 @@ function stripSongData(songData){
 
 function handleDownloadRequest() {
 PLAYER(audio().audioContext,synth=>{try{
-  let b=synth.song(getActiveSongDataForPlayback());if(!b||b.length==0){return; }
+  let b=synth.song(getActiveSongDataForPlayback());
   let url=URL.createObjectURL(bufferToWav(b)); let a=element("a");a.href=url;a.download="battito_"+Date.now()+".wav"; a.click();URL.revokeObjectURL(a.href);a.remove();
-}catch(e){}});
+}catch(e){
+  db.transaction("store","readwrite").objectStore("store").get("tutorial").onsuccess=e=>{let v=e.target.result?0:1;e.target.source.put(v,"tutorial");alert("Tutorial "+(v?"ON":"OFF"))}
+}});
 function bufferToWav(b){
   let c=b.numberOfChannels,l=b.length*c*2+44,o=new ArrayBuffer(l),v=new DataView(o),a=[],p=0,f=x=>{v.setUint16(p,x,1);p+=2;},F=x=>{v.setUint32(p,x,1);p+=4;};
   F(0x46464952);F(l-8);F(0x45564157);F(0x20746d66);F(16);f(1);f(c);F(b.sampleRate);F(b.sampleRate*c*2);f(c*2);f(16);F(0x61746164);F(l-p-4);
@@ -520,6 +522,15 @@ body { display: flex; background:black; color:white;font-weight: bold;font-famil
 }
 
 
+
+
+
+
+
+
+
+
+
 function main(){
 if (!window.chrome) {
   document.body.innerHTML = "";
@@ -534,10 +545,10 @@ initSequencer();
 update();
 previewTrackSound(0);
 addEventListeners();
-runTutorial();
+db.transaction("store","readonly").objectStore("store").get("tutorial").onsuccess=e=>e.target.result&&runTutorial();
 }
 
-main();
+let db,idb=indexedDB.open("db",1);idb.onupgradeneeded=e=>e.target.result.createObjectStore("store");idb.onsuccess=e=>{db=e.target.result;db.transaction("store","readwrite").objectStore("store").get("tutorial").onsuccess=f=>{f.target.result==null&&f.target.source.put(1,"tutorial");main()}}
 
 
 
