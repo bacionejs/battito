@@ -15,11 +15,7 @@ let fullscreenButton=element("div",document.body,"fullscreen"); fullscreenButton
 let PLAYER=pl_synth_wasm_init;
 let SR=500,SC=8,PR=32,PC=48;
 let active=(function(){ let cols=Array(SC).fill(0); let rows=Array(SR).fill(0); return {cols,rows}; })();
-let db,idb=indexedDB.open("bacionejs_battito",1);idb.onupgradeneeded=e=>e.target.result.createObjectStore("store");idb.onsuccess=e=>{db=e.target.result;db.transaction("store","readwrite").objectStore("store").get("tutorial").onsuccess=f=>{f.target.result==null&&f.target.source.put(1,"tutorial");main()}}
-
-
-
-
+if (location.search.includes("off")) { runTutorial = () => {};}
 
 
 
@@ -304,9 +300,7 @@ function handleDownloadRequest() {
 PLAYER(audio().audioContext,synth=>{try{
   let b=synth.song(getActiveSongDataForPlayback());
   let url=URL.createObjectURL(bufferToWav(b)); let a=element("a");a.href=url;a.download="battito_"+Date.now()+".wav"; a.click();URL.revokeObjectURL(a.href);a.remove();
-}catch(e){
-  db.transaction("store","readwrite").objectStore("store").get("tutorial").onsuccess=e=>{let v=e.target.result?0:1;e.target.source.put(v,"tutorial");alert("Tutorial "+(v?"ON":"OFF"))}
-}});
+}catch(e){alert("Nothing to save. Please select song or range")}});
 function bufferToWav(b){
   let c=b.numberOfChannels,l=b.length*c*2+44,o=new ArrayBuffer(l),v=new DataView(o),a=[],p=0,f=x=>{v.setUint16(p,x,1);p+=2;},F=x=>{v.setUint32(p,x,1);p+=4;};
   F(0x46464952);F(l-8);F(0x45564157);F(0x20746d66);F(16);f(1);f(c);F(b.sampleRate);F(b.sampleRate*c*2);f(c*2);f(16);F(0x61746164);F(l-p-4);
@@ -546,8 +540,10 @@ initSequencer();
 update();
 previewTrackSound(0);
 addEventListeners();
-db.transaction("store","readonly").objectStore("store").get("tutorial").onsuccess=e=>e.target.result&&runTutorial();
+runTutorial();
 }
+
+main();
 
 
 
