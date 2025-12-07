@@ -17,6 +17,7 @@ Or download and open from your file manager
 
 </details><details><summary>Features</summary>
 
+- tutorial
 - instrument editor
 - sequence editor
 - pattern editor
