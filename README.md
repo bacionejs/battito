@@ -1,7 +1,7 @@
 
 ---
 
-To open the app, click ↴  
+To open, click ↴  
 
 <a href="//bacionejs.github.io/battito/battito.html" target="_blank"> <img src="https://repository-images.githubusercontent.com/1048415375/ae3a7d1a-62bd-4ea8-b795-3a390ce6e537" width="70%" /> </a>
 
