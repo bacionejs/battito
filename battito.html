@@ -23,6 +23,10 @@ if (location.search.includes("off")) { runTutorial = () => {};}
 
 
 
+
+
+
+
 function initPiano(){
 grid(piano,PC,PR);
 [...piano.children].forEach(cell => { let [r, c] = [parseInt(cell.dataset.row), parseInt(cell.dataset.col)]; if (c % 12 === 0) cell.style.borderLeft = "1px solid black"; if (r % 4 === 0) cell.style.borderTop = "1px solid black"; });
