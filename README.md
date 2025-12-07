@@ -3,9 +3,10 @@
 
 To open the app, click ↴  
 
-<a href="//bacionejs.github.io/battito/battito.html" target="_blank"> <img src="https://repository-images.githubusercontent.com/1048415375/7817263c-3e00-4191-b7bf-ac38a741bb88" width="70%" /> </a>
+<a href="//bacionejs.github.io/battito/battito.html" target="_blank"> <img src="https://repository-images.githubusercontent.com/1048415375/ccd0d7cb-a4ef-4856-b4f0-3bfed58d240c" width="70%" /> </a>
 
 Or download and open from your file manager 
+
 
 ---
 
@@ -175,4 +176,5 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 </details>
 
 ---
+
 
