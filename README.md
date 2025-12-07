@@ -10,14 +10,14 @@ Or download and open from your file manager
 
 ---
 
-<details><summary>Purpose</summary>  
+<details><summary>About</summary>  
 
 - This music tracker produces Sonant formatted JSON. Sonant based synth is designed to be small, **for size constrained games** (2 minute song+player=3k, 8000 times smaller than WAV).  
 - What makes this app unique from other Sonant based trackers is the use of a piano-roll to **reduce clicks and enhance visualization of note relationships**.  
-
+- Only works on Chrome browser. Works great on a tablet.
+- See the 25 second built-in automated tutorial.
 </details><details><summary>Features</summary>
 
-- tutorial
 - instrument editor
 - sequence editor
 - pattern editor
