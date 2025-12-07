@@ -548,7 +548,7 @@ addEventListeners();
 db.transaction("store","readonly").objectStore("store").get("tutorial").onsuccess=e=>e.target.result&&runTutorial();
 }
 
-let db,idb=indexedDB.open("db",1);idb.onupgradeneeded=e=>e.target.result.createObjectStore("store");idb.onsuccess=e=>{db=e.target.result;db.transaction("store","readwrite").objectStore("store").get("tutorial").onsuccess=f=>{f.target.result==null&&f.target.source.put(1,"tutorial");main()}}
+let db,idb=indexedDB.open("bacionejs_battito",1);idb.onupgradeneeded=e=>e.target.result.createObjectStore("store");idb.onsuccess=e=>{db=e.target.result;db.transaction("store","readwrite").objectStore("store").get("tutorial").onsuccess=f=>{f.target.result==null&&f.target.source.put(1,"tutorial");main()}}
 
 
 
