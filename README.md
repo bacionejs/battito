@@ -21,7 +21,7 @@ Or download and open from your file manager
 - pattern editor
 - play/stop/loop
 - import/export
-- presets
+- instrument presets
 - waveform analyzer
 - spectrum analyzer
 
