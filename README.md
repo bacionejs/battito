@@ -3,7 +3,7 @@
 
 To open the app, click ↴  
 
-<a href="//bacionejs.github.io/battito/battito.html" target="_blank"> <img src="https://repository-images.githubusercontent.com/1048415375/582182ee-178d-465b-aeb4-1427966e6832" width="70%" /> </a>
+<a href="//bacionejs.github.io/battito/battito.html" target="_blank"> <img src="https://repository-images.githubusercontent.com/1048415375/ae3a7d1a-62bd-4ea8-b795-3a390ce6e537" width="70%" /> </a>
 
 Or download and open from your file manager 
 
