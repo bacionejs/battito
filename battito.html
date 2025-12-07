@@ -2,20 +2,19 @@
 
 document.title="Battito";
 let tested="Requires Chrome browser";
+//https://github.com/bacionejs/battito
 
-applystyle();
-
-let PLAYER=pl_synth_wasm_init;
-let SR=500,SC=8,PR=32,PC=48;
 let piano=element("div",document.body,"piano");
 let sliders=element("div",document.body,"sliders");
 let side=element("div",document.body,"side");
 let sequencer=element("div",side,"sequencer");
-let text=element("div",side,"text");
+let text=element("div",side,"text"); text.contentEditable=true;
 let canvas=element("canvas",side,"canvas");
-text.contentEditable=true;
-let fullscreenButton=element("div",document.body,"fullscreen");
-fullscreenButton.textContent = "\u26F6";
+let fullscreenButton=element("div",document.body,"fullscreen"); fullscreenButton.textContent = "\u26F6";
+
+let PLAYER=pl_synth_wasm_init;
+let SR=500,SC=8,PR=32,PC=48;
+let active=(function(){ let cols=Array(SC).fill(0); let rows=Array(SR).fill(0); return {cols,rows}; })();
 
 
 
@@ -68,8 +67,8 @@ for(let i=SC+1;i<(SC+1)*(SR+1);i+=SC+1){
 function updatePiano(){
 [...piano.children].forEach(cell=>{cell.style.background="";});
 active.cols.forEach((isActive,i)=>{if(!isActive)return;
-  let song = audio.getSong();
-  song[1][i]?.[2]?.[song[1][i]?.[1]?.[audio.getCurr()]-1]?.forEach((col,row)=>{if(!col)return;
+  let song = audio().getSong();
+  song[1][i]?.[2]?.[song[1][i]?.[1]?.[audio().getCurr()]-1]?.forEach((col,row)=>{if(!col)return;
     piano.children[row*PC+col-123].style.background=getColor(i);
   });
 });
@@ -86,11 +85,11 @@ function updateSequencer(){
   let {row,col}=cell.dataset; if(row==="-1"&&col==="-1"){return;}
   if(row==="-1"){ if(active.cols[col])cell.classList.add("col-selected"); }
   else if(col==="-1"){ if(active.rows[row])cell.classList.add("row-selected"); }
-  else{ cell.textContent=""; let r=parseInt(row),c=parseInt(col); let song = audio.getSong(); if(song[1][c]&&song[1][c][1]?.[r]!==undefined){ if(active.rows[r]&&active.cols[c]){ cell.classList.add("active"); } cell.textContent=song[1][c][1][r]||""; } }
+  else{ cell.textContent=""; let r=parseInt(row),c=parseInt(col); let song = audio().getSong(); if(song[1][c]&&song[1][c][1]?.[r]!==undefined){ if(active.rows[r]&&active.cols[c]){ cell.classList.add("active"); } cell.textContent=song[1][c][1][r]||""; } }
 });
 }
 
-function updateText(){text.textContent=formatSongDataForDisplay(audio.getSong());}
+function updateText(){text.textContent=formatSongDataForDisplay(audio().getSong());}
 
 
 
@@ -102,8 +101,7 @@ function updateText(){text.textContent=formatSongDataForDisplay(audio.getSong())
 
 
 
-let audio=(function(){
-
+function audio(){ if(audio.instance)return audio.instance;
 let SONG=presets();
 let audioBuffer=null;
 let A=null;
@@ -182,9 +180,8 @@ update();
 
 function getCurr(){ return currSequence; }
 
-return {getCurr,stopPlayback,startPlayback,audioContext, getSong, setSong};
-
-})();
+return audio.instance={getCurr,stopPlayback,startPlayback,audioContext,getSong,setSong};
+}
 
 
 
@@ -240,7 +237,7 @@ if(row==="-1"&&col==="-1"){
   active.rows[row]=active.rows[row]?0:1;
 }else{
   let r=parseInt(row),c=parseInt(col);
-  let song = audio.getSong();
+  let song = audio().getSong();
   if(!song[1][c])song[1][c]=[[],[],[]];
   if(!song[1][c][1])song[1][c][1]=[];
   let currentPatternId=song[1][c][1][r]??0;
@@ -249,7 +246,7 @@ if(row==="-1"&&col==="-1"){
 update();
 let isAnyTrackActive=active.cols.some(x=>x);
 let isAnySequenceActive=active.rows.some(y=>y);
-if(isAnyTrackActive&&isAnySequenceActive){audio.stopPlayback();audio.startPlayback();}else{audio.stopPlayback();}
+if(isAnyTrackActive&&isAnySequenceActive){audio().stopPlayback();audio().startPlayback();}else{audio().stopPlayback();}
 }
 
 function handleSongInput(){
@@ -268,7 +265,7 @@ if(text.textContent==""){
   text.textContent=formatSongDataForDisplay(s);
 }
 try{
-audio.setSong(JSON.parse(text.textContent));
+audio().setSong(JSON.parse(text.textContent));
 previewTrackSound();
 }catch(e){}
 }
@@ -294,7 +291,7 @@ if(newSongData&&Array.isArray(newSongData[1])){
   });
 }
 if(keepInstrumentsOnly){newSongData=stripSongData(newSongData);}
-audio.setSong(newSongData);
+audio().setSong(newSongData);
 function stripSongData(songData){
   let songCopy=JSON.parse(JSON.stringify(songData));
   let instruments=songCopy[1].map(track=>[track[0],[],[]]);
@@ -303,7 +300,7 @@ function stripSongData(songData){
 }
 
 function handleDownloadRequest() {
-PLAYER(audio.audioContext,synth=>{try{
+PLAYER(audio().audioContext,synth=>{try{
   let b=synth.song(getActiveSongDataForPlayback());if(!b||b.length==0){return; }
   let url=URL.createObjectURL(bufferToWav(b)); let a=element("a");a.href=url;a.download="battito_"+Date.now()+".wav"; a.click();URL.revokeObjectURL(a.href);a.remove();
 }catch(e){}});
@@ -337,10 +334,10 @@ let playing=null;
 previewTrackSound=function(note){
   if(playing){playing.stop();playing=null;}
   let instrument=getActive("instrument");if(instrument==null)return;
-  PLAYER(audio.audioContext,synth=>{
-  let source=audio.audioContext.createBufferSource();
+  PLAYER(audio().audioContext,synth=>{
+  let source=audio().audioContext.createBufferSource();
   try{source.buffer=synth.sound(instrument,note);}catch(e){drawWaveform(null);return;}
-  source.connect(audio.audioContext.destination);
+  source.connect(audio().audioContext.destination);
   source.start();
   playing=source;
   source.onended=()=>{if(playing===source){playing=null;}};
@@ -387,14 +384,8 @@ do{prev=s;s=s.replace(/,\s*,/g,",0,").replace(/\[\s*,/g,"[0,").replace(/,\s*\]/g
 return s;
 }
 
-let active=(function(){
-let cols=Array(SC).fill(0);
-let rows=Array(SR).fill(0);
-return {cols,rows};
-})();
-
 function getActiveSongDataForPlayback(){
-let songCopy=JSON.parse(JSON.stringify(audio.getSong()));
+let songCopy=JSON.parse(JSON.stringify(audio().getSong()));
 for(let t=songCopy[1].length-1;t>=0;t--){
   if(!active.cols[t]){
     songCopy[1].splice(t,1);
@@ -420,9 +411,8 @@ for (let i = 0; i < totalCells; i++) {
 }
 }
 
-
 function getActive(s){
-let song = audio.getSong();
+let song = audio().getSong();
 if(s=="track"){
   let activeIndices=active.cols.map((isActive,index)=>isActive?index:-1).filter(index=>index!==-1);
   return activeIndices.length===1?song[1][activeIndices[0]]||null:null;
@@ -537,6 +527,7 @@ if (!window.chrome) {
   document.body.textContent = tested;
   return;
 }
+applystyle();
 initPiano();
 initSliders();
 initSequencer();
@@ -559,7 +550,6 @@ main();
 
 
 function runTutorial(){
-applystyle();
 let p=element("div",document.body,"tutorial-pointer");
 let m=element("div",document.body,"tutorial-message");
 let s=element("div",document.body,"tutorial-skip");
@@ -621,7 +611,7 @@ let ts=[5088,[[[7,0,0,1,255,0,7,0,0,1,255,0,0,100,0,5970,171,2,500,254,1,31,4,21
 
 let ss=[
   {msg:"Welcome to Battito! Watch this 25 second tutorial.",wait:5000},
-  {msg:"Click here to enable audio.",wait:3000},
+  {msg:"Click here to enable audio",wait:3000},
     ...gtfs(ts),
   {msg:"See the README for help \uD83D\uDC8B",wait:9000},
 ];
