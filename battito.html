@@ -277,7 +277,7 @@ let pastedText=(event.clipboardData).getData("text");
 let keepInstrumentsOnly=confirm("Delete song patterns and keep only the instruments?");
 let newSongData;
 try{
-  let sanitizedJson=fillEmptyArrayValues(pastedText);
+  let sanitizedJson=sanitizeJson(pastedText);
   newSongData=JSON.parse(sanitizedJson);
   while(newSongData[1].length<8){newSongData[1].push([[7,0,0,0,192,2,7,0,0,0,192,2,0,0,0,20000,192,0,0,0,0,121,0,0,0,0,0,0,0],[],[]]);}
   if(newSongData[1].length>8){newSongData[1].length=8;}
@@ -376,13 +376,27 @@ o.addEventListener("pointerdown",lp.down); o.addEventListener("pointerup",lp.up)
 
 function formatSongDataForDisplay(songData) {
 function stringify(arr) {return "[" + arr.map(x => Array.isArray(x) ? "\n" + stringify(x) : x || 0).join(",") + "]";}
-return fillEmptyArrayValues(stringify(songData));
+return sanitizeJson(stringify(songData));
 }
 
-function fillEmptyArrayValues(s){
-let prev;
-do{prev=s;s=s.replace(/,\s*,/g,",0,").replace(/\[\s*,/g,"[0,").replace(/,\s*\]/g,",0]");}while(s!==prev);
-return s;
+function sanitizeJson(s){
+  // 1) extract a JSON-like span: from first '[' or '{' to last ']' or '}'
+  let start = s.search(/[\[\{]/);
+  let lastSq = s.lastIndexOf(']');
+  let lastCu = s.lastIndexOf('}');
+  let end = Math.max(lastSq, lastCu);
+  if(start === -1 || end === -1 || end < start) return ""; // nothing JSON-like
+  s = s.slice(start, end + 1);
+  // 2) keep only characters that belong in your Sonant JSON (numbers, brackets, commas, newlines)
+  s = s.replace(/[^0-9\[\],\n\r]/g, "");
+  // 3) repeatedly fix empty slots: ",," -> ",0,", "[," -> "[0,", ",]" -> ",0]"
+  let prev;
+  do{
+    prev = s;
+    s = s.replace(/,\s*,/g, ",0,").replace(/\[\s*,/g, "[0,").replace(/,\s*\]/g, ",0]");
+  }while(s !== prev);
+
+  return s;
 }
 
 function getActiveSongDataForPlayback(){
