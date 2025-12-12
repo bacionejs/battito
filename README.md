@@ -52,6 +52,7 @@ Optional
 - Long-press the **waveform** visualizer to export html/wav; html for game, wav for whatever. It will export whatever is selected: ranges or whole song.
 - The **textarea** can be edited. Changes are live.
 - Change the tempo by editing the first value in the **textarea** (5513=120 BPM).
+- To bypass the tutorial on startup, append "?off" to the url.
 
 ---
 

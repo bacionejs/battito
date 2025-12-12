@@ -1,5 +1,8 @@
 <meta name="viewport" content="width=device-width"> <script> onload=()=>{
 
+//https://github.com/bacionejs/battito
+document.title="Battito";
+let tested="Requires Chrome browser";
 addEventListener("error",e=>{alert(e.message);});
 let piano = element("div", document.body, "piano");
 let sliders = element("div", document.body, "sliders");
@@ -15,6 +18,12 @@ let active = (function () {let cols = Array(SC).fill(0); let rows = Array(SR).fi
 function setDebug(s){debug.textContent = s;}
 
 function main() {
+if (!window.chrome) {
+  document.body.innerHTML = "";
+  document.body.style.cssText = " background: black; color: white; font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; padding: 3em; text-align: center; ";
+  document.body.textContent = tested;
+  return;
+}
 applystyle();
 initPiano();
 initSliders();
