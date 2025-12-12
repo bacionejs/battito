@@ -11,20 +11,18 @@ Or download and open from your file manager
 ---
 
 
-Battito, a Sonant-based music tracker. At only 2k for the song and player, it is perfect for size-constrained games. Unlike other Sonant-based trackers, Battito uses a piano roll, making editing easier. It currently works only on the Chrome browser and looks great on a tablet. See the 25-second in-app video tutorial.
+Battito, a Sonant-based music tracker. At only 2k for the song and player, it is perfect for size-constrained games. Unlike other Sonant-based trackers, Battito uses a piano roll, making editing easier, and live-looping to get immediate feedback. It currently works only on the Chrome browser and looks great on a tablet. See the 25-second in-app video tutorial.
 
 ---
 
 <details><summary>Features</summary>
 
-- instrument editor
-- sequence editor
-- pattern editor
+- instrument/sequence/pattern editors
+- waveform/spectrum analyzers
+- instrument presets
 - play/stop/loop
 - import/export
-- instrument presets
-- waveform analyzer
-- spectrum analyzer
+- live-looping
 
 </details><details><summary>Guide</summary>
 
@@ -50,7 +48,7 @@ Optional
 - There are 8 preset instruments, but you can also select a track and configure the **synth**
 - To save your work for future use, copy the **textarea** JSON to a separate text editor. To import, paste the JSON in the **textarea**.
 - Long-press the **waveform** visualizer to export html/wav; html for game, wav for whatever. It will export whatever is selected: ranges or whole song.
-- The **textarea** can be edited. Changes are live.
+- The **textarea** can be edited. Changes are live just like the other components.
 - Change the tempo by editing the first value in the **textarea** (5513=120 BPM).
 - To bypass the tutorial on startup, append "?off" to the url.
 
