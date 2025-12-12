@@ -128,15 +128,20 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 </details><details><summary>Notes</summary>
 
+---
+
 Sonant history
-- Original Sonant: 2008 Jake Taylor
+- Original Sonant: 2008 Jake Taylor (declared public domain in 2025)
 - js-sonant/soundbox: 2011 Marcus Geelnard
 - sonant-x: 2014 Nicolas Van
-- pl_synth: 2024 Dominic Szablewski
+- pl_synth: 2024 Dominic Szablewski (fastest js/wasm solution)
+- battito/BattitoPlayer: 2025 bacionejs (me)
 
-In 2025, Jake declared Sonant public domain.  
-My tracker (GUI) is original and my player (synth engine) is based on Jake's original sonant.c; converted to javascript and optimized. For a javascript implementation that is faster, try the wasm solution by Dominic.  
-The built-in tutorial's song is a simplified version of the song beatnic by mBitsnBites.  
+---
+
+BattitoPlayer (the synth engine) optimizes for speed by precomputing all major sources of per-sample overhead - including sine values, note frequencies, LFO curves, and panning multipliers - so the hot inner loop contains almost no transcendentals or waveform math. It also eliminates most conditional logic by resolving branches ahead of time, leaving a mostly linear, arithmetic-only render loop.
+
+---
 
 </details>
 
