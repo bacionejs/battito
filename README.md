@@ -143,6 +143,7 @@ Sonant history
 
 In 2025, Jake declared Sonant public domain.  
 My tracker (GUI) is original and my player (synth engine) is based on Jake's original sonant.c; converted to javascript and optimized. For a javascript implementation that is faster, try the wasm solution by Dominic.  
+The built-in tutorial's song is a simplified version of the song beatnic by mBitsnBites.  
 
 </details>
 
