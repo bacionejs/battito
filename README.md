@@ -20,8 +20,7 @@ Battito, a Sonant-based music tracker. At only 2k for the song and player, it is
 - instrument/sequence/pattern editors
 - waveform/spectrum analyzers
 - instrument presets
-- play/stop/loop
-- import/export
+- play/stop/import/export
 - live-looping
 
 </details><details><summary>Guide</summary>
