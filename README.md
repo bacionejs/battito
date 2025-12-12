@@ -3,7 +3,7 @@
 
 To open, click ↴  
 
-<a href="//bacionejs.github.io/battito/battito.html" target="_blank"> <img src="https://repository-images.githubusercontent.com/1048415375/ae3a7d1a-62bd-4ea8-b795-3a390ce6e537" width="70%" /> </a>
+<a href="//bacionejs.github.io/battito/battito.html" target="_blank"> <img src="https://repository-images.githubusercontent.com/1048415375/88c95659-f0f2-4d50-8758-763520fdcd2a" width="70%" /> </a>
 
 Or download and open from your file manager 
 
@@ -33,7 +33,7 @@ Battito, a Sonant-based music tracker. At only 2k for the song and player, it is
 | Component   | Description |
 |-------------|-------------|
 | **synth** | Edit instrument oscillators, detune, envelope, modulation, cutoff, delay, etc. |
-| **sequencer** | 8 columns (tracks/instruments), 500 rows (30-minute songs at 120 BPM), and cells where you can toggle through pattern IDs (8 per track). |
+| **sequencer** | 8 columns (tracks/instruments), 60 rows (5-minute songs at 120 BPM), and cells where you can toggle through pattern IDs (8 per track). |
 | **piano** | Edit patterns on a piano roll — 48 notes wide (4 octaves from C3 through C6) and 32 steps tall. |
 | **textarea** | Import/export and manually edit tempo, instruments, and song. |
 | **waveform** | Instrument waveform analyzer. |
@@ -47,42 +47,18 @@ Steps
 ---
 
 Optional
-- There are 8 preset instruments, but you can also:
-  - select a track and configure the **synth**
-  - or import existing Sonant compatible song JSON which have instruments that you like and when prompted after pasting into the **textarea**, answer yes to import only instruments
-- To clear everything, delete the text in the **textarea**, which will then automatically refresh with minimal settings.
+- There are 8 preset instruments, but you can also select a track and configure the **synth**
 - To save your work for future use, copy the **textarea** JSON to a separate text editor. To import, paste the JSON in the **textarea**.
-- Normally, the song is output as JSON to use with a `sonant player`, but it can also be exported to `.wav` by long-pressing on the **waveform** visualizer. It will export whatever is selected: ranges or whole song.
+- Long-press the **waveform** visualizer to export html/wav; html for game, wav for whatever. It will export whatever is selected: ranges or whole song.
 - The **textarea** can be edited. Changes are live.
 - Change the tempo by editing the first value in the **textarea** (5513=120 BPM).
 
 ---
 
 Notes  
-- Looping is **live**, meaning it regenerates every time, so changes you make to notes/sequence/synth, are reflected in the next loop. This is helpful when evaluating a small section, as the changes are almost immediate.
+- Looping is **live**, meaning it regenerates every time, so changes you make are reflected in the next loop. This is helpful when evaluating a small section, as the changes are almost immediate.
 
 ---
-
-Usage
-- For an example of music in a game, see [Bike](https://github.com/bacionejs/bike).
-
----
-
-</details><details><summary>Songs</summary>
-
-You can paste these songs into the **textarea**.
-
-Beatnic by mBitsnBites (simplified)
-
-```json
-[5088,[[[7,0,0,1,255,0,7,0,0,1,255,0,0,100,0,5970,171,2,500,254,1,31,4,21],[1,1,1,1],[[147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147,0,0,0,147]]],[[7,0,0,0,255,2,7,0,4,0,255,2,0,88,2000,7505,255,2,3144,51,6,60,4,64,0,1,7,179],[1,1,1,1],[[0,0,123,0,0,0,0,0,0,0,0,0,0,0,123,0,123]]],[[7,0,0,0,192,2,7,0,0,0,201,3,0,100,150,7505,191,2,5839,254,6,121,6,147,0,1,6,195],[1,1,2,3],[[135,0,0,0,0,0,0,0,159,0,157,0,159,0,0,0,0,0,0,0,0,0,0,0,147,154,0,159],[138,0,0,0,0,0,0,0,150,0,159,0,162,0,0,0,0,0,0,0,0,0,150,0,162,150,0,159],[149,0,0,0,0,0,0,0,149,0,150,0,154,0,0,0,0,0,0,0,0,0,0,0,147,157,0,159]]]]]
-```
-
-Liver by mBitsnBites
-
-```json
-[5513,[[[7,0,0,0,192,3,7,0,7,0,201,3,0,789,1234,13636,191,2,5839,254,6,121,6,147,0,1,6,195],[1,2,0,0,1,2,1,2],[[154,0,154,0,152,0,147,0,0,0,0,0,0,0,0,0,154,0,154,0,152,0,157,0,0,0,156],[154,0,154,0,152,0,147,0,0,0,0,0,0,0,0,0,154,0,154,0,152,0,157,0,0,0,159]]],[[7,0,0,0,255,2,8,0,18,1,191,2,0,3997,56363,100000,255,2,392,255,8,69,5,67,0,1,4,57,3],[1,2,1,2,1,2,1,2],[[130],[123]]],[[8,0,0,0,0,0,8,0,0,0,0,0,60,50,419,4607,130,1,10332,120,4,16,5,108,0,0,5,187],[0,0,0,0,1,1],[[0,0,147,0,0,0,147,147,0,0,147,0,0,147,0,147,0,0,147,0,0,0,147,147,0,0,147,0,0,147,0,147]]],[[7,0,0,1,255,0,7,0,0,1,255,0,0,50,150,4800,200,2,600,254],[1,1,1,1,1,1],[[147,0,0,0,0,0,0,0,147,0,0,0,0,0,0,0,147,0,0,0,0,0,0,0,147]]],[[7,0,0,0,255,2,7,0,9,0,154,2,0,2418,1075,10614,240,3,2962,255,6,117,3,73,0,1,5,124],[0,0,0,0,1,2,1,2],[[154,0,154,0,152,0,147,0,0,0,0,0,0,0,0,0,154,0,154,0,152,0,157,0,0,0,156],[154,0,154,0,152,0,147,0,0,0,0,0,0,0,0,0,154,0,147,0,152,0,157,0,0,0,159]]],[[7,0,0,0,192,1,6,0,9,0,192,1,0,137,2000,4611,192,1,982,89,6,25,6,77,0,1,3,69],[1,2,1,3,1,3],[[130,0,130,0,142,0,130,130,0,142,130,0,142,0,130,0,130,0,130,0,142,0,130,130,0,142,130,0,142,0,130],[123,0,123,0,135,0,123,123,0,135,123,0,135,0,123,0,123,0,123,0,135,0,123,123,0,135,123,0,135,0,123],[135,0,135,0,147,0,135,135,0,147,135,0,147,0,135,0,135,0,135,0,147,0,135,135,0,147,135,0,147,0,135]]],[[7,0,0,0,255,3,8,0,0,0,255,0,127,22,88,3997,255,3,4067,234,4,33,2,84,0,1,3,28],[0,0,1,2,1,2,1,3],[[0,0,142,0,154,0,0,0,142,0,0,0,154,0,0,0,0,0,142,0,154,0,0,0,142,0,0,0,154],[0,0,147,0,154,0,0,0,147,0,0,0,154,0,0,0,0,0,147,0,154,0,147,0,0,0,154,0,0,0,154],[0,0,147,0,154,0,0,0,147,0,0,0,154,0,0,0,0,0,147,0,154,0,0,0,147]]],[[8,0,0,0,0,0,8,0,0,0,0,0,255,140347,9216,133417,208,2,2500,16,2,157,8,207,0,1,2,51],[0,0,1,1,1,1,1,1],[[147]]]]]
-```
 
 </details><details><summary>Instruments</summary>
 
@@ -157,21 +133,16 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 ---
 
-</details><details><summary>Alternatives</summary>
+</details><details><summary>Notes</summary>
 
-- Sonant
-  - Original - 2008 Jake Taylor
-  - js-sonant/soundbox - 2011 Marcus Geelnard
-  - sonant-x - 2014 Nicolas Van
-  - pl_synth - 2024 Dominic Szablewski
+Sonant history
+- Original Sonant: 2008 Jake Taylor
+- js-sonant/soundbox: 2011 Marcus Geelnard
+- sonant-x: 2014 Nicolas Van
+- pl_synth: 2024 Dominic Szablewski
 
-- Others
-  - ZzFXM
-  - BassoonTracker
-
-</details><details><summary>Credits</summary>
-
-- Music Player: [pl_synth](https://github.com/phoboslab/pl_synth)
+In 2025, Jake declared Sonant public domain.  
+My tracker (GUI) is original and my player (synth engine) is based on Jake's original sonant.c; converted to javascript and optimized. For a javascript implementation that is faster, try the wasm solution by Dominic.  
 
 </details>
 
