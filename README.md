@@ -11,7 +11,7 @@ Or download and open from your file manager
 ---
 
 
-Battito, a Sonant-based music tracker. At only 2k for the song and player, it is perfect for size-constrained games. Unlike other Sonant-based trackers, Battito uses a piano roll, making editing easier, and live-looping to get immediate feedback. It currently works only on the Chrome browser and looks great on a tablet. See the 25-second in-app video tutorial.
+Battito, a Sonant-based music tracker. At only 2k for the song and player, it is perfect for size-constrained games. Unlike other Sonant-based trackers, Battito uses a piano roll, making editing easier, and with live-loop editing and a blazingly fast engine, you're sure to have a lot of fun. It currently works only on the Chrome browser and looks great on a tablet. See the 25-second in-app video tutorial.
 
 ---
 
@@ -21,8 +21,7 @@ Battito, a Sonant-based music tracker. At only 2k for the song and player, it is
 - waveform/spectrum analyzers
 - instrument presets
 - play/stop/import/export
-- live-looping
-- optimized, blazingly fast synth engine
+- live-loop editing
 
 </details><details><summary>Guide</summary>
 
