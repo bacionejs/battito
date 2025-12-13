@@ -265,7 +265,7 @@ try{
 function jsonToHtml(){
   let s='';
   s+='\n<\script>onload=()=>{addEventListener("click",play);document.body.textContent="Click to play";'
-  s+='\nconst json='+JSON.stringify(getActiveSongDataForPlayback())+';';
+  s+='\nlet json='+JSON.stringify(getActiveSongDataForPlayback())+';';
   s+='\nfunction play(){let C=new AudioContext(),S=C.createBufferSource();S.buffer=BattitoPlayer(C).createbuffer(json);S.connect(C.destination);S.loop=true;S.start();}'
   s+='\n'+BattitoPlayer;
   s+='\n}</\script>'
@@ -331,9 +331,9 @@ function preview(note) {
   preview = function (note) {
     if(playing){playing.stop();playing=null;}
     let instrument = getActive("instrument"); if (instrument == null) return;
-    const json = { rowLen: getSong().rowLen, endPattern: 1, songData: [{ ...instrument, p: [1], c: [{ n: [] }] }] };
+    let json = { rowLen: getSong().rowLen, endPattern: 1, songData: [{ ...instrument, p: [1], c: [{ n: [] }] }] };
     json.songData[0].c[0].n[0] = note || instrument?.c[0]?.n?.find(n=>n!==0) || 147;
-    const b =PLAYER.createbuffer(json);
+    let b =PLAYER.createbuffer(json);
     let s = C.createBufferSource();
     s.buffer=b;
     s.onended=()=>{if(playing===s){playing=null;}};
@@ -494,7 +494,7 @@ function getColor(i) {let hue = ((i + 5) * 360) / 9; return "hsl(" + hue + ", 70
 
 
 
-const SLIDER_MAP = {
+let SLIDER_MAP = {
 4: "osc1_vol", 5: "osc1_waveform", 0: "osc1_oct", 1: "osc1_det", 2: "osc1_detune",
 10: "osc2_vol", 11: "osc2_waveform", 6: "osc2_oct", 7: "osc2_det", 8: "osc2_detune",
 13: "env_attack", 14: "env_sustain", 15: "env_release", 3: "osc1_xenv", 9: "osc2_xenv",
