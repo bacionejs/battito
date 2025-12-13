@@ -129,45 +129,10 @@ Sonant history
 
 ---
 
-BattitoPlayer (the synth engine) optimizes for speed by precomputing all major sources of per-sample overhead - including sine values, note frequencies, LFO curves, and panning multipliers - so the hot inner loop contains almost no transcendentals or waveform math. It also eliminates most conditional logic by resolving branches ahead of time, leaving a mostly linear, arithmetic-only render loop.
+**Sonant** simplified traditional DSP synthesis with phase-accumulated waveforms, linear envelopes, a basic Chamberlin SVF, and precomputed 12-note pitch. **BattitoPlayer** extended this by adding precomputed pitch for **all** notes, precomputed sine values, and precomputed LFO, resulting in a mostly linear, arithmetic-only render loop.
 
 ---
 
-Core Synth DSP Primitives
-
-| Concept | Algorithm | Origin | Year |
-|-------|----------------|--------------------------|--------------|
-| Pitch (12-TET) | f(n) = f₀ · 2^(n/12) | Western music theory → digital synths | ~1700 / ~1980 |
-| Phase Accumulator | φ ← φ + f | Bell Labs / DDS theory | ~1970 |
-| Oscillator | y = wave(φ) | Analog synth designers | ~1960 |
-| ADSR Envelope | g(t) = A → S → R | Robert Moog | ~1964 |
-| Amplitude | y ← y · g | Audio engineering fundamentals | ~1930 |
-| LFO | m(t) = osc(f ≪ 20 Hz) | Modular synth community | ~1960 |
-| Modulation | param ← param · m | Analog synthesis practice | ~1960 |
-| Noise (LCG) | xₙ₊₁ = (a·xₙ + c) mod m | D. H. Lehmer | 1949 |
-| State Variable Filter | low+=f·band; high=x−low−Q·band; band+=f·high | Hal Chamberlin | ~1979 |
-| Resonance (Q) | high = x − low − Q·band | Moog / analog filter design | ~1965 |
-| Panning | L=y(1−p), R=y·p | Stereo recording engineers | ~1958 |
-| Delay / Echo | y[n]+=g·y[n−d] | Tape echo → digital DSP | ~1953 / ~1970 |
-| Mixing | y = Σ voices | Audio engineering | ~1930 |
-| Normalization | y ← y / max(|y|) | Digital mastering tools | ~1980 |
-
----
-
-# DSP Optimizations Side-by-Side (Speed Gain vs Sonant)
-
-Feature           | Full DSP / Classic      | Sonant       | BattitoPlayer / Optimized                   | Speed Gain vs Sonant
------------------ | ---------------------- | ------------------------ | ------------------------------------------ | -----------------
-**Sine Oscillator**| y = sin(2π·phase)      | y = sin(phase)           | y = sinLUT[phaseIndex]                     | ~20–30×
-**Pitch Table**   | f = f₀·2^(n/12)        | precompute LUT           | Q[n] array                                 | ~5–10×
-**ADSR Envelope** | g(t) = exp(-t/τ)       | linear A→S→R             | linear / squared (no exp)                  | ~5×
-**Noise**         | white/pink spectrum     | LCG ± sin                | randfloat4k() deterministic               | ~10–20×
-**SVF / Filter**  | TPT / Stilson SVF      | Chamberlin SVF           | low+=f·band; high=q·(x-band)-low; band+=f*high | ~3–5×
-**Panning**       | cos-power panning       | linear pan               | L=y*(1-p), R=y*p                           | ~5×
-**Delay**         | fractional interp       | integer delay            | buffer[n+delay] += buffer[n]*gain         | ~2–3×
-**Mix / Normalize**| sum + dither + scale   | sum + scale              | sum → scale (simpler)                      | ~2×
-
----
 </details>
 
 ---
