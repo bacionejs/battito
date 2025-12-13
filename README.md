@@ -3,7 +3,7 @@
 
 To open, click ↴  
 
-<a href="//bacionejs.github.io/battito/battito.html" target="_blank"> <img src="https://repository-images.githubusercontent.com/1048415375/88c95659-f0f2-4d50-8758-763520fdcd2a" width="70%" /> </a>
+<a href="//bacionejs.github.io/battito/battito.html" target="_blank"> <img src="" width="70%" /> </a>
 
 Or download and open from your file manager 
 
@@ -121,15 +121,16 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 ---
 
 Sonant history
-- Original Sonant: 2008 Jake Taylor (declared **public domain** in 2025)
-- soundbox/js-sonant: 2011 Marcus Geelnard
+- Sonant: 2008 Jake Taylor (declared **public domain** in 2025)
+- js-sonant: 2011 Marcus Geelnard
 - sonant-x: 2014 Nicolas Van
 - pl_synth: 2024 Dominic Szablewski
-- battito/BattitoPlayer: 2025 bacionejs (me)
+- battito:  2025 bacionejs (me)
 
 ---
 
-**Sonant** optimized traditional DSP synthesis with phase-accumulated waveforms, linear envelopes, a basic Chamberlin SVF, and precomputed 12-note pitch. **BattitoPlayer** extended this by adding precomputed pitch for **all** notes, precomputed sine, and precomputed LFO, resulting in a mostly linear, arithmetic-only render loop.
+**Sonant** optimized traditional DSP synthesis with phase-accumulated waveforms, linear envelopes, a basic Chamberlin SVF, and precomputed 12-note pitch.  
+**Battito** extends this by adding precomputed pitch for **all** notes, precomputed sine, and precomputed LFO, resulting in a mostly linear, arithmetic-only render loop.  
 
 ---
 
