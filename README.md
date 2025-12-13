@@ -133,6 +133,26 @@ BattitoPlayer (the synth engine) optimizes for speed by precomputing all major s
 
 ---
 
+Core Synth DSP Primitives
+
+| Concept | Algorithm | Origin | Year |
+|-------|----------------|--------------------------|--------------|
+| Pitch (12-TET) | f(n) = f₀ · 2^(n/12) | Western music theory → digital synths | ~1700 / ~1980 |
+| Phase Accumulator | φ ← φ + f | Bell Labs / DDS theory | ~1970 |
+| Oscillator | y = wave(φ) | Analog synth designers | ~1960 |
+| ADSR Envelope | g(t) = A → S → R | Robert Moog | ~1964 |
+| Amplitude | y ← y · g | Audio engineering fundamentals | ~1930 |
+| LFO | m(t) = osc(f ≪ 20 Hz) | Modular synth community | ~1960 |
+| Modulation | param ← param · m | Analog synthesis practice | ~1960 |
+| Noise (LCG) | xₙ₊₁ = (a·xₙ + c) mod m | D. H. Lehmer | 1949 |
+| State Variable Filter | low+=f·band; high=x−low−Q·band; band+=f·high | Hal Chamberlin | ~1979 |
+| Resonance (Q) | high = x − low − Q·band | Moog / analog filter design | ~1965 |
+| Panning | L=y(1−p), R=y·p | Stereo recording engineers | ~1958 |
+| Delay / Echo | y[n]+=g·y[n−d] | Tape echo → digital DSP | ~1953 / ~1970 |
+| Mixing | y = Σ voices | Audio engineering | ~1930 |
+| Normalization | y ← y / max(|y|) | Digital mastering tools | ~1980 |
+
+---
 </details>
 
 ---

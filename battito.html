@@ -694,7 +694,8 @@ for(let i=0;i<I.length;i++){
           let t1=osc1_freq_base;if(B.lfo_osc1_freq)t1+=lfoR;if(B.osc1_xenv)t1*=e*e;c1+=t1;rs=O(B.osc1_waveform,c1)*(B.osc1_vol/255.0);
           let t2=osc2_freq_base;if(B.osc2_xenv)t2*=e*e;c2+=t2;rs+=O(B.osc2_waveform,c2)*(B.osc2_vol/255.0);
           if(B.noise_fader)rs+=O(0,rnd())*(B.noise_fader/255.0)*e;rs*=e;
-          f=B.fx_freq;if(B.lfo_fx_freq)f*=lfoR;f=1.5*(f*Math.PI/S);low+=f*band;high=q*(rs-band)-low;band+=f*high;
+          f=B.fx_freq;if(B.lfo_fx_freq)f*=lfoR;f=1.5*(f*Math.PI/S);
+          low+=f*band;high=q*(rs-band)-low;band+=f*high;
           switch(B.fx_filter){case 1:rs=high;break;case 2:rs=low;break;case 3:rs=band;break;case 4:rs=low+high;break;}
           t=O(0,pan_step*b)*(B.fx_pan_amt/512.0)+0.5;rs*=B.env_master*0.006;L[b]+=rs*(1-t);R[b]+=rs*t;
         }
