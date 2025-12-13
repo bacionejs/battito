@@ -57,12 +57,13 @@ grid(piano, PC, PR);
 }
 
 function initSliders() {
-SLIDER_INIT().forEach((group, i) => {
-  group.forEach(([label, index, max]) => {
-    let l = element("label", sliders); l.textContent = label; l.style.color = getColor(i);
-    let s = element("input", sliders, "slider"); s.type = "range"; s.dataset.index = index; s.max = max; s.disabled = true;
+  SLIDER_INIT().forEach((group,i)=>{
+    group.forEach(([label,key,max])=>{
+      let l=element("label",sliders);l.textContent=label;l.style.color=getColor(i);
+      let s=element("input",sliders,"slider");
+      s.type="range";s.dataset.key=key;s.max=max;s.disabled=true;
+    });
   });
-});
 }
 
 function initSequencer() {
@@ -105,17 +106,17 @@ active.cols.forEach((isActive, i) => {
 });
 }
 
-function updateSliders() {
-let ss = sliders.querySelectorAll(".slider"); 
-let instrument = getActive("instrument");
-if (instrument !== null) {
-  ss.forEach(s => {
-    let key = SLIDER_MAP[s.dataset.index];
-    if (key) s.value = instrument[key];
-    s.disabled = false;
-  });
-}
-else {ss.forEach(s => {s.disabled = true; s.value = 0;});}
+function updateSliders(){
+  let ss=sliders.querySelectorAll(".slider");
+  let instrument=getActive("instrument");
+  if(instrument!==null){
+    ss.forEach(s=>{
+      s.value=instrument[s.dataset.key]||0;
+      s.disabled=false;
+    });
+  }else{
+    ss.forEach(s=>{s.disabled=true;s.value=0;});
+  }
 }
 
 function updateSequencer() {
@@ -179,12 +180,11 @@ audio().preview(note);
 update();
 }
 
-function handleSliderInput(e) {
-if (!e.target.classList.contains("slider")) return;
-let instrument = getActive("instrument"); if (instrument == null) return;
-instrument[SLIDER_MAP[e.target.dataset.index]] = parseInt(e.target.value);
-audio().preview();
-update(); 
+function handleSliderInput(e){
+  if(!e.target.classList.contains("slider"))return;
+  let instrument=getActive("instrument");if(instrument==null)return;
+  instrument[e.target.dataset.key]=parseInt(e.target.value);
+  audio().preview();update();
 }
 
 function handleSequencerClick({row, col}) {
@@ -447,17 +447,6 @@ up(e){e.preventDefault();if(t!==null){clearTimeout(t);t=null;}}
 o.addEventListener("pointerdown",lp.down); o.addEventListener("pointerup",lp.up); o.addEventListener("pointerleave",lp.up);
 }
 
-function grid(e, cols, rows, header) {
-Object.assign(e.style, {gridTemplateColumns: "repeat(" + cols + ",1fr)", gridTemplateRows: "repeat(" + rows + ",1fr)"});
-let totalCells = cols * rows;
-for (let i = 0; i < totalCells; i++) {
-  let c = i % cols; let r = Math.floor(i / cols); let a = 0; let cellClasses = "cell";
-  if (header === true) {a = -1; if (r === 0) {cellClasses += " col-header";} if (c === 0) {cellClasses += " row-header";} }
-  let cell = element("div", e, cellClasses.trim());
-  cell.dataset.row = r + a; cell.dataset.col = c + a;
-}
-}
-
 function getActive(s) {
 let song = audio().getSong();
 if (s == "instrument") {
@@ -472,6 +461,17 @@ if (s == "instrument") {
   patternId = patternId - 1;
   if (!instr.c[patternId]) instr.c[patternId] = {n: Array(PR).fill(0)};
   return instr.c[patternId].n;
+}
+}
+
+function grid(e, cols, rows, header) {
+Object.assign(e.style, {gridTemplateColumns: "repeat(" + cols + ",1fr)", gridTemplateRows: "repeat(" + rows + ",1fr)"});
+let totalCells = cols * rows;
+for (let i = 0; i < totalCells; i++) {
+  let c = i % cols; let r = Math.floor(i / cols); let a = 0; let cellClasses = "cell";
+  if (header === true) {a = -1; if (r === 0) {cellClasses += " col-header";} if (c === 0) {cellClasses += " row-header";} }
+  let cell = element("div", e, cellClasses.trim());
+  cell.dataset.row = r + a; cell.dataset.col = c + a;
 }
 }
 
@@ -494,26 +494,15 @@ function getColor(i) {let hue = ((i + 5) * 360) / 9; return "hsl(" + hue + ", 70
 
 
 
-let SLIDER_MAP = {
-4: "osc1_vol", 5: "osc1_waveform", 0: "osc1_oct", 1: "osc1_det", 2: "osc1_detune",
-10: "osc2_vol", 11: "osc2_waveform", 6: "osc2_oct", 7: "osc2_det", 8: "osc2_detune",
-13: "env_attack", 14: "env_sustain", 15: "env_release", 3: "osc1_xenv", 9: "osc2_xenv",
-17: "fx_filter", 18: "fx_freq", 19: "fx_resonance",
-28: "lfo_waveform", 26: "lfo_freq", 27: "lfo_amt", 24: "lfo_osc1_freq", 25: "lfo_fx_freq",
-20: "fx_delay_time", 21: "fx_delay_amt", 22: "fx_pan_freq", 23: "fx_pan_amt",
-12: "noise_fader", 16: "env_master",
-};
-
-
 function SLIDER_INIT() {
 return [
-  [["1v", 4, 255], ["1w", 5, 3], ["1o", 0, 16], ["1s", 1, 11], ["1d", 2, 255]],
-  [["2v", 10, 255], ["2w", 11, 3], ["2o", 6, 16], ["2s", 7, 11], ["2d", 8, 255]],
-  [["ea", 13, 200000], ["es", 14, 200000], ["er", 15, 200000], ["e1", 3, 1], ["e2", 9, 1]],
-  [["ct", 17, 4], ["ca", 18, 11025], ["cr", 19, 255]],
-  [["mw", 28, 3], ["ms", 26, 16], ["ma", 27, 255], ["m1", 24, 1], ["mc", 25, 1]],
-  [["ds", 20, 16], ["da", 21, 248], ["ps", 22, 16], ["pa", 23, 255]],
-  [["nv", 12, 255], ["vm", 16, 255]],
+[["1v","osc1_vol",255],["1w","osc1_waveform",3],["1o","osc1_oct",16],["1s","osc1_det",11],["1d","osc1_detune",255]],
+[["2v","osc2_vol",255],["2w","osc2_waveform",3],["2o","osc2_oct",16],["2s","osc2_det",11],["2d","osc2_detune",255]],
+[["ea","env_attack",200000],["es","env_sustain",200000],["er","env_release",200000],["e1","osc1_xenv",1],["e2","osc2_xenv",1]],
+[["ct","fx_filter",4],["ca","fx_freq",11025],["cr","fx_resonance",255]],
+[["mw","lfo_waveform",3],["ms","lfo_freq",16],["ma","lfo_amt",255],["m1","lfo_osc1_freq",1],["mc","lfo_fx_freq",1]],
+[["ds","fx_delay_time",16],["da","fx_delay_amt",248],["ps","fx_pan_freq",16],["pa","fx_pan_amt",255]],
+[["nv","noise_fader",255],["vm","env_master",255]],
 ];
 }
 
