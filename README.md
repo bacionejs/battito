@@ -130,7 +130,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 ---
 
-**Battito** optimizes by adding precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only render loop.  
+**Battito** optimizes with precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only render loop.  
 
 ---
 
