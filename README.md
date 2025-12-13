@@ -124,6 +124,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 - Sonant: 2008 Jake Taylor (declared **public domain** in 2025)
 - js-sonant: 2011 Marcus Geelnard
 - sonant-x: 2014 Nicolas Van
+- sonant-rs: 2018 parasyte
 - pl_synth: 2024 Dominic Szablewski
 - battito:  2025 bacionejs (me)
 
