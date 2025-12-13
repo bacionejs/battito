@@ -129,7 +129,7 @@ Sonant history
 
 ---
 
-**Sonant** optimized traditional DSP synthesis with phase-accumulated waveforms, linear envelopes, a basic Chamberlin SVF, and precomputed 12-note pitch. **BattitoPlayer** extended this by adding precomputed pitch for **all** notes, precomputed sine values, and precomputed LFO, resulting in a mostly linear, arithmetic-only render loop.
+**Sonant** optimized traditional DSP synthesis with phase-accumulated waveforms, linear envelopes, a basic Chamberlin SVF, and precomputed 12-note pitch. **BattitoPlayer** extended this by adding precomputed pitch for **all** notes, precomputed sine, and precomputed LFO, resulting in a mostly linear, arithmetic-only render loop.
 
 ---
 
