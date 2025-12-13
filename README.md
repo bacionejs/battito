@@ -130,8 +130,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 ---
 
-**Sonant** optimized traditional DSP synthesis with phase-accumulated waveforms, linear envelopes, a basic Chamberlin SVF, and precomputed 12-note pitch.  
-**Battito** extends this by adding precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only render loop.  
+**Battito** optimizes by adding precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only render loop.  
 
 ---
 
