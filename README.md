@@ -121,7 +121,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 ---
 
 Sonant history
-- Original Sonant: 2008 Jake Taylor (declared public domain in 2025)
+- Original Sonant: 2008 Jake Taylor (declared **public domain** in 2025)
 - js-sonant/soundbox: 2011 Marcus Geelnard
 - sonant-x: 2014 Nicolas Van
 - pl_synth: 2024 Dominic Szablewski (fastest js/wasm solution)
