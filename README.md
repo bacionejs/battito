@@ -153,6 +153,21 @@ Core Synth DSP Primitives
 | Normalization | y ← y / max(|y|) | Digital mastering tools | ~1980 |
 
 ---
+
+# DSP Optimizations Side-by-Side (Speed Gain vs Sonant)
+
+Feature           | Full DSP / Classic      | Sonant       | BattitoPlayer / Optimized                   | Speed Gain vs Sonant
+----------------- | ---------------------- | ------------------------ | ------------------------------------------ | -----------------
+**Sine Oscillator**| y = sin(2π·phase)      | y = sin(phase)           | y = sinLUT[phaseIndex]                     | ~20–30×
+**Pitch Table**   | f = f₀·2^(n/12)        | precompute LUT           | Q[n] array                                 | ~5–10×
+**ADSR Envelope** | g(t) = exp(-t/τ)       | linear A→S→R             | linear / squared (no exp)                  | ~5×
+**Noise**         | white/pink spectrum     | LCG ± sin                | randfloat4k() deterministic               | ~10–20×
+**SVF / Filter**  | TPT / Stilson SVF      | Chamberlin SVF           | low+=f·band; high=q·(x-band)-low; band+=f*high | ~3–5×
+**Panning**       | cos-power panning       | linear pan               | L=y*(1-p), R=y*p                           | ~5×
+**Delay**         | fractional interp       | integer delay            | buffer[n+delay] += buffer[n]*gain         | ~2–3×
+**Mix / Normalize**| sum + dither + scale   | sum + scale              | sum → scale (simpler)                      | ~2×
+
+---
 </details>
 
 ---
