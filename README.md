@@ -3,7 +3,7 @@
 
 To open, click ↴  
 
-<a href="//bacionejs.github.io/battito/battito.html" target="_blank"> <img src="" width="70%" /> </a>
+<a href="//bacionejs.github.io/battito/battito.html" target="_blank"> <img src="https://repository-images.githubusercontent.com/1048415375/88c95659-f0f2-4d50-8758-763520fdcd2a" width="70%" /> </a>
 
 Or download and open from your file manager 
 
@@ -120,7 +120,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 ---
 
-Sonant history
+**Sonant** history
 - Sonant: 2008 Jake Taylor (declared **public domain** in 2025)
 - js-sonant: 2011 Marcus Geelnard
 - sonant-x: 2014 Nicolas Van
