@@ -30,7 +30,7 @@ initSliders();
 initSequencer();
 update();
 addEventListeners();
-if(!location.search.includes("off"))runTutorial();
+if(!location.search.includes("off") && typeof runTutorial!="undefined")runTutorial();
 }
 main();
 
