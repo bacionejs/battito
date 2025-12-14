@@ -295,13 +295,14 @@ function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
 
 function audio(){
 if(audio.instance)return audio.instance;
+let HZ=44100;
 let C=new AudioContext();let S=null;
-let PLAYER=BattitoPlayer(C);let SONG=PRESETS();
+let PLAYER=BattitoPlayer(C,HZ);let SONG=PRESETS();
 let rafid=null;let currSequence=null;let prevSequence=null;
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
 let bpm=samplesToBPM(SONG.rowLen);
 
-function samplesToBPM(samplesPerStep,sampleRate=44100,stepsPerBeat=4){return (sampleRate*60)/(samplesPerStep*stepsPerBeat);}
+function samplesToBPM(samplesPerStep,sampleRate=HZ,stepsPerBeat=4){return (sampleRate*60)/(samplesPerStep*stepsPerBeat);}
 function beatsToSeconds(beats,bpm){return (60/bpm)*beats;}
 function getSong(){return SONG;}
 function setSong(newSong){SONG=newSong;bpm=samplesToBPM(SONG.rowLen);update();}
@@ -380,7 +381,7 @@ preview=function (note){
   playing=s;
 let i=JSON.parse(JSON.stringify(json));
 i.songData[0].fx_delay_time=0;i.songData[0].fx_delay_amt=0;
-i.rowLen=getSong().rowLen*(getSong().rowLen/44100);
+i.rowLen=getSong().rowLen*(getSong().rowLen/HZ);
 wave(PLAYER.createbuffer(i),i.songData[0]);
 };
 function wave(buffer,t){
@@ -431,7 +432,7 @@ function jsonToHtml(){
   let s="";
   s+="\n<\script>onload=()=>{addEventListener('click',play);document.body.textContent='Click to play';"
   s+="\nlet json="+JSON.stringify(range())+";";
-  s+="\nfunction play(){let C=new AudioContext(),S=C.createBufferSource();S.buffer=BattitoPlayer(C).createbuffer(json);S.connect(C.destination);S.loop=true;S.start();}"
+  s+="\nfunction play(){let HZ="+HZ+",C=new AudioContext(),S=C.createBufferSource();S.buffer=BattitoPlayer(C,HZ).createbuffer(json);S.connect(C.destination);S.loop=true;S.start();}"
   s+="\n"+BattitoPlayer;
   s+="\n}</\script>"
   return s;
@@ -626,8 +627,8 @@ loop();
 
 
 
-function BattitoPlayer(audiocontext){
-let S=44100,R_S=1;
+function BattitoPlayer(audiocontext,HZ){
+let R_S=1;
 let SIN=new Float32Array(1024);for(let i=0;i<1024;i++)SIN[i]=Math.sin(i*2*Math.PI/1024);let sin=(v)=>SIN[((v*1024)&1023)>>>0];
 let Q=new Float32Array(256);for(let n=0;n<256;n++){let f=0.00390625,m=1.059463094,l=128,i=n;if(i>l)i-=l;else{i=l-i;m=1/m;}while(i-->0)f*=m;Q[n]=f;}
 let O=(t,v)=>{let p=v-Math.floor(v);switch(t){case 0:return sin(p);case 1:return p<0.5?-1:1;case 2:return p-0.5;case 3:let v2=p*4;return v2<2?v2-1:3-v2;default:return sin(p);}};
@@ -656,7 +657,7 @@ for(let i=0;i<I.length;i++){
           let t1=osc1_freq_base;if(B.lfo_osc1_freq)t1+=lfoR;if(B.osc1_xenv)t1*=e*e;c1+=t1;rs=O(B.osc1_waveform,c1)*(B.osc1_vol/255.0);
           let t2=osc2_freq_base;if(B.osc2_xenv)t2*=e*e;c2+=t2;rs+=O(B.osc2_waveform,c2)*(B.osc2_vol/255.0);
           if(B.noise_fader)rs+=O(0,rnd())*(B.noise_fader/255.0)*e;rs*=e;
-          f=B.fx_freq;if(B.lfo_fx_freq)f*=lfoR;f=1.5*(f*Math.PI/S);
+          f=B.fx_freq;if(B.lfo_fx_freq)f*=lfoR;f=1.5*(f*Math.PI/HZ);
           low+=f*band;high=q*(rs-band)-low;band+=f*high;
           switch(B.fx_filter){case 1:rs=high;break;case 2:rs=low;break;case 3:rs=band;break;case 4:rs=low+high;break;}
           t=O(0,pan_step*b)*(B.fx_pan_amt/512.0)+0.5;rs*=B.env_master*0.006;L[b]+=rs*(1-t);R[b]+=rs*t;
@@ -669,7 +670,7 @@ for(let i=0;i<I.length;i++){
   for(let b=0;b<T;b++){l[b]+=L[b];r[b]+=R[b];}
 }
 let X=0;for(let i=0;i<T;i++){let a=Math.abs(l[i]);if(a>X)X=a;a=Math.abs(r[i]);if(a>X)X=a;}if(X>0){let scale=1/X;for(let i=0;i<T;i++){l[i]*=scale;r[i]*=scale;}}
-let b=audiocontext.createBuffer(2,l.length,S);b.getChannelData(0).set(l);b.getChannelData(1).set(r);
+let b=audiocontext.createBuffer(2,l.length,HZ);b.getChannelData(0).set(l);b.getChannelData(1).set(r);
 return b;
 };
 
