@@ -121,18 +121,18 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 ---
 
 History
-- Sonant: 2008 Jake Taylor ([public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137))
+- Sonant: 2008 Jake Taylor ([public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) as of 2025)
 - js-sonant: 2011 Marcus Geelnard
 - sonant-x: 2014 Nicolas Van
 - sonant-rs: 2018 parasyte
 - pl_synth: 2024 Dominic Szablewski
-- battito:  2025 bacionejs (me)
+- battito:  2025 bacionejs (Sonant )
 
 ---
 
 Contributions
 
-Battito optimizes with precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only, blazingly fast render loop.  
+Battito ports the original Sonant and optimizes with precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only, blazingly fast render loop.  
 
 ---
 
