@@ -24,7 +24,7 @@ if(!window.chrome){
   document.body.textContent=tested;
   return;
 }
-applystyle();
+STYLE();
 initPiano();
 initSliders();
 initSequencer();
@@ -57,7 +57,7 @@ grid(piano,PC,PR);
 }
 
 function initSliders(){
-  SLIDER_INIT().forEach((group,i)=>{
+  SLIDERS().forEach((group,i)=>{
     group.forEach(([label,key,max])=>{
       let l=element("label",sliders);l.textContent=label;l.style.color=getColor(i);
       let s=element("input",sliders,"slider");
@@ -461,7 +461,7 @@ return audio.instance={stop,start,preview,download,getSong,setSong,getCurr};
 
 
 
-function SLIDER_INIT(){
+function SLIDERS(){
 return [
 [["1v","osc1_vol",255],["1w","osc1_waveform",3],["1o","osc1_oct",16],["1s","osc1_det",11],["1d","osc1_detune",255]],
 [["2v","osc2_vol",255],["2w","osc2_waveform",3],["2o","osc2_oct",16],["2s","osc2_det",11],["2d","osc2_detune",255]],
@@ -496,7 +496,7 @@ return {
 };
 }
 
-function applystyle(){
+function STYLE(){
 element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;}
 body{display:flex;background:black;color:white;font-weight:bold;font-family:monospace;}
