@@ -296,7 +296,7 @@ function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
 function audio(){
 if(audio.instance)return audio.instance;
 let C=new AudioContext();let S=null;
-let PLAYER=BattitoPlayer(C);let SONG=presets();
+let PLAYER=BattitoPlayer(C);let SONG=PRESETS();
 let rafid=null;let currSequence=null;let prevSequence=null;
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
 let bpm=samplesToBPM(SONG.rowLen);
@@ -448,7 +448,7 @@ function bufferToWav(){
 
 
 
-return audio.instance={getCurr,stop,start,getSong,setSong,preview,download};
+return audio.instance={stop,start,preview,download,getSong,setSong,getCurr};
 }
 
 
@@ -473,7 +473,7 @@ return [
 ];
 }
 
-function presets(){
+function PRESETS(){
 return {
   "rowLen":5013,
   "endPattern":4,
