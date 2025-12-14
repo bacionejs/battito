@@ -303,7 +303,6 @@ let rafid=null;let currSequence=null;let prevSequence=null;
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
 let bpm=samplesToBPM(SONG.rowLen);
 
-//what does this do: i.rowLen=getSong().rowLen*(getSong().rowLen/sampleRate);
 function samplesToBPM(samplesPerStep){return (sampleRate*60)/(samplesPerStep*stepsPerBeat);}
 function beatsToSeconds(beats,bpm){return (60/bpm)*beats;}
 function getSong(){return SONG;}
