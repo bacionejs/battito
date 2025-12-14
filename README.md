@@ -126,7 +126,7 @@ History
 - sonant-x: 2014 Nicolas Van
 - sonant-rs: 2018 parasyte
 - pl_synth: 2024 Dominic Szablewski
-- battito:  2025 bacionejs (Sonant )
+- battito:  2025 bacionejs
 
 ---
 
