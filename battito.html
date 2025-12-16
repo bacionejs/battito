@@ -24,12 +24,12 @@ if(!window.chrome){
   document.body.textContent=tested;
   return;
 }
-STYLE();
+initStyle();
 initPiano();
 initSliders();
 initSequencer();
-update();
 addEventListeners();
+update();
 if(!location.search.includes("off") && typeof runTutorial!="undefined")runTutorial();
 }
 main();
@@ -498,7 +498,7 @@ return {
 };
 }
 
-function STYLE(){
+function initStyle(){
 element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;}
 body{display:flex;background:black;color:white;font-weight:bold;font-family:monospace;}
