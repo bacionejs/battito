@@ -57,13 +57,13 @@ grid(piano,PC,PR);
 }
 
 function initSliders(){
-  SLIDERS().forEach((group,i)=>{
-    group.forEach(([label,key,max])=>{
-      let l=element("label",sliders);l.textContent=label;l.style.color=getColor(i);
-      let s=element("input",sliders,"slider");
-      s.type="range";s.dataset.key=key;s.max=max;s.disabled=true;
-    });
+SLIDERS().forEach((group,i)=>{
+  group.forEach(([label,key,max])=>{
+    let l=element("label",sliders);l.textContent=label;l.style.color=getColor(i);
+    let s=element("input",sliders,"slider");
+    s.type="range";s.dataset.key=key;s.max=max;s.disabled=true;
   });
+});
 }
 
 function initSequencer(){
