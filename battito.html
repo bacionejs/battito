@@ -53,7 +53,7 @@ grid(piano,PC,PR);
 }
 
 function initSequencer(){
-grid(sequencer,SC+1,SR+1,true);
+grid(sequencer,SC,SR,true);
 for(let i=0;i<8;i++){element("div",sequencer.children[0],"meter");}
 for(let i=1;i<SC+1;i++){
   let cell=sequencer.children[i];
@@ -244,12 +244,12 @@ if(s=="instrument"){
 }
 
 function grid(e,cols,rows,header){
+let a=0;if(header){a=-1;cols++;rows++;}
 Object.assign(e.style,{gridTemplateColumns:"repeat("+cols+",1fr)",gridTemplateRows:"repeat("+rows+",1fr)"});
-let totalCells=cols*rows;
-for(let i=0;i<totalCells;i++){
-  let c=i%cols;let r=Math.floor(i/cols);let a=0;let cellClasses="cell";
-  if(header===true){a=-1;if(r===0){cellClasses+=" col-header";}if(c===0){cellClasses+=" row-header";}}
-  let cell=element("div",e,cellClasses.trim());
+for(let i=0;i<cols*rows;i++){
+  let c=i%cols,r=Math.floor(i/cols),classes="cell";
+  if(header===true){if(r===0){classes+=" col-header";}if(c===0){classes+=" row-header";}}
+  let cell=element("div",e,classes);
   cell.dataset.row=r+a;cell.dataset.col=c+a;
 }
 }
