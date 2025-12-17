@@ -10,7 +10,7 @@ let side=element("div",document.body,"side");
 let sequencer=element("div",side,"sequencer");
 let text=element("div",side,"text");text.contentEditable=true;
 let canvas=element("canvas",side,"canvas");
-let fullscreenButton=element("div",side,"fullscreen");fullscreenButton.textContent="\u26F6";
+let fullscreen=element("div",side,"fullscreen");fullscreen.textContent="\u26F6";
 let loading=element("div",side,"loading");loading.textContent="Loading...";
 let SR=60,SC=8,PR=32,PC=48;
 let active=(function (){let cols=Array(SC).fill(0);let rows=Array(SR).fill(0);return {cols,rows};})();
@@ -161,8 +161,8 @@ sliders.addEventListener("input",handleSliderInput);
 sequencer.addEventListener("click",e=>{handleSequencerClick(e.target.dataset);});
 text.addEventListener("input",handleSongInput);
 makeLongPress(canvas,_=>{audio().download();});
-fullscreenButton.addEventListener("click",_=>{let el=document.documentElement;if(el.requestFullscreen)el.requestFullscreen();fullscreenButton.style.display="none";});
-document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement){fullscreenButton.style.display="block";}});
+fullscreen.addEventListener("click",_=>{let el=document.documentElement;if(el.requestFullscreen)el.requestFullscreen();fullscreen.style.display="none";});
+document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement){fullscreen.style.display="block";}});
 }
 
 function handlePianoClick({row,col}){
@@ -300,8 +300,7 @@ function setSong(newSong){SONG=newSong;bpm=samplesToBPM(SONG.rowLen);update();}
 function getCurr(){return currSequence;}
 
 function start(){
-let json=range();
-if(!json){return;}
+let json=range();if(!json){return;}
 loading.style.display="block";
 requestAnimationFrame(()=>{requestAnimationFrame(()=>{
 S=C.createBufferSource();
