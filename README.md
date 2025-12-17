@@ -35,7 +35,7 @@ Steps
 
 Optional
 - There are 8 preset instruments, but you can also select a track and configure the **synth** (see the Instruments section)
-- Long-press the waveform visualizer to **export** html/wav: the html file for your game and the wav file for whatever else. It will export whatever is selected: ranges or whole song.
+- To **export** html/wav, long-press the waveform visualizer. Use the html file for your game and the wav file for whatever else. It will export whatever is selected: ranges or whole song.
 - To save your work for future use, copy the **textarea** JSON to a separate text editor. To **import**, paste the JSON in the textarea.
 - The **textarea** can be edited. Changes are **live** just like the other components.
 - Change the tempo by editing the first value in the **textarea** (5513=120 BPM).
