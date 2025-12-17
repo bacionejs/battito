@@ -14,7 +14,12 @@ Battito is a simple tablet-centric music tracker with piano-roll, live-loop edit
 
 ---
 
-<details><summary>Features</summary>
+<details><summary>Purpose</summary>
+For size-constrained [js13kgames](js13kgames.com) jam (player+song=2k)  
+
+</details><details><summary>Features</summary>
+
+---
 
 - instrument/sequence/pattern editors
 - waveform/spectrum analyzers
@@ -122,13 +127,6 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 Contributions
 
 Battito ports the original [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant and optimizes with precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only, blazingly fast render loop.  
-
----
-
-Target
-
-Chrome/tablet  
-For size-constrained [js13kgames](js13kgames.com) jam (player+song=2k)  
 
 ---
 
