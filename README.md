@@ -20,8 +20,6 @@ For size-constrained [js13kgames](js13kgames.com) jam (player+song=2k)
 
 </details><details><summary>Features</summary>
 
----
-
 - instrument/sequence/pattern editors
 - waveform/spectrum analyzers
 - instrument presets
