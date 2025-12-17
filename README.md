@@ -15,6 +15,7 @@ Battito is a simple tablet-centric music tracker with piano-roll, live-loop edit
 ---
 
 <details><summary>Purpose</summary>
+
 For size-constrained [js13kgames](js13kgames.com) jam (player+song=2k)  
 
 </details><details><summary>Features</summary>
