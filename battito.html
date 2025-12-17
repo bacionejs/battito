@@ -26,8 +26,8 @@ if(!window.chrome){
 }
 initStyle();
 initPiano();
-initSliders();
 initSequencer();
+initSliders();
 addEventListeners();
 update();
 if(!location.search.includes("off") && typeof runTutorial!="undefined")runTutorial();
@@ -56,16 +56,6 @@ grid(piano,PC,PR);
 [...piano.children].forEach(cell=>{let [r,c]=[parseInt(cell.dataset.row),parseInt(cell.dataset.col)];if(c%12===0)cell.style.borderLeft="1px solid black";if(r%4===0)cell.style.borderTop="1px solid black";});
 }
 
-function initSliders(){
-SLIDERS().forEach((group,i)=>{
-  group.forEach(([label,key,max])=>{
-    let l=element("label",sliders);l.textContent=label;l.style.color=getColor(i);
-    let s=element("input",sliders,"slider");
-    s.type="range";s.dataset.key=key;s.max=max;s.disabled=true;
-  });
-});
-}
-
 function initSequencer(){
 grid(sequencer,SC+1,SR+1,true);
 for(let i=0;i<8;i++){element("div",sequencer.children[0],"meter");}
@@ -78,6 +68,16 @@ for(let i=SC+1;i<(SC+1)*(SR+1);i+=SC+1){
   let cell=sequencer.children[i];
   cell.textContent=i/(SC+1);
 }
+}
+
+function initSliders(){
+SLIDERS().forEach((group,i)=>{
+  group.forEach(([label,key,max])=>{
+    let l=element("label",sliders);l.textContent=label;l.style.color=getColor(i);
+    let s=element("input",sliders,"slider");
+    s.type="range";s.dataset.key=key;s.max=max;s.disabled=true;
+  });
+});
 }
 
 
@@ -106,19 +106,6 @@ active.cols.forEach((isActive,i)=>{
 });
 }
 
-function updateSliders(){
-let ss=sliders.querySelectorAll(".slider");
-let instrument=getActive("instrument");
-if(instrument!==null){
-  ss.forEach(s=>{
-    s.value=instrument[s.dataset.key]||0;
-    s.disabled=false;
-  });
-}else{
-  ss.forEach(s=>{s.disabled=true;s.value=0;});
-}
-}
-
 function updateSequencer(){
 [...sequencer.children].forEach(cell=>{
   cell.classList.remove("active","row-selected","col-selected");
@@ -141,6 +128,19 @@ function updateSequencer(){
     }
   }
 });
+}
+
+function updateSliders(){
+let ss=sliders.querySelectorAll(".slider");
+let instrument=getActive("instrument");
+if(instrument!==null){
+  ss.forEach(s=>{
+    s.value=instrument[s.dataset.key]||0;
+    s.disabled=false;
+  });
+}else{
+  ss.forEach(s=>{s.disabled=true;s.value=0;});
+}
 }
 
 function updateText(){text.textContent=JSON.stringify(audio().getSong(),null,2);}
@@ -180,13 +180,6 @@ audio().preview(note);
 update();
 }
 
-function handleSliderInput(e){
-if(!e.target.classList.contains("slider"))return;
-let instrument=getActive("instrument");if(instrument==null)return;
-instrument[e.target.dataset.key]=parseInt(e.target.value);
-audio().preview();update();
-}
-
 function handleSequencerClick({row,col}){
 if(row==="-1"&&col==="-1"){
   let maxRow=0;
@@ -218,6 +211,13 @@ update();
 let isAnyTrackActive=active.cols.some(x=>x);
 let isAnySequenceActive=active.rows.some(y=>y);
 if(isAnyTrackActive&&isAnySequenceActive){audio().stop();audio().start();}else{audio().stop();}
+}
+
+function handleSliderInput(e){
+if(!e.target.classList.contains("slider"))return;
+let instrument=getActive("instrument");if(instrument==null)return;
+instrument[e.target.dataset.key]=parseInt(e.target.value);
+audio().preview();update();
 }
 
 function handleSongInput(){
