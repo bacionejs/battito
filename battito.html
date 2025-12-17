@@ -17,22 +17,19 @@ let active=(function (){let cols=Array(SC).fill(0);let rows=Array(SR).fill(0);re
 //let debug=element("div");debug.style.cssText="position:fixed;bottom:0;left:0;width:100%";
 function setDebug(s){debug.textContent=s;}
 
-function main(){
+(function main(){
 if(!window.chrome){
-  document.body.innerHTML="";
-  document.body.style.cssText="background:black;color:white;display:flex;justify-content:center;align-items:center;height:100vh;text-align:center;";
-  document.body.textContent=tested;
+  document.body.innerHTML=tested;
+  document.body.style.cssText="background:black;color:white;display:flex;justify-content:center;align-items:center;height:100vh;";
   return;
 }
 initStyle();
 initPiano();
 initSequencer();
 initSliders();
-addEventListeners();
-update();
+initListeners();
 if(!location.search.includes("off") && typeof runTutorial!="undefined")runTutorial();
-}
-main();
+})();
 
 function update(){
 updatePiano();
@@ -150,7 +147,7 @@ function updateText(){text.textContent=JSON.stringify(audio().getSong(),null,2);
 
 
 
-function addEventListeners(){
+function initListeners(){
 piano.addEventListener("click",e=>{handlePianoClick(e.target.dataset);});
 sliders.addEventListener("input",handleSliderInput);
 sequencer.addEventListener("click",e=>{handleSequencerClick(e.target.dataset);});
