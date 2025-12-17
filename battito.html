@@ -57,7 +57,7 @@ grid(sequencer,SC,SR,true);
 for(let i=0;i<8;i++){element("div",sequencer.children[0],"meter");}
 for(let i=1;i<SC+1;i++){
   let cell=sequencer.children[i];
-  cell.textContent=String.fromCharCode(65+i-1);
+  cell.textContent=String.fromCharCode(64+i);
   cell.style.color=getColor(i-1);
 }
 for(let i=SC+1;i<(SC+1)*(SR+1);i+=SC+1){
