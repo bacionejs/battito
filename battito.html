@@ -73,6 +73,16 @@ SLIDERS().forEach((group,i)=>{
 });
 }
 
+function initListeners(){
+piano.addEventListener("click",e=>{handlePianoClick(e.target.dataset);});
+sliders.addEventListener("input",handleSliderInput);
+sequencer.addEventListener("click",e=>{handleSequencerClick(e.target.dataset);});
+text.addEventListener("input",handleSongInput);
+makeLongPress(canvas,_=>{audio().download();});
+fullscreen.addEventListener("click",_=>{let el=document.documentElement;if(el.requestFullscreen)el.requestFullscreen();fullscreen.style.display="none";});
+document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement){fullscreen.style.display="block";}});
+}
+
 
 
 
@@ -142,16 +152,6 @@ function updateText(){text.textContent=JSON.stringify(audio().getSong(),null,2);
 
 
 
-
-function initListeners(){
-piano.addEventListener("click",e=>{handlePianoClick(e.target.dataset);});
-sliders.addEventListener("input",handleSliderInput);
-sequencer.addEventListener("click",e=>{handleSequencerClick(e.target.dataset);});
-text.addEventListener("input",handleSongInput);
-makeLongPress(canvas,_=>{audio().download();});
-fullscreen.addEventListener("click",_=>{let el=document.documentElement;if(el.requestFullscreen)el.requestFullscreen();fullscreen.style.display="none";});
-document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement){fullscreen.style.display="block";}});
-}
 
 function handlePianoClick({row,col}){
 let p=getActive("pattern");if(p==null)return;
