@@ -121,13 +121,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 </details><details><summary>Notes</summary>
 
----
-
-Contributions
-
 Battito ports the original [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant and optimizes with precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only, blazingly fast render loop.  
-
----
 
 </details>
 
