@@ -3,7 +3,7 @@
 
 To open, click ↴  
 
-<a href="//bacionejs.github.io/battito/battito.html" target="_blank"> <img src="https://repository-images.githubusercontent.com/1048415375/88c95659-f0f2-4d50-8758-763520fdcd2a" width="70%" /> </a>
+<a href="//bacionejs.github.io/battito/battito.html" target="_blank"> <img src="https://repository-images.githubusercontent.com/1048415375/da93c3a9-5267-4ce8-b632-084f3f6ff24b" width="70%" /> </a>
 
 Or download and open from your file manager 
 
