@@ -10,8 +10,7 @@ Or download and open from your file manager
 
 ---
 
-
-Battito, a Sonant-based music tracker. At only 2k for the song and player, it is perfect for size-constrained games. Unlike other Sonant-based trackers, Battito uses a piano roll, making **editing easier**, and with **live-loop** editing and a blazingly fast engine, you're sure to have a lot of fun. It currently works only on the **Chrome browser** and looks great on a **tablet**. See the 25-second in-app video tutorial.
+Battito is a simple music tracker with a piano-roll, live-loop editing and a blazingly fast engine.
 
 ---
 
@@ -120,19 +119,16 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 ---
 
-History
-- Sonant: 2008 Jake Taylor (public domain [as of 2025](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137))
-- js-sonant: 2011 Marcus Geelnard
-- sonant-x: 2014 Nicolas Van
-- sonant-rs: 2018 parasyte
-- pl_synth: 2024 Dominic Szablewski
-- battito:  2025 bacionejs
+Contributions
+
+Battito ports the original [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant and optimizes with precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only, blazingly fast render loop.  
 
 ---
 
-Contributions
+Target
 
-Battito ports the original Sonant and optimizes with precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only, blazingly fast render loop.  
+Chrome/tablet  
+Size-constrained games (player+song=2k)  
 
 ---
 
