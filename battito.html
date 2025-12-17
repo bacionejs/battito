@@ -49,7 +49,10 @@ updateText();
 
 function initPiano(){
 grid(piano,PC,PR);
-[...piano.children].forEach(cell=>{let [r,c]=[parseInt(cell.dataset.row),parseInt(cell.dataset.col)];if(c%12===0)cell.style.borderLeft="1px solid black";if(r%4===0)cell.style.borderTop="1px solid black";});
+for(let i=0;i<piano.children.length;i++){
+  if((i%PC)%12===0)piano.children[i].style.borderLeft="1px solid black";
+  if((Math.floor(i/PC))%4===0)piano.children[i].style.borderTop="1px solid black";
+}
 }
 
 function initSequencer(){
@@ -60,10 +63,7 @@ for(let i=1;i<SC+1;i++){
   cell.textContent=String.fromCharCode(64+i);
   cell.style.color=getColor(i-1);
 }
-for(let i=SC+1;i<(SC+1)*(SR+1);i+=SC+1){
-  let cell=sequencer.children[i];
-  cell.textContent=i/(SC+1);
-}
+for(let i=SC+1;i<(SC+1)*(SR+1);i+=SC+1){sequencer.children[i].textContent=i/(SC+1);}
 }
 
 function initSliders(){
