@@ -50,19 +50,16 @@ updateText();
 function initPiano(){
 grid(piano,PC,PR);
 for(let i=0;i<piano.children.length;i++){
-  if((i%PC)%12===0)piano.children[i].style.borderLeft="1px solid black";
-  if((Math.floor(i/PC))%4===0)piano.children[i].style.borderTop="1px solid black";
+  let s=piano.children[i].style,c="1px solid black";
+  if((i%PC)%12===0)s.borderLeft=c;
+  if((Math.floor(i/PC))%4===0)s.borderTop=c;
 }
 }
 
 function initSequencer(){
 grid(sequencer,SC,SR,true);
 for(let i=0;i<8;i++){element("div",sequencer.children[0],"meter");}
-for(let i=1;i<SC+1;i++){
-  let cell=sequencer.children[i];
-  cell.textContent=String.fromCharCode(64+i);
-  cell.style.color=getColor(i-1);
-}
+for(let i=1;i<SC+1;i++){sequencer.children[i].textContent=String.fromCharCode(64+i);sequencer.children[i].style.color=getColor(i-1);}
 for(let i=SC+1;i<(SC+1)*(SR+1);i+=SC+1){sequencer.children[i].textContent=i/(SC+1);}
 }
 
