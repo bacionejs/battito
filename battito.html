@@ -14,8 +14,7 @@ let fullscreen=element("div",side,"fullscreen");fullscreen.textContent="\u26F6";
 let loading=element("div",side,"loading");loading.textContent="Loading...";
 let SR=60,SC=8,PR=32,PC=48;
 let active=(function (){let cols=Array(SC).fill(0);let rows=Array(SR).fill(0);return {cols,rows};})();
-//let debug=element("div");debug.style.cssText="position:fixed;bottom:0;left:0;width:100%";
-function setDebug(s){debug.textContent=s;}
+// let debug=element("div");debug.style.cssText="position:fixed;bottom:0;left:0;width:100%";function setDebug(s){debug.textContent=s;}
 
 (function main(){
 if(!window.chrome){
