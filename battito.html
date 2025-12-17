@@ -182,19 +182,9 @@ update();
 
 function handleSequencerClick({row,col}){
 if(row==="-1"&&col==="-1"){
-  let maxRow=0;
-  let maxCol=0;
-  audio().getSong().songData.forEach((t,c)=>{
-    t.p.forEach((v,r)=>{
-      if(v){
-        if(c>maxCol)maxCol=c;
-        if(r>maxRow)maxRow=r;
-      }
-    });
-  });
-  let allOn=active.rows.every((v,i)=>i>maxRow||v)&&active.cols.every((v,i)=>i>maxCol||v);
-  active.rows=active.rows.map((_,i)=>allOn?0:i<=maxRow?1:0);
-  active.cols=active.cols.map((_,i)=>allOn?0:i<=maxCol?1:0);
+  let mr=0,mc=0;audio().getSong().songData.forEach((t,c)=>{t.p.forEach((v,r)=>{if(v){if(c>mc)mc=c;if(r>mr)mr=r;}});});
+  let allOn=active.rows.every((v,i)=>i>mr||v)&&active.cols.every((v,i)=>i>mc||v);
+  active.rows=active.rows.map((_,i)=>allOn?0:i<=mr?1:0);active.cols=active.cols.map((_,i)=>allOn?0:i<=mc?1:0);
 }else if(row==="-1"){
   active.cols[col]=active.cols[col]?0:1;
   audio().preview();
