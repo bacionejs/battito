@@ -10,7 +10,7 @@ Or download and open from your file manager
 
 ---
 
-Battito is a simple tablet-centric music tracker with piano-roll, live-loop editing and a blazingly fast engine.
+Battito is a tablet-centric music tracker with piano-roll, live-loop editing and a blazingly fast engine.
 
 ---
 
