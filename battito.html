@@ -608,12 +608,11 @@ loop();
 
 
 function BattitoPlayer(audiocontext,sampleRate){
-let R_S=1;
 let SIN=new Float32Array(1024);for(let i=0;i<1024;i++)SIN[i]=Math.sin(i*2*Math.PI/1024);let sin=(v)=>SIN[((v*1024)&1023)>>>0];
 let Q=new Float32Array(256);for(let n=0;n<256;n++){let f=0.00390625,m=1.059463094,l=128,i=n;if(i>l)i-=l;else{i=l-i;m=1/m;}while(i-->0)f*=m;Q[n]=f;}
 let O=(t,v)=>{let p=v-Math.floor(v);switch(t){case 0:return sin(p);case 1:return p<0.5?-1:1;case 2:return p-0.5;case 3:let v2=p*4;return v2<2?v2-1:3-v2;default:return sin(p);}};
 let G=(f,m,n,l)=>{if(n>l)n-=l;else{n=l-n;m=1/m;}while(n-->0)f*=m;return f;};
-let rnd=()=>{R_S=Math.imul(R_S,0x15a4e35);return (R_S>>>0)%255/255.0;};
+let R_S=1,rnd=()=>{R_S=Math.imul(R_S,0x15a4e35);return (R_S>>>0)%255/255.0;};
 
 let createbuffer=(d)=>{
 let rowLen=d.rowLen,E=d.endPattern,I=d.songData,T=E*32*rowLen;
