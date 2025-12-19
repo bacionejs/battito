@@ -1,4 +1,6 @@
-<meta name="viewport" content="width=device-width"> <script> onload=()=>{
+<meta name="viewport" content="width=device-width">
+<script>
+onload=()=>{
 
 //https://github.com/bacionejs/battito
 document.title="Battito";
@@ -601,10 +603,6 @@ loop();
 
 
 
-
-
-
-
 function BattitoPlayer(audiocontext,sampleRate){
 let R_S=1;
 let SIN=new Float32Array(1024);for(let i=0;i<1024;i++)SIN[i]=Math.sin(i*2*Math.PI/1024);let sin=(v)=>SIN[((v*1024)&1023)>>>0];
@@ -655,5 +653,5 @@ return b;
 return {createbuffer};
 }
 
-} </script>
-
+}
+</script>
