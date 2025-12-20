@@ -27,7 +27,7 @@ initPiano();
 initSequencer();
 initSliders();
 initListeners();
-if(!location.search.includes("off") && typeof runTutorial!="undefined")runTutorial();
+if(!location.hash === "#off" && typeof runTutorial!="undefined")runTutorial();
 })();
 
 function update(){
