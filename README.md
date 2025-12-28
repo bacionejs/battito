@@ -1,22 +1,12 @@
 
----
-
-To open, click ↴  
-
 <a href="//bacionejs.github.io/battito/battito.html" target="_blank"> <img src="https://repository-images.githubusercontent.com/1048415375/da93c3a9-5267-4ce8-b632-084f3f6ff24b" width="70%" /> </a>
 
-Or download and open from your file manager
 
 
----
+<details><summary>About</summary>
 
-Battito is a tablet-centric music tracker with piano-roll, live-loop editing and a blazingly fast engine.
-
----
-
-<details><summary>Purpose</summary>
-
-For size-constrained games (player+song=2k)  
+- What: Battito is a tablet-centric music tracker with piano-roll, live-loop editing and a blazingly fast engine.
+- Why: For size-constrained games (player+song=2k)  
 
 </details><details><summary>Features</summary>
 
