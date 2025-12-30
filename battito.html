@@ -11,13 +11,12 @@ let text=element("div",side,"text");text.contentEditable=true;
 let canvas=element("canvas",side,"canvas");
 let fullscreen=element("div",side,"fullscreen");fullscreen.textContent="\u26F6";
 let loading=element("div",side,"loading");loading.textContent="Loading...";
-let active,audio,SR=60,SC=8,PR=32,PC=48;
+let audio,SR=60,SC=8,PR=32,PC=48;
 // let debug=element("div");debug.style.cssText="position:fixed;bottom:0;left:0;width:100%";function setDebug(s){debug.textContent=s;}
 
 (function main(){
 if(navigator.userAgent.includes("Firefox"))return document.body.innerHTML="Tested on Android Chrome";
 initStyle();
-initActive();
 initAudio();
 initPiano();
 initSequencer();
@@ -57,6 +56,7 @@ grid(sequencer,SC,SR,true);
 for(let i=0;i<8;i++){element("div",sequencer.children[0],"meter");}
 for(let i=1;i<SC+1;i++){sequencer.children[i].textContent=String.fromCharCode(64+i);sequencer.children[i].style.color=getColor(i-1);}
 for(let i=SC+1;i<(SC+1)*(SR+1);i+=SC+1){sequencer.children[i].textContent=i/(SC+1);}
+initSequencerMethods();
 }
 
 function initSliders(){
@@ -91,7 +91,7 @@ document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement
 
 function updatePiano(){
 [...piano.children].forEach(cell=>{cell.style.background="";});
-active.cols.forEach((on,tid)=>{if(!on)return;
+sequencer.cols.forEach((on,tid)=>{if(!on)return;
   let t=audio.getSong().songData[tid];
   t?.c?.[t?.p[audio.getCurr()]-1]?.n?.forEach((note,step)=>{
     if(note){piano.children[step*PC+note-123].style.background=getColor(tid);}
@@ -105,15 +105,15 @@ function updateSequencer(){
   let {row,col}=cell.dataset;
   if(row==="-1" && col==="-1"){return;}
   if(row==="-1"){
-    if(active.cols[col])cell.classList.add("col-selected");
+    if(sequencer.cols[col])cell.classList.add("col-selected");
   }else if(col==="-1"){
-    if(active.rows[row])cell.classList.add("row-selected");
+    if(sequencer.rows[row])cell.classList.add("row-selected");
   }else{
     cell.textContent="";
     let r=parseInt(row),c=parseInt(col);
     let t=audio.getSong().songData[c];
     if(t?.p?.[r]!==undefined){
-      if(active.rows[r] && active.cols[c]){cell.classList.add("active");}
+      if(sequencer.rows[r] && sequencer.cols[c]){cell.classList.add("active");}
       cell.textContent=t.p[r]||"";
     }
   }
@@ -122,7 +122,7 @@ function updateSequencer(){
 
 function updateSliders(){
 let ss=sliders.querySelectorAll(".slider");
-let i=active.instrument();
+let i=sequencer.instrument();
 if(i!==null){
   ss.forEach(s=>{s.disabled=false;s.value=i[s.dataset.key]||0;});
 }else{
@@ -143,7 +143,7 @@ function updateText(){text.textContent=JSON.stringify(audio.getSong(),null,2);}
 
 
 function handlePianoClick({row,col}){
-let p=active.pattern();if(p==null)return;
+let p=sequencer.pattern();if(p==null)return;
 let note=parseInt(col)+123;
 let r=parseInt(row);
 if(p[r]==note){p[r]=0;update();return;}
@@ -154,13 +154,13 @@ update();audio.preview(note);
 
 function handleSliderInput(e){
 if(!e.target.classList.contains("slider"))return;
-let instrument=active.instrument();if(instrument==null)return;
+let instrument=sequencer.instrument();if(instrument==null)return;
 instrument[e.target.dataset.key]=parseInt(e.target.value);
 update();audio.preview();
 }
 
 function handleSequencerClick(cell){
-active.click(cell);
+sequencer.click(cell);
 update();audio.start();
 }
 
@@ -220,7 +220,7 @@ function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
 
 
 
-function initActive(){
+function initSequencerMethods(){
 let cols=Array(SC).fill(0),rows=Array(SR).fill(0);
 
 function instrument(){if(cols.filter(v=>v).length!=1)return null;return audio.getSong().songData[cols.indexOf(1)]||null;}
@@ -277,8 +277,8 @@ if(typeof debug!=="undefined")setDebug(JSON.stringify(copy));
 return copy;
 }
 
-active={cols,rows,click,instrument,sequences,pattern,range};
-}//initActive
+Object.assign(sequencer, {cols, rows, click, instrument, sequences, pattern, range});
+}
 
 
 
@@ -307,7 +307,7 @@ function getCurr(){return currSequence;}
 
 function start(){
 stop();
-let json=active.range(SONG);if(!json){return;}
+let json=sequencer.range(SONG);if(!json){return;}
 loading.style.display="block";
 requestAnimationFrame(()=>{requestAnimationFrame(()=>{
 S=C.createBufferSource();
@@ -343,7 +343,7 @@ try{
   analyser.getByteFrequencyData(meter);
   [...sequencer.children[0].children].forEach((b,i,a)=>{b.style.height=(meter[Math.floor(i*(meter.length/a.length))]/255*100)+"%";});
   let elapsed=(C.currentTime-S.startTime)%S.buffer.duration;
-  let sequences=active.sequences();
+  let sequences=sequencer.sequences();
   if(sequences.length===0)return;
   let sequenceDuration=beatsToSeconds(PR/4,bpm);
   let pianoDuration=sequenceDuration/PR;
@@ -372,7 +372,7 @@ function preview(note){
 let playing=null;
 preview=function (note){
   if(playing){playing.stop();playing=null;}
-  let instrument=active.instrument();if(instrument==null)return;
+  let instrument=sequencer.instrument();if(instrument==null)return;
   let json={rowLen:getSong().rowLen,endPattern:1,songData:[{...instrument,p:[1],c:[{n:[]}]}]};
   json.songData[0].c[0].n[0]=note||instrument?.c[0]?.n?.find(n=>n!==0)||147;
   let b=PLAYER.createbuffer(json);
@@ -414,7 +414,7 @@ try{
 function jsonToHtml(){
   let s="";
   s+="\n<\script>onload=()=>{addEventListener('click',play);document.body.textContent='Click to play';"
-  s+="\nlet json="+JSON.stringify(active.range(SONG))+";";
+  s+="\nlet json="+JSON.stringify(sequencer.range(SONG))+";";
   s+="\nfunction play(){let C=new AudioContext(),S=C.createBufferSource();S.buffer=BattitoPlayer(C,"+sampleRate+").createbuffer(json);S.connect(C.destination);S.loop=true;S.start();}"
   s+="\n"+BattitoPlayer;
   s+="\n}</\script>"
