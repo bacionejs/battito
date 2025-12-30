@@ -230,9 +230,20 @@ function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
 
 function initActive(){
 let cols=Array(SC).fill(0),rows=Array(SR).fill(0);
+
 function instrument(){if(cols.filter(v=>v).length!=1)return null;return audio().getSong().songData[cols.indexOf(1)]||null;}
+
 function sequences(){return rows.reduce((acc,on,i)=>on?acc.concat(i):acc,[]);}
+
+
+function pattern(){
+if(cols.filter(v=>v).length!=1||rows.filter(v=>v).length!=1)return null;
+let i=rows.indexOf(1),t=audio().getSong().songData[cols.indexOf(1)];if(!t?.p?.[i])return null;
+return (t.c[t.p[i]-1]||(t.c[t.p[i]-1]={n:Array(PR).fill(0)})).n;
+}
+
 function toggleRow(row){rows[row]=rows[row]?0:1;}
+
 function toggleCol(col){cols[col]=cols[col]?0:1;audio().preview();}
 
 function toggleAll(){
@@ -247,12 +258,6 @@ for(i=0;i<cols.length;i++)cols[i]=(i<=mc)?(all?0:1):0;
 function clickCell(row,col){
 let r=parseInt(row),c=parseInt(col),t=audio().getSong().songData[c],i=t.p[r]??0;
 t.p[r]=(i+1)%9;if(t.p[r]>t.c.length){t.c.push({n:Array(PR).fill(0)});t.p[r]=t.c.length;}
-}
-
-function pattern(){
-if(cols.filter(v=>v).length!=1||rows.filter(v=>v).length!=1)return null;
-let i=rows.indexOf(1),t=audio().getSong().songData[cols.indexOf(1)];if(!t?.p?.[i])return null;
-return (t.c[t.p[i]-1]||(t.c[t.p[i]-1]={n:Array(PR).fill(0)})).n;
 }
 
 function range(song){
