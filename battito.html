@@ -2,7 +2,6 @@
 
 //https://github.com/bacionejs/battito
 document.title="Battito";
-let tested="Requires Chrome browser";
 addEventListener("error",e=>{alert(e.message);});
 let piano=element("div",document.body,"piano");
 let sliders=element("div",document.body,"sliders");
@@ -17,11 +16,7 @@ let active=(function (){let cols=Array(SC).fill(0);let rows=Array(SR).fill(0);re
 // let debug=element("div");debug.style.cssText="position:fixed;bottom:0;left:0;width:100%";function setDebug(s){debug.textContent=s;}
 
 (function main(){
-if(!window.chrome){
-  document.body.innerHTML=tested;
-  document.body.style.cssText="background:black;color:white;display:flex;justify-content:center;align-items:center;height:100vh;";
-  return;
-}
+if(navigator.userAgent.includes("Firefox"))return document.body.innerHTML="Tested on Android Chrome";
 initStyle();
 initPiano();
 initSequencer();
