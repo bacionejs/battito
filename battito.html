@@ -146,38 +146,28 @@ function handlePianoClick({row,col}){
 let p=active.pattern();if(p==null)return;
 let note=parseInt(col)+123;
 let r=parseInt(row);
-if(p[r]==note){
-  p[r]=0;
-  update();
-  return;
-}
+if(p[r]==note){p[r]=0;update();return;}
 p[r]=note;
 for(let i=0;i<p.length;i++){if(!(i in p))p[i]=0;}
-audio.preview(note);
-update();
-}
-
-function handleSequencerClick({row,col}){
-if(row==="-1" && col==="-1")active.toggleAll();
-else if(row==="-1")active.toggleCol(col);
-else if(col==="-1")active.toggleRow(row);
-else active.clickCell(row,col);
-update();
-audio.start();
+update();audio.preview(note);
 }
 
 function handleSliderInput(e){
 if(!e.target.classList.contains("slider"))return;
 let instrument=active.instrument();if(instrument==null)return;
 instrument[e.target.dataset.key]=parseInt(e.target.value);
-audio.preview();update();
+update();audio.preview();
+}
+
+function handleSequencerClick(cell){
+active.click(cell);
+update();audio.start();
 }
 
 function handleSongInput(){
 try{
 audio.setSong(JSON.parse(text.textContent));
-audio.preview();
-update(true);
+update(true);audio.preview();
 }catch(e){}
 }
 
@@ -229,6 +219,7 @@ function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
 
 
 
+
 function initActive(){
 let cols=Array(SC).fill(0),rows=Array(SR).fill(0);
 
@@ -242,9 +233,12 @@ let i=rows.indexOf(1),t=audio.getSong().songData[cols.indexOf(1)];if(!t?.p?.[i])
 return (t.c[t.p[i]-1]||(t.c[t.p[i]-1]={n:Array(PR).fill(0)})).n;
 }
 
-function toggleRow(row){rows[row]=rows[row]?0:1;}
-
-function toggleCol(col){cols[col]=cols[col]?0:1;audio.preview();}
+function click({row,col}){
+if(row==="-1" && col==="-1")toggleAll();
+else if(row==="-1"){cols[col]=cols[col]?0:1;audio.preview();}
+else if(col==="-1"){rows[row]=rows[row]?0:1;}
+else cell(row,col);
+}
 
 function toggleAll(){
 let i,mr=0,mc=0,all=true;
@@ -255,7 +249,7 @@ for(i=0;i<rows.length;i++)rows[i]=(i<=mr)?(all?0:1):0;
 for(i=0;i<cols.length;i++)cols[i]=(i<=mc)?(all?0:1):0;
 }
 
-function clickCell(row,col){
+function cell(row,col){
 let r=parseInt(row),c=parseInt(col),t=audio.getSong().songData[c],i=t.p[r]??0;
 t.p[r]=(i+1)%9;if(t.p[r]>t.c.length){t.c.push({n:Array(PR).fill(0)});t.p[r]=t.c.length;}
 }
@@ -283,7 +277,7 @@ if(typeof debug!=="undefined")setDebug(JSON.stringify(copy));
 return copy;
 }
 
-active={cols,rows,toggleRow,toggleCol,toggleAll,clickCell,instrument,sequences,pattern,range};
+active={cols,rows,click,instrument,sequences,pattern,range};
 }//initActive
 
 
