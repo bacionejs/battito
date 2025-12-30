@@ -277,7 +277,14 @@ if(typeof debug!=="undefined")setDebug(JSON.stringify(copy));
 return copy;
 }
 
-Object.assign(sequencer, {cols, rows, click, instrument, sequences, pattern, range});
+function scroll(currSequence){
+if(currSequence==0)sequencer.scrollTop=0;
+let c=sequencer.children[(currSequence+1)*(SC+1)],h=sequencer.children[0].offsetHeight,t=c.offsetTop-sequencer.offsetTop,b=t+c.offsetHeight;
+let v1=sequencer.scrollTop+h,v2=sequencer.scrollTop+sequencer.clientHeight;
+if(t<v1)sequencer.scrollTop=t-h; else if(b>v2)sequencer.scrollTop=b-sequencer.clientHeight;
+}
+
+Object.assign(sequencer, {cols, rows, click, instrument, sequences, pattern, range, scroll});
 }
 
 
@@ -330,13 +337,6 @@ if(S){S.onended=null;S.stop();S.disconnect();S=null;}
 [...sequencer.children[0].children].forEach(bar=>bar.style.height="0%");
 }
 
-function scroll(){
-if(currSequence==0)sequencer.scrollTop=0;
-let c=sequencer.children[(currSequence+1)*(SC+1)],h=sequencer.children[0].offsetHeight,t=c.offsetTop-sequencer.offsetTop,b=t+c.offsetHeight;
-let v1=sequencer.scrollTop+h,v2=sequencer.scrollTop+sequencer.clientHeight;
-if(t<v1)sequencer.scrollTop=t-h; else if(b>v2)sequencer.scrollTop=b-sequencer.clientHeight;
-}
-
 function pointers(){
 try{
   if(!S?.buffer)return;
@@ -355,7 +355,7 @@ try{
   let step=Math.floor(elapsed/pianoDuration)%PR;
   if(currSequence!==prevSequence){
     update(sequencer,SR+1,SC+1,currSequence,1);
-    scroll();
+    sequencer.scroll(currSequence);
     prevSequence=currSequence;
     updatePiano();
   }
