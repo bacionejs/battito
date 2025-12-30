@@ -11,13 +11,14 @@ let text=element("div",side,"text");text.contentEditable=true;
 let canvas=element("canvas",side,"canvas");
 let fullscreen=element("div",side,"fullscreen");fullscreen.textContent="\u26F6";
 let loading=element("div",side,"loading");loading.textContent="Loading...";
-let active,SR=60,SC=8,PR=32,PC=48;
+let active,audio,SR=60,SC=8,PR=32,PC=48;
 // let debug=element("div");debug.style.cssText="position:fixed;bottom:0;left:0;width:100%";function setDebug(s){debug.textContent=s;}
 
 (function main(){
 if(navigator.userAgent.includes("Firefox"))return document.body.innerHTML="Tested on Android Chrome";
 initStyle();
 initActive();
+initAudio();
 initPiano();
 initSequencer();
 initSliders();
@@ -73,7 +74,7 @@ piano.addEventListener("click",e=>{handlePianoClick(e.target.dataset);});
 sliders.addEventListener("input",handleSliderInput);
 sequencer.addEventListener("click",e=>{handleSequencerClick(e.target.dataset);});
 text.addEventListener("input",handleSongInput);
-makeLongPress(canvas,()=>{audio().download();});
+makeLongPress(canvas,()=>{audio.download();});
 fullscreen.addEventListener("click",()=>{let el=document.documentElement;if(el.requestFullscreen)el.requestFullscreen();fullscreen.style.display="none";});
 document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement){fullscreen.style.display="block";}});
 }
@@ -91,8 +92,8 @@ document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement
 function updatePiano(){
 [...piano.children].forEach(cell=>{cell.style.background="";});
 active.cols.forEach((on,tid)=>{if(!on)return;
-  let t=audio().getSong().songData[tid];
-  t?.c?.[t?.p[audio().getCurr()]-1]?.n?.forEach((note,step)=>{
+  let t=audio.getSong().songData[tid];
+  t?.c?.[t?.p[audio.getCurr()]-1]?.n?.forEach((note,step)=>{
     if(note){piano.children[step*PC+note-123].style.background=getColor(tid);}
   });
 });
@@ -110,7 +111,7 @@ function updateSequencer(){
   }else{
     cell.textContent="";
     let r=parseInt(row),c=parseInt(col);
-    let t=audio().getSong().songData[c];
+    let t=audio.getSong().songData[c];
     if(t?.p?.[r]!==undefined){
       if(active.rows[r] && active.cols[c]){cell.classList.add("active");}
       cell.textContent=t.p[r]||"";
@@ -129,7 +130,7 @@ if(i!==null){
 }
 }
 
-function updateText(){text.textContent=JSON.stringify(audio().getSong(),null,2);}
+function updateText(){text.textContent=JSON.stringify(audio.getSong(),null,2);}
 
 
 
@@ -152,7 +153,7 @@ if(p[r]==note){
 }
 p[r]=note;
 for(let i=0;i<p.length;i++){if(!(i in p))p[i]=0;}
-audio().preview(note);
+audio.preview(note);
 update();
 }
 
@@ -162,20 +163,20 @@ else if(row==="-1")active.toggleCol(col);
 else if(col==="-1")active.toggleRow(row);
 else active.clickCell(row,col);
 update();
-audio().start();
+audio.start();
 }
 
 function handleSliderInput(e){
 if(!e.target.classList.contains("slider"))return;
 let instrument=active.instrument();if(instrument==null)return;
 instrument[e.target.dataset.key]=parseInt(e.target.value);
-audio().preview();update();
+audio.preview();update();
 }
 
 function handleSongInput(){
 try{
-audio().setSong(JSON.parse(text.textContent));
-audio().preview();
+audio.setSong(JSON.parse(text.textContent));
+audio.preview();
 update(true);
 }catch(e){}
 }
@@ -231,24 +232,23 @@ function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
 function initActive(){
 let cols=Array(SC).fill(0),rows=Array(SR).fill(0);
 
-function instrument(){if(cols.filter(v=>v).length!=1)return null;return audio().getSong().songData[cols.indexOf(1)]||null;}
+function instrument(){if(cols.filter(v=>v).length!=1)return null;return audio.getSong().songData[cols.indexOf(1)]||null;}
 
 function sequences(){return rows.reduce((acc,on,i)=>on?acc.concat(i):acc,[]);}
 
-
 function pattern(){
 if(cols.filter(v=>v).length!=1||rows.filter(v=>v).length!=1)return null;
-let i=rows.indexOf(1),t=audio().getSong().songData[cols.indexOf(1)];if(!t?.p?.[i])return null;
+let i=rows.indexOf(1),t=audio.getSong().songData[cols.indexOf(1)];if(!t?.p?.[i])return null;
 return (t.c[t.p[i]-1]||(t.c[t.p[i]-1]={n:Array(PR).fill(0)})).n;
 }
 
 function toggleRow(row){rows[row]=rows[row]?0:1;}
 
-function toggleCol(col){cols[col]=cols[col]?0:1;audio().preview();}
+function toggleCol(col){cols[col]=cols[col]?0:1;audio.preview();}
 
 function toggleAll(){
 let i,mr=0,mc=0,all=true;
-audio().getSong().songData.forEach((t,c)=>{t.p.forEach((v,r)=>{if(v){if(c>mc)mc=c;if(r>mr)mr=r;}});});
+audio.getSong().songData.forEach((t,c)=>{t.p.forEach((v,r)=>{if(v){if(c>mc)mc=c;if(r>mr)mr=r;}});});
 for(i=0;i<=mr;i++)if(!rows[i])all=false;
 for(i=0;i<=mc;i++)if(!cols[i])all=false;
 for(i=0;i<rows.length;i++)rows[i]=(i<=mr)?(all?0:1):0;
@@ -256,7 +256,7 @@ for(i=0;i<cols.length;i++)cols[i]=(i<=mc)?(all?0:1):0;
 }
 
 function clickCell(row,col){
-let r=parseInt(row),c=parseInt(col),t=audio().getSong().songData[c],i=t.p[r]??0;
+let r=parseInt(row),c=parseInt(col),t=audio.getSong().songData[c],i=t.p[r]??0;
 t.p[r]=(i+1)%9;if(t.p[r]>t.c.length){t.c.push({n:Array(PR).fill(0)});t.p[r]=t.c.length;}
 }
 
@@ -296,8 +296,7 @@ active={cols,rows,toggleRow,toggleCol,toggleAll,clickCell,instrument,sequences,p
 
 
 
-function audio(){
-if(audio.instance)return audio.instance;
+function initAudio(){
 let sampleRate=44100;
 let stepsPerBeat=4;
 let C=new AudioContext();let S=null;
@@ -437,8 +436,8 @@ function bufferToWav(){
 }
 }
 
-return audio.instance={stop,start,preview,download,getSong,setSong,getCurr};
-}//audio
+audio={stop,start,preview,download,getSong,setSong,getCurr};
+}//initAudio
 
 
 
