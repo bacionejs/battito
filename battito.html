@@ -6,7 +6,7 @@ let piano=element("div",document.body,"piano");
 let sliders=element("div",document.body,"sliders");
 let side=element("div",document.body,"side");
 let sequencer=element("div",side,"sequencer");
-let text=element("div",side,"text");text.contentEditable=true;
+let text=element("div",side,"text");
 let canvas=element("canvas",side,"canvas");
 let fullscreen=element("div",side,"fullscreen");
 let loading=element("div",side,"loading");
@@ -29,6 +29,7 @@ initAudio();
 initPiano();
 initSequencer();
 initSliders();
+initText();
 initListeners();
 if(!location.search.includes("off"))runTutorial();
 })();
@@ -68,6 +69,11 @@ SLIDERS().forEach((group,i)=>{
     s.type="range";s.dataset.key=key;s.max=max;s.disabled=true;
   });
 });
+}
+
+function initText(){
+text.contentEditable=true;
+updateText();
 }
 
 function initListeners(){
