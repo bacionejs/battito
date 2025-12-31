@@ -56,7 +56,7 @@ grid(sequencer,SC,SR,true);
 for(let i=0;i<8;i++){element("div",sequencer.children[0],"meter");}
 for(let i=1;i<SC+1;i++){sequencer.children[i].textContent=String.fromCharCode(64+i);sequencer.children[i].style.color=getColor(i-1);}
 for(let i=SC+1;i<(SC+1)*(SR+1);i+=SC+1){sequencer.children[i].textContent=i/(SC+1);}
-initSequencerMethods();
+initSequencerHelpers();
 }
 
 function initSliders(){
@@ -220,7 +220,7 @@ function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
 
 
 
-function initSequencerMethods(){
+function initSequencerHelpers(){
 let cols=Array(SC).fill(0),rows=Array(SR).fill(0);
 
 function instrument(){if(cols.filter(v=>v).length!=1)return null;return audio.getSong().songData[cols.indexOf(1)]||null;}
