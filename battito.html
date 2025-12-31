@@ -312,7 +312,7 @@ Object.assign(sequencer, {cols, rows, click, track, sequences, pattern, range, s
 function initAudio(){
 let sampleRate=44100,stepsPerBeat=4,C=new AudioContext(),S=null;
 let PLAYER=BattitoPlayer(C,sampleRate),SONG=PRESETS();
-let raf=null,currSequence=null,prevSequence=null;
+let raf=null,curr=null,prev=null;
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
 let bpm=samplesToBPM(SONG.rowLen);
 
@@ -320,22 +320,17 @@ function samplesToBPM(samplesPerStep){return (sampleRate*60)/(samplesPerStep*ste
 function beatsToSeconds(beats,bpm){return (60/bpm)*beats;}
 function getSong(){return SONG;}
 function setSong(newSong){SONG=newSong;bpm=samplesToBPM(SONG.rowLen);}
-function getCurr(){return currSequence;}
+function getCurr(){return curr;}
 
 function start(){
 stop();
 let json=sequencer.range(SONG);if(!json){return;}
 loading.style.display="block";
 requestAnimationFrame(()=>{requestAnimationFrame(()=>{
-S=C.createBufferSource();
-S.buffer=PLAYER.createbuffer(json);
-loading.style.display="none";
-S.connect(analyser);
-analyser.connect(C.destination);
+S=C.createBufferSource();S.buffer=PLAYER.createbuffer(json);loading.style.display="none";
+S.connect(analyser);analyser.connect(C.destination);
 S.onended=()=>{start();};
-let startTime=C.currentTime;
-S.start(startTime);
-S.startTime=startTime;
+let startTime=C.currentTime;S.start(startTime);S.startTime=startTime;
 raf=requestAnimationFrame(pointers);
 });});
 }
@@ -353,22 +348,11 @@ try{
   analyser.getByteFrequencyData(meter);
   [...sequencer.children[0].children].forEach((b,i,a)=>{b.style.height=(meter[Math.floor(i*(meter.length/a.length))]/255*100)+"%";});
   let elapsed=(C.currentTime-S.startTime)%S.buffer.duration;
-  let sequences=sequencer.sequences();
-  if(sequences.length===0)return;
-  let sequenceDuration=beatsToSeconds(PR/4,bpm);
-  let pianoDuration=sequenceDuration/PR;
-  if((elapsed/sequenceDuration)>sequences.length){
-    if(raf)cancelAnimationFrame(raf);
-    return;
-  }
-  currSequence=sequences[Math.floor(elapsed/sequenceDuration)%sequences.length];
-  let step=Math.floor(elapsed/pianoDuration)%PR;
-  if(currSequence!==prevSequence){
-    point(sequencer,SR+1,SC+1,currSequence,1);
-    sequencer.scroll(currSequence);
-    prevSequence=currSequence;
-    updatePiano();
-  }
+  let sequences=sequencer.sequences();if(sequences.length===0)return;
+  let sequenceDuration=beatsToSeconds(PR/4,bpm),pianoDuration=sequenceDuration/PR,step=Math.floor(elapsed/pianoDuration)%PR;
+  if((elapsed/sequenceDuration)>sequences.length){if(raf)cancelAnimationFrame(raf);return;}
+  curr=sequences[Math.floor(elapsed/sequenceDuration)%sequences.length];
+  if(curr!==prev){point(sequencer,SR+1,SC+1,curr,1);sequencer.scroll(curr);prev=curr;updatePiano();}
   point(piano,PR,PC,step);
 }catch(e){}finally{raf=requestAnimationFrame(pointers);}
 }
