@@ -166,8 +166,8 @@ update();audio.start();
 
 function handleSliderInput(e){
 if(!e.target.classList.contains("slider"))return;
-let instrument=sequencer.instrument();if(instrument==null)return;
-instrument[e.target.dataset.key]=parseInt(e.target.value);
+let i=sequencer.instrument();if(i==null)return;
+i[e.target.dataset.key]=parseInt(e.target.value);
 update();audio.preview();
 }
 
@@ -383,9 +383,9 @@ function preview(note){
 let playing=null;
 preview=function (note){
   if(playing){playing.stop();playing=null;}
-  let instrument=sequencer.instrument();if(instrument==null)return;
-  let json={rowLen:getSong().rowLen,endPattern:1,songData:[{...instrument,p:[1],c:[{n:[]}]}]};
-  json.songData[0].c[0].n[0]=note||instrument?.c[0]?.n?.find(n=>n!==0)||147;
+  let i=sequencer.instrument();if(i==null)return;
+  let json={rowLen:getSong().rowLen,endPattern:1,songData:[{...i,p:[1],c:[{n:[]}]}]};
+  json.songData[0].c[0].n[0]=note||i?.c[0]?.n?.find(n=>n!==0)||147;
   let b=PLAYER.createbuffer(json);
   let s=C.createBufferSource();
   s.buffer=b;
@@ -393,10 +393,10 @@ preview=function (note){
   s.connect(C.destination);
   s.start();
   playing=s;
-  let i=JSON.parse(JSON.stringify(json));
-  i.songData[0].fx_delay_time=0;i.songData[0].fx_delay_amt=0;
-  i.rowLen=Math.min(getSong().rowLen,(sampleRate*0.25)/32)|0;
-  wave(PLAYER.createbuffer(i),i.songData[0]);
+  i=json.songData[0];
+  i.fx_delay_time=0;i.fx_delay_amt=0;
+  json.rowLen=(sampleRate/128)|0;
+  wave(PLAYER.createbuffer(json),i);
 };
 function wave(buffer,t){
   let c=canvas.getContext("2d"),m=canvas.height/2;
