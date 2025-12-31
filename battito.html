@@ -129,9 +129,9 @@ function updateSequencer(){
 
 function updateSliders(){
 let ss=sliders.querySelectorAll(".slider");
-let i=sequencer.track();
-if(i!==null){
-  ss.forEach(s=>{s.disabled=false;s.value=i[s.dataset.key]||0;});
+let t=sequencer.track();
+if(t!==null){
+  ss.forEach(s=>{s.disabled=false;s.value=t[s.dataset.key]||0;});
 }else{
   ss.forEach(s=>{s.disabled=true; s.value=0;});
 }
@@ -166,8 +166,8 @@ update();audio.start();
 
 function handleSliderInput(e){
 if(!e.target.classList.contains("slider"))return;
-let i=sequencer.track();if(i==null)return;
-i[e.target.dataset.key]=parseInt(e.target.value);
+let t=sequencer.track();if(t==null)return;
+t[e.target.dataset.key]=parseInt(e.target.value);
 update();audio.preview();
 }
 
