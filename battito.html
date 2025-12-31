@@ -8,8 +8,8 @@ let side=element("div",document.body,"side");
 let sequencer=element("div",side,"sequencer");
 let text=element("div",side,"text");text.contentEditable=true;
 let canvas=element("canvas",side,"canvas");
-let fullscreen=element("div",side,"fullscreen");fullscreen.textContent="\u26F6";
-let loading=element("div",side,"loading");loading.textContent="Loading...";
+let fullscreen=element("div",side,"fullscreen");
+let loading=element("div",side,"loading");
 let audio,SC=8,SR=60,PC=48,PR=32;
 
 
@@ -471,7 +471,9 @@ body{display:flex;background:black;color:white;font-weight:bold;font-family:mono
 .sequencer .cell[data-row="-1"][data-col="-1"]{padding:2px;background:#222;display:flex;align-items:flex-end;gap:1px;overflow:hidden;}
 .meter{flex:1;width:100%;height:0%;background:linear-gradient(to top,#39FF14,orange 60%,red 90%);transition:height 50ms linear;pointer-events:none;}
 .fullscreen{position:relative;bottom:30px;right:5px;color:orange;z-index:1000;font-size:20px;text-align:right;}
+.fullscreen::before{content:"\u26F6"}
 .loading{display:none;position:relative;bottom:50px;color:silver;font-size:10px;text-align:center;z-index:9999;}
+.loading::before{content:"loading..."}
 .side{background:black;}
 `;
 }
