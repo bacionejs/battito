@@ -2,15 +2,15 @@
 
 document.title="Battito";//https://github.com/bacionejs/battito
 addEventListener("error",e=>{alert(e.message);});
-let piano=element("div",document.body,"piano");
-let sliders=element("div",document.body,"sliders");
-let side=element("div",document.body,"side");
-let sequencer=element("div",side,"sequencer");
-let text=element("div",side,"text");
-let canvas=element("canvas",side,"canvas");
-let fullscreen=element("div",side,"fullscreen");
-let loading=element("div",side,"loading");
 let audio,SC=8,SR=60,PC=48,PR=32;
+let piano      =element("div",document.body,"piano");
+let sliders    =element("div",document.body,"sliders");
+let side       =element("div",document.body,"side");
+let sequencer  =element("div",side,"sequencer");
+let text       =element("div",side,"text");
+let canvas     =element("canvas",side,"canvas");
+let fullscreen =element("div",side,"fullscreen");
+let loading    =element("div",side,"loading");
 
 
 
@@ -214,10 +214,10 @@ for(let i=0;i<cols*rows;i++){
 }
 
 function element(tagName,parent=document.body,className=""){
-let el=document.createElement(tagName);
-if(className)el.className=className;
-parent.appendChild(el);
-return el;
+let e=document.createElement(tagName);
+if(className)e.className=className;
+parent.appendChild(e);
+return e;
 }
 
 function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
