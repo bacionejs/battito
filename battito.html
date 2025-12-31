@@ -289,6 +289,17 @@ copy.endPattern=d[0].p.length;
 return copy;
 }
 
+function notes(song){
+let ok=false,r=range(song);if(!r)return null;
+outer:for(let t of r.songData){
+  for(let i=0;i<t.p.length;i++){
+    if(t.p[i]-1>=0 && t.c[t.p[i]-1]){if(t.c[t.p[i]-1].n.some(n=>n!==0)){ok=true;break outer;}}
+  }
+}
+if(!ok)return null;
+return r;
+}
+
 function scroll(currSequence){
 if(currSequence==0)sequencer.scrollTop=0;
 let c=sequencer.children[(currSequence+1)*(SC+1)],h=sequencer.children[0].offsetHeight,t=c.offsetTop-sequencer.offsetTop,b=t+c.offsetHeight;
@@ -296,7 +307,7 @@ let v1=sequencer.scrollTop+h,v2=sequencer.scrollTop+sequencer.clientHeight;
 if(t<v1)sequencer.scrollTop=t-h; else if(b>v2)sequencer.scrollTop=b-sequencer.clientHeight;
 }
 
-Object.assign(sequencer, {cols, rows, click, track, sequences, pattern, range, scroll});
+Object.assign(sequencer, {cols, rows, click, track, sequences, pattern, range, notes, scroll});
 }//
 
 
@@ -389,10 +400,10 @@ return preview(note);
 
 function download(){
 try{
-  let wav=bufferToWav();if(!wav)return alert("Nothing to save. Please select song or range");
+  if(!sequencer.notes(SONG))return alert("Nothing to save. Please select song or range");
   let a=element("a");
   let file="battito_song_"+Date.now();
-  a.href=URL.createObjectURL(wav);a.download=file+".wav";a.click();
+  a.href=URL.createObjectURL(bufferToWav());a.download=file+".wav";a.click();
   a.href=URL.createObjectURL(new File([jsonToHtml()],""));a.download=file+".html";a.click();
   URL.revokeObjectURL(a.href);a.remove();
 }catch(e){alert(e.message);}
@@ -406,7 +417,7 @@ function jsonToHtml(){
   return s;
 }
 function bufferToWav(){
-  let b=S?.buffer;if(!b)return null;
+  let b=S.buffer;
   let c=b.numberOfChannels,l=b.length*c*2+44,o=new ArrayBuffer(l),v=new DataView(o),a=[],p=0,f=x=>{v.setUint16(p,x,1);p+=2;},F=x=>{v.setUint32(p,x,1);p+=4;};
   F(0x46464952);F(l-8);F(0x45564157);F(0x20746d66);F(16);f(1);f(c);F(b.sampleRate);F(b.sampleRate*c*2);f(c*2);f(16);F(0x61746164);F(l-p-4);
   for(let i=0;i<c;i++)a.push(b.getChannelData(i));
