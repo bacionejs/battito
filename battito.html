@@ -129,7 +129,7 @@ function updateSequencer(){
 
 function updateSliders(){
 let ss=sliders.querySelectorAll(".slider");
-let i=sequencer.instrument();
+let i=sequencer.track();
 if(i!==null){
   ss.forEach(s=>{s.disabled=false;s.value=i[s.dataset.key]||0;});
 }else{
@@ -166,7 +166,7 @@ update();audio.start();
 
 function handleSliderInput(e){
 if(!e.target.classList.contains("slider"))return;
-let i=sequencer.instrument();if(i==null)return;
+let i=sequencer.track();if(i==null)return;
 i[e.target.dataset.key]=parseInt(e.target.value);
 update();audio.preview();
 }
@@ -236,7 +236,7 @@ function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
 function initSequencerHelpers(){
 let cols=Array(SC).fill(0),rows=Array(SR).fill(0);
 
-function instrument(){if(cols.filter(v=>v).length!=1)return null;return audio.getSong().songData[cols.indexOf(1)]||null;}
+function track(){if(cols.filter(v=>v).length!=1)return null;return audio.getSong().songData[cols.indexOf(1)]||null;}
 
 function sequences(){return rows.reduce((acc,on,i)=>on?acc.concat(i):acc,[]);}
 
@@ -296,7 +296,7 @@ let v1=sequencer.scrollTop+h,v2=sequencer.scrollTop+sequencer.clientHeight;
 if(t<v1)sequencer.scrollTop=t-h; else if(b>v2)sequencer.scrollTop=b-sequencer.clientHeight;
 }
 
-Object.assign(sequencer, {cols, rows, click, instrument, sequences, pattern, range, scroll});
+Object.assign(sequencer, {cols, rows, click, track, sequences, pattern, range, scroll});
 }//
 
 
@@ -381,22 +381,14 @@ function point(grid,rows,cols,playing,offset=0){
 
 function preview(note){
 let playing=null;
-preview=function (note){
+preview=function(note){
   if(playing){playing.stop();playing=null;}
-  let i=sequencer.instrument();if(i==null)return;
-  let json={rowLen:getSong().rowLen,endPattern:1,songData:[{...i,p:[1],c:[{n:[]}]}]};
-  json.songData[0].c[0].n[0]=note||i?.c[0]?.n?.find(n=>n!==0)||147;
-  let b=PLAYER.createbuffer(json);
-  let s=C.createBufferSource();
-  s.buffer=b;
-  s.onended=()=>{if(playing===s){playing=null;}};
-  s.connect(C.destination);
-  s.start();
-  playing=s;
-  i=json.songData[0];
-  i.fx_delay_time=0;i.fx_delay_amt=0;
-  json.rowLen=(sampleRate/128)|0;
-  wave(PLAYER.createbuffer(json),i);
+  let track=sequencer.track();if(track==null)return;
+  let song={rowLen:getSong().rowLen,endPattern:1,songData:[{...track,p:[1],c:[{n:[]}]}]},t=song.songData[0];
+  t.c[0].n[0]=note||track?.c[0]?.n?.find(n=>n!==0)||147;
+  let s=C.createBufferSource();s.buffer=PLAYER.createbuffer(song);s.onended=()=>{if(playing===s){playing=null;}};s.connect(C.destination);s.start();playing=s;
+  t.fx_delay_time=t.fx_delay_amt=0;song.rowLen=(sampleRate/128)|0;
+  wave(PLAYER.createbuffer(song),t);
 };
 function wave(buffer,t){
   let c=canvas.getContext("2d"),m=canvas.height/2;
