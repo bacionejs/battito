@@ -25,11 +25,11 @@ initListeners();
 if(!location.search.includes("off") && typeof runTutorial!="undefined")runTutorial();
 })();
 
-function update(exclude){
+function update(){
 updatePiano();
 updateSliders();
 updateSequencer();
-if(!exclude)updateText();
+updateText();
 }
 
 
@@ -167,7 +167,10 @@ update();audio.start();
 function handleSongInput(){
 try{
 audio.setSong(JSON.parse(text.textContent));
-update(true);audio.preview();
+updatePiano();
+updateSliders();
+updateSequencer();
+audio.preview();
 }catch(e){}
 }
 
@@ -302,7 +305,7 @@ let sampleRate=44100;
 let stepsPerBeat=4;
 let C=new AudioContext();let S=null;
 let PLAYER=BattitoPlayer(C,sampleRate);let SONG=PRESETS();
-let rafid=null;let currSequence=null;let prevSequence=null;
+let raf=null;let currSequence=null;let prevSequence=null;
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
 let bpm=samplesToBPM(SONG.rowLen);
 
@@ -326,12 +329,12 @@ S.onended=()=>{start();};
 let startTime=C.currentTime;
 S.start(startTime);
 S.startTime=startTime;
-rafid=requestAnimationFrame(pointers);
+raf=requestAnimationFrame(pointers);
 });});
 }
 
 function stop(){
-if(rafid){cancelAnimationFrame(rafid);rafid=null;}
+if(raf){cancelAnimationFrame(raf);raf=null;}
 sequencer.querySelectorAll(".row-header").forEach(h=>h.classList.remove("row-playing"));
 if(S){S.onended=null;S.stop();S.disconnect();S=null;}
 [...sequencer.children[0].children].forEach(bar=>bar.style.height="0%");
@@ -348,24 +351,23 @@ try{
   let sequenceDuration=beatsToSeconds(PR/4,bpm);
   let pianoDuration=sequenceDuration/PR;
   if((elapsed/sequenceDuration)>sequences.length){
-    if(rafid)cancelAnimationFrame(rafid);
+    if(raf)cancelAnimationFrame(raf);
     return;
   }
   currSequence=sequences[Math.floor(elapsed/sequenceDuration)%sequences.length];
   let step=Math.floor(elapsed/pianoDuration)%PR;
   if(currSequence!==prevSequence){
-    update(sequencer,SR+1,SC+1,currSequence,1);
+    point(sequencer,SR+1,SC+1,currSequence,1);
     sequencer.scroll(currSequence);
     prevSequence=currSequence;
     updatePiano();
   }
-  update(piano,PR,PC,step);
-}catch(e){}finally{rafid=requestAnimationFrame(pointers);}
-function update(grid,rows,cols,activeRow,offset=0){
-  for(let r=0;r<rows;r++){
-    grid.children[(r+offset)*cols]?.classList.toggle("row-playing",r===activeRow);
-  }
+  point(piano,PR,PC,step);
+}catch(e){}finally{raf=requestAnimationFrame(pointers);}
 }
+
+function point(grid,rows,cols,playing,offset=0){
+  for(let row=0;row<rows;row++){grid.children[(row+offset)*cols]?.classList.toggle("row-playing",row===playing);}
 }
 
 function preview(note){
