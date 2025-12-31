@@ -167,10 +167,7 @@ update();audio.start();
 function handleSongInput(){
 try{
 audio.setSong(JSON.parse(text.textContent));
-updatePiano();
-updateSliders();
-updateSequencer();
-audio.preview();
+updatePiano();updateSliders();updateSequencer();audio.preview();
 }catch(e){}
 }
 
