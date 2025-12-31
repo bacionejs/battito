@@ -310,11 +310,9 @@ Object.assign(sequencer, {cols, rows, click, track, sequences, pattern, range, s
 
 
 function initAudio(){
-let sampleRate=44100;
-let stepsPerBeat=4;
-let C=new AudioContext();let S=null;
-let PLAYER=BattitoPlayer(C,sampleRate);let SONG=PRESETS();
-let raf=null;let currSequence=null;let prevSequence=null;
+let sampleRate=44100,stepsPerBeat=4,C=new AudioContext(),S=null;
+let PLAYER=BattitoPlayer(C,sampleRate),SONG=PRESETS();
+let raf=null,currSequence=null,prevSequence=null;
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
 let bpm=samplesToBPM(SONG.rowLen);
 
