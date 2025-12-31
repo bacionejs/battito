@@ -346,11 +346,11 @@ try{
   if(!S?.buffer)return;
   analyser.getByteFrequencyData(meter);
   [...sequencer.children[0].children].forEach((b,i,a)=>{b.style.height=(meter[Math.floor(i*(meter.length/a.length))]/255*100)+"%";});
-  let elapsed=(C.currentTime-S.startTime)%S.buffer.duration;
-  let sequences=sequencer.sequences();if(sequences.length===0)return;
-  let sequenceDuration=beatsToSeconds(PR/4,bpm),pianoDuration=sequenceDuration/PR,step=Math.floor(elapsed/pianoDuration)%PR;
-  if((elapsed/sequenceDuration)>sequences.length){if(raf)cancelAnimationFrame(raf);return;}
-  curr=sequences[Math.floor(elapsed/sequenceDuration)%sequences.length];
+  let t=(C.currentTime-S.startTime)%S.buffer.duration;
+  let s=sequencer.sequences();if(s.length===0)return;
+  let st=beatsToSeconds(PR/4,bpm),pt=st/PR,step=Math.floor(t/pt)%PR;
+  if((t/st)>s.length){if(raf)cancelAnimationFrame(raf);return;}
+  curr=s[Math.floor(t/st)%s.length];
   if(curr!==prev){point(sequencer,SR+1,SC+1,curr,1);sequencer.scroll(curr);prev=curr;updatePiano();}
   point(piano,PR,PC,step);
 }catch(e){}finally{raf=requestAnimationFrame(pointers);}
