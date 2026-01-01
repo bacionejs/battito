@@ -235,6 +235,7 @@ function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
 
 function initSequencerHelpers(){
 let cols=Array(SC).fill(0),rows=Array(SR).fill(0);
+let bars=[...sequencer.children[0].children];
 
 function click({row,col}){
 if(row==="-1" && col==="-1")toggleAll();
@@ -295,7 +296,12 @@ let v1=sequencer.scrollTop+h,v2=sequencer.scrollTop+sequencer.clientHeight;
 if(t<v1)sequencer.scrollTop=t-h; else if(b>v2)sequencer.scrollTop=b-sequencer.clientHeight;
 }
 
-Object.assign(sequencer, {cols, rows, click, track, sequences, pattern, range, notes, scroll});
+function spectrum(meter){
+if(meter)bars.forEach((b,i,a)=>{b.style.height=(meter[Math.floor(i*(meter.length/a.length))]/255*100)+"%";});
+else     bars.forEach(bar=>bar.style.height="0%");
+}
+
+Object.assign(sequencer, {cols, rows, click, track, sequences, pattern, range, notes, scroll, spectrum});
 }//
 
 
@@ -311,9 +317,8 @@ Object.assign(sequencer, {cols, rows, click, track, sequences, pattern, range, n
 function initAudio(){
 let sampleRate=44100,stepsPerBeat=4,C=new AudioContext(),S=null;
 let PLAYER=BattitoPlayer(C,sampleRate),SONG=PRESETS();
-let raf=null,curr=null,prev=null;
+let raf=null,curr=null,prev=null,sequences,bpm=samplesToBPM(SONG.rowLen);
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
-let bpm=samplesToBPM(SONG.rowLen);
 
 function samplesToBPM(samplesPerStep){return (sampleRate*60)/(samplesPerStep*stepsPerBeat);}
 function beatsToSeconds(beats,bpm){return (60/bpm)*beats;}
@@ -322,7 +327,8 @@ function setSong(newSong){SONG=newSong;bpm=samplesToBPM(SONG.rowLen);}
 
 function start(){
 stop();
-let json=sequencer.range(SONG);if(!json){return;}
+sequences=sequencer.sequences();if(sequences.length===0)return;
+let json=sequencer.range(SONG);if(!json)return;
 loading.style.display="block";
 requestAnimationFrame(()=>{requestAnimationFrame(()=>{
 S=C.createBufferSource();S.buffer=PLAYER.createbuffer(json);loading.style.display="none";
@@ -337,19 +343,18 @@ function stop(){
 if(raf){cancelAnimationFrame(raf);raf=null;}
 sequencer.querySelectorAll(".row-header").forEach(h=>h.classList.remove("row-playing"));
 if(S){S.onended=null;S.stop();S.disconnect();S=null;}
-[...sequencer.children[0].children].forEach(bar=>bar.style.height="0%");
+sequencer.spectrum();
 }
 
 function pointers(){
 try{
   if(!S?.buffer)return;
   analyser.getByteFrequencyData(meter);
-  [...sequencer.children[0].children].forEach((b,i,a)=>{b.style.height=(meter[Math.floor(i*(meter.length/a.length))]/255*100)+"%";});
+  sequencer.spectrum(meter);
   let t=(C.currentTime-S.startTime)%S.buffer.duration;
-  let s=sequencer.sequences();if(s.length===0)return;
   let st=beatsToSeconds(PR/4,bpm),pt=st/PR,step=Math.floor(t/pt)%PR;
-  if((t/st)>s.length){if(raf)cancelAnimationFrame(raf);return;}
-  curr=s[Math.floor(t/st)%s.length];
+  if((t/st)>sequences.length){if(raf)cancelAnimationFrame(raf);return;}
+  curr=sequences[Math.floor(t/st)%sequences.length];
   if(curr!==prev){point(sequencer,SR+1,SC+1,curr,1);sequencer.scroll(curr);prev=curr;updatePiano();}
   point(piano,PR,PC,step);
 }catch(e){}finally{raf=requestAnimationFrame(pointers);}
