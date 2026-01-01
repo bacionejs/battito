@@ -254,7 +254,7 @@ for(i=0;i<cols.length;i++)cols[i]=(i<=mc)?(all?0:1):0;
 
 function cell(row,col){
 let r=parseInt(row),c=parseInt(col),t=audio.getSong().songData[c],i=t.p[r]??0;
-t.p[r]=(i+1)%9;if(t.p[r]>t.c.length){t.c.push({n:Array(PR).fill(0)});t.p[r]=t.c.length;}
+t.p[r]=(i+1)%9;if(t.p[r]>t.c.length){t.c.push({n:Array(PR).fill(0)});}
 }
 
 function range(song){
