@@ -31,7 +31,7 @@ initSequencer();
 initSliders();
 initText();
 initListeners();
-// if(!location.search.includes("off"))runTutorial();
+if(!location.search.includes("off"))runTutorial();
 })();
 
 
@@ -258,8 +258,7 @@ t.p[r]=(i+1)%9;if(t.p[r]>t.c.length){t.c.push({n:Array(PR).fill(0)});t.p[r]=t.c.
 }
 
 function range(song){
-if(!(rows.some(y=>y) && cols.some(x=>x)))return null;
-if(!song?.songData)return null;
+if(!(rows.some(y=>y) && cols.some(x=>x)))return null;if(!song?.songData)return null;
 let ok,copy=JSON.parse(JSON.stringify(song)),d=copy.songData;
 for(let c=cols.length-1;c>=0;c--){
   if(!cols[c]){d.splice(c,1);continue;}
