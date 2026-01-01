@@ -259,7 +259,7 @@ t.p[r]=(i+1)%9;if(t.p[r]>t.c.length){t.c.push({n:Array(PR).fill(0)});}
 }
 
 function range(song){
-if(!(rows.some(Boolean) && cols.some(Boolean)))return null;if(!song?.songData)return null;
+if(!(rows.some(Boolean) && cols.some(Boolean)))return null;
 let d=JSON.parse(JSON.stringify(song.songData));
 d=d.filter((_,c)=>cols[c]);if(!d.length)return null;
 d.forEach(t=>rows.forEach((on,r)=>{if(!on||!t.p[r])t.p[r]=0;}));
@@ -343,25 +343,22 @@ function stop(){
 if(raf){cancelAnimationFrame(raf);raf=null;}
 sequencer.querySelectorAll(".row-header").forEach(h=>h.classList.remove("row-playing"));
 if(S){S.onended=null;S.stop();S.disconnect();S=null;}
-sequencer.spectrum();
+sequencer.spectrum(false);
 }
 
-function pointers(){
-try{
-  if(!S?.buffer)return;
-  analyser.getByteFrequencyData(meter);
-  sequencer.spectrum(meter);
-  let t=(C.currentTime-S.startTime)%S.buffer.duration;
-  let st=beatsToSeconds(PR/4,bpm),pt=st/PR,step=Math.floor(t/pt)%PR;
-  if((t/st)>sequences.length){if(raf)cancelAnimationFrame(raf);return;}
-  curr=sequences[Math.floor(t/st)%sequences.length];
-  if(curr!==prev){point(sequencer,SR+1,SC+1,curr,1);sequencer.scroll(curr);prev=curr;updatePiano();}
-  point(piano,PR,PC,step);
+function pointers(){try{
+if(!S?.buffer)return;
+analyser.getByteFrequencyData(meter);sequencer.spectrum(meter);
+let t=(C.currentTime-S.startTime)%S.buffer.duration,st=beatsToSeconds(PR/4,bpm),pt=st/PR,step=Math.floor(t/pt)%PR;
+if((t/st)>sequences.length){if(raf)cancelAnimationFrame(raf);return;}
+curr=sequences[Math.floor(t/st)%sequences.length];
+if(curr!==prev){point(sequencer,SR+1,SC+1,curr,1);sequencer.scroll(curr);prev=curr;updatePiano();}
+point(piano,PR,PC,step);
 }catch(e){}finally{raf=requestAnimationFrame(pointers);}
 }
 
 function point(grid,rows,cols,playing,offset=0){
-  for(let row=0;row<rows;row++){grid.children[(row+offset)*cols]?.classList.toggle("row-playing",row===playing);}
+for(let row=0;row<rows;row++){grid.children[(row+offset)*cols]?.classList.toggle("row-playing",row===playing);}
 }
 
 function preview(note){
@@ -391,14 +388,12 @@ function wave(buffer,t){
 return preview(note);
 }
 
-function download(){
-try{
-  if(!sequencer.notes(SONG))return alert("Nothing to save. Please select song or range");
-  let a=element("a");
-  let file="battito_song_"+Date.now();
-  a.href=URL.createObjectURL(bufferToWav());a.download=file+".wav";a.click();
-  a.href=URL.createObjectURL(new File([jsonToHtml()],""));a.download=file+".html";a.click();
-  URL.revokeObjectURL(a.href);a.remove();
+function download(){try{
+if(!sequencer.notes(SONG))return alert("Nothing to save. Please select song or range");
+let a=element("a"),file="battito_song_"+Date.now();
+a.href=URL.createObjectURL(bufferToWav());a.download=file+".wav";a.click();
+a.href=URL.createObjectURL(new File([jsonToHtml()],""));a.download=file+".html";a.click();
+URL.revokeObjectURL(a.href);a.remove();
 }catch(e){alert(e.message);}
 function jsonToHtml(){
   let s="";
@@ -410,8 +405,7 @@ function jsonToHtml(){
   return s;
 }
 function bufferToWav(){
-  let b=S.buffer;
-  let c=b.numberOfChannels,l=b.length*c*2+44,o=new ArrayBuffer(l),v=new DataView(o),a=[],p=0,f=x=>{v.setUint16(p,x,1);p+=2;},F=x=>{v.setUint32(p,x,1);p+=4;};
+  let b=S.buffer,c=b.numberOfChannels,l=b.length*c*2+44,o=new ArrayBuffer(l),v=new DataView(o),a=[],p=0,f=x=>{v.setUint16(p,x,1);p+=2;},F=x=>{v.setUint32(p,x,1);p+=4;};
   F(0x46464952);F(l-8);F(0x45564157);F(0x20746d66);F(16);f(1);f(c);F(b.sampleRate);F(b.sampleRate*c*2);f(c*2);f(16);F(0x61746164);F(l-p-4);
   for(let i=0;i<c;i++)a.push(b.getChannelData(i));
   for(let i=0,j=0;p<l;j++)for(i=0;i<c;i++){let s=a[i][j];s=s<-1?-1:s>1?1:s;s=(s<0?s*32768:s*32767)|0;v.setInt16(p,s,1);p+=2;}
