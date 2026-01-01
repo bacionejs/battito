@@ -288,9 +288,9 @@ let i=rows.indexOf(1),t=track();if(!t?.p?.[i])return null;
 return (t.c[t.p[i]-1]||(t.c[t.p[i]-1]={n:Array(PR).fill(0)})).n;
 }
 
-function scroll(currSequence){
-if(currSequence==0)sequencer.scrollTop=0;
-let c=sequencer.children[(currSequence+1)*(SC+1)],h=sequencer.children[0].offsetHeight,t=c.offsetTop-sequencer.offsetTop,b=t+c.offsetHeight;
+function scroll(curr){
+if(curr==0)sequencer.scrollTop=0;
+let c=sequencer.children[(curr+1)*(SC+1)],h=sequencer.children[0].offsetHeight,t=c.offsetTop-sequencer.offsetTop,b=t+c.offsetHeight;
 let v1=sequencer.scrollTop+h,v2=sequencer.scrollTop+sequencer.clientHeight;
 if(t<v1)sequencer.scrollTop=t-h; else if(b>v2)sequencer.scrollTop=b-sequencer.clientHeight;
 }
