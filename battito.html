@@ -260,8 +260,7 @@ t.p[r]=(i+1)%9;if(t.p[r]>t.c.length){t.c.push({n:Array(PR).fill(0)});}
 
 function range(song){
 if(!(rows.some(Boolean) && cols.some(Boolean)))return null;
-let d=JSON.parse(JSON.stringify(song.songData));
-d=d.filter((_,c)=>cols[c]);if(!d.length)return null;
+let d=structuredClone(song.songData).filter((_,c)=>cols[c]);if(!d.length)return null;
 d.forEach(t=>rows.forEach((on,r)=>{if(!on||!t.p[r])t.p[r]=0;}));
 for(let r=rows.length-1;r>=0;r--)if(!d.some(t=>t.p[r]))d.forEach(t=>t.p.splice(r,1));if(!d[0].p.length)return null;
 if(!d.some(t=>t.p.some(Boolean)))return null;
