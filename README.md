@@ -14,8 +14,8 @@
 - instrument/sequence/pattern editors
 - waveform/spectrum analyzers
 - instrument presets
-- import/export
 - live-loop editing
+- import/export
 
 </details><details><summary>Guide</summary>
 
