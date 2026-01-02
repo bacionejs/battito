@@ -140,11 +140,11 @@ function updateText(){text.textContent=JSON.stringify(audio.getSong(),null,2);}
 
 
 function initListeners(){
-piano.onclick = handlePianoClick;
-sequencer.onclick=handleSequencerClick;
-sliders.oninput=handleSliderInput;
-text.oninput=handleSongInput;
-fullscreen.onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
+piano      .onclick=handlePianoClick;
+sequencer  .onclick=handleSequencerClick;
+sliders    .oninput=handleSliderInput;
+text       .oninput=handleSongInput;
+fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
 makeLongPress(canvas,()=>{audio.download();});
 }
 
