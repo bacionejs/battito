@@ -144,8 +144,8 @@ piano.onclick = handlePianoClick;
 sequencer.onclick=handleSequencerClick;
 sliders.oninput=handleSliderInput;
 text.oninput=handleSongInput;
-makeLongPress(canvas,()=>{audio.download();});
 fullscreen.onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
+makeLongPress(canvas,()=>{audio.download();});
 }
 
 function handlePianoClick({target:{dataset:{row,col}}}){
