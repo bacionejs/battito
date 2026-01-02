@@ -76,16 +76,6 @@ text.contentEditable=true;
 updateText();
 }
 
-function initListeners(){
-piano.addEventListener("click",e=>{handlePianoClick(e.target.dataset);});
-sliders.addEventListener("input",handleSliderInput);
-sequencer.addEventListener("click",e=>{handleSequencerClick(e.target.dataset);});
-text.addEventListener("input",handleSongInput);
-makeLongPress(canvas,()=>{audio.download();});
-fullscreen.addEventListener("click",()=>{let el=document.documentElement;if(el.requestFullscreen)el.requestFullscreen();fullscreen.style.display="none";});
-document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement){fullscreen.style.display="block";}});
-}
-
 
 
 
@@ -149,7 +139,16 @@ function updateText(){text.textContent=JSON.stringify(audio.getSong(),null,2);}
 
 
 
-function handlePianoClick({row,col}){
+function initListeners(){
+piano.onclick = handlePianoClick;
+sequencer.onclick=handleSequencerClick;
+sliders.oninput=handleSliderInput;
+text.oninput=handleSongInput;
+makeLongPress(canvas,()=>{audio.download();});
+fullscreen.onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
+}
+
+function handlePianoClick({target:{dataset:{row,col}}}){
 let p=sequencer.pattern();if(p==null)return;
 let note=parseInt(col)+123;
 let r=parseInt(row);
@@ -159,8 +158,8 @@ for(let i=0;i<p.length;i++){if(!(i in p))p[i]=0;}
 update();audio.preview(note);
 }
 
-function handleSequencerClick(cell){
-sequencer.click(cell);
+function handleSequencerClick({target:{dataset}}){
+sequencer.click(dataset);
 update();audio.start();
 }
 
@@ -184,6 +183,7 @@ updateSliders();
 updateSequencer();
 updateText();
 }
+
 
 
 
@@ -221,7 +221,6 @@ return e;
 }
 
 function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
-
 
 
 
@@ -449,6 +448,7 @@ body{display:flex;background:black;color:white;font-weight:bold;font-family:mono
 .meter{flex:1;width:100%;height:0%;background:linear-gradient(to top,#39FF14,orange 60%,red 90%);transition:height 50ms linear;pointer-events:none;}
 .fullscreen{position:relative;bottom:30px;right:5px;color:orange;z-index:1000;font-size:20px;text-align:right;}
 .fullscreen::before{content:"\u26F6"}
+:fullscreen .fullscreen{display:none;}
 .loading{display:none;position:relative;bottom:50px;color:silver;font-size:10px;text-align:center;z-index:9999;}
 .loading::before{content:"loading..."}
 .side{background:black;}
