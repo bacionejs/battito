@@ -10,9 +10,7 @@ Battito is a tablet-centric music tracker with piano-roll, live-loop editing and
 - waveform/spectrum analyzers
 - instrument presets
 - live-loop editing
-- export HTML+JSON (engine+song=2k)
-- import JSON
-- export WAV
+- import/export 2k
 
 </details><details><summary>Guide</summary>
 
@@ -26,7 +24,7 @@ Steps
 
 Optional
 - There are 8 preset instruments, but you can also select a track and configure the **synth** (see the Instruments section)
-- To **export** html/wav, long-press the waveform visualizer. Use the html file for your game and the wav file for whatever else. It will export whatever is selected: whole song or ranges.
+- To **export** html/wav, long-press the waveform visualizer. Use the html file for your game and the wav file for whatever else. It will export whatever is selected: whole song or ranges. The exported html file (engine+song) is 2k, 1000s times smaller than a wav file.
 - To **export** a sound effect, like an explosion, create one note on the first row of the piano, and export a range.
 - To save your work for future use, copy the **textarea** to a separate text editor. To **import**, paste in the textarea.
 - The **textarea** can be edited. Changes are **live** just like the other components.
