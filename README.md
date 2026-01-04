@@ -10,8 +10,7 @@ Battito is a tablet-centric music tracker with piano-roll, live-loop editing and
 - waveform/spectrum analyzers
 - instrument presets
 - live-loop editing
-- import/export
-- 2k size
+- import/export 2k
 
 </details><details><summary>Guide</summary>
 
