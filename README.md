@@ -7,7 +7,7 @@
 
 - **What**: Battito is a tablet-centric music tracker with piano-roll, live-loop editing and a blazingly fast engine.
 - **Why**: For size-constrained games (player+song=2k)
-- **How**: To open , click the thumbnail, or download and run from your file manager.
+- **How**: To open, click the thumbnail, or download and run from your file manager.
 
 </details><details><summary>Features</summary>
 
