@@ -1,4 +1,4 @@
-<meta name="viewport" content="width=device-width"> <script> onload=()=>{
+<meta name="viewport" content="width=device-width"> <script>
 
 addEventListener("error",e=>{alert(e.message);});document.title="Battito";//https://github.com/bacionejs/battito
 
@@ -282,8 +282,9 @@ return acc;
 function track(){if(cols.filter(Boolean).length!=1)return null;return audio.getSong().songData[cols.indexOf(1)]||null;}
 
 function pattern(){
-if(cols.filter(Boolean).length!=1||rows.filter(Boolean).length!=1)return null;
-let i=rows.indexOf(1),t=track();if(!t?.p?.[i])return null;
+let t=track();if(!t)return null;
+if(rows.filter(Boolean).length!=1)return null;
+let i=rows.indexOf(1);if(!t?.p?.[i])return null;
 return (t.c[t.p[i]-1]||(t.c[t.p[i]-1]={n:Array(PR).fill(0)})).n;
 }
 
@@ -657,5 +658,4 @@ return b;
 return {createbuffer};
 }
 
-}
 </script>
