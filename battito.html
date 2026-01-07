@@ -44,11 +44,7 @@ if(!location.search.includes("off"))runTutorial();
 
 
 
-function initPiano(){
-grid(piano,PC,PR);
-let rule,side,borders=[[i=>!(i%PC%12),"Left"],[i=>!((i/PC|0)%4),"Top"]];
-piano.forEach((cell,i)=>{for([rule,side] of borders)rule(i)&&(cell.style["border"+side+"Color"]="black");});
-}
+function initPiano(){grid(piano,PC,PR,false,12,4);}
 
 function initSequencer(){
 grid(sequencer,SC,SR,true);
@@ -68,10 +64,7 @@ SLIDERS().forEach((group,i)=>{
 });
 }
 
-function initText(){
-text.contentEditable=true;
-updateText();
-}
+function initText(){text.contentEditable=true;updateText();}
 
 
 
@@ -191,7 +184,7 @@ updateText();
 
 
 
-function grid(e,cols,rows,header){
+function grid(e,cols,rows,header,BC,BR){
 let cells=[],a=0;if(header){a=-1;cols++;rows++;}
 Object.assign(e.style,{gridTemplateColumns:"repeat("+cols+",1fr)",gridTemplateRows:"repeat("+rows+",1fr)"});
 for(let i=0;i<cols*rows;i++){
@@ -202,6 +195,7 @@ for(let i=0;i<cols*rows;i++){
   cells.push(cell);
 }
 e.forEach=f=>cells.forEach(f);
+if(BC && BR)cells.forEach((cell,i)=>{for(let [rule,side] of [[i=>!(i%cols%BC),"Left"],[i=>!((i/cols|0)%BR),"Top"]])rule(i)&&(cell.style["border"+side+"Color"]="black");});
 }
 
 function makeLongPress(o,callback){
