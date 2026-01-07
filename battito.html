@@ -46,11 +46,8 @@ if(!location.search.includes("off"))runTutorial();
 
 function initPiano(){
 grid(piano,PC,PR);
-for(let i=0;i<piano.children.length;i++){
-  let s=piano.children[i].style,c="1px solid black";
-  if((i%PC)%12===0)s.borderLeft=c;
-  if((Math.floor(i/PC))%4===0)s.borderTop=c;
-}
+let rule,side,borders=[[i=>!(i%PC%12),"Left"],[i=>!((i/PC|0)%4),"Top"]];
+piano.forEach((cell,i)=>{for([rule,side] of borders)rule(i)&&(cell.style["border"+side+"Color"]="black");});
 }
 
 function initSequencer(){
@@ -87,7 +84,7 @@ updateText();
 
 
 function updatePiano(){
-[...piano.children].forEach(cell=>{cell.style.background="";});
+piano.forEach(cell=>{cell.style.background="";});
 sequencer.cols.forEach((on,tid)=>{if(!on)return;
   let t=audio.song.songData[tid];
   t?.c?.[t?.p[audio.curr]-1]?.n?.forEach((note,step)=>{
@@ -97,7 +94,7 @@ sequencer.cols.forEach((on,tid)=>{if(!on)return;
 }
 
 function updateSequencer(){
-[...sequencer.children].forEach(cell=>{
+sequencer.forEach(cell=>{
   cell.classList.remove("active","row-selected","col-selected");
   let {row,col}=cell.dataset;
   if(row==="-1" && col==="-1"){return;}
@@ -194,23 +191,25 @@ updateText();
 
 
 
-function makeLongPress(o,callback){
-let t=null,lp={
-  down(e){e.preventDefault();if(t!==null)clearTimeout(t);t=setTimeout(()=>{t=null;callback(e);},800);},
-  up  (e){e.preventDefault();if(t!==null){clearTimeout(t);t=null;}}
-};
-o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);o.addEventListener("pointerleave",lp.up);
-}
-
 function grid(e,cols,rows,header){
-let a=0;if(header){a=-1;cols++;rows++;}
+let cells=[],a=0;if(header){a=-1;cols++;rows++;}
 Object.assign(e.style,{gridTemplateColumns:"repeat("+cols+",1fr)",gridTemplateRows:"repeat("+rows+",1fr)"});
 for(let i=0;i<cols*rows;i++){
   let c=i%cols,r=Math.floor(i/cols),classes="cell";
   if(header===true){if(r===0){classes+=" col-header";}if(c===0){classes+=" row-header";}}
   let cell=element("div",e,classes);
   cell.dataset.row=r+a;cell.dataset.col=c+a;
+  cells.push(cell);
 }
+e.forEach=f=>cells.forEach(f);
+}
+
+function makeLongPress(o,callback){
+let t=null,lp={
+  down(e){e.preventDefault();if(t!==null)clearTimeout(t);t=setTimeout(()=>{t=null;callback(e);},800);},
+  up  (e){e.preventDefault();if(t!==null){clearTimeout(t);t=null;}}
+};
+o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);o.addEventListener("pointerleave",lp.up);
 }
 
 function element(tagName,parent=document.body,className=""){
