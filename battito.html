@@ -314,15 +314,14 @@ Object.assign(sequencer, {cols, rows, click, track, sequences, pattern, range, n
 
 
 function initAudio(){
-let sampleRate=44100,stepsPerBeat=4,C=new AudioContext(),S=null;
+let sampleRate=44100,C=new AudioContext(),S=null;
 let PLAYER=BattitoPlayer(C,sampleRate),SONG=PRESETS();
-let raf=null,currS=null,prevS=null,currP=null,prevP=null,sequences,bpm=samplesToBPM(SONG.rowLen);
+let sequences,raf,currS,prevS,currP,prevP,T=timing(SONG.rowLen);
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
 
-function samplesToBPM(samplesPerStep){return (sampleRate*60)/(samplesPerStep*stepsPerBeat);}
-function beatsToSeconds(beats,bpm){return (60/bpm)*beats;}
+function timing(rowLen){return {s:PR*rowLen/sampleRate,p:rowLen/sampleRate};}
 function getSong(){return SONG;}
-function setSong(newSong){SONG=newSong;bpm=samplesToBPM(SONG.rowLen);}
+function setSong(newSong){SONG=newSong;(T=timing(SONG.rowLen));}
 
 function start(){
 stop();
@@ -334,7 +333,7 @@ S=C.createBufferSource();S.buffer=PLAYER.createbuffer(json);loading.style.displa
 S.connect(analyser);analyser.connect(C.destination);
 S.onended=()=>{start();};
 let startTime=C.currentTime;S.start(startTime);S.startTime=startTime;
-raf=requestAnimationFrame(pointers);
+raf=requestAnimationFrame(loop);
 });});
 }
 
@@ -344,16 +343,16 @@ if(S){S.onended=null;S.stop();S.disconnect();S=null;}
 sequencer.spectrum(false);
 }
 
-function pointers(){try{
+function loop(){try{
 if(!S?.buffer)return;
 analyser.getByteFrequencyData(meter);sequencer.spectrum(meter);
-let t=(C.currentTime-S.startTime)%S.buffer.duration,st=beatsToSeconds(PR/4,bpm),pt=st/PR;
-currP=Math.floor(t/pt)%PR;
-if((t/st)>sequences.length){if(raf)cancelAnimationFrame(raf);return;}
-currS=sequences[Math.floor(t/st)%sequences.length];
+let t=(C.currentTime-S.startTime)%S.buffer.duration;
+if((t/T.s)>sequences.length){if(raf)cancelAnimationFrame(raf);return;}
+currS=sequences[Math.floor(t/T.s)%sequences.length];
+currP=Math.floor(t/T.p)%PR;
 if(currS!==prevS){point(sequencer,SC,prevS,currS,1);prevS=currS;sequencer.scroll(currS);updatePiano();}
 if(currP!==prevP){point(piano    ,PC,prevP,currP  );prevP=currP;}
-}catch(e){}finally{raf=requestAnimationFrame(pointers);}
+}catch(e){}finally{raf=requestAnimationFrame(loop);}
 }
 
 function point(grid,cols,prev,curr,offset=0){
