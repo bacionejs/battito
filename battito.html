@@ -89,7 +89,7 @@ updateText();
 function updatePiano(){
 [...piano.children].forEach(cell=>{cell.style.background="";});
 sequencer.cols.forEach((on,tid)=>{if(!on)return;
-  let t=audio.getSong().songData[tid];
+  let t=audio.song.songData[tid];
   t?.c?.[t?.p[audio.curr]-1]?.n?.forEach((note,step)=>{
     if(note){piano.children[step*PC+note-123].style.background=getColor(tid);}
   });
@@ -108,7 +108,7 @@ function updateSequencer(){
   }else{
     cell.textContent="";
     let r=parseInt(row),c=parseInt(col);
-    let t=audio.getSong().songData[c];
+    let t=audio.song.songData[c];
     if(t?.p?.[r]!==undefined){
       if(sequencer.rows[r] && sequencer.cols[c]){cell.classList.add("active");}
       cell.textContent=t.p[r]||"";
@@ -127,7 +127,7 @@ if(t!==null){
 }
 }
 
-function updateText(){text.textContent=JSON.stringify(audio.getSong(),null,2);}
+function updateText(){text.textContent=JSON.stringify(audio.song,null,2);}
 
 
 
@@ -172,7 +172,7 @@ update();audio.preview();
 
 function handleSongInput(){
 try{
-audio.setSong(JSON.parse(text.textContent));
+audio.song=JSON.parse(text.textContent);
 updatePiano();updateSliders();updateSequencer();audio.preview();
 }catch(e){}
 }
@@ -245,7 +245,7 @@ else cell(row,col);
 
 function toggleAll(){
 let i,mr=0,mc=0,all=true;
-audio.getSong().songData.forEach((t,c)=>{t.p.forEach((v,r)=>{if(v){if(c>mc)mc=c;if(r>mr)mr=r;}});});
+audio.song.songData.forEach((t,c)=>{t.p.forEach((v,r)=>{if(v){if(c>mc)mc=c;if(r>mr)mr=r;}});});
 for(i=0;i<=mr;i++)if(!rows[i])all=false;
 for(i=0;i<=mc;i++)if(!cols[i])all=false;
 for(i=0;i<rows.length;i++)rows[i]=(i<=mr)?(all?0:1):0;
@@ -253,7 +253,7 @@ for(i=0;i<cols.length;i++)cols[i]=(i<=mc)?(all?0:1):0;
 }
 
 function cell(row,col){
-let r=parseInt(row),c=parseInt(col),t=audio.getSong().songData[c],i=t.p[r]??0;
+let r=parseInt(row),c=parseInt(col),t=audio.song.songData[c],i=t.p[r]??0;
 t.p[r]=(i+1)%9;if(t.p[r]>t.c.length){t.c.push({n:Array(PR).fill(0)});}
 }
 
@@ -274,12 +274,12 @@ return r.songData.some(t=>t.p.some(p=>p>0 && t.c[p-1]?.n.some(Boolean)))?r:null;
 function sequences(){
 return rows.reduce((acc,on,r)=>{
 if(!on)return acc;
-for(let t of audio.getSong().songData){if(t.p[r]){acc.push(r);break;}}
+for(let t of audio.song.songData){if(t.p[r]){acc.push(r);break;}}
 return acc;
 },[]);
 }
 
-function track(){if(cols.filter(Boolean).length!=1)return null;return audio.getSong().songData[cols.indexOf(1)]||null;}
+function track(){if(cols.filter(Boolean).length!=1)return null;return audio.song.songData[cols.indexOf(1)]||null;}
 
 function pattern(){
 let t=track();if(!t)return null;
@@ -319,8 +319,7 @@ let PLAYER=BattitoPlayer(C,sampleRate),SONG=PRESETS();
 let sequences,raf,currS,prevS,currP,prevP;
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
 
-function getSong(){return SONG;}
-function setSong(newSong){SONG=newSong;}
+
 
 function start(){
 stop();
@@ -364,7 +363,7 @@ let playing=null;
 preview=function(note){
   if(playing){playing.stop();playing=null;}
   let track=sequencer.track();if(track==null)return;
-  let song={rowLen:getSong().rowLen,endPattern:1,songData:[{...track,p:[1],c:[{n:[]}]}]},t=song.songData[0];
+  let song={rowLen:SONG.rowLen,endPattern:1,songData:[{...track,p:[1],c:[{n:[]}]}]},t=song.songData[0];
   t.c[0].n[0]=note||track?.c[0]?.n?.find(n=>n!==0)||147;
   let s=C.createBufferSource();s.buffer=PLAYER.createbuffer(song);s.onended=()=>{if(playing===s){playing=null;}};s.connect(C.destination);s.start();playing=s;
   t.fx_delay_time=t.fx_delay_amt=0;song.rowLen=(sampleRate/128)|0;
@@ -411,7 +410,7 @@ function bufferToWav(){
 }
 }
 
-audio={stop,start,preview,download,getSong,setSong,get curr(){return currS;}};
+audio={stop,start,preview,download,get song(){return SONG;},set song(newSong){SONG=newSong;},get curr(){return currS;}};
 }//
 
 
