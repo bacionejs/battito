@@ -316,7 +316,7 @@ Object.assign(sequencer, {cols, rows, click, track, sequences, pattern, range, n
 function initAudio(){
 let sampleRate=44100,stepsPerBeat=4,C=new AudioContext(),S=null;
 let PLAYER=BattitoPlayer(C,sampleRate),SONG=PRESETS();
-let raf=null,curr=null,prev=null,sequences,bpm=samplesToBPM(SONG.rowLen);
+let raf=null,currS=null,prevS=null,currP=null,prevP=null,sequences,bpm=samplesToBPM(SONG.rowLen);
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
 
 function samplesToBPM(samplesPerStep){return (sampleRate*60)/(samplesPerStep*stepsPerBeat);}
@@ -340,7 +340,6 @@ raf=requestAnimationFrame(pointers);
 
 function stop(){
 if(raf){cancelAnimationFrame(raf);raf=null;}
-sequencer.querySelectorAll(".row-header").forEach(h=>h.classList.remove("row-playing"));
 if(S){S.onended=null;S.stop();S.disconnect();S=null;}
 sequencer.spectrum(false);
 }
@@ -348,16 +347,18 @@ sequencer.spectrum(false);
 function pointers(){try{
 if(!S?.buffer)return;
 analyser.getByteFrequencyData(meter);sequencer.spectrum(meter);
-let t=(C.currentTime-S.startTime)%S.buffer.duration,st=beatsToSeconds(PR/4,bpm),pt=st/PR,step=Math.floor(t/pt)%PR;
+let t=(C.currentTime-S.startTime)%S.buffer.duration,st=beatsToSeconds(PR/4,bpm),pt=st/PR;
+currP=Math.floor(t/pt)%PR;
 if((t/st)>sequences.length){if(raf)cancelAnimationFrame(raf);return;}
-curr=sequences[Math.floor(t/st)%sequences.length];
-if(curr!==prev){point(sequencer,SR+1,SC+1,curr,1);sequencer.scroll(curr);prev=curr;updatePiano();}
-point(piano,PR,PC,step);
+currS=sequences[Math.floor(t/st)%sequences.length];
+if(currS!==prevS){point(sequencer,SC,prevS,currS,1);prevS=currS;sequencer.scroll(currS);updatePiano();}
+if(currP!==prevP){point(piano    ,PC,prevP,currP  );prevP=currP;}
 }catch(e){}finally{raf=requestAnimationFrame(pointers);}
 }
 
-function point(grid,rows,cols,playing,offset=0){
-for(let row=0;row<rows;row++){grid.children[(row+offset)*cols]?.classList.toggle("row-playing",row===playing);}
+function point(grid,cols,prev,curr,offset=0){
+grid.children[(prev+offset)*(cols+offset)]?.classList.remove("row-playing");
+grid.children[(curr+offset)*(cols+offset)]?.classList.add("row-playing");
 }
 
 function preview(note){
@@ -412,7 +413,7 @@ function bufferToWav(){
 }
 }
 
-audio={stop,start,preview,download,getSong,setSong,get curr(){return curr;}};
+audio={stop,start,preview,download,getSong,setSong,get curr(){return currS;}};
 }//
 
 
