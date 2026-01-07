@@ -319,8 +319,6 @@ let PLAYER=BattitoPlayer(C,sampleRate),SONG=PRESETS();
 let sequences,raf,currS,prevS,currP,prevP;
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
 
-
-
 function start(){
 stop();
 sequences=sequencer.sequences();if(sequences.length===0)return;
@@ -353,7 +351,7 @@ if(currP!==prevP){point(piano    ,PC,prevP,currP  );prevP=currP;}
 }catch(e){}finally{raf=requestAnimationFrame(loop);}
 }
 
-function point(g,s,prev,curr,o=0){[[prev,"remove"],[curr,"add"]].forEach(([x,m])=>g.children[(x+o)*(s+o)]?.classList[m]("row-playing"));}
+function point(grid,width,prev,curr,o=0){[[prev,"remove"],[curr,"add"]].forEach(([x,m])=>grid.children[(x+o)*(width+o)]?.classList[m]("row-playing"));}
 
 function preview(note){
 let playing=null;
