@@ -316,12 +316,12 @@ Object.assign(sequencer, {cols, rows, click, track, sequences, pattern, range, n
 function initAudio(){
 let sampleRate=44100,C=new AudioContext(),S=null;
 let PLAYER=BattitoPlayer(C,sampleRate),SONG=PRESETS();
-let sequences,raf,currS,prevS,currP,prevP,T=timing(SONG.rowLen);
+let sequences,raf,currS,prevS,currP,prevP,T=timing();
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
 
-function timing(rowLen){return {s:PR*rowLen/sampleRate,p:rowLen/sampleRate};}
+function timing(){return {s:PR*SONG.rowLen/sampleRate,p:SONG.rowLen/sampleRate};}
 function getSong(){return SONG;}
-function setSong(newSong){SONG=newSong;(T=timing(SONG.rowLen));}
+function setSong(newSong){SONG=newSong;(T=timing());}
 
 function start(){
 stop();
