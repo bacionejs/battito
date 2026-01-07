@@ -319,7 +319,7 @@ let PLAYER=BattitoPlayer(C,sampleRate),SONG=PRESETS();
 let sequences,raf,currS,prevS,currP,prevP,T=timing();
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
 
-function timing(){return {s:PR*SONG.rowLen/sampleRate,p:SONG.rowLen/sampleRate};}
+function timing(){return {s:sampleRate/SONG.rowLen/PR,p:sampleRate/SONG.rowLen};}
 function getSong(){return SONG;}
 function setSong(newSong){SONG=newSong;(T=timing());}
 
@@ -347,9 +347,9 @@ function loop(){try{
 if(!S?.buffer)return;
 analyser.getByteFrequencyData(meter);sequencer.spectrum(meter);
 let t=(C.currentTime-S.startTime)%S.buffer.duration;
-if((t/T.s)>sequences.length){if(raf)cancelAnimationFrame(raf);return;}
-currS=sequences[Math.floor(t/T.s)%sequences.length];
-currP=Math.floor(t/T.p)%PR;
+if((t*T.s)>=sequences.length){if(raf)cancelAnimationFrame(raf);return;}
+currS=sequences[(t*T.s|0)%sequences.length];
+currP=(t*T.p|0)%PR;
 if(currS!==prevS){point(sequencer,SC,prevS,currS,1);prevS=currS;sequencer.scroll(currS);updatePiano();}
 if(currP!==prevP){point(piano    ,PC,prevP,currP  );prevP=currP;}
 }catch(e){}finally{raf=requestAnimationFrame(loop);}
@@ -369,9 +369,9 @@ preview=function(note){
   t.c[0].n[0]=note||track?.c[0]?.n?.find(n=>n!==0)||147;
   let s=C.createBufferSource();s.buffer=PLAYER.createbuffer(song);s.onended=()=>{if(playing===s){playing=null;}};s.connect(C.destination);s.start();playing=s;
   t.fx_delay_time=t.fx_delay_amt=0;song.rowLen=(sampleRate/128)|0;
-  wave(PLAYER.createbuffer(song),t);
+  waveform(PLAYER.createbuffer(song),t);
 };
-function wave(buffer,t){
+function waveform(buffer,t){
   let c=canvas.getContext("2d"),m=canvas.height/2;
   c.fillStyle="#0A0F0A";c.fillRect(0,0,canvas.width,canvas.height);
   if(!buffer||!t){c.strokeStyle="#39FF14";c.beginPath();c.moveTo(0,m);c.lineTo(canvas.width,m);c.stroke();return;}
