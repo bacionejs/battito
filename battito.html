@@ -316,12 +316,11 @@ Object.assign(sequencer, {cols, rows, click, track, sequences, pattern, range, n
 function initAudio(){
 let sampleRate=44100,C=new AudioContext(),S=null;
 let PLAYER=BattitoPlayer(C,sampleRate),SONG=PRESETS();
-let sequences,raf,currS,prevS,currP,prevP,T=timing();
+let sequences,raf,currS,prevS,currP,prevP;
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
 
-function timing(){return {s:sampleRate/SONG.rowLen/PR,p:sampleRate/SONG.rowLen};}
 function getSong(){return SONG;}
-function setSong(newSong){SONG=newSong;(T=timing());}
+function setSong(newSong){SONG=newSong;}
 
 function start(){
 stop();
@@ -346,10 +345,10 @@ sequencer.spectrum(false);
 function loop(){try{
 if(!S?.buffer)return;
 analyser.getByteFrequencyData(meter);sequencer.spectrum(meter);
-let t=(C.currentTime-S.startTime)%S.buffer.duration;
-if((t*T.s)>=sequences.length){if(raf)cancelAnimationFrame(raf);return;}
-currS=sequences[(t*T.s|0)%sequences.length];
-currP=(t*T.p|0)%PR;
+let t=(C.currentTime-S.startTime)%S.buffer.duration*(sampleRate/SONG.rowLen/PR);
+if(t>=sequences.length){if(raf)cancelAnimationFrame(raf);return;}
+currS=sequences[t|0];
+currP=(t*PR|0)%PR;
 if(currS!==prevS){point(sequencer,SC,prevS,currS,1);prevS=currS;sequencer.scroll(currS);updatePiano();}
 if(currP!==prevP){point(piano    ,PC,prevP,currP  );prevP=currP;}
 }catch(e){}finally{raf=requestAnimationFrame(loop);}
