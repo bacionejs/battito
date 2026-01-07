@@ -345,7 +345,7 @@ sequencer.spectrum(false);
 function loop(){try{
 if(!S?.buffer)return;
 analyser.getByteFrequencyData(meter);sequencer.spectrum(meter);
-let t=(C.currentTime-S.startTime)%S.buffer.duration*(sampleRate/SONG.rowLen/PR);
+let t=(C.currentTime-S.startTime)*(sampleRate/SONG.rowLen/PR);
 if(t>=sequences.length){if(raf)cancelAnimationFrame(raf);return;}
 currS=sequences[t|0];
 currP=(t*PR|0)%PR;
