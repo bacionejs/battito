@@ -1,6 +1,6 @@
 <meta name="viewport" content="width=device-width"> <script> onload=()=>{
 
-addEventListener("error",e=>{alert(e.message);});document.title="Battito";//https://github.com/bacionejs/battito
+addEventListener("error",e=>{prompt("",e.message);});document.title="Battito";//https://github.com/bacionejs/battito
 
 let audio,SC=8,SR=60,PC=48,PR=32;
 let piano      =element("div",document.body,"piano");
@@ -52,9 +52,9 @@ line(piano,PC,"y",4);
 
 function initSequencer(){
 grid(sequencer,SC,SR,true);
-for(let i=0;i<8;i++){element("div",sequencer.children[0],"meter");}
-for(let i=1;i<SC+1;i++){sequencer.children[i].textContent=String.fromCharCode(64+i);sequencer.children[i].style.color=getColor(i-1);}
-for(let i=SC+1;i<(SC+1)*(SR+1);i+=SC+1){sequencer.children[i].textContent=i/(SC+1);}
+for(let i=0;i<8;i++){element("div",sequencer.cells[0],"meter");}
+for(let i=1;i<SC+1;i++){sequencer.cells[i].textContent=String.fromCharCode(64+i);sequencer.cells[i].style.color=getColor(i-1);}
+for(let i=SC+1;i<(SC+1)*(SR+1);i+=SC+1){sequencer.cells[i].textContent=i/(SC+1);}
 initSequencerHelpers();
 }
 
@@ -85,7 +85,7 @@ piano.forEach(cell=>{cell.style.background="";});
 sequencer.cols.forEach((on,tid)=>{if(!on)return;
   let t=audio.song.songData[tid];
   t?.c?.[t?.p[audio.curr]-1]?.n?.forEach((note,step)=>{
-    if(note){piano.children[step*PC+note-123].style.background=getColor(tid);}
+    if(note){piano.cells[step*PC+note-123].style.background=getColor(tid);}
   });
 });
 }
@@ -199,6 +199,7 @@ for(let i=0;i<cols*rows;i++){
   cells.push(cell);
 }
 e.forEach=f=>cells.forEach(f);
+e.cells=cells;
 }
 
 function line(e,width,dir,freq){
@@ -235,7 +236,7 @@ function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
 
 function initSequencerHelpers(){
 let cols=Array(SC).fill(0),rows=Array(SR).fill(0);
-let bars=[...sequencer.children[0].children];
+let bars=[...sequencer.cells[0].children];
 
 function click({row,col}){
 if(row==="-1" && col==="-1")toggleAll();
@@ -291,7 +292,7 @@ return (t.c[t.p[i]-1]||(t.c[t.p[i]-1]={n:Array(PR).fill(0)})).n;
 
 function scroll(curr){
 if(curr==0)sequencer.scrollTop=0;
-let c=sequencer.children[(curr+1)*(SC+1)],h=sequencer.children[0].offsetHeight,t=c.offsetTop-sequencer.offsetTop,b=t+c.offsetHeight;
+let c=sequencer.cells[(curr+1)*(SC+1)],h=sequencer.cells[0].offsetHeight,t=c.offsetTop-sequencer.offsetTop,b=t+c.offsetHeight;
 let v1=sequencer.scrollTop+h,v2=sequencer.scrollTop+sequencer.clientHeight;
 if(t<v1)sequencer.scrollTop=t-h; else if(b>v2)sequencer.scrollTop=b-sequencer.clientHeight;
 }
@@ -352,7 +353,7 @@ if(currP!==prevP){point(piano    ,PC,prevP,currP  );prevP=currP;}
 }catch(e){}finally{raf=requestAnimationFrame(loop);}
 }
 
-function point(grid,width,prev,curr,o=0){[[prev,"remove"],[curr,"add"]].forEach(([x,m])=>grid.children[(x+o)*(width+o)]?.classList[m]("row-playing"));}
+function point(grid,width,prev,curr,o=0){[[prev,"remove"],[curr,"add"]].forEach(([x,m])=>grid.cells[(x+o)*(width+o)]?.classList[m]("row-playing"));}
 
 function preview(note){
 let playing=null;
