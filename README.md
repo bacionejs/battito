@@ -106,7 +106,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 ---
 
-</details><details><summary>Contributions</summary>
+</details><details><summary>Credits</summary>
 
 Battito ports Jake Taylor's [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant engine and optimizes with precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only, blazingly fast render loop.  
 
