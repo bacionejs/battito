@@ -63,7 +63,7 @@ SLIDERS().forEach((group,i)=>{
   group.forEach(([label,key,max])=>{
     let l=element("label",sliders);l.textContent=label;l.style.color=getColor(i);
     let s=element("input",sliders,"slider");
-    s.type="range";s.dataset.key=key;s.max=max;s.disabled=true;
+    s.type="range";s.key=key;s.max=max;s.disabled=true;
   });
 });
 }
@@ -93,15 +93,15 @@ sequencer.cols.forEach((on,tid)=>{if(!on)return;
 function updateSequencer(){
 sequencer.forEach(cell=>{
   cell.classList.remove("active","row-selected","col-selected");
-  let {row,col}=cell.dataset;
-  if(row==="-1" && col==="-1"){return;}
-  if(row==="-1"){
+  let {row,col}=cell;
+  if(row===-1 && col===-1){return;}
+  if(row===-1){
     if(sequencer.cols[col])cell.classList.add("col-selected");
-  }else if(col==="-1"){
+  }else if(col===-1){
     if(sequencer.rows[row])cell.classList.add("row-selected");
   }else{
     cell.textContent="";
-    let r=parseInt(row),c=parseInt(col);
+    let r=row,c=col;
     let t=audio.song.songData[c];
     if(t?.p?.[r]!==undefined){
       if(sequencer.rows[r] && sequencer.cols[c]){cell.classList.add("active");}
@@ -115,7 +115,7 @@ function updateSliders(){
 let ss=sliders.querySelectorAll(".slider");
 let t=sequencer.track();
 if(t!==null){
-  ss.forEach(s=>{s.disabled=false;s.value=t[s.dataset.key]||0;});
+  ss.forEach(s=>{s.disabled=false;s.value=t[s.key]||0;});
 }else{
   ss.forEach(s=>{s.disabled=true; s.value=0;});
 }
@@ -142,25 +142,25 @@ fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.doc
 makeLongPress(canvas,()=>{audio.download();});
 }
 
-function handlePianoClick({target:{dataset:{row,col}}}){
+function handlePianoClick({target:{row,col}}){
 let p=sequencer.pattern();if(p==null)return;
-let note=parseInt(col)+123;
-let r=parseInt(row);
+let note=col+123;
+let r=row;
 if(p[r]==note){p[r]=0;update();return;}
 p[r]=note;
 for(let i=0;i<p.length;i++){if(!(i in p))p[i]=0;}
 update();audio.preview(note);
 }
 
-function handleSequencerClick({target:{dataset}}){
-sequencer.click(dataset);
+function handleSequencerClick({target}){
+sequencer.click(target);
 update();audio.start();
 }
 
 function handleSliderInput(e){
 if(!e.target.classList.contains("slider"))return;
 let t=sequencer.track();if(t==null)return;
-t[e.target.dataset.key]=parseInt(e.target.value);
+t[e.target.key]=+e.target.value;
 update();audio.preview();
 }
 
@@ -195,7 +195,7 @@ for(let i=0;i<cols*rows;i++){
   let c=i%cols,r=Math.floor(i/cols),classes="cell";
   if(header===true){if(r===0){classes+=" col-header";}if(c===0){classes+=" row-header";}}
   let cell=element("div",e,classes);
-  cell.dataset.row=r+a;cell.dataset.col=c+a;
+  cell.row=r+a;cell.col=c+a;
   cells.push(cell);
 }
 e.forEach=f=>cells.forEach(f);
@@ -239,9 +239,9 @@ let cols=Array(SC).fill(0),rows=Array(SR).fill(0);
 let bars=[...sequencer.cells[0].children];
 
 function click({row,col}){
-if(row==="-1" && col==="-1")toggleAll();
-else if(row==="-1"){cols[col]=cols[col]?0:1;audio.preview();}
-else if(col==="-1"){rows[row]=rows[row]?0:1;}
+if(row===-1&& col===-1)toggleAll();
+else if(row===-1){cols[col]=cols[col]?0:1;audio.preview();}
+else if(col===-1){rows[row]=rows[row]?0:1;}
 else cell(row,col);
 }
 
@@ -255,7 +255,7 @@ for(i=0;i<cols.length;i++)cols[i]=(i<=mc)?(all?0:1):0;
 }
 
 function cell(row,col){
-let r=parseInt(row),c=parseInt(col),t=audio.song.songData[c],i=t.p[r]??0;
+let r=row,c=col,t=audio.song.songData[c],i=t.p[r]??0;
 t.p[r]=(i+1)%9;if(t.p[r]>t.c.length){t.c.push({n:Array(PR).fill(0)});}
 }
 
@@ -440,7 +440,7 @@ body{display:flex;background:black;color:white;font-weight:bold;font-family:mono
 .col-header{position:sticky;top:0;background:black;z-index:1;}
 .canvas{height:25dvh;aspect-ratio:2/1;}
 .text, .canvas{border:1px solid silver;border-top:none;}
-.sequencer .cell[data-row="-1"][data-col="-1"]{padding:2px;background:#222;display:flex;align-items:flex-end;gap:1px;overflow:hidden;}
+.sequencer > :first-child{padding:2px;background:#222;display:flex;align-items:flex-end;gap:1px;overflow:hidden;}
 .meter{flex:1;width:100%;height:0%;background:linear-gradient(to top,#39FF14,orange 60%,red 90%);transition:height 50ms linear;pointer-events:none;}
 .fullscreen{position:relative;bottom:30px;right:5px;color:orange;z-index:1000;font-size:20px;text-align:right;}
 .fullscreen::before{content:"\u26F6"}
@@ -523,30 +523,45 @@ let cs=-1;let ta=true;
 function cl(){if(!ta)return;ta=false;p.remove();m.remove();s.remove();}
 s.addEventListener("click",cl);
 
-function gtfs(song){
-let st=[];let ptd={};
-song.forEach((track,ti)=>{
-  if(track && track[0]){
-    track[0].forEach((pi,ri)=>{
-      if(pi>0){
-        for(let i=0;i<pi;i++){st.push({target:()=>sequencer.querySelector('[data-col="'+ti+'"][data-row="'+ri+'"]'),action:'click'});}
-        let k=ti+"-"+pi;
-        if(!ptd[k] && track[1] && track[1][pi-1]){ptd[k]={ti,pi,dr:ri};}
-      }
-    });
-  }
-});
-for(let k in ptd){
-  let {ti,pi,dr}=ptd[k];
-  let pd=song[ti][1][pi-1];
-  st.push({target:()=>sequencer.querySelector('[data-col="'+ti+'"][data-row="-1"]'),action:'click'});
-  st.push({target:()=>sequencer.querySelector('[data-col="-1"][data-row="'+dr+'"]'),action:'click'});
-  if(pd){pd.forEach((note,pr)=>{if(note>0){let pc=note-123;st.push({target:()=>piano.querySelector('[data-col="'+pc+'"][data-row="'+pr+'"]'),action:'click'});}});}
-  st.push({target:()=>sequencer.querySelector('[data-col="-1"][data-row="'+dr+'"]'),action:'click'});
-  st.push({target:()=>sequencer.querySelector('[data-col="'+ti+'"][data-row="-1"]'),action:'click'});
+function cell(grid, row, col){
+  return grid.cells.find(c => c.row === row && c.col === col);
 }
-st.push({target:()=>sequencer.querySelector('[data-col="-1"][data-row="-1"]'),action:'click'});
-return st;
+
+function gtfs(song){
+  let st=[]; let ptd={};
+  song.forEach((track,ti)=>{
+    if(track && track[0]){
+      track[0].forEach((pi,ri)=>{
+        if(pi>0){
+          for(let i=0;i<pi;i++){
+            st.push({target:()=> cell(sequencer, ri, ti), action:'click'});
+          }
+          let k=ti+"-"+pi;
+          if(!ptd[k] && track[1] && track[1][pi-1]){
+            ptd[k]={ti,pi,dr:ri};
+          }
+        }
+      });
+    }
+  });
+  for(let k in ptd){
+    let {ti,pi,dr}=ptd[k];
+    let pd=song[ti][1][pi-1];
+    st.push({target:()=> cell(sequencer, -1, ti), action:'click'});
+    st.push({target:()=> cell(sequencer, dr, -1), action:'click'});
+    if(pd){
+      pd.forEach((note,pr)=>{
+        if(note>0){
+          let pc = note - 123;
+          st.push({target:()=> cell(piano, pr, pc), action:'click'});
+        }
+      });
+    }
+    st.push({target:()=> cell(sequencer, dr, -1), action:'click'});
+    st.push({target:()=> cell(sequencer, -1, ti), action:'click'});
+  }
+  st.push({target:()=> cell(sequencer, -1, -1), action:'click'});
+  return st;
 }
 
 function loop(){
