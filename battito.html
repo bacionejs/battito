@@ -44,7 +44,11 @@ if(!location.search.includes("off"))runTutorial();
 
 
 
-function initPiano(){grid(piano,PC,PR,false,12,4);}
+function initPiano(){
+grid(piano,PC,PR);
+line(piano,PC,"x",12);
+line(piano,PC,"y",4);
+}
 
 function initSequencer(){
 grid(sequencer,SC,SR,true);
@@ -184,7 +188,7 @@ updateText();
 
 
 
-function grid(e,cols,rows,header,BC,BR){
+function grid(e,cols,rows,header){
 let cells=[],a=0;if(header){a=-1;cols++;rows++;}
 Object.assign(e.style,{gridTemplateColumns:"repeat("+cols+",1fr)",gridTemplateRows:"repeat("+rows+",1fr)"});
 for(let i=0;i<cols*rows;i++){
@@ -195,7 +199,11 @@ for(let i=0;i<cols*rows;i++){
   cells.push(cell);
 }
 e.forEach=f=>cells.forEach(f);
-if(BC && BR)cells.forEach((cell,i)=>{for(let [rule,side] of [[i=>!(i%cols%BC),"Left"],[i=>!((i/cols|0)%BR),"Top"]])rule(i)&&(cell.style["border"+side+"Color"]="black");});
+}
+
+function line(e,width,dir,freq){
+let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];
+e.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});
 }
 
 function makeLongPress(o,callback){
