@@ -85,7 +85,7 @@ piano.forEach(cell=>{cell.style.background="";});
 sequencer.cols.forEach((on,tid)=>{if(!on)return;
   let t=audio.song.songData[tid];
   t?.c?.[t?.p[audio.curr]-1]?.n?.forEach((note,step)=>{
-    if(note){piano.cells[step*PC+note-123].style.background=getColor(tid);}
+    if(note && note>=123 && note<=123+PC){piano.cells[step*PC+note-123].style.background=getColor(tid);}
   });
 });
 }
@@ -326,13 +326,13 @@ stop();
 sequences=sequencer.sequences();if(sequences.length===0)return;
 let json=sequencer.range(SONG);if(!json)return;
 loading.style.display="block";
-requestAnimationFrame(()=>{requestAnimationFrame(()=>{
+requestAnimationFrame(()=>requestAnimationFrame(()=>{
 S=C.createBufferSource();S.buffer=PLAYER.createbuffer(json);loading.style.display="none";
 S.connect(analyser);analyser.connect(C.destination);
 S.onended=()=>{start();};
 let startTime=C.currentTime;S.start(startTime);S.startTime=startTime;
 raf=requestAnimationFrame(loop);
-});});
+}));
 }
 
 function stop(){
