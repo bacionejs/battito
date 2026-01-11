@@ -575,70 +575,67 @@ return {createbuffer};
 
 
 function runTutorial(){
-let p=element("div",document.body,"tutorial-pointer"),m=element("div",document.body,"tutorial-message"),s=element("div",document.body,"tutorial-skip");
-s.textContent="Skip Tutorial";
-let cs=-1;let ta=true;
-function cl(){if(!ta)return;ta=false;p.remove();m.remove();s.remove();}
-s.addEventListener("click",cl);
+let cs=-1,ta=true;
+let p=element("div",document.body,"tut-pointer");
+let m=element("div",document.body,"tut-message");
+let s=element("div",document.body,"tut-skip");s.onclick=clear;
 
-function cell(grid, row, col){
-  return grid.cells.find(c => c.row === row && c.col === col);
-}
+function clear(){if(!ta)return;ta=false;p.remove();m.remove();s.remove();}
+function cell(grid,row,col){ return grid.cells.find(c=>c.row===row&&c.col===col); }
 
 function gtfs(song){
-  let st=[]; let ptd={};
-  song.forEach((track,ti)=>{
-    if(track && track[0]){
-      track[0].forEach((pi,ri)=>{
-        if(pi>0){
-          for(let i=0;i<pi;i++){
-            st.push({target:()=> cell(sequencer, ri, ti), action:'click'});
-          }
-          let k=ti+"-"+pi;
-          if(!ptd[k] && track[1] && track[1][pi-1]){
-            ptd[k]={ti,pi,dr:ri};
-          }
+let st=[];let ptd={};
+song.forEach((track,ti)=>{
+  if(track&&track[0]){
+    track[0].forEach((pi,ri)=>{
+      if(pi>0){
+        for(let i=0;i<pi;i++){
+          st.push({target:()=>cell(sequencer,ri,ti),action:"click"});
         }
-      });
-    }
-  });
-  for(let k in ptd){
-    let {ti,pi,dr}=ptd[k];
-    let pd=song[ti][1][pi-1];
-    st.push({target:()=> cell(sequencer, -1, ti), action:'click'});
-    st.push({target:()=> cell(sequencer, dr, -1), action:'click'});
-    if(pd){
-      pd.forEach((note,pr)=>{
-        if(note>0){
-          let pc = note - 123;
-          st.push({target:()=> cell(piano, pr, pc), action:'click'});
+        let k=ti+"-"+pi;
+        if(!ptd[k]&&track[1]&&track[1][pi-1]){
+          ptd[k]={ti,pi,dr:ri};
         }
-      });
-    }
-    st.push({target:()=> cell(sequencer, dr, -1), action:'click'});
-    st.push({target:()=> cell(sequencer, -1, ti), action:'click'});
+      }
+    });
   }
-  st.push({target:()=> cell(sequencer, -1, -1), action:'click'});
-  return st;
+});
+for(let k in ptd){
+  let {ti,pi,dr}=ptd[k],pd=song[ti][1][pi-1];
+  st.push({target:()=>cell(sequencer,-1,ti),action:"click"});
+  st.push({target:()=>cell(sequencer,dr,-1),action:"click"});
+  if(pd){
+    pd.forEach((note,pr)=>{
+      if(note>0){
+        let pc=note-123;
+        st.push({target:()=>cell(piano,pr,pc),action:"click"});
+      }
+    });
+  }
+  st.push({target:()=>cell(sequencer,dr,-1),action:"click"});
+  st.push({target:()=>cell(sequencer,-1,ti),action:"click"});
+}
+st.push({target:()=>cell(sequencer,-1,-1),action:"click"});
+return st;
 }
 
 function loop(){
-if(!ta)return;cs++;if(cs>=ss.length){cl();return;}
+if(!ta)return;cs++;if(cs>=ss.length){clear();return;}
 let s=ss[cs];
-m.textContent=s.msg||"";if(s.msg)m.style.display='block';else m.style.display='none';
+m.textContent=s.msg||"";if(s.msg)m.style.display="block";else m.style.display="none";
 let pa=(te)=>{
   let r=te.getBoundingClientRect();p.style.top=r.top+r.height/2+"px";p.style.left=r.left+r.width/2+"px";
   setTimeout(()=>{
     if(!ta)return;
     let cap=()=>{
-      p.classList.add('clicking');
+      p.classList.add("clicking");
       setTimeout(()=>{
-        te.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));
-        p.classList.remove('clicking');
+        te.dispatchEvent(new MouseEvent("click",{bubbles:true,cancelable:true}));
+        p.classList.remove("clicking");
         setTimeout(loop,click);
       },click);
     };
-    if(s.action==='click'){cap();}
+    if(s.action==="click"){cap();}
   },move);
 };
 if(s.target){let te=s.target();if(te){pa(te);}else{setTimeout(loop,100);}}
@@ -657,16 +654,16 @@ let ts=[
 ];
 
 let ss=[
-  {msg:"Welcome to Battito! Watch this 25 second tutorial.",wait:5000},
-//   {msg:"Welcome to Battito! Watch this 25 second tutorial.",wait:10},
+  {msg:"Welcome to Battito! Watch this 25 second tut.",wait:5000},
+// {msg:"Welcome to Battito! Watch this 25 second tutorial.",wait:10},
   {msg:"Click here to enable audio",wait:3000},
-//   {msg:"Click here to enable audio",wait:10},
+// {msg:"Click here to enable audio",wait:10},
     ...gtfs(ts),
   {msg:"See the README for help \uD83D\uDC8B",wait:9000},
 ];
 let move=100,click=100;
-element("style").textContent=".tutorial-pointer{position:fixed;width:30px;height:30px;z-index:10001;transform:translate(-100%,-30%);transition:all "+move/1000+"s ease-in-out;pointer-events:none;filter:drop-shadow(0 0 5px orange);}.tutorial-pointer::before{content:\x22\\1F449\x22;font-size:30px;position:absolute;top:0;left:0;line-height:1;}.tutorial-pointer.clicking{transform:translate(-100%,-30%) scale(0.9);transition:all "+click/1000+"s ease-in-out;}.tutorial-message{position:fixed;top:10px;left:50%;transform:translateX(-50%);background:rgba(255,165,0,0.9);color:black;padding:10px 20px;border-radius:5px;font-family:monospace;font-size:16px;z-index:10002;text-align:center;box-shadow:0 0 10px rgba(0,0,0,0.5);max-width:90%;}.tutorial-skip{position:fixed;top:15px;right:15px;background:orange;color:black;padding: 5px 10px;border-radius:3px;cursor:pointer;z-index:10003;}";
-//.tutorial-pointer{opacity:0!important;}
+element("style").textContent=".tut-pointer{position:fixed;width:30px;height:30px;z-index:10001;transform:translate(-100%,-30%);transition:all "+move/1000+"s ease-in-out;pointer-events:none;filter:drop-shadow(0 0 5px orange);}.tut-pointer::before{content:\x22\\1F449\x22;font-size:30px;position:absolute;top:0;left:0;line-height:1;}.tut-pointer.clicking{transform:translate(-100%,-30%) scale(0.9);transition:all "+click/1000+"s ease-in-out;}.tut-message{position:fixed;top:10px;left:50%;transform:translateX(-50%);background:rgba(255,165,0,0.9);color:black;padding:10px 20px;border-radius:5px;font-family:monospace;font-size:16px;z-index:10002;text-align:center;box-shadow:0 0 10px rgba(0,0,0,0.5);max-width:90%;} .tut-skip::before{content:'Skip Tutorial'} .tut-skip{position:fixed;top:15px;right:15px;background:orange;color:black;padding: 5px 10px;border-radius:3px;cursor:pointer;z-index:10003;}";
+//.tut-pointer{opacity:0!important;}
 
 loop();
 }
