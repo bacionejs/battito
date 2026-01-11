@@ -350,7 +350,8 @@ currS=sequences[t|0];
 currP=(t*PR|0)%PR;
 if(currS!==prevS){point(sequencer,SC,prevS,currS,1);prevS=currS;sequencer.scroll(currS);updatePiano();}
 if(currP!==prevP){point(piano    ,PC,prevP,currP  );prevP=currP;}
-}catch(e){}finally{raf=requestAnimationFrame(loop);}
+raf=requestAnimationFrame(loop);
+}catch(e){raf=null;}
 }
 
 function point(grid,width,prev,curr,o=0){[[prev,"remove"],[curr,"add"]].forEach(([x,m])=>grid.cells[(x+o)*(width+o)]?.classList[m]("row-playing"));}
