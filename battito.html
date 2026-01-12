@@ -358,10 +358,9 @@ function preview(note){
 let playing=null;
 preview=function(note){
   if(playing){playing.stop();playing=null;}
-  let track=sequencer.track();if(track==null)return;
-  let song={rowLen:SONG.rowLen,endPattern:0.3,songData:[{...track,p:[1],c:[{n:[]}]}]};
-  song.songData[0].c[0].n[0]=note||track?.c[0]?.n?.find(n=>n!==0)||147;
-  let s=C.createBufferSource();s.buffer=PLAYER.createbuffer(song);s.onended=()=>{if(playing===s){playing=null;}};s.connect(C.destination);s.start();playing=s;
+  let t=sequencer.track();if(t==null)return;
+  let song={rowLen:SONG.rowLen,endPattern:0.3,songData:[{...t,p:[1],c:[{n:[note||t?.c[0]?.n?.find(n=>n!==0)||147]}]}]};
+  let s=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(song)});s.onended=()=>{if(playing===s){playing=null;}};s.connect(C.destination);s.start();playing=s;
   waveform(s.buffer.getChannelData(0));
 };
 function waveform(d){
