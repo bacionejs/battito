@@ -215,10 +215,9 @@ let t=null,lp={
 o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);o.addEventListener("pointerleave",lp.up);
 }
 
-function element(tagName,parent=document.body,className=""){
-let e=document.createElement(tagName);
-if(className)e.className=className;
-parent.appendChild(e);
+function element(tag,parent=document.body,c=""){
+let e=parent.appendChild(document.createElement(tag));
+if(c)e.className=c;
 return e;
 }
 
