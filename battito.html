@@ -209,7 +209,7 @@ e.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});
 
 function makeLongPress(o,callback){
 let t=null,lp={
-  down(e){e.preventDefault();if(t!==null)clearTimeout(t);t=setTimeout(()=>{t=null;callback(e);},800);},
+  down(e){e.preventDefault();if(t!==null){clearTimeout(t);}t=setTimeout(()=>{t=null;callback(e);},800);},
   up  (e){e.preventDefault();if(t!==null){clearTimeout(t);t=null;}}
 };
 o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);o.addEventListener("pointerleave",lp.up);
