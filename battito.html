@@ -368,7 +368,7 @@ preview=function(note){
 function waveform(d,v){
   let c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2,scale=m*v/255,p=d.length/w;
   c.clearRect(0,0,w,h);c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[x*p|0]*scale);}
-  c.strokeStyle="lime";c.stroke();
+  c.strokeStyle="blue";c.stroke();
 }
 return preview(note);
 }
