@@ -363,20 +363,12 @@ preview=function(note){
   t.c[0].n[0]=note||track?.c[0]?.n?.find(n=>n!==0)||147;
   let s=C.createBufferSource();s.buffer=PLAYER.createbuffer(song);s.onended=()=>{if(playing===s){playing=null;}};s.connect(C.destination);s.start();playing=s;
   t.fx_delay_time=t.fx_delay_amt=0;song.rowLen=(sampleRate/128)|0;
-  waveform(PLAYER.createbuffer(song),t);
+  waveform(PLAYER.createbuffer(song).getChannelData(0),t.env_master);
 };
-function waveform(buffer,t){
-  let c=canvas.getContext("2d"),m=canvas.height/2;
-  c.fillStyle="#0A0F0A";c.fillRect(0,0,canvas.width,canvas.height);
-  if(!buffer||!t){c.strokeStyle="#39FF14";c.beginPath();c.moveTo(0,m);c.lineTo(canvas.width,m);c.stroke();return;}
-  let d=buffer.getChannelData(0),p=d.length/canvas.width,v=t.env_master/255,a=t.env_attack/p,s=t.env_sustain/p,r=t.env_release/p;
-  c.fillStyle="#003300";c.beginPath();c.moveTo(0,m);
-  [[a,m-(m*v)],[a+s,m-(m*v)],[a+s+r,m],[a+s,m+(m*v)],[a,m+(m*v)]].forEach(p=>c.lineTo(p[0],p[1]));
-  c.closePath();c.fill();c.beginPath();c.moveTo(0,m);
-  let peak=Math.max(...d.map(Math.abs))||1;
-  for(let x=0;x<canvas.width && x*p<d.length;x++){c.lineTo(x,m+d[Math.floor(x*p)]*m*(t.env_master/255)/peak);}
-  c.strokeStyle="#39FF14";
-  c.stroke();
+function waveform(d,v){
+  let c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2,scale=m*v/255,p=d.length/w;
+  c.clearRect(0,0,w,h);c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[x*p|0]*scale);}
+  c.strokeStyle="lime";c.stroke();
 }
 return preview(note);
 }
