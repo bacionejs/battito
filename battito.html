@@ -574,20 +574,20 @@ loop();
 
 function clear(){if(!ta)return;ta=false;p.remove();m.remove();}
 function cell(grid,row,col){return grid.cells.find(c=>c.row===row&&c.col===col);}
-function C(grid,r,c){return {target:()=>cell(grid,r,c),action:"click"};}
-function C1(ti,ri){return Array(2).fill(0).flatMap(()=>[C(S,-1,ti),C(S,ri,-1)]);}
+function click(grid,r,c){return {target:()=>cell(grid,r,c),action:"click"};}
+function toggle(ti,ri){return Array(2).fill(0).flatMap(()=>[click(S,-1,ti),click(S,ri,-1)]);}
 
 function initClicks(){
 let notes=new Map();
-let sequencerclicks=song.flatMap((t,ti)=>t[0].flatMap((pid,ri)=>(notes.set(ti+'-'+pid,{ti,ri,a:t[1][pid-1]}),Array(pid).fill(0).map(()=>C(S,ri,ti)))));
-let pianoclicks=Array.from(notes.values()).flatMap(({ti,ri,a})=>{return C1(ti,ri).toSpliced(2,0,...a.flatMap((n,r)=>n>0?[C(P,r,n-123)]:[]));});
-clicks=[...sequencerclicks,...pianoclicks,C(S,-1,-1)];
+let sequencerclicks=song.flatMap((t,ti)=>t[0].flatMap((pid,ri)=>(notes.set(ti+'-'+pid,{ti,ri,a:t[1][pid-1]}),Array(pid).fill(0).map(()=>click(S,ri,ti)))));
+let pianoclicks=Array.from(notes.values()).flatMap(({ti,ri,a})=>{return toggle(ti,ri).toSpliced(2,0,...a.flatMap((n,r)=>n>0?[click(P,r,n-123)]:[]));});
+clicks=[...sequencerclicks,...pianoclicks,click(S,-1,-1)];
 }
 
 function loop(){
 if(!ta)return;cs++;if(cs>=clicks.length){clear();return;}
 let s=clicks[cs];
-if(cs===-1){let gate=setTimeout(clear,5000);addEventListener('click',()=>{clearTimeout(gate);m.remove();loop();},{once:true});return;}
+if(cs===-1){let gate=setTimeout(clear,5000);m.addEventListener('click',()=>{clearTimeout(gate);m.remove();loop();},{once:true});return;}
 let pa=(te)=>{let r=te.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;setTimeout(()=>{if(!ta)return;let cap=()=>{
   p.classList.add("tut-clicking");setTimeout(()=>{te.dispatchEvent(new MouseEvent("click",{bubbles:true}));p.classList.remove("tut-clicking");setTimeout(loop,100);},100);
 };if(s.action==="click"){cap();}},100);};
