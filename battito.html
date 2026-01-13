@@ -580,7 +580,7 @@ function toggle(ti,ri){return Array(2).fill(0).flatMap(()=>[click(S,-1,ti),click
 function initClicks(){
 let notes=new Map();
 let sequencerclicks=song.flatMap((t,ti)=>t[0].flatMap((pid,ri)=>(notes.set(ti+'-'+pid,{ti,ri,a:t[1][pid-1]}),Array(pid).fill(0).map(()=>click(S,ri,ti)))));
-let pianoclicks=Array.from(notes.values()).flatMap(({ti,ri,a})=>{return toggle(ti,ri).toSpliced(2,0,...a.flatMap((n,r)=>n>0?[click(P,r,n-123)]:[]));});
+let pianoclicks=Array.from(notes.values()).flatMap(({ti,ri,a})=>toggle(ti,ri).toSpliced(2,0,...a.flatMap((n,r)=>n?[click(P,r,n-123)]:[])));
 clicks=[...sequencerclicks,...pianoclicks,click(S,-1,-1)];
 }
 
@@ -596,14 +596,9 @@ if(s.target){let te=s.target();if(te){pa(te);}else{setTimeout(loop,100);}}
 
 function initSong(){
 song=[
-[[1,1,1,1],
-[[123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123]]],
-[[1,1,1,1],
-[[0,0,124,0,0,0,0,0,0,0,0,0,0,0,124,0,124]]],
-[[1,1,2,3],[
-[135,0,0,0,0,0,0,0,159,0,157,0,159,0,0,0,0,0,0,0,0,0,0,0,147,154,0,159],
-[138,0,0,0,0,0,0,0,150,0,159,0,162,0,0,0,0,0,0,0,0,0,150,0,162,150,0,159],
-[149,0,0,0,0,0,0,0,149,0,150,0,154,0,0,0,0,0,0,0,0,0,0,0,147,157,0,159]]]
+[[1,1,1,1],[[123,,,,123,,,,123,,,,123,,,,123,,,,123,,,,123,,,,123]]],
+[[1,1,1,1],[[,,124,,,,,,,,,,,,124,,124]]],
+[[1,1,2,3],[[135,,,,,,,,159,,157,,159,,,,,,,,,,,,147,154,,159],[138,,,,,,,,150,,159,,162,,,,,,,,,,150,,162,150,,159],[149,,,,,,,,149,,150,,154,,,,,,,,,,,,147,157,,159]]]
 ];
 }
 
