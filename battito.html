@@ -566,7 +566,7 @@ return {createbuffer};
 function runTutorial(){
 let cs=-2,ta=true,S=sequencer,P=piano,song,clicks;
 let p=element("div",document.body,"tut tut-pointer");
-let m=element("div",document.body,"tut tut-text tut-message");
+let m=element("div",document.body,"tut tut-message");
 initStyle();
 initSong();
 initClicks();
@@ -587,7 +587,6 @@ clicks=[...sequencerclicks,...pianoclicks,C(S,-1,-1)];
 function loop(){
 if(!ta)return;cs++;if(cs>=clicks.length){clear();return;}
 let s=clicks[cs];
-m.innerHTML="Welcome to Battito!<br><br>Click here to watch a 25 second tutorial";
 if(cs===-1){let gate=setTimeout(clear,5000);addEventListener('click',()=>{clearTimeout(gate);m.remove();loop();},{once:true});return;}
 let pa=(te)=>{let r=te.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;setTimeout(()=>{if(!ta)return;let cap=()=>{
   p.classList.add("tut-clicking");setTimeout(()=>{te.dispatchEvent(new MouseEvent("click",{bubbles:true}));p.classList.remove("tut-clicking");setTimeout(loop,100);},100);
@@ -609,7 +608,7 @@ song=[
 }
 
 function initStyle(){
-element("style").textContent=".tut{position:fixed;z-index:2;} .tut-text{position:fixed;background:orange;color:black;padding:10;border-radius:5px;top:6dvh;border:2px outset orange;text-align:center;} .tut-pointer::before{content:\x22\\1F449\x22;} .tut-pointer{transition:all 0.1s ease-in-out;} .tut-clicking{transform:scale(0.5);} .tut-message{left:50%;transform:translateX(-50%);}";
+element("style").textContent=".tut-message::before{content:'Welcome to Battito!\\a\\a Click here to watch a 25 second tutorial';white-space:pre;} .tut{position:fixed;z-index:2;} .tut-message{position:fixed;background:orange;color:black;padding:10;border-radius:5px;top:6dvh;border:2px outset orange;text-align:center;left:50%;transform:translateX(-50%);} .tut-pointer::before{content:'\\1F449';} .tut-pointer{transition:all 0.1s ease-in-out;} .tut-clicking{transform:scale(0.5);} ";
 }
 
 }
