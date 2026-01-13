@@ -1,5 +1,5 @@
 
-<a href="//bacionejs.github.io/battito/battito.html" target="_blank"> <img src="https://repository-images.githubusercontent.com/1048415375/aa7199c6-f9bf-4507-880b-7b494a896514" width="100%" /> </a>
+<a href="//bacionejs.github.io/battito/battito.html" target="_blank"><img src="https://repository-images.githubusercontent.com/1048415375/aa7199c6-f9bf-4507-880b-7b494a896514" width="100%" /></a>
 
 
 Battito is a tablet-centric music tracker with piano-roll, live-loop editing and a blazingly fast engine, for size-constrained games
