@@ -1,5 +1,5 @@
 
-<a href="//bacionejs.github.io/battito/battito.html" target="_blank"> <img src="https://repository-images.githubusercontent.com/1048415375/da93c3a9-5267-4ce8-b632-084f3f6ff24b" width="70%" /> </a>
+<a href="//bacionejs.github.io/battito/battito.html" target="_blank"> <img src="" width="70%" /> </a>
 
 
 Battito is a tablet-centric music tracker with piano-roll, live-loop editing and a blazingly fast engine, for size-constrained games
@@ -29,7 +29,6 @@ Optional
 - To save your work for future use, copy the **textarea** to a separate text editor. To **import**, paste in the textarea.
 - The **textarea** can be edited. Changes are **live** just like the other components.
 - Change the tempo by editing the first value in the **textarea** (5513=120 BPM).
-- To bypass the tutorial on startup, append "?off" to the url.
 
 ---
 
