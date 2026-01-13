@@ -139,7 +139,7 @@ sequencer  .onclick=handleSequencerClick;
 sliders    .oninput=handleSliderInput;
 text       .oninput=handleSongInput;
 fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
-makeLongPress(canvas,()=>{audio.download();});
+makeLongPress(canvas,audio.download);
 }
 
 function handlePianoClick({target:{row,col}}){
