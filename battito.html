@@ -565,8 +565,8 @@ return {createbuffer};
 
 function runTutorial(){
 let cs=-2,ta=true,S=sequencer,P=piano,song,clicks;
-let p=element("div",document.body,"tut tut-pointer");
-let m=element("div",document.body,"tut tut-message");
+let p=element("div",document.body,"tut-pointer");
+let m=element("div",document.body,"tut-message");
 initStyle();
 initSong();
 initClicks();
@@ -603,7 +603,7 @@ song=[
 }
 
 function initStyle(){
-element("style").textContent=".tut{position:fixed;z-index:2;} .tut-message::before{content:'Welcome to Battito!\\a\\a Click here to watch a 25 second tutorial';white-space:pre;} .tut-message{position:fixed;background:orange;color:black;padding:10;border-radius:5px;top:6dvh;border:2px outset orange;text-align:center;left:50%;transform:translateX(-50%);} .tut-pointer::before{content:'\\1F449';} .tut-pointer{transition:all 0.1s ease-in-out;} .tut-clicking{transform:scale(0.5);} ";
+element("style").textContent=".tut-message,.tut-pointer{position:fixed;z-index:2;} .tut-message::before{content:'Welcome to Battito!\\a\\a Click here to watch a 25 second tutorial';white-space:pre;} .tut-message{position:fixed;background:orange;color:black;padding:10;border-radius:5px;top:6dvh;border:2px outset orange;text-align:center;left:50%;transform:translateX(-50%);} .tut-pointer::before{content:'\\1F449';} .tut-pointer{transition:all 0.1s ease-in-out;} .tut-clicking{transform:scale(0.5);} ";
 }
 
 }
