@@ -7,7 +7,7 @@ let piano      =element("div",document.body,"piano");
 let sliders    =element("div",document.body,"sliders");
 let side       =element("div",document.body,"side");
 let sequencer  =element("div",side,"sequencer");
-let text       =element("div",side,"text");
+let text       =element("textarea",side,"text");
 let canvas     =element("canvas",side,"canvas");
 let fullscreen =element("div",side,"fullscreen");
 let loading    =element("div",side,"loading");
@@ -68,7 +68,7 @@ SLIDERS().forEach((group,i)=>{
 });
 }
 
-function initText(){text.contentEditable=true;updateText();}
+function initText(){updateText();}
 
 
 
@@ -121,7 +121,11 @@ if(t!==null){
 }
 }
 
-function updateText(){text.textContent=JSON.stringify(audio.song,null,2);}
+function updateText(){
+let start=text.selectionStart;
+text.value=JSON.stringify(audio.song,null,2);
+text.setSelectionRange(start,start);
+}
 
 
 
@@ -166,7 +170,7 @@ update();audio.preview();
 
 function handleSongInput(){
 try{
-audio.song=JSON.parse(text.textContent);
+audio.song=JSON.parse(text.value);
 updatePiano();updateSliders();updateSequencer();audio.preview();
 }catch(e){}
 }
@@ -428,7 +432,7 @@ body{display:flex;background:black;color:white;font-weight:bold;font-family:mono
 .col-selected, .row-selected{background:gray !important;}
 .row-playing{border-left:3px solid orange !important;}
 .active{background:blue;}
-.text{padding:10px;font-size:8px;white-space:pre;overflow:auto;}
+.text{padding:10px;font-size:8px;white-space:pre;overflow:auto;background:transparent;color:white;outline:none;}
 .text, .canvas{height:25dvh;aspect-ratio:2/1;border:1px solid silver;border-top:none;}
 .fullscreen::before{content:"\u26F6"}
 :fullscreen .fullscreen{display:none;}
