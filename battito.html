@@ -320,8 +320,7 @@ Object.assign(sequencer, {cols, rows, click, track, sequences, pattern, range, h
 
 function initAudio(){
 let sampleRate=44100,C=new AudioContext(),S=null;
-// alert(C.sampleRate);//48000
-let PLAYER=BattitoPlayer(C,sampleRate),SONG=PRESETS();
+let PLAYER=BattitoPlayer(C,sampleRate,PR),SONG=PRESETS();
 let sequences,raf,currS,prevS,currP,prevP;
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
 
@@ -387,7 +386,7 @@ function jsonToHtml(){
   let s="";
   s+="\n<\script>onload=()=>{addEventListener('click',play);document.body.textContent='Click to play';"
   s+="\nlet json="+JSON.stringify(sequencer.range(SONG))+";";
-  s+="\nfunction play(){let C=new AudioContext(),S=C.createBufferSource();S.buffer=BattitoPlayer(C,"+sampleRate+").createbuffer(json);S.connect(C.destination);S.loop=true;S.start();}"
+  s+="\nfunction play(){let C=new AudioContext(),S=C.createBufferSource();S.buffer=BattitoPlayer(C,"+sampleRate+","+PR+").createbuffer(json);S.connect(C.destination);S.loop=true;S.start();}"
   s+="\n"+BattitoPlayer;
   s+="\n}</\script>"
   return s;
@@ -509,7 +508,7 @@ return {
 
 
 
-function BattitoPlayer(audiocontext,sampleRate){
+function BattitoPlayer(audiocontext,sampleRate,PR){
 let SIN=new Float32Array(1024);for(let i=0;i<1024;i++)SIN[i]=Math.sin(i*2*Math.PI/1024);let sin=(v)=>SIN[((v*1024)&1023)>>>0];
 let Q=new Float32Array(256);for(let n=0;n<256;n++){let f=0.00390625,m=1.059463094,l=128,i=n;if(i>l)i-=l;else{i=l-i;m=1/m;}while(i-->0)f*=m;Q[n]=f;}
 let O=(t,v)=>{let p=v-Math.floor(v);switch(t){case 0:return sin(p);case 1:return p<0.5?-1:1;case 2:return p-0.5;case 3:let v2=p*4;return v2<2?v2-1:3-v2;default:return sin(p);}};
@@ -517,13 +516,13 @@ let G=(f,m,n,l)=>{if(n>l)n-=l;else{n=l-n;m=1/m;}while(n-->0)f*=m;return f;};
 let R_S=1,rnd=()=>{R_S=Math.imul(R_S,0x15a4e35);return (R_S>>>0)%255/255.0;};
 
 let createbuffer=(d)=>{
-let rowLen=d.rowLen,E=d.endPattern,I=d.songData,T=E*32*rowLen;
+let rowLen=d.rowLen,E=d.endPattern,I=d.songData,T=E*PR*rowLen;
 let l=new Float32Array(T),r=new Float32Array(T),L=new Float32Array(T),R=new Float32Array(T);
 for(let i=0;i<I.length;i++){
   let B=I[i],P=0,lfo_step=G(1,2,B.lfo_freq,8)/rowLen,pan_step=G(1,2,B.fx_pan_freq,8)/rowLen;L.fill(0);R.fill(0);
   for(let p=0;p<E;p++){
     let C=B.p[p];
-    for(let row=0;row<32;row++){
+    for(let row=0;row<PR;row++){
       let n,osc1_freq_base=0.0,osc2_freq_base=0.0;
       if(C>0&&(n=B.c[C-1].n[row])>0){
         osc1_freq_base=Q[n+(B.osc1_oct-8)*12+B.osc1_det]*(1+0.2*B.osc1_detune/255.0);
