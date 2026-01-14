@@ -564,35 +564,29 @@ return {createbuffer};
 
 
 function runTutorial(){
-let cs=-2,ta=true,S=sequencer,P=piano,song,clicks;
+let ci=-1,S=sequencer,P=piano,song,clicks;
 let p=element("div",document.body,"tut-pointer");
 let m=element("div",document.body,"tut-message");
 initStyle();
 initSong();
 initClicks();
-loop();
+let gate=setTimeout(clear,5000);m.addEventListener("click",function(){clearTimeout(gate);m.remove();loop();},{once:true});
 
-function clear(){if(!ta)return;ta=false;p.remove();m.remove();}
-function cell(grid,row,col){return grid.cells.find(c=>c.row===row&&c.col===col);}
-function click(grid,r,c){return {target:()=>cell(grid,r,c),action:"click"};}
-function toggle(ti,ri){return Array(2).fill(0).flatMap(()=>[click(S,-1,ti),click(S,ri,-1)]);}
+function clear(){p.remove();m.remove();}
+function make(clickon,c,r){return{target:()=>clickon.cells.find(x=>x.row===r&&x.col===c),action:"click"};}
+function toggle(c,r){return Array(2).fill(0).flatMap(()=>[make(S,c,-1),make(S,-1,r)]);}
+function act(s){let e=s.target();if(!e){setTimeout(loop,100);return;}setTimeout(function(){point(e);if(s.action==="click")click(e);},100);}
+function point(e){let r=e.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;}
+function click(e){p.classList.add("click");setTimeout(function(){e.dispatchEvent(new MouseEvent("click",{bubbles:true}));p.classList.remove("click");setTimeout(loop,100);},100);}
 
 function initClicks(){
 let notes=new Map();
-let sequencerclicks=song.flatMap((t,ti)=>t[0].flatMap((pid,ri)=>(notes.set(ti+'-'+pid,{ti,ri,a:t[1][pid-1]}),Array(pid).fill(0).map(()=>click(S,ri,ti)))));
-let pianoclicks=Array.from(notes.values()).flatMap(({ti,ri,a})=>toggle(ti,ri).toSpliced(2,0,...a.flatMap((n,r)=>n?[click(P,r,n-123)]:[])));
-clicks=[...sequencerclicks,...pianoclicks,click(S,-1,-1)];
+let sequencerclicks=song.flatMap((t,c)=>t[0].flatMap((pid,r)=>(notes.set(c+"-"+pid,{c,r,a:t[1][pid-1]}),Array(pid).fill(0).map(()=>make(S,c,r)))));
+let pianoclicks=Array.from(notes.values()).flatMap(({c,r,a})=>toggle(c,r).toSpliced(2,0,...a.flatMap((n,r)=>n?[make(P,n-123,r)]:[])));
+clicks=[...sequencerclicks,...pianoclicks,make(S,-1,-1)];
 }
 
-function loop(){
-if(!ta)return;cs++;if(cs>=clicks.length){clear();return;}
-let s=clicks[cs];
-if(cs===-1){let gate=setTimeout(clear,5000);m.addEventListener('click',()=>{clearTimeout(gate);m.remove();loop();},{once:true});return;}
-let pa=(te)=>{let r=te.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;setTimeout(()=>{if(!ta)return;let cap=()=>{
-  p.classList.add("tut-clicking");setTimeout(()=>{te.dispatchEvent(new MouseEvent("click",{bubbles:true}));p.classList.remove("tut-clicking");setTimeout(loop,100);},100);
-};if(s.action==="click"){cap();}},100);};
-if(s.target){let te=s.target();if(te){pa(te);}else{setTimeout(loop,100);}}
-}
+function loop(){if(++ci>=clicks.length)clear();else act(clicks[ci]);}
 
 function initSong(){
 song=[
@@ -603,7 +597,7 @@ song=[
 }
 
 function initStyle(){
-element("style").textContent=".tut-message,.tut-pointer{position:fixed;z-index:2;} .tut-message::before{content:'Welcome to Battito!\\a\\a Click here to watch a 25 second tutorial';white-space:pre;} .tut-message{position:fixed;background:orange;color:black;padding:10;border-radius:5px;top:6dvh;border:2px outset orange;text-align:center;left:50%;transform:translateX(-50%);} .tut-pointer::before{content:'\\1F449';} .tut-pointer{transition:all 0.1s ease-in-out;} .tut-clicking{transform:scale(0.5);} ";
+element("style").textContent=".tut-message,.tut-pointer{position:fixed;z-index:2;} .tut-message::before{content:'Welcome to Battito!\\a\\a Click here to watch a 25 second tutorial';white-space:pre;} .tut-message{position:fixed;background:orange;color:black;padding:10;border-radius:5px;top:6dvh;border:2px outset orange;text-align:center;left:50%;transform:translateX(-50%);} .tut-pointer::before{content:'\\1F449';} .tut-pointer{transition:all 0.1s ease-in-out;} .click{transform:scale(0.5);} ";
 }
 
 }
