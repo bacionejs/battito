@@ -564,7 +564,7 @@ return {createbuffer};
 
 
 function runTutorial(){
-let ci=-1,S=sequencer,P=piano,song,clicks;
+let ci=0,S=sequencer,P=piano,song,clicks;
 let p=element("div",document.body,"tut-pointer");
 let m=element("div",document.body,"tut-message");
 initStyle();
@@ -586,7 +586,7 @@ let pianoclicks=Array.from(notes.values()).flatMap(({c,r,a})=>toggle(c,r).toSpli
 clicks=[...sequencerclicks,...pianoclicks,make(S,-1,-1)];
 }
 
-function loop(){if(++ci>=clicks.length)clear();else act(clicks[ci]);}
+function loop(){if(ci>=clicks.length)clear();else act(clicks[ci++]);}
 
 function initSong(){
 song=[
