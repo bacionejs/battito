@@ -320,6 +320,7 @@ Object.assign(sequencer, {cols, rows, click, track, sequences, pattern, range, h
 
 function initAudio(){
 let sampleRate=44100,C=new AudioContext(),S=null;
+// alert(C.sampleRate);//48000
 let PLAYER=BattitoPlayer(C,sampleRate),SONG=PRESETS();
 let sequences,raf,currS,prevS,currP,prevP;
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
