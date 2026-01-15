@@ -596,11 +596,11 @@ initClicks();
 loop();
 }
 
-function make(clickon,c,r){return{target:()=>clickon.cells.find(x=>x.row===r&&x.col===c),action:"click"};}
+function make(clickon,c,r){return ()=>clickon.cells.find(x=>x.row===r&&x.col===c);}
 function toggle(c,r){return Array(2).fill(0).flatMap(()=>[make(S,c,-1),make(S,-1,r)]);}
-function act(s){setTimeout(()=>{point(s.target());if(s.action=="click")click(s.target());},100);}
+function act(s){setTimeout(()=>{point(s());p.classList.add("click");setTimeout(()=>{click(s());p.classList.remove("click");setTimeout(loop,100);},100);},100);}
 function point(e){let r=e.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;}
-function click(e){p.classList.add("click");setTimeout(()=>{e.dispatchEvent(new MouseEvent("click",{bubbles:true}));p.classList.remove("click");setTimeout(loop,100);},100);}
+function click(e){e.dispatchEvent(new MouseEvent("click",{bubbles:true}));}
 
 function initClicks(){
 let notes=new Map();
