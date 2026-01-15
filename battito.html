@@ -176,7 +176,12 @@ update();audio.preview();
 
 function handleSongInput(){
 try{
-audio.song=JSON.parse(text.value);
+let song=JSON.parse(text.value);
+if(!song.bpm){
+  let bpm=15*44100/song.rowLen;
+  song={bpm,...song};
+}
+audio.song=song;
 updatePiano();updateSliders();updateSequencer();audio.preview();
 }catch(e){}
 }
