@@ -599,6 +599,8 @@ initClicks();
 loop();
 }
 
+function loop(){if(ci<clicks.length)act(clicks[ci++]);else p.remove();}
+
 function make(clickon,c,r){return ()=>clickon.cells.find(x=>x.row===r&&x.col===c);}
 function toggle(c,r){return Array(2).fill(0).flatMap(()=>[make(S,c,-1),make(S,-1,r)]);}
 function act(s){setTimeout(()=>{p.point(s);p.animate();setTimeout(()=>{p.click(s);p.animate();setTimeout(loop,100);},100);},100);}
@@ -609,8 +611,6 @@ let sequencerclicks=song.flatMap((t,c)=>t[0].flatMap((pid,r)=>(notes.set(c+"-"+p
 let pianoclicks=Array.from(notes.values()).flatMap(({c,r,a})=>toggle(c,r).toSpliced(2,0,...a.flatMap((n,r)=>n?[make(P,n-123,r)]:[])));
 clicks=[...sequencerclicks,...pianoclicks,make(S,-1,-1)];
 }
-
-function loop(){if(ci<clicks.length)act(clicks[ci++]);else p.remove();}
 
 function initSong(){
 song=[
