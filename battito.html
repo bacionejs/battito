@@ -1,6 +1,13 @@
 <meta name="viewport" content="width=device-width"> <script> onload=()=>{
 
-addEventListener("error",e=>{prompt("",e.message);});document.title="Battito";//https://github.com/bacionejs/battito
+// addEventListener("error",e=>{prompt("",e.message);});
+addEventListener("error",e=>{
+  let msg="Error: "+e.message+"\nFile: "+e.filename+"\nLine: "+e.lineno+":"+e.colno;
+  if(e.error)msg+="\nName: "+e.error.name+"\nStack:\n"+e.error.stack;
+  prompt("",msg);
+});
+
+document.title="Battito";//https://github.com/bacionejs/battito
 
 let audio,SC=8,SR=60,PC=48,PR=32;
 let piano      =element("div",document.body,"piano");
@@ -268,7 +275,7 @@ let d=structuredClone(song.songData).filter((_,c)=>cols[c]);if(!d.length)return 
 d.forEach(t=>rows.forEach((on,r)=>{if(!on||!t.p[r])t.p[r]=0;}));
 for(let r=rows.length-1;r>=0;r--)if(!d.some(t=>t.p[r]))d.forEach(t=>t.p.splice(r,1));if(!d[0].p.length)return null;
 if(!d.some(t=>t.p.some(Boolean)))return null;
-return {rowLen:song.rowLen,endPattern:d[0].p.length,songData:d};
+return {bpm:song.bpm,endPattern:d[0].p.length,songData:d};
 }
 
 function hasNotes(song){
@@ -319,8 +326,9 @@ Object.assign(sequencer, {cols, rows, click, track, sequences, pattern, range, h
 
 
 function initAudio(){
-let sampleRate=44100,C=new AudioContext(),S=null;
-let PLAYER=BattitoPlayer(C,sampleRate,PR),SONG=PRESETS();
+// let sampleRate=44100,C=new AudioContext(),S=null;
+let C=new AudioContext(),S=null;
+let PLAYER=BattitoPlayer(C,PR),SONG=PRESETS();
 let sequences,raf,currS,prevS,currP,prevP;
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
 
@@ -347,7 +355,8 @@ sequencer.spectrum(false);
 function loop(){
 if(!S?.buffer)return;
 analyser.getByteFrequencyData(meter);sequencer.spectrum(meter);
-let t=(C.currentTime-S.startTime)*(sampleRate/SONG.rowLen/PR);
+// let t=(C.currentTime-S.startTime)*(C.sampleRate/SONG.rowLen/PR);
+let t=(C.currentTime-S.startTime)/4;
 if(t>=sequences.length){if(raf)cancelAnimationFrame(raf);return;}
 currS=sequences[t|0];
 currP=(t*PR|0)%PR;
@@ -363,7 +372,7 @@ let playing=null;
 preview=function(note){
   if(playing){playing.stop();playing=null;}
   let t=sequencer.track();if(t==null)return;
-  let song={rowLen:SONG.rowLen,endPattern:0.3,songData:[{...t,p:[1],c:[{n:[note||t?.c[0]?.n?.find(n=>n!==0)||147]}]}]};
+  let song={bpm:SONG.bpm,endPattern:0.3,songData:[{...t,p:[1],c:[{n:[note||t?.c[0]?.n?.find(n=>n!==0)||147]}]}]};
   let s=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(song)});s.onended=()=>{if(playing===s){playing=null;}};s.connect(C.destination);s.start();playing=s;
   waveform(s.buffer.getChannelData(0));
 };
@@ -386,7 +395,8 @@ function jsonToHtml(){
   let s="";
   s+="\n<\script>onload=()=>{addEventListener('click',play);document.body.textContent='Click to play';"
   s+="\nlet json="+JSON.stringify(sequencer.range(SONG))+";";
-  s+="\nfunction play(){let C=new AudioContext(),S=C.createBufferSource();S.buffer=BattitoPlayer(C,"+sampleRate+","+PR+").createbuffer(json);S.connect(C.destination);S.loop=true;S.start();}"
+//   s+="\nfunction play(){let C=new AudioContext(),S=C.createBufferSource();S.buffer=BattitoPlayer(C,"+sampleRate+","+PR+").createbuffer(json);S.connect(C.destination);S.loop=true;S.start();}"
+  s+="\nfunction play(){let C=new AudioContext(),S=C.createBufferSource();S.buffer=BattitoPlayer(C,"+PR+").createbuffer(json);S.connect(C.destination);S.loop=true;S.start();}"
   s+="\n"+BattitoPlayer;
   s+="\n}</\script>"
   return s;
@@ -477,18 +487,18 @@ return [
 
 function PRESETS(){
 return {
-"rowLen":5513,
+"bpm":120,
 "endPattern":4,
 "songData":[
   {"osc1_oct":9,"osc1_det":0,"osc1_detune":0,"osc1_xenv":1,"osc1_vol":255,"osc1_waveform":0,"osc2_oct":7,"osc2_det":0,"osc2_detune":0,"osc2_xenv":1,"osc2_vol":255,"osc2_waveform":0,"noise_fader":0,"env_attack":100,"env_sustain":0,"env_release":5970,"env_master":171,"fx_filter":2,"fx_freq":500,"fx_resonance":254,"fx_delay_time":1,"fx_delay_amt":31,"fx_pan_freq":4,"fx_pan_amt":21,"lfo_osc1_freq":0,"lfo_fx_freq":0,"lfo_freq":0,"lfo_amt":0,"lfo_waveform":0,
-"p":[],"c":[]},
-// "p":[1,1,1,1],"c":[{"n":[123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123]}]},
+// "p":[],"c":[]},
+"p":[1,1,1,1],"c":[{"n":[123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123]}]},
     {"osc1_oct":6,"osc1_det":11,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":255,"osc1_waveform":2,"osc2_oct":6,"osc2_det":11,"osc2_detune":4,"osc2_xenv":0,"osc2_vol":255,"osc2_waveform":2,"noise_fader":0,"env_attack":88,"env_sustain":2000,"env_release":7505,"env_master":255,"fx_filter":2,"fx_freq":3144,"fx_resonance":51,"fx_delay_time":6,"fx_delay_amt":60,"fx_pan_freq":4,"fx_pan_amt":64,"lfo_osc1_freq":0,"lfo_fx_freq":1,"lfo_freq":7,"lfo_amt":179,"lfo_waveform":0,
-"p":[],"c":[]},
-// "p":[1,1,1,1],"c":[{"n":[0,0,124,0,0,0,0,0,0,0,0,0,0,0,124,0,124,0,0]}]},
+// "p":[],"c":[]},
+"p":[1,1,1,1],"c":[{"n":[0,0,124,0,0,0,0,0,0,0,0,0,0,0,124,0,124,0,0]}]},
     {"osc1_oct":7,"osc1_det":0,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":192,"osc1_waveform":2,"osc2_oct":7,"osc2_det":0,"osc2_detune":0,"osc2_xenv":0,"osc2_vol":201,"osc2_waveform":3,"noise_fader":0,"env_attack":100,"env_sustain":150,"env_release":7505,"env_master":191,"fx_filter":2,"fx_freq":5839,"fx_resonance":254,"fx_delay_time":6,"fx_delay_amt":121,"fx_pan_freq":6,"fx_pan_amt":147,"lfo_osc1_freq":0,"lfo_fx_freq":1,"lfo_freq":6,"lfo_amt":195,"lfo_waveform":0,
-"p":[],"c":[]},
-// "p":[1,1,2,3],"c":[{"n":[135,0,0,0,0,0,0,0,159,0,157,0,159,0,0,0,0,0,0,0,0,0,0,0,147,154,0,159]},{"n":[138,0,0,0,0,0,0,0,150,0,159,0,162,0,0,0,0,0,0,0,0,0,150,0,162,150,0,159,0,0,0,0]},{"n":[149,0,0,0,0,0,0,0,149,0,150,0,154,0,0,0,0,0,0,0,0,0,0,0,147,157,0,159,0,0,0,0]}]},
+// "p":[],"c":[]},
+"p":[1,1,2,3],"c":[{"n":[135,0,0,0,0,0,0,0,159,0,157,0,159,0,0,0,0,0,0,0,0,0,0,0,147,154,0,159]},{"n":[138,0,0,0,0,0,0,0,150,0,159,0,162,0,0,0,0,0,0,0,0,0,150,0,162,150,0,159,0,0,0,0]},{"n":[149,0,0,0,0,0,0,0,149,0,150,0,154,0,0,0,0,0,0,0,0,0,0,0,147,157,0,159,0,0,0,0]}]},
     {"osc1_oct":9,"osc1_det":0,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":255,"osc1_waveform":0,"osc2_oct":9,"osc2_det":0,"osc2_detune":12,"osc2_xenv":0,"osc2_vol":255,"osc2_waveform":0,"noise_fader":0,"env_attack":100,"env_sustain":0,"env_release":14545,"env_master":70,"fx_filter":0,"fx_freq":0,"fx_resonance":240,"fx_delay_time":2,"fx_delay_amt":157,"fx_pan_freq":3,"fx_pan_amt":47,"lfo_osc1_freq":0,"lfo_fx_freq":0,"lfo_freq":0,"lfo_amt":0,"lfo_waveform":0,"p":[],"c":[]},
     {"osc1_oct":7,"osc1_det":0,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":255,"osc1_waveform":3,"osc2_oct":8,"osc2_det":0,"osc2_detune":0,"osc2_xenv":0,"osc2_vol":255,"osc2_waveform":0,"noise_fader":127,"env_attack":22,"env_sustain":22,"env_release":2193,"env_master":255,"fx_filter":3,"fx_freq":4067,"fx_resonance":176,"fx_delay_time":4,"fx_delay_amt":12,"fx_pan_freq":2,"fx_pan_amt":84,"lfo_osc1_freq":0,"lfo_fx_freq":1,"lfo_freq":3,"lfo_amt":96,"lfo_waveform":0,"p":[],"c":[]},
     {"osc1_oct":7,"osc1_det":0,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":255,"osc1_waveform":2,"osc2_oct":7,"osc2_det":0,"osc2_detune":9,"osc2_xenv":0,"osc2_vol":154,"osc2_waveform":2,"noise_fader":0,"env_attack":2418,"env_sustain":1075,"env_release":10614,"env_master":240,"fx_filter":3,"fx_freq":2962,"fx_resonance":255,"fx_delay_time":6,"fx_delay_amt":117,"fx_pan_freq":3,"fx_pan_amt":73,"lfo_osc1_freq":0,"lfo_fx_freq":1,"lfo_freq":5,"lfo_amt":124,"lfo_waveform":0,"p":[],"c":[]},
@@ -508,7 +518,7 @@ return {
 
 
 
-function BattitoPlayer(audiocontext,sampleRate,PR){
+function BattitoPlayer(audiocontext,PR){
 let SIN=new Float32Array(1024);for(let i=0;i<1024;i++)SIN[i]=Math.sin(i*2*Math.PI/1024);let sin=(v)=>SIN[((v*1024)&1023)>>>0];
 let Q=new Float32Array(256);for(let n=0;n<256;n++){let f=0.00390625,m=1.059463094,l=128,i=n;if(i>l)i-=l;else{i=l-i;m=1/m;}while(i-->0)f*=m;Q[n]=f;}
 let O=(t,v)=>{let p=v-Math.floor(v);switch(t){case 0:return sin(p);case 1:return p<0.5?-1:1;case 2:return p-0.5;case 3:let v2=p*4;return v2<2?v2-1:3-v2;default:return sin(p);}};
@@ -516,7 +526,8 @@ let G=(f,m,n,l)=>{if(n>l)n-=l;else{n=l-n;m=1/m;}while(n-->0)f*=m;return f;};
 let R_S=1,rnd=()=>{R_S=Math.imul(R_S,0x15a4e35);return (R_S>>>0)%255/255.0;};
 
 let createbuffer=(d)=>{
-let rowLen=d.rowLen,E=d.endPattern,I=d.songData,T=E*PR*rowLen;
+// let rowLen=d.rowLen,E=d.endPattern,I=d.songData,T=E*PR*rowLen;
+let rowLen=60*audiocontext.sampleRate/4/d.bpm,E=d.endPattern,I=d.songData,T=E*PR*rowLen;
 let l=new Float32Array(T),r=new Float32Array(T),L=new Float32Array(T),R=new Float32Array(T);
 for(let i=0;i<I.length;i++){
   let B=I[i],P=0,lfo_step=G(1,2,B.lfo_freq,8)/rowLen,pan_step=G(1,2,B.fx_pan_freq,8)/rowLen;L.fill(0);R.fill(0);
@@ -537,7 +548,8 @@ for(let i=0;i<I.length;i++){
           let t1=osc1_freq_base;if(B.lfo_osc1_freq)t1+=lfoR;if(B.osc1_xenv)t1*=e*e;c1+=t1;rs=O(B.osc1_waveform,c1)*(B.osc1_vol/255.0);
           let t2=osc2_freq_base;if(B.osc2_xenv)t2*=e*e;c2+=t2;rs+=O(B.osc2_waveform,c2)*(B.osc2_vol/255.0);
           if(B.noise_fader)rs+=O(0,rnd())*(B.noise_fader/255.0)*e;rs*=e;
-          f=B.fx_freq;if(B.lfo_fx_freq)f*=lfoR;f=1.5*(f*Math.PI/sampleRate);
+//           f=B.fx_freq;if(B.lfo_fx_freq)f*=lfoR;f=1.5*(f*Math.PI/sampleRate);
+          f=B.fx_freq;if(B.lfo_fx_freq)f*=lfoR;f=1.5*(f*Math.PI/audiocontext.sampleRate);
           low+=f*band;high=q*(rs-band)-low;band+=f*high;
           switch(B.fx_filter){case 1:rs=high;break;case 2:rs=low;break;case 3:rs=band;break;case 4:rs=low+high;break;}
           t=O(0,pan_step*b)*(B.fx_pan_amt/512.0)+0.5;rs*=B.env_master*0.006;L[b]+=rs*(1-t);R[b]+=rs*t;
@@ -550,7 +562,8 @@ for(let i=0;i<I.length;i++){
   for(let b=0;b<T;b++){l[b]+=L[b];r[b]+=R[b];}
 }
 let X=0;for(let i=0;i<T;i++){let a=Math.abs(l[i]);if(a>X)X=a;a=Math.abs(r[i]);if(a>X)X=a;}if(X>0){let scale=1/X;for(let i=0;i<T;i++){l[i]*=scale;r[i]*=scale;}}
-let b=audiocontext.createBuffer(2,l.length,sampleRate);b.getChannelData(0).set(l);b.getChannelData(1).set(r);
+// let b=audiocontext.createBuffer(2,l.length,sampleRate);b.getChannelData(0).set(l);b.getChannelData(1).set(r);
+let b=audiocontext.createBuffer(2,l.length,audiocontext.sampleRate);b.getChannelData(0).set(l);b.getChannelData(1).set(r);
 return b;
 };
 
