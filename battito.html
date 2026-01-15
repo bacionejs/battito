@@ -1,11 +1,5 @@
 <meta name="viewport" content="width=device-width"> <script> onload=()=>{
 
-addEventListener("error",e=>{
-  let s="Error: "+e.message+"\nFile: "+e.filename+"\nLine: "+e.lineno+":"+e.colno;
-  if(e.error)s+="\nName: "+e.error.name+"\nStack:\n"+e.error.stack;
-  prompt("Error",s);
-});
-
 document.title="Battito";//https://github.com/bacionejs/battito
 
 let audio,SC=8,SR=60,PC=48,PR=32;
@@ -30,6 +24,7 @@ let loading    =element("div",side,"loading");
 
 (function main(){
 if(navigator.userAgent.includes("Firefox"))return document.body.innerHTML="Tested on Android Chrome";
+initErrorHandler();
 initStyle();
 initAudio();
 initPiano();
@@ -228,6 +223,14 @@ let t=null,lp={
   up  (e){e.preventDefault();if(t!==null){clearTimeout(t);t=null;}}
 };
 o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);o.addEventListener("pointerleave",lp.up);
+}
+
+function initErrorHandler(){
+addEventListener("error",e=>{
+  let s="Error: "+e.message+"\nFile: "+e.filename+"\nLine: "+e.lineno+":"+e.colno;
+  if(e.error)s+="\nName: "+e.error.name+"\nStack:\n"+e.error.stack;
+  prompt("Error",s);
+});
 }
 
 function element(tag,parent=document.body,c=""){
