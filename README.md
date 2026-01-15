@@ -28,7 +28,7 @@ Optional
 - To **export** a sound effect, like an explosion, create one note on the first row of the piano, and export a range.
 - To save your work for future use, copy the **textarea** to a separate text editor. To **import**, paste in the textarea.
 - The **textarea** can be edited. Changes are **live** just like the other components.
-- Change the tempo by editing the rowLen value in the **textarea** (60x44100/4/BPM)
+- Change the tempo by editing the bpm value in the **textarea**.
 
 ---
 
