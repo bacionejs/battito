@@ -591,9 +591,9 @@ function init(){
 m.remove();
 S=sequencer,P=piano;
 p=element("div",document.body,"tut-pointer");
-p.animate=()=>p.classList.toggle("click");
 p.point=(e)=>{let r=e().getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;};
-p.click=(e)=>{e().dispatchEvent(new MouseEvent("click",{bubbles:true}));};
+p.animate=()=>p.classList.toggle("click");
+p.click=(e)=>e().dispatchEvent(new MouseEvent("click",{bubbles:true}));
 initSong();
 initClicks();
 loop();
