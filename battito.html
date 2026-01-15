@@ -395,11 +395,12 @@ URL.revokeObjectURL(a.href);a.remove();
 }catch(e){alert(e.message);}
 function jsonToHtml(){
   let s="";
-  s+="\n<\script>onload=()=>{addEventListener('click',play);document.body.textContent='Click to play';"
+  s+="\n<\script>onload=()=>{addEventListener('click',play);document.body.textContent='Click to play';";
   s+="\nlet json="+JSON.stringify(sequencer.range(SONG))+";";
-  s+="\nfunction play(){let C=new AudioContext(),S=C.createBufferSource();S.buffer=BattitoPlayer(C,"+PR+").createbuffer(json);S.connect(C.destination);S.loop=true;S.start();}"
+  s+="\nlet C=new AudioContext(),buffer=BattitoPlayer(C,"+PR+").createbuffer(json);";
+  s+="\nfunction play(){let S=C.createBufferSource();S.buffer=buffer;S.connect(C.destination);S.start();}//to loop: S.loop=true";
   s+="\n"+BattitoPlayer;
-  s+="\n}</\script>"
+  s+="\n}</\script>";
   return s;
 }
 function bufferToWav(){
