@@ -102,8 +102,7 @@ sequencer.forEach(cell=>{
     if(sequencer.rows[row])cell.classList.add("row-selected");
   }else{
     cell.textContent="";
-    let r=row,c=col;
-    let t=audio.song.songData[c];
+    let r=row,c=col,t=audio.song.songData[c];
     if(t?.p?.[r]!==undefined){
       if(sequencer.rows[r] && sequencer.cols[c]){cell.classList.add("active");}
       cell.textContent=t.p[r]||"";
@@ -122,11 +121,7 @@ if(t!==null){
 }
 }
 
-function updateText(){
-let start=text.selectionStart;
-text.value=JSON.stringify(audio.song,null,2);
-text.setSelectionRange(start,start);
-}
+function updateText(){let s=text.selectionStart;text.value=JSON.stringify(audio.song,null,2);text.setSelectionRange(s,s);}
 
 
 
@@ -149,18 +144,12 @@ makeLongPress(canvas,audio.download);
 
 function handlePianoClick({target:{row,col}}){
 let p=sequencer.pattern();if(p==null)return;
-let note=col+123;
-let r=row;
-if(p[r]==note){p[r]=0;update();return;}
-p[r]=note;
+let note=col+123,r=row;if(p[r]==note){p[r]=0;update();return;};p[r]=note;
 for(let i=0;i<p.length;i++){if(!(i in p))p[i]=0;}
 update();audio.preview(note);
 }
 
-function handleSequencerClick({target}){
-sequencer.click(target);
-update();audio.start();
-}
+function handleSequencerClick({target}){sequencer.click(target);update();audio.start();}
 
 function handleSliderInput(e){
 if(!e.target.classList.contains("slider"))return;
@@ -169,24 +158,12 @@ t[e.target.key]=+e.target.value;
 update();audio.preview();
 }
 
-function handleSongInput(){
-try{
-let song=JSON.parse(text.value);
-if(!song.bpm){
-  let bpm=15*44100/song.rowLen;
-  song={bpm,...song};
-}
-audio.song=song;
+function handleSongInput(){try{
+let song=JSON.parse(text.value);if(!song.bpm){song={bpm:15*44100/song.rowLen,...song};};audio.song=song;
 updatePiano();updateSliders();updateSequencer();audio.preview();
-}catch(e){}
-}
+}catch(e){}}
 
-function update(){
-updatePiano();
-updateSliders();
-updateSequencer();
-updateText();
-}
+function update(){updatePiano();updateSliders();updateSequencer();updateText();}
 
 
 
@@ -225,19 +202,13 @@ let t=null,lp={
 o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);o.addEventListener("pointerleave",lp.up);
 }
 
-function initErrorHandler(){
-addEventListener("error",e=>{
+function initErrorHandler(){addEventListener("error",e=>{
   let s="Error: "+e.message+"\nFile: "+e.filename+"\nLine: "+e.lineno+":"+e.colno;
   if(e.error)s+="\nName: "+e.error.name+"\nStack:\n"+e.error.stack;
   prompt("Error",s);
-});
-}
+});}
 
-function element(tag,parent=document.body,c=""){
-let e=parent.appendChild(document.createElement(tag));
-if(c)e.className=c;
-return e;
-}
+function element(tag,parent=document.body,c=""){let e=parent.appendChild(document.createElement(tag));if(c)e.className=c;return e;}
 
 function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
 
@@ -333,9 +304,7 @@ Object.assign(sequencer, {cols, rows, click, track, sequences, pattern, range, h
 
 
 function initAudio(){
-let C=new AudioContext(),S=null;
-let PLAYER=BattitoPlayer(C),SONG=PRESETS();
-let sequences,raf,currS,prevS,currP,prevP;
+let C=new AudioContext(),S=null,PLAYER=BattitoPlayer(C),SONG=PRESETS(),sequences,raf,currS,prevS,currP,prevP;
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
 
 function start(){
@@ -428,8 +397,7 @@ audio={stop,start,preview,download,get song(){return SONG;},set song(newSong){SO
 
 
 
-function initStyle(){
-element("style").textContent=`
+function initStyle(){element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;}
 body{display:flex;background:black;color:white;font-weight:bold;font-family:monospace;}
 .piano, .sequencer{display:grid;}
