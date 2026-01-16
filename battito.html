@@ -583,45 +583,41 @@ return {createbuffer};
 
 
 function runTutorial(){
-let ci=0,p,song,clicks,S,P;
-let m=element("div",document.body,"tut-message");m.onclick=init;setTimeout(()=>m?.remove(),3000);
-initStyle();
+let ci=0,p,song,clicks,S,P;let m=element("div",document.body,"tut-message");m.onclick=init;setTimeout(()=>m?.remove(),3000);initStyle();
 
 function init(){
-m.remove();
-S=sequencer,P=piano;
-p=element("div",document.body,"tut-pointer");
-p.point=(e)=>{let r=e().getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;};
-p.animate=()=>p.classList.toggle("click");
-p.click=(e)=>e().dispatchEvent(new MouseEvent("click",{bubbles:true}));
-initSong();
-initClicks();
-loop();
+m.remove();S=sequencer;P=piano;p=element("div",document.body,"tut-pointer");p.style.transition="transform .1s ease";
+initSong();initClicks();point();
 }
 
-function loop(){if(ci<clicks.length)act(clicks[ci++]);else p.remove();}
+function point(){
+if(ci>=clicks.length)return p.remove();let e=clicks[ci++]();
+setTimeout(()=>{let r=e.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;setTimeout(()=>{click(e);},100)},100);
+}
 
+function click(e){p.style.transform="scale(.5)";e.dispatchEvent(new MouseEvent("click",{bubbles:true}));setTimeout(()=>{p.style.transform="";point();},100);};
 function make(clickon,c,r){return ()=>clickon.cells.find(x=>x.row===r&&x.col===c);}
 function toggle(c,r){return Array(2).fill(0).flatMap(()=>[make(S,c,-1),make(S,-1,r)]);}
-function act(s){setTimeout(()=>{p.point(s);p.animate();setTimeout(()=>{p.click(s);p.animate();setTimeout(loop,100);},100);},100);}
 
-function initClicks(){
-let notes=new Map();
+function initClicks(){let notes=new Map();
 let sequencerclicks=song.flatMap((t,c)=>t[0].flatMap((pid,r)=>(notes.set(c+"-"+pid,{c,r,a:t[1][pid-1]}),Array(pid).fill(0).map(()=>make(S,c,r)))));
-let pianoclicks=Array.from(notes.values()).flatMap(({c,r,a})=>toggle(c,r).toSpliced(2,0,...a.flatMap((n,r)=>n?[make(P,n-123,r)]:[])));
+let pianoclicks=[...notes.values()].flatMap(({c,r,a})=>toggle(c,r).toSpliced(2,0,...a.flatMap((n,r)=>n?[make(P,n-123,r)]:[])));
 clicks=[...sequencerclicks,...pianoclicks,make(S,-1,-1)];
 }
 
-function initSong(){
-song=[
+function initSong(){song=[
 [[1,1,1,1],[[123,,,,123,,,,123,,,,123,,,,123,,,,123,,,,123,,,,123]]],
 [[1,1,1,1],[[,,124,,,,,,,,,,,,124,,124]]],
-[[1,1,2,3],[[135,,,,,,,,159,,157,,159,,,,,,,,,,,,147,154,,159],[138,,,,,,,,150,,159,,162,,,,,,,,,,150,,162,150,,159],[149,,,,,,,,149,,150,,154,,,,,,,,,,,,147,157,,159]]]
-];
+[[1,1,2,3],[[135,,,,,,,,159,,157,,159,,,,,,,,,,,,147,154,,159],[138,,,,,,,,150,,159,,162,,,,,,,,,,150,,162,150,,159],[149,,,,,,,,149,,150,,154,,,,,,,,,,,,147,157,,159]]]];
 }
 
 function initStyle(){
-element("style").textContent=".tut-message,.tut-pointer{position:fixed;z-index:2;} .tut-message::before{content:'Click here to watch a 25 second tutorial';} .tut-message{position:fixed;background:orange;color:black;padding:10;border-radius:5px;top:6dvh;border:2px outset orange;text-align:center;left:50%;transform:translateX(-50%);} .tut-pointer::before{content:'\\1F449';} .tut-pointer{transition:all 0.1s ease-in-out;} .click{transform:scale(0.5);} ";
+element("style").textContent=""
++".tut-pointer,.tut-message{position:fixed;z-index:2;}"
++".tut-pointer::before{content:'\\1F449';}"
++".tut-message::before{content:'Click here to watch a 25 second tutorial';}"
++".tut-message{background:orange;color:black;padding:10;border-radius:5px;top:6dvh;border:2px outset orange;text-align:center;left:50%;transform:translateX(-50%);}"
+;
 }
 
 }
