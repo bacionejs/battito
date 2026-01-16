@@ -32,7 +32,7 @@ initSequencer();
 initSliders();
 initText();
 initListeners();
-runTutorial();
+tutorial();
 })();
 
 
@@ -582,7 +582,7 @@ return {createbuffer};
 
 
 
-function runTutorial(){
+function tutorial(){
 let ci=0,p,song,clicks,S,P;let m=element("div",document.body,"tut-message");m.onclick=init;setTimeout(()=>m?.remove(),3000);initStyle();
 
 function init(){m.remove();S=sequencer;P=piano;p=element("div",document.body,"tut-pointer");p.style.transition="transform .1s ease";initSong();initClicks();point();}
