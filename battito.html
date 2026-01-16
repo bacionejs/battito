@@ -590,12 +590,8 @@ m.remove();S=sequencer;P=piano;p=element("div",document.body,"tut-pointer");p.st
 initSong();initClicks();point();
 }
 
-function point(){
-if(ci>=clicks.length)return p.remove();let e=clicks[ci++]();
-setTimeout(()=>{let r=e.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;setTimeout(()=>{click(e);},100)},100);
-}
-
-function click(e){p.style.transform="scale(.5)";e.dispatchEvent(new MouseEvent("click",{bubbles:true}));setTimeout(()=>{p.style.transform="";point();},100);};
+function point(){if(ci>=clicks.length)return p.remove();let e=clicks[ci++]();let r=e.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;setTimeout(()=>{click(e);},100);}
+function click(e){p.style.transform="scale(.5)";e.dispatchEvent(new MouseEvent("click",{bubbles:true}));setTimeout(()=>{p.style.transform="";setTimeout(()=>{point();},100)},100);};
 function make(clickon,c,r){return ()=>clickon.cells.find(x=>x.row===r&&x.col===c);}
 function toggle(c,r){return Array(2).fill(0).flatMap(()=>[make(S,c,-1),make(S,-1,r)]);}
 
