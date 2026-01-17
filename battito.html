@@ -522,9 +522,9 @@ return {createbuffer};
 function tutorial(){
 let ci=0,p,song,clicks,S,P;let m=element("div",document.body,"tut-message");m.onclick=init;setTimeout(()=>m?.remove(),3000);initStyle();
 
-function init(){m.remove();S=sequencer;P=piano;p=element("div",document.body,"tut-pointer");p.style.transition="transform .1s ease";initSong();initClicks();point();}
-function point(){if(ci>=clicks.length)return p.remove();let e=clicks[ci++]();let r=e.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;click(e);}
-function click(e){setTimeout(()=>{p.style.transform="scale(.5)";e.dispatchEvent(new MouseEvent("click",{bubbles:true}));setTimeout(()=>{p.style.transform="";setTimeout(point,100);},100);},100);}
+function init(){m.remove();S=sequencer;P=piano;p=element("div",document.body,"tut-pointer");p.style.transition="transform .1s ease";initSong();initClicks();move();}
+function move(){if(ci>=clicks.length)return p.remove();let e=clicks[ci++]();let r=e.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;click(e);}
+function click(e){setTimeout(()=>{p.style.transform="scale(.5)";e.dispatchEvent(new MouseEvent("click",{bubbles:true}));setTimeout(()=>{p.style.transform="";setTimeout(move,100);},100);},100);}
 function make(clickon,c,r){return ()=>clickon.cells.find(x=>x.row===r&&x.col===c);}
 function toggle(c,r){return Array(2).fill(0).flatMap(()=>[make(S,c,-1),make(S,-1,r)]);}
 
