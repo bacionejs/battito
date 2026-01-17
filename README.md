@@ -42,13 +42,13 @@ This synth is a **2-oscillator subtractive synthesizer**. This means it starts w
 
 ---
 
-`vm` Volumn Master
+`vm` Volume Master
 
 The final volume control for the entire instrument patch.  
 
 ---
 
-`nv` Noise Volumn
+`nv` Noise Volume
 
 Blends white noise with the oscillators. Essential for percussion (snares, hats) and effects (wind, static).  
 
@@ -57,7 +57,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 `1/2` Oscillators
 
 `v` Volume - The volume of the individual oscillator.  
-`w` Waveform - Selects the basic timbre: 0=Sine, 1=Square, 2=Saw, 3=Triangle.  
+`w` Waveform - Selects the basic timbre: Sine(0), Square(1), Saw(2), Triangle(3).  
 `o` Octave - Shifts the oscillator's pitch up or down in octaves. A value of 7 or 8 is often a good middle C starting point. Setting `2o` one octave below `1o` can create a sub-bass.  
 `s` Semitone - Fine-tunes the pitch in semitone (half-step) increments. Useful for creating musical intervals between the two oscillators (e.g., set `2s` to 7 for a perfect fifth).  
 `d` Detune - Fine-tunes the pitch by a very small amount. When `1` and `2` have slightly different detune values, they create a rich, thick "chorus" effect. This is key for pads and big leads.  
@@ -75,7 +75,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 `c` Cutoff
 
-`t` Type - 0:Off, 1:High-Pass, 2:Low-Pass, 3:Band-Pass, 4:Notch. Set to 2 for most classic synth sounds. Use 1 for hi-hats or thinning out a sound.  
+`t` Type - The type of filter: Off(0), High-Pass(1), Low-Pass(2), Band-Pass(3), Notch(4). Set to 2 for most classic synth sounds. Use 1 for hi-hats or thinning out a sound.  
 `a` Amount - For Low-Pass, lowering `a` makes the sound darker and more muffled.  
 `r` Resonance - Emphasizes the frequencies around the cutoff point. Low values are subtle. High values give a sharp, ringing, "squelchy" sound. Bug: `r` must be used when using `t` or there will be no sound.  
 
@@ -83,7 +83,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 `m` Modulation
 
-`w` Waveform - The shape of the modulation signal: 0=Sine, 1=Square, 2=Saw, 3=Triangle. Sine/Triangle gives smooth modulation (vibrato). Square gives an abrupt on/off effect (trills). Saw gives a repeating ramp.  
+`w` Waveform - The shape of the modulation signal: Sine(0), Square(1), Saw(2), Triangle(3). Sine/Triangle gives smooth modulation (vibrato). Square gives an abrupt on/off effect (trills). Saw gives a repeating ramp.  
 `s` Speed - Low values = slow, evolving changes. High values = fast, aggressive modulation.  
 `a` Amount - The overall intensity.  
 `1` Modulate the pitch of Oscillator 1. A slow sine wave creates vibrato. A fast square wave creates a trill.  
