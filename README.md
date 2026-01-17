@@ -83,7 +83,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 `m` Modulation
 
-`w` Waveform - The shape of the modulation signal (0:Sin,1:Sqr,2:Saw,3:Tri). Sine/Triangle gives smooth modulation (vibrato). Square gives an abrupt on/off effect (trills). Saw gives a repeating ramp.  
+`w` Waveform - The shape of the modulation signal: 0=Sine, 1=Square, 2=Saw, 3=Triangle. Sine/Triangle gives smooth modulation (vibrato). Square gives an abrupt on/off effect (trills). Saw gives a repeating ramp.  
 `s` Speed - Low values = slow, evolving changes. High values = fast, aggressive modulation.  
 `a` Amount - The overall intensity.  
 `1` Modulate the pitch of Oscillator 1. A slow sine wave creates vibrato. A fast square wave creates a trill.  
