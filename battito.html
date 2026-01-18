@@ -332,10 +332,12 @@ function point(grid,width,prev,curr,o=0){[[prev,"remove"],[curr,"add"]].forEach(
 
 function preview(note){
 let playing=null;
+let base=new Array(32).fill(0);
 preview=function(note){
   if(playing){playing.stop();playing=null;}
   let t=sequencer.track();if(t==null)return;
-  let song={bpm:SONG.bpm,endPattern:1,songData:[{...t,p:[1],c:[{n:Array(PR).fill(0).map((_,i)=>i===0?(note||t?.c[0]?.n?.find(n=>n!==0)||147):0)}]}]};
+  base[0]=note||t?.c[0]?.n?.find(n=>n!==0)||147;
+  let song={bpm:SONG.bpm,endPattern:1,songData:[{...t,p:[1],c:[{n:base}]}]};
   let s=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(song)});s.onended=()=>{if(playing===s){playing=null;}};s.connect(C.destination);s.start();playing=s;
   waveform(s.buffer.getChannelData(0));
 };
