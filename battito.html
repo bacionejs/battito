@@ -335,7 +335,7 @@ let playing=null;
 preview=function(note){
   if(playing){playing.stop();playing=null;}
   let t=sequencer.track();if(t==null)return;
-  let song={bpm:SONG.bpm,endPattern:1,songData:[{...t,p:[1],c:[{n:[note||t?.c[0]?.n?.find(n=>n!==0)||147]}]}]};
+  let song={bpm:SONG.bpm,endPattern:1,songData:[{...t,p:[1],c:[{n:Array(PR).fill(0).map((_,i)=>i===0?(note||t?.c[0]?.n?.find(n=>n!==0)||147):0)}]}]};
   let s=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(song)});s.onended=()=>{if(playing===s){playing=null;}};s.connect(C.destination);s.start();playing=s;
   waveform(s.buffer.getChannelData(0));
 };
@@ -470,8 +470,7 @@ let G=(f,m,n,l)=>{if(n>l)n-=l;else{n=l-n;m=1/m;}while(n-->0)f*=m;return f;};
 let R_S=1,rnd=()=>{R_S=Math.imul(R_S,0x15a4e35);return (R_S>>>0)%255/255.0;};
 
 let createbuffer=(d)=>{
-// let rowLen=Math.ceil(15*44100/d.bpm),E=d.endPattern,I=d.songData,PR=I[0]?.c[0]?.n.length||32,T=E*PR*rowLen;
-let rowLen=Math.ceil(15*44100/d.bpm),E=d.endPattern,I=d.songData,PR=32,T=E*PR*rowLen;
+let rowLen=Math.ceil(15*44100/d.bpm),E=d.endPattern,I=d.songData,PR=I[0]?.c[0]?.n.length||32,T=E*PR*rowLen;
 let l=new Float32Array(T),r=new Float32Array(T),L=new Float32Array(T),R=new Float32Array(T);
 for(let i=0;i<I.length;i++){
   let B=I[i],P=0,lfo_step=G(1,2,B.lfo_freq,8)/rowLen,pan_step=G(1,2,B.fx_pan_freq,8)/rowLen;L.fill(0);R.fill(0);
