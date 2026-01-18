@@ -340,7 +340,7 @@ preview=function(note){
   waveform(s.buffer.getChannelData(0));
 };
 function waveform(d){
-  let c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2,p=d.length/w;
+  let c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2,p=d.length/w/PR/4;
   c.clearRect(0,0,w,h);c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[x*p|0]*m);}
   c.lineWidth=2;c.strokeStyle="blue";c.stroke();
 }
