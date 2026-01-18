@@ -130,7 +130,7 @@ sliders    .oninput=handleSliderInput;
 text       .oninput=handleSongInput;
 fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
 makeLongPress(canvas,audio.download);
-document.querySelectorAll('.piano,.sequencer').forEach(el=>{el.addEventListener('contextmenu',e=>e.preventDefault());});
+[piano,sequencer,sliders].forEach(el=>{el.addEventListener('contextmenu',e=>e.preventDefault());});
 }
 
 function handlePianoClick({target:{row,col}}){
