@@ -7,6 +7,7 @@ let LT=0,TB=0,PS=0;
 //LT LastTrack - supports adding track while others are playing
 //TB TimeBased,PS PatternStart - support timebased input vs stepbased. PS supports - On the first interaction each loop, the pattern clears, because timebased (improv?) input is messy...otherwise there would need to be separate buttons like clear-pattern.
 let piano      =element("div",document.body,"piano");
+let message    =element("div",piano,"message");
 let sliders    =element("div",document.body,"sliders");
 let side       =element("div",document.body,"side");
 let sequencer  =element("div",side,"sequencer");
@@ -133,7 +134,7 @@ sliders    .oninput=handleSliderInput;
 text       .oninput=handleSongInput;
 fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
 makeLongPress(canvas,audio.download);
-makeLongPress(piano,()=>{TB^=1});
+makeLongPress(piano,()=>{message.textContent=(TB^=1)?"timemode":"stepmode";message.classList.remove("show");message.offsetWidth;message.classList.add("show");});
 [piano,sequencer,sliders].forEach(el=>{el.addEventListener('contextmenu',e=>e.preventDefault());});
 }
 
@@ -417,6 +418,9 @@ audio={stop,start,preview,download,get song(){return SONG;},set song(newSong){SO
 function initStyle(){element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;}
 body{display:flex;background:black;color:white;font-weight:bold;font-family:monospace;}
+@keyframes fade{0%{opacity:0;}50%{opacity:1;}100%{opacity:0;}}
+.message{color:silver;font-size:5rem;top:50%;left:50%;translate:-50% -50%;position:absolute;z-index:2;pointer-events:none;opacity:0;}
+.message.show{animation:fade 2s ease forwards;}
 .piano{position:relative;}
 .piano, .sequencer{display:grid;}
 .side{background:black;}
