@@ -31,7 +31,7 @@ Optional
 - The **textarea** can be edited. Changes are **live** just like the other components.
 - To change the tempo, edit the `bpm` value in the **textarea**.
 - Besides clicking sequencer column headers to preview instruments, you can also click the piano to hear what their pitches sound like.
-- Instead of **step-based** input, you can also perform **time-based** input. **Long-press the piano to toggle it on/off.** On the first interaction each loop, the pattern clears.
+- Instead of **step-based** input, you can also perform **time-based** input. Long-press the piano to toggle it on/off. On the first interaction each loop, the pattern clears.
 
 ---
 
