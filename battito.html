@@ -2,9 +2,11 @@
 
 document.title="Battito";//https://github.com/bacionejs/battito
 
-let audio,SC=8,SR=60,PC=48,PR=32,PS=0;
+let audio,SC=8,SR=60,PC=48,PR=32;
+let LT=0,TB=0,PS=0;
+//LT LastTrack - supports adding track while others are playing
+//TB TimeBased,PS PatternStart - support timebased input vs stepbased. PS supports - On the first interaction each loop, the pattern clears, because timebased (improv?) input is messy...otherwise there would need to be separate buttons like clear-pattern.
 let piano      =element("div",document.body,"piano");
-let jam        =element("div",piano,"jam");
 let sliders    =element("div",document.body,"sliders");
 let side       =element("div",document.body,"side");
 let sequencer  =element("div",side,"sequencer");
@@ -40,7 +42,6 @@ function initPiano(){
 grid(piano,PC,PR);
 line(piano,PC,"x",12);
 line(piano,PC,"y",4);
-grid(jam,12,4);jam.forEach((cell,i)=>[1,3,6,8,10].includes(i%12)&&(cell.style.background="black"));
 }
 
 function initSequencer(){
@@ -126,40 +127,39 @@ function updateText(){let s=text.selectionStart;text.value=JSON.stringify(audio.
 
 
 function initListeners(){
-jam        .onclick=e=>{e.stopPropagation();handleJamClick(e);};
 piano      .onclick=handlePianoClick;
 sequencer  .onclick=handleSequencerClick;
 sliders    .oninput=handleSliderInput;
 text       .oninput=handleSongInput;
 fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
 makeLongPress(canvas,audio.download);
-makeLongPress(piano,()=>{jam.style.display=jam.style.display!="grid"?"grid":"none";});
+makeLongPress(piano,()=>{TB^=1});
 [piano,sequencer,sliders].forEach(el=>{el.addEventListener('contextmenu',e=>e.preventDefault());});
 }
 
 function handlePianoClick({target:{row,col}}){
-let p=sequencer.pattern();if(p==null)return;
-let note=col+123;
-let r=row;
-if(p[r]==note){p[r]=0;update();return;}
-p[r]=note;
-update();
-audio.preview(note);
-}
-
-function handleJamClick({target:{row,col}}){
 let p=sequencer.pattern();
 if(p==null){
-  audio.preview(123+((3-row)*12)+col);
+  let note=col+123;
+  audio.preview(note);
   return;
 }
-if(PS==0){PS=1;for(let i=0;i<p.length;i++){p[i]=0;}}
-let note=123+((3-row)*12)+col;
-let r=audio.currp;
-if(p[r]==note){p[r]=0;update();return;}
-p[r]=note;
-update();
-audio.preview(note);
+if(TB){
+  if(PS==0){PS=1;for(let i=0;i<p.length;i++){p[i]=0;}}//On the first interaction each loop, the pattern clears.
+  let note=col+123;
+  let r=audio.currp;//timebased
+  if(p[r]==note){p[r]=0;update();return;}
+  p[r]=note;
+  update();
+  audio.preview(note);
+}else{
+  let note=col+123;
+  let r=row;//stepbased
+  if(p[r]==note){p[r]=0;update();return;}
+  p[r]=note;
+  update();
+  audio.preview(note);
+}
 }
 
 function handleSequencerClick({target}){sequencer.click(target);update();audio.start();}
@@ -240,7 +240,7 @@ let bars=[...sequencer.cells[0].children];
 
 function click({row,col}){
 if(row===-1&& col===-1)toggleAll();
-else if(row===-1){cols[col]=cols[col]?0:1;audio.preview();}
+else if(row===-1){cols[col]=cols[col]?0:1;audio.preview();LT=col;}
 else if(col===-1){rows[row]=rows[row]?0:1;}
 else cell(row,col);
 }
@@ -281,7 +281,10 @@ return rows.reduce((acc,on,r)=>{
 },[]);
 }
 
-function track(){if(cols.filter(Boolean).length!=1)return null;return audio.song.songData[cols.indexOf(1)]||null;}
+function track(){
+if(cols.filter(Boolean).length!=1){return audio.song.songData[LT];}//supports adding track while others playing
+return audio.song.songData[cols.indexOf(1)]||null;
+}
 
 function pattern(){
 let t=track();if(!t)return null;
@@ -415,7 +418,6 @@ function initStyle(){element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;}
 body{display:flex;background:black;color:white;font-weight:bold;font-family:monospace;}
 .piano{position:relative;}
-.jam{display:none;position:absolute;left:0;bottom:0;background:gray;z-index:1;aspect-ratio:12/4;width:100%;opacity:20%;}
 .piano, .sequencer{display:grid;}
 .side{background:black;}
 .piano{background:white;}
@@ -497,7 +499,8 @@ let G=(f,m,n,l)=>{if(n>l)n-=l;else{n=l-n;m=1/m;}while(n-->0)f*=m;return f;};
 let R_S=1,rnd=()=>{R_S=Math.imul(R_S,0x15a4e35);return (R_S>>>0)%255/255.0;};
 
 let createbuffer=(d)=>{
-let rowLen=Math.ceil(15*44100/d.bpm),E=d.endPattern,I=d.songData,PR=I[0]?.c[0]?.n.length,T=E*PR*rowLen;
+// let rowLen=Math.ceil(15*44100/d.bpm),E=d.endPattern,I=d.songData,PR=I[0]?.c[0]?.n.length,T=E*PR*rowLen;
+let rowLen=Math.ceil(15*44100/d.bpm),E=d.endPattern,I=d.songData,PR=I[0]?.c[0]?.n.length||32,T=E*PR*rowLen;
 let l=new Float32Array(T),r=new Float32Array(T),L=new Float32Array(T),R=new Float32Array(T);
 for(let i=0;i<I.length;i++){
   let B=I[i],P=0,lfo_step=G(1,2,B.lfo_freq,8)/rowLen,pan_step=G(1,2,B.fx_pan_freq,8)/rowLen;L.fill(0);R.fill(0);

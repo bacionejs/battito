@@ -10,7 +10,7 @@ Battito is a tablet-centric music tracker with piano-roll, live-loop editing and
 - waveform/spectrum analyzers
 - instrument presets
 - live-loop editing
-- step/jam modes
+- step/time modes
 - import/export
 
 </details><details><summary>Guide</summary>
@@ -18,7 +18,7 @@ Battito is a tablet-centric music tracker with piano-roll, live-loop editing and
 ---
 
 Steps
-1. Click on the column headers in the **sequencer** to hear what the preset instruments sound like. You can select multiple columns/rows in the sequencer for playback, but you can only have one column/row selected while editing notes on the **piano**. The sequencer constantly loops over the selected sequencer columns/rows. Click the corner to toggle the whole song. Looping is **live**, meaning it regenerates every time, so changes you make are reflected in the next loop. This is helpful when editing a small section, as the changes are almost immediate.
+1. Click on the column headers in the **sequencer** to hear what the preset instruments sound like. You can select multiple columns/rows in the sequencer for playback, but you can only have one row selected while editing notes on the **piano** and the column used is the last one selected. The sequencer constantly loops over the selected sequencer columns/rows. Click the corner to toggle the whole song. Looping is **live**, meaning it regenerates every time, so changes you make are reflected in the next loop. This is helpful when editing a small section, as the changes are almost immediate.
 1. To enter a note on the **piano**, select a column/row in the **sequencer** and click the intersecting cell to select a pattern ID. Then you can edit that pattern on the piano. To advance the pattern ID number just keep clicking in the sequencer cell. You can reuse a pattern ID. When coming back to edit a pattern, don't click the sequencer cell as that will advance the pattern ID, just select a column/row.
 
 ---
@@ -30,7 +30,8 @@ Optional
 - To save your work for future use, copy the **textarea** to a separate text editor. To **import**, paste in the textarea.
 - The **textarea** can be edited. Changes are **live** just like the other components.
 - To change the tempo, edit the `bpm` value in the **textarea**.
-- **Jam Mode** is an alternative, **time-based** piano stack for recording notes into the current step. **Long-press the piano to toggle Jam on/off.** On the first interaction each loop, the pattern clears. If no pattern (sequencer row) is selected, Jam acts as a preview-only keyboard.
+- Besides clicking sequencer column headers to preview instruments, you can also click the piano to hear what their pitches sound like.
+- Instead of step-based input, you can also perform **time-based** input. **Long-press the piano to toggle it on/off.** On the first interaction each loop, the pattern clears.
 
 ---
 
