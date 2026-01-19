@@ -29,6 +29,7 @@ Optional
 - To save your work for future use, copy the **textarea** to a separate text editor. To **import**, paste in the textarea.
 - The **textarea** can be edited. Changes are **live** just like the other components.
 - To change the tempo, edit the `bpm` value in the **textarea**.
+- **Jam Mode** is an alternative, **time-based** piano stack for recording notes into the current step. **Long-press the piano to toggle Jam on/off.** On the first interaction each loop, the pattern clears. If no pattern (sequencer row) is selected, Jam acts as a preview-only keyboard.
 
 ---
 
