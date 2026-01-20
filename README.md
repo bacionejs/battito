@@ -169,7 +169,7 @@ song structure
 
 ---
 
-instrument **key** parameters
+instrument **key** parameters  
 osc1_oct, osc1_det, osc1_detune, osc1_xenv, osc1_vol, osc1_waveform,
 osc2_oct, osc2_det, osc2_detune, osc2_xenv, osc2_vol, osc2_waveform,
 noise_fader,
