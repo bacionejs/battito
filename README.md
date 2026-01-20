@@ -184,6 +184,7 @@ A track consists of:
     ...
   ]
 }
+```
 
 ## INSTRUMENT PARAMETERS
 osc1_oct, osc1_det, osc1_detune, osc1_xenv, osc1_vol, osc1_waveform,
