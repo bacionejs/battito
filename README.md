@@ -112,101 +112,64 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 ---
 
-note encoding
-- Notes are non-MIDI
-- A0 = 0
-- Note value formula:  
-  `note = (12 × osc1_oct) + (12 × octave) + semitone`
-- C3 = 123
-- Valid piano range: C3–C6 inclusive
-- Note value 0 = no note
+song
+- `bpm`
+- `endPattern` (inclusive pattern count)
+- `songData`
+
+---
+
+`songData`
+- multiple tracks
+
+---
+
+track
+- Instrument parameters (see below)
+- PatternIDs (`p`) 1-based, 0 = silence
+- Patterns (`c`) notes are 1-based, 0 = silence, c3=123 (not midi)
 
 ---
 
 sequencer
-- Width: 8 columns (tracks / instruments)
-- Height: 60 rows (phrases)
-- With headers: 9 × 61
-- Each cell contains a pattern ID
-- Pattern IDs are 1-based
+- Together, column (instrument), row (patternIDs index) and cell (patternID) define a track
+- One sequencer row = one phrase = patternIDs across all tracks
+- One phrase has a length the size of patternIDs count
+- PatternIDs are reused within a track, for example [1,1,0,2,3]
 
 ---
 
-piano
-- Width: 48 columns (note values)
-- Height: 32 rows (steps)
-- Each row represents one step
-- Each cell represents a note at that step
-- Cell color corresponds to instrument color
-- If multiple tracks write to the same cell, last rendered track wins
-
----
-
-track  
-A track consists of:
-- Instrument parameters
-- Pattern ID sequence (`p`)
-- Pattern data grid (`c`)
-- `bpm`
-- `endPattern` (inclusive pattern count)
-
----
-
-patterns
-- Patterns are reused within a track
-- Patterns are edited outside the sequencer
-- Patterns form a third dimension
-- Pattern representation is grid-based:
-  - X-axis: note values
-  - Y-axis: step time
-- Pattern height = 32 rows (PR)
-
----
-
-phrases
-- One sequencer row = one phrase
-- A phrase is composed of patterns across all tracks
-
----
-
-tempo
-- Modern format: `bpm` stored directly
-- Legacy format:  
-  `bpm = (15 × 44100) / rowLen`
-
----
-
-timing
-- `rowLen = ceil(15 × 44100 / bpm)`
-- Pattern duration = `PR × rowLen` samples
-- Song duration = `endPattern × pattern duration`
+piano (piano-roll)
+- Together, column (note) and row (pattern index) define a pattern
+- Cell color corresponds to track color
+- If multiple tracks write to the same cell, last rendered track color wins (but all notes play)
 
 ---
 
 song structure
 ```json
 {
-  "bpm": number,
-  "endPattern": number,
-  "songData": [
-    {
-      "instrument": { ... },
-      "p": [patternId, ...],        // phrase → pattern mapping
-      "c": [                        // pattern data
-        {
-          "n": [note, ...]          // length = PR × pianoWidth
-        },
-        ...
-      ]
-    },
-    ...
-  ]
+   "bpm":<value>
+  ,"endPattern":<value>
+  ,"songData":
+    [
+      {
+        "<key>":<value>,...
+        ,"p":[<patternID>,...]
+        ,"c":
+          [
+            {"n":[<note>,...]}
+            ,...
+          ]
+      }
+      ,...
+    ]
 }
 ```
 
 ---
 
-instrument parameters
+instrument **key** parameters
 osc1_oct, osc1_det, osc1_detune, osc1_xenv, osc1_vol, osc1_waveform,
 osc2_oct, osc2_det, osc2_detune, osc2_xenv, osc2_vol, osc2_waveform,
 noise_fader,
@@ -214,6 +177,8 @@ env_attack, env_sustain, env_release, env_master,
 fx_filter, fx_freq, fx_resonance, fx_delay_time, fx_delay_amt,
 fx_pan_freq, fx_pan_amt,
 lfo_osc1_freq, lfo_fx_freq, lfo_freq, lfo_amt, lfo_waveform
+
+---
 
 </details><details><summary>Credits</summary>
 
