@@ -128,21 +128,8 @@ track
 - Instrument parameters (see below)
 - PatternIDs (`p`) sequence is 1-based, 0 = silence
 - Patterns (`c`) notes are 1-based, 0 = silence, c3=123 (not midi)
-
----
-
-sequencer
-- Together, column (instrument), row (patternIDs index) and cell (patternID) define a track
-- One sequencer row = one phrase = patternIDs across all tracks
-- One phrase has a length the size of patternIDs count
-- PatternIDs are reused within a track, for example [1,1,0,2,3]
-
----
-
-piano (piano-roll)
-- Together, column (note) and row (pattern index) define a pattern
-- Cell color corresponds to track color
-- If multiple tracks write to the same cell, last rendered track color wins (but all notes play)
+- Sequences on the sequencer are shown vertically
+- Notes on the piano-roll are shown in 2 dimension, x-axis (note), y-axis (time step)
 
 ---
 
