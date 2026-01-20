@@ -130,7 +130,7 @@ track
 - Patterns (`c`) notes are 1-based, 0 = silence
 - A note = (12 x osc_oct) + (12 x octave) + semitone (not midi)
 - Sequences on the sequencer are shown vertically
-- Notes on the piano-roll are shown in 2 dimension, x-axis (note), y-axis (time step)
+- Notes on the piano-roll are shown in 2 dimensions, x-axis (note), y-axis (time step)
 
 ---
 
