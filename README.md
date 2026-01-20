@@ -126,7 +126,7 @@ song
 
 track
 - Instrument parameters (see below)
-- PatternIDs (`p`) 1-based, 0 = silence
+- PatternIDs (`p`) sequence is 1-based, 0 = silence
 - Patterns (`c`) notes are 1-based, 0 = silence, c3=123 (not midi)
 
 ---
