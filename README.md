@@ -142,7 +142,7 @@ piano
 
 ---
 
-track
+track  
 A track consists of:
 - Instrument parameters
 - Pattern ID sequence (`p`)
