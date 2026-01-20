@@ -110,7 +110,9 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 </details><details><summary>Specification</summary>
 
-## NOTE ENCODING
+---
+
+note encoding
 - Notes are non-MIDI
 - A0 = 0
 - Note value formula:  
@@ -119,14 +121,18 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 - Valid piano range: C3–C6 inclusive
 - Note value 0 = no note
 
-## SEQUENCER
+---
+
+sequencer
 - Width: 8 columns (tracks / instruments)
 - Height: 60 rows (phrases)
 - With headers: 9 × 61
 - Each cell contains a pattern ID
 - Pattern IDs are 1-based
 
-## PIANO
+---
+
+piano
 - Width: 48 columns (note values)
 - Height: 32 rows (steps)
 - Each row represents one step
@@ -134,7 +140,9 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 - Cell color corresponds to instrument color
 - If multiple tracks write to the same cell, last rendered track wins
 
-## TRACK
+---
+
+track
 A track consists of:
 - Instrument parameters
 - Pattern ID sequence (`p`)
@@ -142,7 +150,9 @@ A track consists of:
 - `bpm`
 - `endPattern` (inclusive pattern count)
 
-## PATTERNS
+---
+
+patterns
 - Patterns are reused within a track
 - Patterns are edited outside the sequencer
 - Patterns form a third dimension
@@ -151,21 +161,29 @@ A track consists of:
   - Y-axis: step time
 - Pattern height = 32 rows (PR)
 
-## PHRASES
+---
+
+phrases
 - One sequencer row = one phrase
 - A phrase is composed of patterns across all tracks
 
-## TEMPO
+---
+
+tempo
 - Modern format: `bpm` stored directly
 - Legacy format:  
   `bpm = (15 × 44100) / rowLen`
 
-## TIMING
+---
+
+timing
 - `rowLen = ceil(15 × 44100 / bpm)`
 - Pattern duration = `PR × rowLen` samples
 - Song duration = `endPattern × pattern duration`
 
-## SONG STRUCTURE
+---
+
+song structure
 ```json
 {
   "bpm": number,
@@ -186,7 +204,9 @@ A track consists of:
 }
 ```
 
-## INSTRUMENT PARAMETERS
+---
+
+instrument parameters
 osc1_oct, osc1_det, osc1_detune, osc1_xenv, osc1_vol, osc1_waveform,
 osc2_oct, osc2_det, osc2_detune, osc2_xenv, osc2_vol, osc2_waveform,
 noise_fader,
