@@ -108,6 +108,92 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 ---
 
+</details><details><summary>Specification</summary>
+
+## NOTE ENCODING
+- Notes are non-MIDI
+- A0 = 0
+- Note value formula:  
+  `note = (12 × osc1_oct) + (12 × octave) + semitone`
+- C3 = 123
+- Valid piano range: C3–C6 inclusive
+- Note value 0 = no note
+
+## SEQUENCER
+- Width: 8 columns (tracks / instruments)
+- Height: 60 rows (phrases)
+- With headers: 9 × 61
+- Each cell contains a pattern ID
+- Pattern IDs are 1-based
+
+## PIANO
+- Width: 48 columns (note values)
+- Height: 32 rows (steps)
+- Each row represents one step
+- Each cell represents a note at that step
+- Cell color corresponds to instrument color
+- If multiple tracks write to the same cell, last rendered track wins
+
+## TRACK
+A track consists of:
+- Instrument parameters
+- Pattern ID sequence (`p`)
+- Pattern data grid (`c`)
+- `bpm`
+- `endPattern` (inclusive pattern count)
+
+## PATTERNS
+- Patterns are reused within a track
+- Patterns are edited outside the sequencer
+- Patterns form a third dimension
+- Pattern representation is grid-based:
+  - X-axis: note values
+  - Y-axis: step time
+- Pattern height = 32 rows (PR)
+
+## PHRASES
+- One sequencer row = one phrase
+- A phrase is composed of patterns across all tracks
+
+## TEMPO
+- Modern format: `bpm` stored directly
+- Legacy format:  
+  `bpm = (15 × 44100) / rowLen`
+
+## TIMING
+- `rowLen = ceil(15 × 44100 / bpm)`
+- Pattern duration = `PR × rowLen` samples
+- Song duration = `endPattern × pattern duration`
+
+## SONG STRUCTURE
+```json
+{
+  "bpm": number,
+  "endPattern": number,
+  "songData": [
+    {
+      "instrument": { ... },
+      "p": [patternId, ...],        // phrase → pattern mapping
+      "c": [                        // pattern data
+        {
+          "n": [note, ...]          // length = PR × pianoWidth
+        },
+        ...
+      ]
+    },
+    ...
+  ]
+}
+
+## INSTRUMENT PARAMETERS
+osc1_oct, osc1_det, osc1_detune, osc1_xenv, osc1_vol, osc1_waveform,
+osc2_oct, osc2_det, osc2_detune, osc2_xenv, osc2_vol, osc2_waveform,
+noise_fader,
+env_attack, env_sustain, env_release, env_master,
+fx_filter, fx_freq, fx_resonance, fx_delay_time, fx_delay_amt,
+fx_pan_freq, fx_pan_amt,
+lfo_osc1_freq, lfo_fx_freq, lfo_freq, lfo_amt, lfo_waveform
+
 </details><details><summary>Credits</summary>
 
 Battito ports Jake Taylor's [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant engine and optimizes with precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only, blazingly fast render loop.  
