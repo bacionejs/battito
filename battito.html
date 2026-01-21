@@ -74,12 +74,12 @@ function initText(){updateText();}
 
 
 
-
 function updatePiano(){
 piano.forEach(cell=>{cell.style.background="";});
 sequencer.cols.forEach((on,tid)=>{if(!on)return;
-  let t=audio.song.songData[tid];
-  t?.c?.[t?.p[audio.currs]-1]?.n?.forEach((note,step)=>{
+  let t=audio.song.tracks[tid];
+//   t?.c?.[t?.p[audio.currs]-1]?.n?.forEach((note,step)=>{
+  t?.p?.[t?.s[audio.currs]-1]?.forEach((note,step)=>{
     if(note && note>=123 && note<=123+PC){piano.cells[step*PC+note-123].style.background=getColor(tid);}
   });
 });
@@ -96,10 +96,10 @@ sequencer.forEach(cell=>{
     if(sequencer.rows[row])cell.classList.add("row-selected");
   }else{
     cell.textContent="";
-    let r=row,c=col,t=audio.song.songData[c];
-    if(t?.p?.[r]!==undefined){
+    let r=row,c=col,t=audio.song.tracks[c];
+    if(t?.s?.[r]!==undefined){
       if(sequencer.rows[r] && sequencer.cols[c]){cell.classList.add("active");}
-      cell.textContent=t.p[r]||"";
+      cell.textContent=t.s[r]||"";
     }
   }
 });
@@ -248,7 +248,7 @@ else cell(row,col);
 
 function toggleAll(){
 let i,mr=0,mc=0,all=true;
-audio.song.songData.forEach((t,c)=>{t.p.forEach((v,r)=>{if(v){if(c>mc)mc=c;if(r>mr)mr=r;}});});
+audio.song.tracks.forEach((t,c)=>{t.s.forEach((v,r)=>{if(v){if(c>mc)mc=c;if(r>mr)mr=r;}});});
 for(i=0;i<=mr;i++)if(!rows[i])all=false;
 for(i=0;i<=mc;i++)if(!cols[i])all=false;
 for(i=0;i<rows.length;i++)rows[i]=(i<=mr)?(all?0:1):0;
@@ -256,42 +256,46 @@ for(i=0;i<cols.length;i++)cols[i]=(i<=mc)?(all?0:1):0;
 }
 
 function cell(row,col){
-let r=row,c=col,t=audio.song.songData[c],i=t.p[r]??0;
-t.p[r]=(i+1)%10;if(t.p[r]>t.c.length){t.c.push({n:Array(PR).fill(0)});}
+let r=row,c=col,t=audio.song.tracks[c],i=t.s[r]??0;
+// t.s[r]=(i+1)%10;if(t.s[r]>t.p.length){t.p.push({n:Array(PR).fill(0)});}
+t.s[r]=(i+1)%10;if(t.s[r]>t.p.length){t.p.push(Array(PR).fill(0));}
 }
 
 function range(song){
 if(!(rows.some(Boolean) && cols.some(Boolean)))return null;
-let d=structuredClone(song.songData).filter((_,c)=>cols[c]);if(!d.length)return null;
-d.forEach(t=>rows.forEach((on,r)=>{if(!on||!t.p[r])t.p[r]=0;}));
-for(let r=rows.length-1;r>=0;r--)if(!d.some(t=>t.p[r]))d.forEach(t=>t.p.splice(r,1));if(!d[0].p.length)return null;
-if(!d.some(t=>t.p.some(Boolean)))return null;
-return {bpm:song.bpm,endPattern:d[0].p.length,songData:d};
+let d=structuredClone(song.tracks).filter((_,c)=>cols[c]);if(!d.length)return null;
+d.forEach(t=>rows.forEach((on,r)=>{if(!on||!t.s[r])t.s[r]=0;}));
+for(let r=rows.length-1;r>=0;r--)if(!d.some(t=>t.s[r]))d.forEach(t=>t.s.splice(r,1));if(!d[0].s.length)return null;
+if(!d.some(t=>t.s.some(Boolean)))return null;
+// return {bpm:song.bpm,endPattern:d[0].s.length,tracks:d};
+return {bpm:song.bpm,tracks:d};
 }
 
 function hasNotes(song){
 let r=range(song);if(!r)return null;
-return r.songData.some(t=>t.p.some(p=>p>0 && t.c[p-1]?.n.some(Boolean)))?r:null;
+// return r.tracks.some(t=>t.p.some(p=>p>0 && t.c[p-1]?.n.some(Boolean)))?r:null;
+return r.tracks.some(t=>t.s.some(p=>p>0 && t.p[p-1]?.some(Boolean)))?r:null;
 }
 
 function sequences(){
 return rows.reduce((acc,on,r)=>{
   if(!on)return acc;
-  for(let t of audio.song.songData){if(t.p[r]){acc.push(r);break;}}
+  for(let t of audio.song.tracks){if(t.s[r]){acc.push(r);break;}}
   return acc;
 },[]);
 }
 
 function track(){
-if(cols.filter(Boolean).length!=1){return audio.song.songData[LT];}//supports adding track while others playing
-return audio.song.songData[cols.indexOf(1)]||null;
+if(cols.filter(Boolean).length!=1){return audio.song.tracks[LT];}//supports adding track while others playing
+return audio.song.tracks[cols.indexOf(1)]||null;
 }
 
 function pattern(){
 let t=track();if(!t)return null;
 if(rows.filter(Boolean).length!=1)return null;
-let i=rows.indexOf(1);if(!t?.p?.[i])return null;
-return (t.c[t.p[i]-1]||(t.c[t.p[i]-1]={n:Array(PR).fill(0)})).n;
+let i=rows.indexOf(1);if(!t?.s?.[i])return null;
+// return (t.c[t.p[i]-1]||(t.c[t.p[i]-1]={n:Array(PR).fill(0)})).n;
+return t.p[t.s[i]-1]||(t.p[t.s[i]-1]=Array(PR).fill(0));
 }
 
 function scroll(curr){
@@ -359,12 +363,14 @@ function point(grid,width,prev,curr,o=0){[[prev,"remove"],[curr,"add"]].forEach(
 
 function preview(note){
 let playing=null;
-let base=new Array(32).fill(0);
+let base=new Array(PR).fill(0);
 preview=function(note){
   if(playing){playing.stop();playing=null;}
   let t=sequencer.track();if(t==null)return;
-  base[0]=note||t?.c[0]?.n?.find(n=>n!==0)||147;
-  let song={bpm:SONG.bpm,endPattern:1,songData:[{...t,p:[1],c:[{n:base}]}]};
+//   base[0]=note||t?.c[0]?.n?.find(n=>n!==0)||147;
+  base[0]=note||t?.p[0]?.find(n=>n!==0)||147;
+//   let song={bpm:SONG.bpm,endPattern:1,tracks:[{...t,p:[1],c:[{n:base}]}]};
+  let song={bpm:SONG.bpm,tracks:[{...t,s:[1],p:[base]}]};
   let s=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(song)});s.onended=()=>{if(playing===s){playing=null;}};s.connect(C.destination);s.start();playing=s;
   waveform(s.buffer.getChannelData(0));
 };
@@ -375,6 +381,16 @@ function waveform(d){
 }
 return preview(note);
 }
+
+
+
+
+
+
+// Error: Uncaught NotSupportedError: Failed to execute 'createBuffer' on 'BaseAudioContext': The number of frames provided (0) is less than or equal to the minimum bound (0). File: http://127.0.0.1:8080/myapps/dev/battito/player.js Line: 46:20 Name: NotSupportedError Stack: NotSupportedError: Failed to execute 'createBuffer' on 'BaseAudioContext': The number of frames provided (0) is less than or equal to the minimum bound (0).     at Object.createbuffer (http://127.0.0.1:8080/myapps/dev/battito/player.js:46:20)     at http://127.0.0.1:8080/myapps/dev/battito/index.js:333:42
+
+
+
 
 function download(){try{
 if(!sequencer.hasNotes(SONG))return alert("Nothing to save. Please select song or range");
@@ -468,21 +484,21 @@ function SLIDERS(){return [
 [["nv","noise_fader",255],["vm","env_master",255]],
 ];}
 
-function PRESETS(){return {"bpm":120,"endPattern":4,"songData":[
+function PRESETS(){return {"bpm":120,"tracks":[
 {"osc1_oct":9,"osc1_det":0,"osc1_detune":0,"osc1_xenv":1,"osc1_vol":255,"osc1_waveform":0,"osc2_oct":7,"osc2_det":0,"osc2_detune":0,"osc2_xenv":1,"osc2_vol":255,"osc2_waveform":0,"noise_fader":0,"env_attack":100,"env_sustain":0,"env_release":5970,"env_master":171,"fx_filter":2,"fx_freq":500,"fx_resonance":254,"fx_delay_time":1,"fx_delay_amt":31,"fx_pan_freq":4,"fx_pan_amt":21,"lfo_osc1_freq":0,"lfo_fx_freq":0,"lfo_freq":0,"lfo_amt":0,"lfo_waveform":0,
-"p":[],"c":[]},
-// "p":[1,1,1,1],"c":[{"n":[123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0]}]},
+// "s":[],"p":[]},
+"s":[1,1,1,1],"p":[[123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0]]},
 {"osc1_oct":6,"osc1_det":11,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":255,"osc1_waveform":2,"osc2_oct":6,"osc2_det":11,"osc2_detune":4,"osc2_xenv":0,"osc2_vol":255,"osc2_waveform":2,"noise_fader":0,"env_attack":88,"env_sustain":2000,"env_release":7505,"env_master":255,"fx_filter":2,"fx_freq":3144,"fx_resonance":51,"fx_delay_time":6,"fx_delay_amt":60,"fx_pan_freq":4,"fx_pan_amt":64,"lfo_osc1_freq":0,"lfo_fx_freq":1,"lfo_freq":7,"lfo_amt":179,"lfo_waveform":0,
-"p":[],"c":[]},
-// "p":[1,1,1,1],"c":[{"n":[0,0,124,0,0,0,0,0,0,0,0,0,0,0,124,0,124,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}]},
+// "s":[],"p":[]},
+"s":[1,1,1,1],"p":[[0,0,124,0,0,0,0,0,0,0,0,0,0,0,124,0,124,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]},
 {"osc1_oct":7,"osc1_det":0,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":192,"osc1_waveform":2,"osc2_oct":7,"osc2_det":0,"osc2_detune":0,"osc2_xenv":0,"osc2_vol":201,"osc2_waveform":3,"noise_fader":0,"env_attack":100,"env_sustain":150,"env_release":7505,"env_master":191,"fx_filter":2,"fx_freq":5839,"fx_resonance":254,"fx_delay_time":6,"fx_delay_amt":121,"fx_pan_freq":6,"fx_pan_amt":147,"lfo_osc1_freq":0,"lfo_fx_freq":1,"lfo_freq":6,"lfo_amt":195,"lfo_waveform":0,
-"p":[],"c":[]},
-// "p":[1,1,2,3],"c":[{"n":[135,0,0,0,0,0,0,0,159,0,157,0,159,0,0,0,0,0,0,0,0,0,0,0,147,154,0,159,0,0,0,0]},{"n":[138,0,0,0,0,0,0,0,150,0,159,0,162,0,0,0,0,0,0,0,0,0,150,0,162,150,0,159,0,0,0,0]},{"n":[149,0,0,0,0,0,0,0,149,0,150,0,154,0,0,0,0,0,0,0,0,0,0,0,147,157,0,159,0,0,0,0]}]},
-{"osc1_oct":9,"osc1_det":0,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":255,"osc1_waveform":0,"osc2_oct":9,"osc2_det":0,"osc2_detune":12,"osc2_xenv":0,"osc2_vol":255,"osc2_waveform":0,"noise_fader":0,"env_attack":100,"env_sustain":0,"env_release":14545,"env_master":70,"fx_filter":0,"fx_freq":0,"fx_resonance":240,"fx_delay_time":2,"fx_delay_amt":157,"fx_pan_freq":3,"fx_pan_amt":47,"lfo_osc1_freq":0,"lfo_fx_freq":0,"lfo_freq":0,"lfo_amt":0,"lfo_waveform":0,"p":[],"c":[]},
-{"osc1_oct":7,"osc1_det":0,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":255,"osc1_waveform":3,"osc2_oct":8,"osc2_det":0,"osc2_detune":0,"osc2_xenv":0,"osc2_vol":255,"osc2_waveform":0,"noise_fader":127,"env_attack":22,"env_sustain":22,"env_release":2193,"env_master":255,"fx_filter":3,"fx_freq":4067,"fx_resonance":176,"fx_delay_time":4,"fx_delay_amt":12,"fx_pan_freq":2,"fx_pan_amt":84,"lfo_osc1_freq":0,"lfo_fx_freq":1,"lfo_freq":3,"lfo_amt":96,"lfo_waveform":0,"p":[],"c":[]},
-{"osc1_oct":7,"osc1_det":0,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":255,"osc1_waveform":2,"osc2_oct":7,"osc2_det":0,"osc2_detune":9,"osc2_xenv":0,"osc2_vol":154,"osc2_waveform":2,"noise_fader":0,"env_attack":2418,"env_sustain":1075,"env_release":10614,"env_master":240,"fx_filter":3,"fx_freq":2962,"fx_resonance":255,"fx_delay_time":6,"fx_delay_amt":117,"fx_pan_freq":3,"fx_pan_amt":73,"lfo_osc1_freq":0,"lfo_fx_freq":1,"lfo_freq":5,"lfo_amt":124,"lfo_waveform":0,"p":[],"c":[]},
-{"osc1_oct":7,"osc1_det":0,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":192,"osc1_waveform":3,"osc2_oct":7,"osc2_det":0,"osc2_detune":7,"osc2_xenv":0,"osc2_vol":201,"osc2_waveform":3,"noise_fader":0,"env_attack":789,"env_sustain":1234,"env_release":13636,"env_master":191,"fx_filter":2,"fx_freq":5839,"fx_resonance":254,"fx_delay_time":6,"fx_delay_amt":121,"fx_pan_freq":6,"fx_pan_amt":147,"lfo_osc1_freq":0,"lfo_fx_freq":1,"lfo_freq":6,"lfo_amt":195,"lfo_waveform":0,"p":[],"c":[]},
-{"osc1_oct":7,"osc1_det":0,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":192,"osc1_waveform":2,"osc2_oct":7,"osc2_det":0,"osc2_detune":0,"osc2_xenv":0,"osc2_vol":192,"osc2_waveform":2,"noise_fader":0,"env_attack":0,"env_sustain":0,"env_release":20000,"env_master":192,"fx_filter":0,"fx_freq":0,"fx_resonance":0,"fx_delay_time":0,"fx_delay_amt":0,"fx_pan_freq":0,"fx_pan_amt":0,"lfo_osc1_freq":0,"lfo_fx_freq":0,"lfo_freq":0,"lfo_amt":0,"lfo_waveform":0,"p":[],"c":[]}
+// "s":[],"p":[]},
+"s":[1,1,2,3],"p":[ [135,0,0,0,0,0,0,0,159,0,157,0,159,0,0,0,0,0,0,0,0,0,0,0,147,154,0,159,0,0,0,0], [138,0,0,0,0,0,0,0,150,0,159,0,162,0,0,0,0,0,0,0,0,0,150,0,162,150,0,159,0,0,0,0], [149,0,0,0,0,0,0,0,149,0,150,0,154,0,0,0,0,0,0,0,0,0,0,0,147,157,0,159,0,0,0,0] ]},
+{"osc1_oct":9,"osc1_det":0,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":255,"osc1_waveform":0,"osc2_oct":9,"osc2_det":0,"osc2_detune":12,"osc2_xenv":0,"osc2_vol":255,"osc2_waveform":0,"noise_fader":0,"env_attack":100,"env_sustain":0,"env_release":14545,"env_master":70,"fx_filter":0,"fx_freq":0,"fx_resonance":240,"fx_delay_time":2,"fx_delay_amt":157,"fx_pan_freq":3,"fx_pan_amt":47,"lfo_osc1_freq":0,"lfo_fx_freq":0,"lfo_freq":0,"lfo_amt":0,"lfo_waveform":0,"s":[],"p":[]},
+{"osc1_oct":7,"osc1_det":0,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":255,"osc1_waveform":3,"osc2_oct":8,"osc2_det":0,"osc2_detune":0,"osc2_xenv":0,"osc2_vol":255,"osc2_waveform":0,"noise_fader":127,"env_attack":22,"env_sustain":22,"env_release":2193,"env_master":255,"fx_filter":3,"fx_freq":4067,"fx_resonance":176,"fx_delay_time":4,"fx_delay_amt":12,"fx_pan_freq":2,"fx_pan_amt":84,"lfo_osc1_freq":0,"lfo_fx_freq":1,"lfo_freq":3,"lfo_amt":96,"lfo_waveform":0,"s":[],"p":[]},
+{"osc1_oct":7,"osc1_det":0,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":255,"osc1_waveform":2,"osc2_oct":7,"osc2_det":0,"osc2_detune":9,"osc2_xenv":0,"osc2_vol":154,"osc2_waveform":2,"noise_fader":0,"env_attack":2418,"env_sustain":1075,"env_release":10614,"env_master":240,"fx_filter":3,"fx_freq":2962,"fx_resonance":255,"fx_delay_time":6,"fx_delay_amt":117,"fx_pan_freq":3,"fx_pan_amt":73,"lfo_osc1_freq":0,"lfo_fx_freq":1,"lfo_freq":5,"lfo_amt":124,"lfo_waveform":0,"s":[],"p":[]},
+{"osc1_oct":7,"osc1_det":0,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":192,"osc1_waveform":3,"osc2_oct":7,"osc2_det":0,"osc2_detune":7,"osc2_xenv":0,"osc2_vol":201,"osc2_waveform":3,"noise_fader":0,"env_attack":789,"env_sustain":1234,"env_release":13636,"env_master":191,"fx_filter":2,"fx_freq":5839,"fx_resonance":254,"fx_delay_time":6,"fx_delay_amt":121,"fx_pan_freq":6,"fx_pan_amt":147,"lfo_osc1_freq":0,"lfo_fx_freq":1,"lfo_freq":6,"lfo_amt":195,"lfo_waveform":0,"s":[],"p":[]},
+{"osc1_oct":7,"osc1_det":0,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":192,"osc1_waveform":2,"osc2_oct":7,"osc2_det":0,"osc2_detune":0,"osc2_xenv":0,"osc2_vol":192,"osc2_waveform":2,"noise_fader":0,"env_attack":0,"env_sustain":0,"env_release":20000,"env_master":192,"fx_filter":0,"fx_freq":0,"fx_resonance":0,"fx_delay_time":0,"fx_delay_amt":0,"fx_pan_freq":0,"fx_pan_amt":0,"lfo_osc1_freq":0,"lfo_fx_freq":0,"lfo_freq":0,"lfo_amt":0,"lfo_waveform":0,"s":[],"p":[]}
 ]};}
 
 
@@ -503,16 +519,19 @@ let G=(f,m,n,l)=>{if(n>l)n-=l;else{n=l-n;m=1/m;}while(n-->0)f*=m;return f;};
 let R_S=1,rnd=()=>{R_S=Math.imul(R_S,0x15a4e35);return (R_S>>>0)%255/255.0;};
 
 let createbuffer=(d)=>{
-// let rowLen=Math.ceil(15*44100/d.bpm),E=d.endPattern,I=d.songData,PR=I[0]?.c[0]?.n.length,T=E*PR*rowLen;
-let rowLen=Math.ceil(15*44100/d.bpm),E=d.endPattern,I=d.songData,PR=I[0]?.c[0]?.n.length||32,T=E*PR*rowLen;
+let rowLen=Math.ceil(15*44100/d.bpm),I=d.tracks;
+let E=0;I.forEach(t=>{if(t.s.length>E)E=t.s.length;});
+let PR=0;I.forEach(t=>t.p.forEach(p=>{if(p.length>PR)PR=p.length;}));
+let T=E*PR*rowLen;
 let l=new Float32Array(T),r=new Float32Array(T),L=new Float32Array(T),R=new Float32Array(T);
 for(let i=0;i<I.length;i++){
   let B=I[i],P=0,lfo_step=G(1,2,B.lfo_freq,8)/rowLen,pan_step=G(1,2,B.fx_pan_freq,8)/rowLen;L.fill(0);R.fill(0);
   for(let p=0;p<E;p++){
-    let C=B.p[p];
+    let C=B.s[p];
     for(let row=0;row<PR;row++){
       let n,osc1_freq_base=0.0,osc2_freq_base=0.0;
-      if(C>0&&(n=B.c[C-1].n[row])>0){
+//       if(C>0&&(n=B.c[C-1].n[row])>0){
+      if(C>0&&(n=B.p[C-1][row])>0){
         osc1_freq_base=Q[n+(B.osc1_oct-8)*12+B.osc1_det]*(1+0.2*B.osc1_detune/255.0);
         osc2_freq_base=Q[n+(B.osc2_oct-8)*12+B.osc2_det]*(1+0.2*B.osc2_detune/255.0);
         let [a,s,r]=[B.env_attack,B.env_sustain,B.env_release];

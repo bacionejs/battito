@@ -113,35 +113,39 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 ---
 
 song
-- `bpm`
-- `endPattern` (inclusive pattern count)
-- `songData`
-
----
-
-`songData`
-- multiple tracks
-
----
-
-track
-- Instrument parameters (see below)
-- PatternIDs (`p`) sequence is 1-based, 0 = silence
-- Patterns (`c`) notes are 1-based, 0 = silence
-- A note = (12 x osc_oct) + (12 x octave) + semitone (not midi)
-- Sequences on the sequencer are shown vertically
-- Notes on the piano-roll are shown in 2 dimensions, x-axis (note), y-axis (time step)
-
----
-
-instrument parameters (see **key** in song structure below)   
-osc1_oct, osc1_det, osc1_detune, osc1_xenv, osc1_vol, osc1_waveform,
-osc2_oct, osc2_det, osc2_detune, osc2_xenv, osc2_vol, osc2_waveform,
-noise_fader,
-env_attack, env_sustain, env_release, env_master,
-fx_filter, fx_freq, fx_resonance, fx_delay_time, fx_delay_amt,
-fx_pan_freq, fx_pan_amt,
-lfo_osc1_freq, lfo_fx_freq, lfo_freq, lfo_amt, lfo_waveform
+- `bpm` a value
+- `tracks` an array of objects
+  - `osc1_vol`/255 (key/max)
+  - `osc1_waveform`/3
+  - `osc1_oct`/16
+  - `osc1_det`/11
+  - `osc1_detune`/255
+  - `osc2_vol`/255
+  - `osc2_waveform`/3
+  - `osc2_oct`/16
+  - `osc2_det`/11
+  - `osc2_detune`/255
+  - `env_attack`/200000
+  - `env_sustain`/200000
+  - `env_release`/200000
+  - `osc1_xenv`/1
+  - `osc2_xenv`/1
+  - `fx_filter`/4
+  - `fx_freq`/11025
+  - `fx_resonance`/255
+  - `lfo_waveform`/3
+  - `lfo_freq`/16
+  - `lfo_amt`/255
+  - `lfo_osc1_freq`/1
+  - `lfo_fx_freq`/1
+  - `fx_delay_time`/16
+  - `fx_delay_amt`/248
+  - `fx_pan_freq`/16
+  - `fx_pan_amt`/255
+  - `noise_fader`/255
+  - `env_master`/255
+  - `s` sequence is an array of patternIDs, 1-based, 0 = silence
+  - `p` patterns is an array of note arrays, 1-based, 0 = silence
 
 ---
 
@@ -149,15 +153,14 @@ song structure
 ```json
 {
    "bpm":<value>
-  ,"endPattern":<value>
-  ,"songData":
+  ,"tracks":
     [
       {
         "<key>":<value>,...
-        ,"p":[<patternID>,...]
-        ,"c":
+        ,"s":[<patternID>,...]
+        ,"p":
           [
-            {"n":[<note>,...]}
+            [<note>,...]
             ,...
           ]
       }
@@ -165,6 +168,12 @@ song structure
     ]
 }
 ```
+
+---
+
+- A note = (12 x osc_oct) + (12 x octave) + semitone (not midi)
+- Sequences on the sequencer are shown vertically
+- Notes on the piano-roll are shown in 2 dimensions, x-axis (note), y-axis (time step)
 
 ---
 
