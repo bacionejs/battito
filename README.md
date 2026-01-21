@@ -157,8 +157,8 @@ Song structure
       "lfo_fx_freq": 1,
 
       // --- Sequences & Patterns ---
-      "S": [1, 2, 1, 0],    // sequence of pattern IDs (1-based, 0 = silence)
-      "P": [                // array of patterns
+      "s": [1, 2, 1, 0],    // sequence of pattern IDs (1-based, 0 = silence)
+      "p": [                // array of patterns
         [60, 64, 67],       // pattern 1 notes
         [62, 65, 69]        // pattern 2 notes
       ]
