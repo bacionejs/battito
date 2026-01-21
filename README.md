@@ -112,58 +112,15 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 ---
 
-Song structure
-
-``` json
-{
-  "bpm": 120,              // beats per minute
-  "tracks": [              // array of tracks
-    {
-      "osc1_vol":255,
-      "osc1_waveform":3,
-      "osc1_oct":16,
-      "osc1_det":11,
-      "osc1_detune":255,
-      "osc2_vol":255,
-      "osc2_waveform":3,
-      "osc2_oct":16,
-      "osc2_det":11,
-      "osc2_detune":255,
-      "env_attack":200000,
-      "env_sustain":200000,
-      "env_release":200000,
-      "osc1_xenv":1,
-      "osc2_xenv":1,
-      "fx_filter":4,
-      "fx_freq":11025,
-      "fx_resonance":255,
-      "lfo_waveform":3,
-      "lfo_freq":16,
-      "lfo_amt":255,
-      "lfo_osc1_freq":1,
-      "lfo_fx_freq":1,
-      "fx_delay_time":16,
-      "fx_delay_amt":248,
-      "fx_pan_freq":16,
-      "fx_pan_amt":255,
-      "noise_fader":255,
-      "env_master":255,
-      "s": [1, 2, 0, 2],    // sequence of pattern IDs (0 = silence)
-      "p": [                // array of patterns
-        [123,   0, 125],    // pattern 1 notes (0 = silence)
-        [133, 123, 147]     // pattern 2 notes
-      ]
-    }
-    // ...additional tracks
-  ]
-}
-```
-
----
-
-- A note = (12 x osc_oct) + (12 x octave) + semitone, where A0 = 0 (not MIDI)
 - Sequencer display: sequences are shown vertically
 - Piano-roll display: x-axis = note, y-axis = time step
+- A note = (12 x osc_oct) + (12 x octave) + semitone, where A0 = 0 (not MIDI)
+- sequences and notes: (0 = silence)
+    "s": [1, 2, 0, 2],    // sequence of pattern IDs
+    "p": [                // array of patterns
+        [123,   0, 125],    // pattern 1 notes
+        [133, 123, 147]     // pattern 2 notes
+    ]
 
 ---
 
