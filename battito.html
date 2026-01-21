@@ -2,6 +2,18 @@
 
 document.title="Battito";//https://github.com/bacionejs/battito
 
+/*
+- Sequencer display: sequences are shown vertically
+- Piano-roll display: x-axis = note, y-axis = time step
+- A note = (12 x osc_oct) + (12 x octave) + semitone, where A0 = 0 (not MIDI)
+- Structure:
+    "s": [1, 2, 0, 2],  // sequence of pattern IDs (0 = silence)
+    "p": [              // array of patterns
+      [123,   0, 125],  // pattern 1 notes (0 = silence)
+      [133, 123, 147]   // pattern 2 notes
+    ]
+*/
+
 let audio,SC=8,SR=60,PC=48,PR=32,LT=0,TB=0,PS=0;
 let piano      =element("div",document.body,"piano");
 let message    =element("div",piano,"message");
@@ -429,28 +441,6 @@ body{display:flex;background:black;color:white;font-weight:bold;font-family:mono
 .loading::before{content:"loading..."}
 `;
 }
-
-
-
-
-
-
-
-
-
-
-
-/*
-- A note = (12 x osc_oct) + (12 x octave) + semitone, where A0 = 0 (not MIDI)
-- Sequencer display: sequences are shown vertically
-- Piano-roll display: x-axis = note, y-axis = time step
-- sequences and notes: (0 = silence)
-    "s": [1, 2, 0, 2],    // sequence of pattern IDs
-    "p": [                // array of patterns
-        [123,   0, 125],    // pattern 1 notes
-        [133, 123, 147]     // pattern 2 notes
-    ]
-*/
 
 
 
