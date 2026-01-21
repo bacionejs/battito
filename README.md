@@ -148,10 +148,10 @@ Song structure
       "fx_pan_amt":255,
       "noise_fader":255,
       "env_master":255,
-      "s": [1, 2, 1, 0],    // sequence of pattern IDs (1-based, 0 = silence)
+      "s": [1, 2, 0, 2],    // sequence of pattern IDs (0 = silence)
       "p": [                // array of patterns
-        [60, 64, 67],       // pattern 1 notes
-        [62, 65, 69]        // pattern 2 notes
+        [123,   0, 125],    // pattern 1 notes (0 = silence)
+        [133, 123, 147]     // pattern 2 notes
       ]
     }
     // ...additional tracks
