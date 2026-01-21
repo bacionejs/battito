@@ -2,10 +2,7 @@
 
 document.title="Battito";//https://github.com/bacionejs/battito
 
-let audio,SC=8,SR=60,PC=48,PR=32;
-let LT=0,TB=0,PS=0;
-//LT LastTrack - supports adding track while others are playing
-//TB TimeBased,PS PatternStart - support timebased input vs stepbased. PS supports - On the first interaction each loop, the pattern clears, because timebased (improv?) input is messy...otherwise there would need to be separate buttons like clear-pattern.
+let audio,SC=8,SR=60,PC=48,PR=32,LT=0,TB=0,PS=0;
 let piano      =element("div",document.body,"piano");
 let message    =element("div",piano,"message");
 let sliders    =element("div",document.body,"sliders");
@@ -78,7 +75,6 @@ function updatePiano(){
 piano.forEach(cell=>{cell.style.background="";});
 sequencer.cols.forEach((on,tid)=>{if(!on)return;
   let t=audio.song.tracks[tid];
-//   t?.c?.[t?.p[audio.currs]-1]?.n?.forEach((note,step)=>{
   t?.p?.[t?.s[audio.currs]-1]?.forEach((note,step)=>{
     if(note && note>=123 && note<=123+PC){piano.cells[step*PC+note-123].style.background=getColor(tid);}
   });
@@ -257,7 +253,6 @@ for(i=0;i<cols.length;i++)cols[i]=(i<=mc)?(all?0:1):0;
 
 function cell(row,col){
 let r=row,c=col,t=audio.song.tracks[c],i=t.s[r]??0;
-// t.s[r]=(i+1)%10;if(t.s[r]>t.p.length){t.p.push({n:Array(PR).fill(0)});}
 t.s[r]=(i+1)%10;if(t.s[r]>t.p.length){t.p.push(Array(PR).fill(0));}
 }
 
@@ -267,13 +262,11 @@ let d=structuredClone(song.tracks).filter((_,c)=>cols[c]);if(!d.length)return nu
 d.forEach(t=>rows.forEach((on,r)=>{if(!on||!t.s[r])t.s[r]=0;}));
 for(let r=rows.length-1;r>=0;r--)if(!d.some(t=>t.s[r]))d.forEach(t=>t.s.splice(r,1));if(!d[0].s.length)return null;
 if(!d.some(t=>t.s.some(Boolean)))return null;
-// return {bpm:song.bpm,endPattern:d[0].s.length,tracks:d};
 return {bpm:song.bpm,tracks:d};
 }
 
 function hasNotes(song){
 let r=range(song);if(!r)return null;
-// return r.tracks.some(t=>t.p.some(p=>p>0 && t.c[p-1]?.n.some(Boolean)))?r:null;
 return r.tracks.some(t=>t.s.some(p=>p>0 && t.p[p-1]?.some(Boolean)))?r:null;
 }
 
@@ -286,7 +279,7 @@ return rows.reduce((acc,on,r)=>{
 }
 
 function track(){
-if(cols.filter(Boolean).length!=1){return audio.song.tracks[LT];}//supports adding track while others playing
+if(cols.filter(Boolean).length>1){return audio.song.tracks[LT];}
 return audio.song.tracks[cols.indexOf(1)]||null;
 }
 
@@ -294,7 +287,6 @@ function pattern(){
 let t=track();if(!t)return null;
 if(rows.filter(Boolean).length!=1)return null;
 let i=rows.indexOf(1);if(!t?.s?.[i])return null;
-// return (t.c[t.p[i]-1]||(t.c[t.p[i]-1]={n:Array(PR).fill(0)})).n;
 return t.p[t.s[i]-1]||(t.p[t.s[i]-1]=Array(PR).fill(0));
 }
 
@@ -367,9 +359,7 @@ let base=new Array(PR).fill(0);
 preview=function(note){
   if(playing){playing.stop();playing=null;}
   let t=sequencer.track();if(t==null)return;
-//   base[0]=note||t?.c[0]?.n?.find(n=>n!==0)||147;
   base[0]=note||t?.p[0]?.find(n=>n!==0)||147;
-//   let song={bpm:SONG.bpm,endPattern:1,tracks:[{...t,p:[1],c:[{n:base}]}]};
   let song={bpm:SONG.bpm,tracks:[{...t,s:[1],p:[base]}]};
   let s=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(song)});s.onended=()=>{if(playing===s){playing=null;}};s.connect(C.destination);s.start();playing=s;
   waveform(s.buffer.getChannelData(0));
@@ -520,7 +510,6 @@ for(let i=0;i<I.length;i++){
     let C=B.s[p];
     for(let row=0;row<PR;row++){
       let n,osc1_freq_base=0.0,osc2_freq_base=0.0;
-//       if(C>0&&(n=B.c[C-1].n[row])>0){
       if(C>0&&(n=B.p[C-1][row])>0){
         osc1_freq_base=Q[n+(B.osc1_oct-8)*12+B.osc1_det]*(1+0.2*B.osc1_detune/255.0);
         osc2_freq_base=Q[n+(B.osc2_oct-8)*12+B.osc2_det]*(1+0.2*B.osc2_detune/255.0);
