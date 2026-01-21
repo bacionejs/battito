@@ -135,28 +135,14 @@ makeLongPress(piano,()=>{message.textContent=(TB^=1)?"timemode":"stepmode";messa
 }
 
 function handlePianoClick({target:{row,col}}){
-let p=sequencer.pattern();
-if(p==null){
-  let note=col+123;
-  audio.preview(note);
-  return;
-}
-if(TB){
+let r,note=col+123,p=sequencer.pattern();if(p===null){audio.preview(note);return;}
+if(TB){//timebased
   if(PS==0){PS=1;for(let i=0;i<p.length;i++){p[i]=0;}}//On the first interaction each loop, the pattern clears.
-  let note=col+123;
-  let r=audio.currp;//timebased
-  if(p[r]==note){p[r]=0;update();return;}
-  p[r]=note;
-  update();
-  audio.preview(note);
-}else{
-  let note=col+123;
-  let r=row;//stepbased
-  if(p[r]==note){p[r]=0;update();return;}
-  p[r]=note;
-  update();
-  audio.preview(note);
+  r=audio.currp;
+}else{//stepbased
+  r=row;
 }
+if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(note);
 }
 
 function handleSequencerClick({target}){sequencer.click(target);update();audio.start();}
@@ -237,7 +223,7 @@ let bars=[...sequencer.cells[0].children];
 
 function click({row,col}){
 if(row===-1&& col===-1)toggleAll();
-else if(row===-1){cols[col]=cols[col]?0:1;audio.preview();LT=col;}
+else if(row===-1){cols[col]=cols[col]?0:1;LT=col;audio.preview();}
 else if(col===-1){rows[row]=rows[row]?0:1;}
 else cell(row,col);
 }
@@ -358,7 +344,7 @@ let playing=null;
 let base=new Array(PR).fill(0);
 preview=function(note){
   if(playing){playing.stop();playing=null;}
-  let t=sequencer.track();if(t==null)return;
+  let t=sequencer.track();if(t===null)return;
   base[0]=note||t?.p[0]?.find(n=>n!==0)||147;
   let song={bpm:SONG.bpm,tracks:[{...t,s:[1],p:[base]}]};
   let s=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(song)});s.onended=()=>{if(playing===s){playing=null;}};s.connect(C.destination);s.start();playing=s;
