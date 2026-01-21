@@ -173,7 +173,7 @@ update();audio.preview();
 }
 
 function handleSongInput(){try{
-let song=JSON.parse(text.value);if(!song.bpm){song={bpm:15*44100/song.rowLen,...song};};audio.song=song;
+let song=JSON.parse(text.value);audio.song=song;
 updatePiano();updateSliders();updateSequencer();audio.preview();
 }catch(e){}}
 
@@ -381,16 +381,6 @@ function waveform(d){
 }
 return preview(note);
 }
-
-
-
-
-
-
-
-
-
-
 
 function download(){try{
 if(!sequencer.hasNotes(SONG))return alert("Nothing to save. Please select song or range");
