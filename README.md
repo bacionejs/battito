@@ -108,22 +108,6 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 ---
 
-</details><details><summary>Specification</summary>
-
----
-
-- Sequencer display: sequences are shown vertically
-- Piano-roll display: x-axis = note, y-axis = time step
-- A note = (12 x osc_oct) + (12 x octave) + semitone, where A0 = 0 (not MIDI)
-- sequences and notes: (0 = silence)
-    "s": [1, 2, 0, 2],    // sequence of pattern IDs
-    "p": [                // array of patterns
-        [123,   0, 125],    // pattern 1 notes
-        [133, 123, 147]     // pattern 2 notes
-    ]
-
----
-
 </details><details><summary>Credits</summary>
 
 Battito ports Jake Taylor's [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant engine and optimizes with precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only, blazingly fast render loop.  
