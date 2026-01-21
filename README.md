@@ -119,44 +119,35 @@ Song structure
   "bpm": 120,              // beats per minute
   "tracks": [              // array of tracks
     {
-      // --- Instrument / Oscillator Parameters ---
-      "osc1_vol": 255,
-      "osc1_waveform": 3,
-      "osc1_oct": 7,
-      "osc1_det": 0,
-      "osc1_detune": 0,
-      "osc2_vol": 255,
-      "osc2_waveform": 3,
-      "osc2_oct": 7,
-      "osc2_det": 0,
-      "osc2_detune": 0,
-      "osc1_xenv": 1,
-      "osc2_xenv": 1,
-
-      // --- Envelope Parameters ---
-      "env_attack": 200000,
-      "env_sustain": 200000,
-      "env_release": 200000,
-      "env_master": 255,
-
-      // --- Effects ---
-      "fx_filter": 4,
-      "fx_freq": 11025,
-      "fx_resonance": 255,
-      "fx_delay_time": 16,
-      "fx_delay_amt": 248,
-      "fx_pan_freq": 16,
-      "fx_pan_amt": 255,
-      "noise_fader": 255,
-
-      // --- LFO ---
-      "lfo_waveform": 3,
-      "lfo_freq": 16,
-      "lfo_amt": 255,
-      "lfo_osc1_freq": 1,
-      "lfo_fx_freq": 1,
-
-      // --- Sequences & Patterns ---
+      "osc1_vol":255,
+      "osc1_waveform":3,
+      "osc1_oct":16,
+      "osc1_det":11,
+      "osc1_detune":255,
+      "osc2_vol":255,
+      "osc2_waveform":3,
+      "osc2_oct":16,
+      "osc2_det":11,
+      "osc2_detune":255,
+      "env_attack":200000,
+      "env_sustain":200000,
+      "env_release":200000,
+      "osc1_xenv":1,
+      "osc2_xenv":1,
+      "fx_filter":4,
+      "fx_freq":11025,
+      "fx_resonance":255,
+      "lfo_waveform":3,
+      "lfo_freq":16,
+      "lfo_amt":255,
+      "lfo_osc1_freq":1,
+      "lfo_fx_freq":1,
+      "fx_delay_time":16,
+      "fx_delay_amt":248,
+      "fx_pan_freq":16,
+      "fx_pan_amt":255,
+      "noise_fader":255,
+      "env_master":255,
       "s": [1, 2, 1, 0],    // sequence of pattern IDs (1-based, 0 = silence)
       "p": [                // array of patterns
         [60, 64, 67],       // pattern 1 notes
