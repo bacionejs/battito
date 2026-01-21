@@ -112,68 +112,67 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 ---
 
-song
-- `bpm` a value
-- `tracks` an array of objects
-  - `osc1_vol`/255 (key/max)
-  - `osc1_waveform`/3
-  - `osc1_oct`/16
-  - `osc1_det`/11
-  - `osc1_detune`/255
-  - `osc2_vol`/255
-  - `osc2_waveform`/3
-  - `osc2_oct`/16
-  - `osc2_det`/11
-  - `osc2_detune`/255
-  - `env_attack`/200000
-  - `env_sustain`/200000
-  - `env_release`/200000
-  - `osc1_xenv`/1
-  - `osc2_xenv`/1
-  - `fx_filter`/4
-  - `fx_freq`/11025
-  - `fx_resonance`/255
-  - `lfo_waveform`/3
-  - `lfo_freq`/16
-  - `lfo_amt`/255
-  - `lfo_osc1_freq`/1
-  - `lfo_fx_freq`/1
-  - `fx_delay_time`/16
-  - `fx_delay_amt`/248
-  - `fx_pan_freq`/16
-  - `fx_pan_amt`/255
-  - `noise_fader`/255
-  - `env_master`/255
-  - `s` sequence is an array of patternIDs, 1-based, 0 = silence
-  - `p` patterns is an array of note arrays, 1-based, 0 = silence
+Song structure
 
----
-
-song structure
-```json
+``` json
 {
-   "bpm":<value>
-  ,"tracks":
-    [
-      {
-        "<key>":<value>,...
-        ,"s":[<patternID>,...]
-        ,"p":
-          [
-            [<note>,...]
-            ,...
-          ]
-      }
-      ,...
-    ]
+  "bpm": 120,              // beats per minute
+  "tracks": [              // array of tracks
+    {
+      // --- Instrument / Oscillator Parameters ---
+      "osc1_vol": 255,
+      "osc1_waveform": 3,
+      "osc1_oct": 7,
+      "osc1_det": 0,
+      "osc1_detune": 0,
+      "osc2_vol": 255,
+      "osc2_waveform": 3,
+      "osc2_oct": 7,
+      "osc2_det": 0,
+      "osc2_detune": 0,
+      "osc1_xenv": 1,
+      "osc2_xenv": 1,
+
+      // --- Envelope Parameters ---
+      "env_attack": 200000,
+      "env_sustain": 200000,
+      "env_release": 200000,
+      "env_master": 255,
+
+      // --- Effects ---
+      "fx_filter": 4,
+      "fx_freq": 11025,
+      "fx_resonance": 255,
+      "fx_delay_time": 16,
+      "fx_delay_amt": 248,
+      "fx_pan_freq": 16,
+      "fx_pan_amt": 255,
+      "noise_fader": 255,
+
+      // --- LFO ---
+      "lfo_waveform": 3,
+      "lfo_freq": 16,
+      "lfo_amt": 255,
+      "lfo_osc1_freq": 1,
+      "lfo_fx_freq": 1,
+
+      // --- Sequences & Patterns ---
+      "S": [1, 2, 1, 0],    // sequence of pattern IDs (1-based, 0 = silence)
+      "P": [                // array of patterns
+        [60, 64, 67],       // pattern 1 notes
+        [62, 65, 69]        // pattern 2 notes
+      ]
+    }
+    // ...additional tracks
+  ]
 }
 ```
 
 ---
 
-- A note = (12 x osc_oct) + (12 x octave) + semitone (not midi)
-- Sequences on the sequencer are shown vertically
-- Notes on the piano-roll are shown in 2 dimensions, x-axis (note), y-axis (time step)
+- A note = (12 x osc_oct) + (12 x octave) + semitone, where A0 = 0 (not MIDI)
+- Sequencer display: sequences are shown vertically
+- Piano-roll display: x-axis = note, y-axis = time step
 
 ---
 
