@@ -31,27 +31,7 @@ Optional
 - The **textarea** can be edited. Changes are **live** just like the other components.
 - To change the tempo, edit the `bpm` value in the **textarea**.
 - Besides clicking sequencer column headers to preview instruments, you can also click the piano to hear what their pitches sound like.
-- Switch from stepmode to timemode by longpressing the piano. Indicate your desire to overwrite by clicking during the last half of a pattern which will replay as a countdown and your new notes will be recorded.
-
-- Switch from stepmode to timemode by longpressing the piano. Indicate your desire to overwrite by clicking during replay which will replay as a countdown and your new notes will be recorded.
-
-logic for timemode and only one row selected
-operate on curr track (LT) pattern
-T=0
-on piano click do:
-if T==0
-    T++
-    clear
-else if T==2
-    record clicks
-
-audio function
-if currs!=prevs
-    if T>0 && T<3
-        T++
-    else
-        T=0
-
+- Switch from stepmode to timemode by longpressing the piano.
 
 ---
 
