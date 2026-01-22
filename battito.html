@@ -2,7 +2,7 @@
 
 document.title="Battito";//https://github.com/bacionejs/battito
 
-let audio,SC=8,SR=60,PC=48,PR=32,LT=0,TB=0,PS=0;
+let audio,SC=8,SR=60,PC=48,PR=32,LT=0,timemode=0,T=0;
 let piano      =element("div",document.body,"piano");
 let message    =element("div",piano,"message");
 let sliders    =element("div",document.body,"sliders");
@@ -130,18 +130,15 @@ sliders    .oninput=handleSliderInput;
 text       .oninput=handleSongInput;
 fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
 makeLongPress(canvas,audio.download);
-makeLongPress(piano,()=>{message.textContent=(TB^=1)?"timemode":"stepmode";message.classList.remove("show");message.offsetWidth;message.classList.add("show");});
+makeLongPress(piano,handleMode);
 [piano,sequencer,sliders].forEach(el=>{el.addEventListener('contextmenu',e=>e.preventDefault());});
 }
 
+function handleMode(){if((timemode^=1)){msg(0);}else{msg(6);}}
+
 function handlePianoClick({target:{row,col}}){
 let r,note=col+123,p=sequencer.pattern();if(p===null){audio.preview(note);return;}
-if(TB){//timebased
-  if(PS==0){PS=1;for(let i=0;i<p.length;i++){p[i]=0;}}//On the first interaction each loop, the pattern clears.
-  r=audio.currp;
-}else{//stepbased
-  r=row;
-}
+if(!timemode){r=row;}else{if(T==0){msg(0);}else if(T==3){r=audio.currp;}if(T!=3)return;}
 if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(note);
 }
 
@@ -170,6 +167,19 @@ function update(){updatePiano();updateSliders();updateSequencer();updateText();}
 
 
 
+
+function msg(t){
+let m=s=>{message.textContent=s;message.classList.remove("show");message.offsetWidth;message.classList.add("show");};
+let table={
+  0:()=>{m("ready...");sequencer.clear();T++;},
+  2:()=>{m("set...");update();},
+  3:()=>{m("GO!");},
+  4:()=>{m("wait...");},
+  5:()=>{m("reset?");T=0;},
+  6:()=>{m("stepmode");T=0;}
+};
+msg=t=>table[t]?.();table[t]?.();
+}
 
 function grid(e,cols,rows,header){
 let cells=[],a=0;if(header){a=-1;cols++;rows++;}
@@ -206,6 +216,7 @@ prompt("Error",s);
 function element(tag,parent=document.body,c=""){let e=parent.appendChild(document.createElement(tag));if(c)e.className=c;return e;}
 
 function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
+
 
 
 
@@ -288,7 +299,11 @@ if(meter)bars.forEach((b,i,a)=>{b.style.height=(meter[Math.floor(i*(meter.length
 else     bars.forEach(bar=>bar.style.height="0%");
 }
 
-Object.assign(sequencer, {cols, rows, click, track, sequences, pattern, range, hasNotes, scroll, spectrum});
+function clear(){
+  pattern().forEach((_,i,a)=>a[i]=0);
+}
+
+Object.assign(sequencer, {clear, cols, rows, click, track, sequences, pattern, range, hasNotes, scroll, spectrum});
 }//
 
 
@@ -333,7 +348,7 @@ if(t>=sequences.length){if(raf)cancelAnimationFrame(raf);return;}
 currS=sequences[t|0];
 currP=(t*PR|0)%PR;
 if(currS!==prevS){point(sequencer,SC,prevS,currS,1);prevS=currS;sequencer.scroll(currS);updatePiano();}
-if(currP!==prevP){point(piano    ,PC,prevP,currP  );prevP=currP;if(currP==0)PS=0;}
+if(currP!==prevP){point(piano    ,PC,prevP,currP  );prevP=currP;if(currP==0){if(T>0&&T<5){T++;msg(T);}}}
 raf=requestAnimationFrame(loop);
 }
 
@@ -400,9 +415,8 @@ audio={stop,start,preview,download,get song(){return SONG;},set song(newSong){SO
 function initStyle(){element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;}
 body{display:flex;background:black;color:white;font-weight:bold;font-family:monospace;}
-@keyframes fade{0%{opacity:0;}50%{opacity:1;}100%{opacity:0;}}
-.message{color:silver;font-size:5rem;top:50%;left:50%;translate:-50% -50%;position:absolute;z-index:2;pointer-events:none;opacity:0;}
-.message.show{animation:fade 2s ease forwards;}
+@keyframes fade{0%{opacity:1;}100%{opacity:0;}} .message.show{animation:fade 2s ease forwards;}
+.message{color:silver;font-size:3rem;top:50%;left:50%;translate:-50% -50%;position:absolute;z-index:2;pointer-events:none;opacity:0;}
 .piano{position:relative;}
 .piano, .sequencer{display:grid;}
 .side{background:black;}
