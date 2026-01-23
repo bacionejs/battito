@@ -2,7 +2,7 @@
 
 document.title="Battito";//https://github.com/bacionejs/battito
 
-let audio,SC=8,SR=60,PC=48,PR=32,LT=0,timemode=0
+let audio,SC=8,SR=60,PC=48,PR=32,LT=0,timemode=0,C3=123/*not midi 48*/;
 let piano      =element("div",document.body,"piano");
 let message    =element("div",piano,"message");
 let sliders    =element("div",document.body,"sliders");
@@ -77,7 +77,7 @@ piano.forEach(cell=>{cell.style.background="";});
 sequencer.cols.forEach((on,tid)=>{if(!on)return;
   let t=audio.song.tracks[tid];
   t?.p?.[t?.s[audio.currs]-1]?.forEach((note,step)=>{
-    if(note && note>=123 && note<=123+PC){piano.cells[step*PC+note-123].style.background=getColor(tid);}
+    if(note && note>=C3 && note<=C3+PC){piano.cells[step*PC+note-C3].style.background=getColor(tid);}
   });
 });
 }
@@ -152,7 +152,7 @@ updatePiano();updateSliders();updateSequencer();audio.preview();
 function update(){updatePiano();updateSliders();updateSequencer();updateText();}
 
 function handlePianoClick({target:{row:r,col}}){
-let note=col+123,p=sequencer.pattern();if(p===null){audio.preview(note);return;}
+let note=col+C3,p=sequencer.pattern();if(p===null){audio.preview(note);return;}
 if(timemode){
   M.run(note);
 }else{
