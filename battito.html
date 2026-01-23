@@ -35,7 +35,6 @@ tutorial();
 
 
 
-
 function initPiano(){
 grid(piano,PC,PR);
 line(piano,PC,"x",12);
@@ -61,7 +60,6 @@ SLIDERS().forEach((group,i)=>{
 }
 
 function initText(){updateText();}
-
 
 
 
@@ -125,7 +123,6 @@ function update(){updatePiano();updateSliders();updateSequencer();updateText();}
 
 
 
-
 function initListeners(){
 piano      .onclick=handlePianoClick;
 sequencer  .onclick=handleSequencerClick;
@@ -156,7 +153,6 @@ function handleSongInput(){try{
 let song=JSON.parse(text.value);audio.song=song;
 updatePiano();updateSliders();updateSequencer();audio.preview();
 }catch(e){}}
-
 
 
 
@@ -202,8 +198,6 @@ prompt("Error",s);
 function element(tag,parent=document.body,c=""){let e=parent.appendChild(document.createElement(tag));if(c)e.className=c;return e;}
 
 function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
-
-
 
 
 
@@ -313,7 +307,6 @@ Object.assign(sequencer, {mode, cols, rows, click, track, sequences, pattern, ra
 
 
 
-
 function initAudio(){
 let C=new AudioContext(),S=null,PLAYER=BattitoPlayer(C),SONG=PRESETS(),sequences,raf,currS,prevS,currP,prevP;
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
@@ -409,7 +402,6 @@ audio={stop,start,preview,download,get song(){return SONG;},set song(newSong){SO
 
 
 
-
 function initStyle(){element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;}
 body{display:flex;background:black;color:white;font-weight:bold;font-family:monospace;}
@@ -451,7 +443,6 @@ body{display:flex;background:black;color:white;font-weight:bold;font-family:mono
 
 
 
-
 function SLIDERS(){return [
 [["1v","osc1_vol",255],["1w","osc1_waveform",3],["1o","osc1_oct",16],["1s","osc1_det",11],["1d","osc1_detune",255]],
 [["2v","osc2_vol",255],["2w","osc2_waveform",3],["2o","osc2_oct",16],["2s","osc2_det",11],["2d","osc2_detune",255]],
@@ -478,7 +469,6 @@ function PRESETS(){return {"bpm":120,"tracks":[
 {"osc1_oct":7,"osc1_det":0,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":192,"osc1_waveform":3,"osc2_oct":7,"osc2_det":0,"osc2_detune":7,"osc2_xenv":0,"osc2_vol":201,"osc2_waveform":3,"noise_fader":0,"env_attack":789,"env_sustain":1234,"env_release":13636,"env_master":191,"fx_filter":2,"fx_freq":5839,"fx_resonance":254,"fx_delay_time":6,"fx_delay_amt":121,"fx_pan_freq":6,"fx_pan_amt":147,"lfo_osc1_freq":0,"lfo_fx_freq":1,"lfo_freq":6,"lfo_amt":195,"lfo_waveform":0,"s":[],"p":[]},
 {"osc1_oct":7,"osc1_det":0,"osc1_detune":0,"osc1_xenv":0,"osc1_vol":192,"osc1_waveform":2,"osc2_oct":7,"osc2_det":0,"osc2_detune":0,"osc2_xenv":0,"osc2_vol":192,"osc2_waveform":2,"noise_fader":0,"env_attack":0,"env_sustain":0,"env_release":20000,"env_master":192,"fx_filter":0,"fx_freq":0,"fx_resonance":0,"fx_delay_time":0,"fx_delay_amt":0,"fx_pan_freq":0,"fx_pan_amt":0,"lfo_osc1_freq":0,"lfo_fx_freq":0,"lfo_freq":0,"lfo_amt":0,"lfo_waveform":0,"s":[],"p":[]}
 ]};}
-
 
 
 
@@ -549,7 +539,6 @@ return {createbuffer};
 
 
 
-
 function tutorial(){
 let ci=0,p,song,clicks,S,P;let m=element("div",document.body,"tut-message");m.onclick=init;setTimeout(()=>m?.remove(),3000);initStyle();
 
@@ -581,7 +570,6 @@ element("style").textContent=""
 }
 
 }//
-
 
 
 
