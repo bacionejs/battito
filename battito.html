@@ -132,7 +132,6 @@ fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.doc
 makeLongPress(canvas,audio.download);
 makeLongPress(piano,sequencer.mode.toggle);
 [piano,sequencer,sliders].forEach(el=>{el.addEventListener('contextmenu',e=>e.preventDefault());});
-}
 
 function handlePianoClick({target:{row:r,col}}){
 let note=col+C3,p=sequencer.pattern();if(p===null){audio.preview(note);return;}
@@ -153,6 +152,8 @@ function handleSongInput(){try{
 let song=JSON.parse(text.value);audio.song=song;
 updatePiano();updateSliders();updateSequencer();audio.preview();
 }catch(e){}}
+
+}//
 
 
 

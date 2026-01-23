@@ -31,7 +31,7 @@ Optional
 - The **textarea** can be edited. Changes are **live** just like the other components.
 - To change the tempo, edit the `bpm` value in the **textarea**.
 - Besides clicking sequencer column headers to preview instruments, you can also click the piano to hear what their pitches sound like.
-- Switch from **stepmode** to **timemode** by longpressing the piano.
+- Switch from **stepmode** to **timemode** by longpressing the piano. To help keep you in time, create a drum track and a cowbell lead in.
 
 ---
 
