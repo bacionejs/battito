@@ -63,6 +63,16 @@ SLIDERS().forEach((group,i)=>{
 
 function initText(){updateText();}
 
+
+
+
+
+
+
+
+
+
+
 function updatePiano(){
 piano.forEach(cell=>{cell.style.background="";});
 sequencer.cols.forEach((on,tid)=>{if(!on)return;
@@ -147,6 +157,16 @@ function handleSongInput(){try{
 let song=JSON.parse(text.value);audio.song=song;
 updatePiano();updateSliders();updateSequencer();audio.preview();
 }catch(e){}}
+
+
+
+
+
+
+
+
+
+
 
 function M(){
 let T=0;
