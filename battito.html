@@ -279,7 +279,7 @@ else     bars.forEach(bar=>bar.style.height="0%");
 function mode(){
 let T=0;
 let t={
-  0:()=>{m("ready...");clear();T++;},
+  0:()=>{m("ready...");clear();T=1;},
   1:()=>{},
   2:()=>{m("set...");update();},
   3:()=>{m("GO!");},
