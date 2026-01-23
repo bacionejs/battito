@@ -1,6 +1,7 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width"><script> onload=()=>{
 
 document.title="Battito";//https://github.com/bacionejs/battito
+addEventListener("error",e=>{prompt("Error",e.error.stack);});
 
 let audio,SC=8,SR=60,PC=48,PR=32,LT=0,timemode=0,C3=12*7+12*3+3;
 let piano      =element("div",document.body,"piano");
@@ -15,13 +16,13 @@ let loading    =element("div",side,"loading");
 
 (function main(){
 if(navigator.userAgent.includes("Firefox"))return document.body.innerHTML="Tested on Android Chrome";
-initStyle();
 initAudio();
 initPiano();
 initSequencer();
 initSliders();
 initText();
 initListeners();
+initStyle();
 tutorial();
 })();
 
@@ -159,8 +160,6 @@ let t=null,lp={
 };
 o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);o.addEventListener("pointerleave",lp.up);
 }
-
-addEventListener("error",e=>{prompt("Error",e.error.stack);});
 
 }//
 
