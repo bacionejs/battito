@@ -273,11 +273,7 @@ return r.tracks.some(t=>t.s.some(p=>p>0 && t.p[p-1]?.some(Boolean)))?r:null;
 }
 
 function sequences(){
-return rows.reduce((acc,on,r)=>{
-  if(!on)return acc;
-  for(let t of audio.song.tracks){if(t.s[r]){acc.push(r);break;}}
-  return acc;
-},[]);
+return rows.reduce((acc,on,r)=>{if(!on)return acc;for(let t of audio.song.tracks){if(t.s[r]){acc.push(r);break;}}return acc;},[]);
 }
 
 function track(){
@@ -304,9 +300,7 @@ if(meter)bars.forEach((b,i,a)=>{b.style.height=(meter[Math.floor(i*(meter.length
 else     bars.forEach(bar=>bar.style.height="0%");
 }
 
-function clear(){
-  pattern().forEach((_,i,a)=>a[i]=0);
-}
+function clear(){pattern().forEach((_,i,a)=>a[i]=0);}
 
 Object.assign(sequencer, {clear, cols, rows, click, track, sequences, pattern, range, hasNotes, scroll, spectrum});
 }//
