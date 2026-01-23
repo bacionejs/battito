@@ -482,8 +482,8 @@ let O=(t,v)=>{let p=v-Math.floor(v);switch(t){case 0:return sin(p);case 1:return
 let G=(f,m,n,l)=>{if(n>l)n-=l;else{n=l-n;m=1/m;}while(n-->0)f*=m;return f;};
 let R_S=1,rnd=()=>{R_S=Math.imul(R_S,0x15a4e35);return (R_S>>>0)%255/255.0;};
 
-let createbuffer=(d)=>{
-let rowLen=Math.ceil(15*44100/d.bpm),I=d.tracks;
+let createbuffer=(json)=>{
+let rowLen=Math.ceil(15*44100/json.bpm),I=json.tracks;
 let E=0;I.forEach(t=>{if(t.s.length>E)E=t.s.length;});
 let PR=0;I.forEach(t=>t.p.forEach(p=>{if(p.length>PR)PR=p.length;}));
 let T=E*PR*rowLen;
