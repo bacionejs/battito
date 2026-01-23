@@ -285,7 +285,7 @@ else     bars.forEach(bar=>bar.style.height="0%");
 function mode(){
 let T=0;
 let t={
-  0:()=>{m("ready...");sequencer.clear();T++;},
+  0:()=>{m("ready...");clear();T++;},
   1:()=>{},
   2:()=>{m("set...");update();},
   3:()=>{m("GO!");},
@@ -297,12 +297,11 @@ function toggle(){if((timemode^=1)){run();}else{t[6]();}}
 function next(){if(T>0 && T<5)t[++T]();}
 function run(note){if(T==0){t[0]();}else if(T==3){sequencer.pattern()[audio.currp]=note;update();audio.preview(note);}}
 function m(s){message.textContent=s;message.classList.remove("show");message.offsetWidth;message.classList.add("show");}
+function clear(){pattern().forEach((_,i,a)=>a[i]=0);}
 Object.assign(mode,{next,run,toggle});
 }
 
-function clear(){pattern().forEach((_,i,a)=>a[i]=0);}
-
-Object.assign(sequencer, {mode, clear, cols, rows, click, track, sequences, pattern, range, hasNotes, scroll, spectrum});
+Object.assign(sequencer, {mode, cols, rows, click, track, sequences, pattern, range, hasNotes, scroll, spectrum});
 }//
 
 
