@@ -15,7 +15,6 @@ let loading    =element("div",side,"loading");
 
 (function main(){
 if(navigator.userAgent.includes("Firefox"))return document.body.innerHTML="Tested on Android Chrome";
-initErrorHandler();
 initStyle();
 initAudio();
 initPiano();
@@ -153,6 +152,16 @@ let song=JSON.parse(text.value);audio.song=song;
 updatePiano();updateSliders();updateSequencer();audio.preview();
 }catch(e){}}
 
+function makeLongPress(o,callback){
+let t=null,lp={
+  down(e){e.preventDefault();if(t!==null){clearTimeout(t);}t=setTimeout(()=>{t=null;callback(e);},800);},
+  up  (e){e.preventDefault();if(t!==null){clearTimeout(t);t=null;}}
+};
+o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);o.addEventListener("pointerleave",lp.up);
+}
+
+addEventListener("error",e=>{prompt("Error",e.error.stack);});
+
 }//
 
 
@@ -182,19 +191,6 @@ function line(e,width,dir,freq){
 let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];
 e.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});
 }
-
-function makeLongPress(o,callback){
-let t=null,lp={
-  down(e){e.preventDefault();if(t!==null){clearTimeout(t);}t=setTimeout(()=>{t=null;callback(e);},800);},
-  up  (e){e.preventDefault();if(t!==null){clearTimeout(t);t=null;}}
-};
-o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);o.addEventListener("pointerleave",lp.up);
-}
-
-function initErrorHandler(){addEventListener("error",e=>{
-let s="Error: "+e.message+"\nFile: "+e.filename+"\nLine: "+e.lineno+":"+e.colno;if(e.error)s+="\nName: "+e.error.name+"\nStack:\n"+e.error.stack;
-prompt("Error",s);
-});}
 
 function element(tag,parent=document.body,c=""){let e=parent.appendChild(document.createElement(tag));if(c)e.className=c;return e;}
 
