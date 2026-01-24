@@ -29,7 +29,7 @@ tutorial();
 
 
 
-
+// TypeError: Cannot read properties of null (reading 'forEach')     at clear (http://127.0.0.1:8080/myapps/dev/battito/index.js:293:27)     at 0 (http://127.0.0.1:8080/myapps/dev/battito/index.js:281:24)     at run (http://127.0.0.1:8080/myapps/dev/battito/index.js:291:33)     at toggle (http://127.0.0.1:8080/myapps/dev/battito/index.js:289:37)     at http://127.0.0.1:8080/myapps/dev/battito/index.js:160:85
 
 
 
@@ -74,8 +74,8 @@ function updatePiano(){
 piano.forEach(cell=>{cell.style.background="";});
 sequencer.cols.forEach((on,tid)=>{if(!on)return;
   let t=audio.song.tracks[tid];
-//   t?.p?.[t?.s[audio.currs]-1]?.forEach((note,step)=>{
-  t.p[t.s[audio.currs]-1]?.forEach((note,step)=>{
+  t?.p?.[t?.s[audio.currs]-1]?.forEach((note,step)=>{
+//   t.p[t.s[audio.currs]-1]?.forEach((note,step)=>{
     if(note && note>=C3 && note<=C3+PC){piano.cells[step*PC+note-C3].style.background=getColor(tid);}
   });
 });
@@ -85,6 +85,7 @@ function updateSequencer(){
 sequencer.forEach(cell=>{
   cell.classList.remove("active","row-selected","col-selected");
   let {row,col}=cell;
+  if(row===-1 && col===-1){return;}
 //   if(row===-1 && col===-1){return;}
   if(row===-1){
     if(sequencer.cols[col])cell.classList.add("col-selected");
@@ -93,8 +94,8 @@ sequencer.forEach(cell=>{
   }else{
     cell.textContent="";
     let r=row,c=col,t=audio.song.tracks[c];
-//     if(t?.s?.[r]!==undefined){
-    if(t.s[r]!==undefined){
+    if(t?.s?.[r]!==undefined){
+//     if(t.s[r]!==undefined){
       if(sequencer.rows[r] && sequencer.cols[c]){cell.classList.add("active");}
       cell.textContent=t.s[r]||"";
     }
@@ -144,8 +145,8 @@ else{if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(not
 function handleSequencerClick({target}){sequencer.click(target);update();audio.start();}
 
 function handleSliderInput(e){
-if(!e.target.key)return;
-// if(!e.target.classList.contains("slider"))return;
+if(!e.target.classList.contains("slider"))return;
+// if(!e.target.key)return;
 let t=sequencer.track();if(t==null)return;
 t[e.target.key]=+e.target.value;
 update();audio.preview();
@@ -259,8 +260,8 @@ return audio.song.tracks[cols.indexOf(1)]||null;
 function pattern(){
 let t=track();if(!t)return null;
 if(rows.filter(Boolean).length!=1)return null;
-// let i=rows.indexOf(1);if(!t?.s?.[i])return null;
-let i=rows.indexOf(1);if(!t.s[i])return null;
+let i=rows.indexOf(1);if(!t?.s?.[i])return null;
+// let i=rows.indexOf(1);if(!t.s[i])return null;
 return t.p[t.s[i]-1]||(t.p[t.s[i]-1]=Array(PR).fill(0));
 }
 
@@ -291,7 +292,8 @@ function toggle(){if((timemode^=1)){run();}else{t[6]();}}
 function next(){if(T>0 && T<5)t[++T]();}
 function run(note){if(T==0){t[0]();}else if(T==3){sequencer.pattern()[audio.currp]=note;update();audio.preview(note);}}
 function m(s){message.textContent=s;message.classList.remove("show");message.offsetWidth;message.classList.add("show");}
-function clear(){pattern().forEach((_,i,a)=>a[i]=0);}
+// function clear(){pattern().forEach((_,i,a)=>a[i]=0);}
+function clear(){pattern()?.forEach((_,i,a)=>a[i]=0);}
 Object.assign(mode,{next,run,toggle});
 }
 
