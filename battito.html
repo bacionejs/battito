@@ -286,14 +286,17 @@ let t={
   3:()=>{m("GO!");},
   4:()=>{m("wait...");},
   5:()=>{m("reset?");T=0;},
-  6:()=>{m("stepmode");T=0;}
+//   6:()=>{m("stepmode");T=0;}
+  6:()=>{m("stepmode");T=0;timemode=0;}
 };
-function toggle(){if((timemode^=1)){run();}else{t[6]();}}
+// function toggle(){if((timemode^=1)){run();}else{t[6]();}}
+function toggle(){if(pattern() && (timemode^=1)){run();}else{t[6]();}}
+// function toggle(){if(!pattern())return;if((timemode^=1)){run();}else{t[6]();}}
 function next(){if(T>0 && T<5)t[++T]();}
-function run(note){if(T==0){t[0]();}else if(T==3){sequencer.pattern()[audio.currp]=note;update();audio.preview(note);}}
+function run(note){if(T==0){t[0]();}else if(T==3){pattern()[audio.currp]=note;update();audio.preview(note);}}
 function m(s){message.textContent=s;message.classList.remove("show");message.offsetWidth;message.classList.add("show");}
-// function clear(){pattern().forEach((_,i,a)=>a[i]=0);}
-function clear(){pattern()?.forEach((_,i,a)=>a[i]=0);}
+function clear(){pattern().forEach((_,i,a)=>a[i]=0);}
+// function clear(){pattern()?.forEach((_,i,a)=>a[i]=0);}
 Object.assign(mode,{next,run,toggle});
 }
 
