@@ -74,7 +74,8 @@ function updatePiano(){
 piano.forEach(cell=>{cell.style.background="";});
 sequencer.cols.forEach((on,tid)=>{if(!on)return;
   let t=audio.song.tracks[tid];
-  t?.p?.[t?.s[audio.currs]-1]?.forEach((note,step)=>{
+//   t?.p?.[t?.s[audio.currs]-1]?.forEach((note,step)=>{
+  t.p[t.s[audio.currs]-1]?.forEach((note,step)=>{
     if(note && note>=C3 && note<=C3+PC){piano.cells[step*PC+note-C3].style.background=getColor(tid);}
   });
 });
@@ -84,7 +85,7 @@ function updateSequencer(){
 sequencer.forEach(cell=>{
   cell.classList.remove("active","row-selected","col-selected");
   let {row,col}=cell;
-  if(row===-1 && col===-1){return;}
+//   if(row===-1 && col===-1){return;}
   if(row===-1){
     if(sequencer.cols[col])cell.classList.add("col-selected");
   }else if(col===-1){
@@ -92,7 +93,8 @@ sequencer.forEach(cell=>{
   }else{
     cell.textContent="";
     let r=row,c=col,t=audio.song.tracks[c];
-    if(t?.s?.[r]!==undefined){
+//     if(t?.s?.[r]!==undefined){
+    if(t.s[r]!==undefined){
       if(sequencer.rows[r] && sequencer.cols[c]){cell.classList.add("active");}
       cell.textContent=t.s[r]||"";
     }
@@ -142,7 +144,8 @@ else{if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(not
 function handleSequencerClick({target}){sequencer.click(target);update();audio.start();}
 
 function handleSliderInput(e){
-if(!e.target.classList.contains("slider"))return;
+if(!e.target.key)return;
+// if(!e.target.classList.contains("slider"))return;
 let t=sequencer.track();if(t==null)return;
 t[e.target.key]=+e.target.value;
 update();audio.preview();
@@ -256,7 +259,8 @@ return audio.song.tracks[cols.indexOf(1)]||null;
 function pattern(){
 let t=track();if(!t)return null;
 if(rows.filter(Boolean).length!=1)return null;
-let i=rows.indexOf(1);if(!t?.s?.[i])return null;
+// let i=rows.indexOf(1);if(!t?.s?.[i])return null;
+let i=rows.indexOf(1);if(!t.s[i])return null;
 return t.p[t.s[i]-1]||(t.p[t.s[i]-1]=Array(PR).fill(0));
 }
 
@@ -302,7 +306,6 @@ Object.assign(sequencer, {mode, cols, rows, click, track, sequences, pattern, ra
 
 
 
-
 function initAudio(){
 let C=new AudioContext(),S=null,PLAYER=BattitoPlayer(C),SONG=PRESETS(),sequences,raf,currS,prevS,currP,prevP;
 let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
@@ -312,20 +315,20 @@ stop();
 sequences=sequencer.sequences();if(sequences.length===0)return;
 let json=sequencer.range(SONG);if(!json)return;
 loading.style.display="block";
-requestAnimationFrame(()=>requestAnimationFrame(()=>{
+requestAnimationFrame(()=>requestAnimationFrame(()=>{try{
 S=C.createBufferSource();S.buffer=PLAYER.createbuffer(json);loading.style.display="none";
 S.connect(analyser);analyser.connect(C.destination);
 S.onended=()=>{start();};
 let startTime=C.currentTime;S.start(startTime);S.startTime=startTime;
 raf=requestAnimationFrame(loop);
-}));
+}catch(e){}}));
 }
 
-function stop(){
+function stop(){try{
 if(raf){cancelAnimationFrame(raf);raf=null;}
 if(S){S.onended=null;S.stop();S.disconnect();S=null;}
 sequencer.spectrum(false);
-}
+}catch(e){}}
 
 function loop(){
 if(!S?.buffer)return;
@@ -341,7 +344,7 @@ raf=requestAnimationFrame(loop);
 
 function point(grid,width,prev,curr,o=0){[[prev,"remove"],[curr,"add"]].forEach(([x,m])=>grid.cells[(x+o)*(width+o)]?.classList[m]("row-playing"));}
 
-function preview(note){
+function preview(note){try{
 let playing=null;
 let base=new Array(PR).fill(0);
 preview=function(note){
@@ -358,7 +361,7 @@ function waveform(d){
   c.lineWidth=2;c.strokeStyle="blue";c.stroke();
 }
 return preview(note);
-}
+}catch(e){}}
 
 function download(){try{
 if(!sequencer.hasNotes(SONG))return alert("Nothing to save. Please select song or range");
