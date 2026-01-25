@@ -100,9 +100,7 @@ sequencer.forEach(cell=>{
 }
 
 function updateSliders(){let t=sequencer.track();sliders.forEach(s=>{if(t!==null){s.disabled=false;s.value=t[s.key]||0;}else{s.disabled=true;s.value=0;}});}
-
 function updateText(){let s=text.selectionStart;text.value=JSON.stringify(audio.song,null,2);text.setSelectionRange(s,s);}
-
 function update(){updatePiano();updateSliders();updateSequencer();updateText();}
 
 
@@ -130,16 +128,14 @@ if(timemode){sequencer.mode.run(note);}
 else{if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(note);}
 }
 
-function handleSequencerClick({target}){sequencer.click(target);update();audio.start();}
-
 function handleSliderInput(e){
 let t=sequencer.track();if(t==null)return;
 t[e.target.key]=+e.target.value;
 update();audio.preview();
 }
 
+function handleSequencerClick({target}){sequencer.click(target);update();audio.start();}
 function handleSongInput(){try{let song=JSON.parse(text.value);audio.song=song;updatePiano();updateSliders();updateSequencer();audio.preview();}catch(e){}}
-
 function makeLongPress(o,c){let t,h=f=>e=>(e.preventDefault(),f(e));o.onpointerdown=h(e=>t=setTimeout(c,800,e));o.onpointerup=o.onpointerleave=h(_=>clearTimeout(t));}
 
 }//
@@ -167,9 +163,7 @@ e.forEach=f=>cells.forEach(f);e.cells=cells;
 }
 
 function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});}
-
 function element(tag,parent=document.body,c=""){let e=parent.appendChild(document.createElement(tag));if(c)e.className=c;return e;}
-
 function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
 
 
@@ -234,11 +228,9 @@ let i=rows.indexOf(1);if(!t.s[i])return null;
 return t.p[t.s[i]-1]||(t.p[t.s[i]-1]=Array(PR).fill(0));
 }
 
-function scroll(curr){
-if(curr==0)sequencer.scrollTop=0;
-let c=sequencer.cells[(curr+1)*(SC+1)],h=sequencer.cells[0].offsetHeight,t=c.offsetTop-sequencer.offsetTop,b=t+c.offsetHeight;
-let v1=sequencer.scrollTop+h,v2=sequencer.scrollTop+sequencer.clientHeight;
-if(t<v1)sequencer.scrollTop=t-h; else if(b>v2)sequencer.scrollTop=b-sequencer.clientHeight;
+function scroll(c){
+let s=sequencer,C=s.cells,[a,b,x,y]=["offsetTop","offsetHeight","scrollTop","clientHeight"],e=C[(c+1)*(SC+1)],o=e[a]-s[a],B=o+e[b];
+!c && (s[x]=0);(o<s[x]+C[0][b] && (s[x]=o-b)) || (B>s[x]+s[y] && (s[x]=B-s[y]))
 }
 
 function mode(){
