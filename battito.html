@@ -43,7 +43,7 @@ line(piano,PC,"y",4);
 
 function initSequencer(){
 grid(sequencer,SC,SR,true);
-for(let i=0;i<16;i++){element("div",sequencer.cells[0],"meter");}
+grid(sequencer.children[0],16,1,false,"meter");
 for(let i=1;i<SC+1;i++){sequencer.cells[i].textContent=String.fromCharCode(64+i);sequencer.cells[i].style.color=getColor(i-1);}
 for(let i=SC+1;i<(SC+1)*(SR+1);i+=SC+1){sequencer.cells[i].textContent=i/(SC+1);}
 initSequencerHelpers();
@@ -168,13 +168,13 @@ o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);
 
 
 
-function grid(e,cols,rows,header){
+function grid(e,cols,rows,header,classname=""){
 let cells=[],a=0;if(header){a=-1;cols++;rows++;}
 Object.assign(e.style,{gridTemplateColumns:"repeat("+cols+",1fr)",gridTemplateRows:"repeat("+rows+",1fr)"});
 for(let i=0;i<cols*rows;i++){
-  let c=i%cols,r=Math.floor(i/cols),classes="cell";
+  let c=i%cols,r=Math.floor(i/cols),classes="";
   if(header===true){if(r===0){classes+=" col-header";}if(c===0){classes+=" row-header";}}
-  let cell=element("div",e,classes);
+  let cell=element("div",e,classname||classes+" cell");
   cell.row=r+a;cell.col=c+a;
   cells.push(cell);
 }
@@ -281,8 +281,9 @@ function clear(){pattern()?.forEach((_,i,a)=>a[i]=0);}
 Object.assign(mode,{next,run,toggle});
 }
 
-Object.assign(sequencer, {mode, cols, rows, click, track, sequences, pattern, range, hasNotes, scroll, bars:[...sequencer.cells[0].children]});
+Object.assign(sequencer, {mode, cols, rows, click, track, sequences, pattern, range, hasNotes, scroll, bars:sequencer.children[0]});
 }//
+
 
 
 
