@@ -108,6 +108,10 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 ---
 
+</details><details><summary>Compatibility</summary>
+
+The app is compatible with the most recent version of Chrome and Android Chrome as of January 2026. It's also compatible with Edge browser and probably any other Chromium-based browser. If you don't see a 48-note wide piano roll, then that's a good indication that your browser is either not compatible or not up to date. I haven't tested it on Apple devices. I didn't have the energy to make it compatible with Firefox, so it's explicitly disables the app if run from Firefox. I'm a minimalist, and at only 400 lines of code, I want to keep the app simple. I developed it on a tablet for a tablet, so the piano roll is very big and almost impossible to use on a phone. But it is possible. To use it on a phone, try clicking the full screen icon in the lower right of the app, and then use it in portrait mode, first setting your sequencer values and then scrolling to the left to lay down your notes.
+
 </details><details><summary>Credits</summary>
 
 Battito ports Jake Taylor's [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant engine and optimizes with precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only, blazingly fast render loop.  
