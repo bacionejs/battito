@@ -1,5 +1,5 @@
 
-<a href="//bacionejs.github.io/battito/battito.html" target="_blank"><img src="" width="100%" /></a>
+<a href="//bacionejs.github.io/battito/battito.html" target="_blank"><img src="https://repository-images.githubusercontent.com/1048415375/59cbd670-4542-4af1-98c3-a787f6f8e9a2" width="100%" /></a>
 
 
 Battito is a tablet-centric music tracker with piano-roll, live-loop editing and a blazingly fast engine, for size-constrained games
@@ -118,7 +118,7 @@ The app is compatible with the most recent version of Chrome and Android Chrome 
 
 </details><details><summary>Comparison</summary>
 
-For javascript trackers, ZzFXM has the best interface and the smallest engine, but at three times the size, Sonant produces a better sound. Sonant is a [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) tracker created by Jake Taylor. The biggest additions I've made to the Sonant class of trackers is a piano roll, which some may argue makes it no longer a tracker. Also, except for PL_SYNTH's WASM engine, mine is the fastest javascript Sonant port. This is because my engine optimizes with precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only, blazingly fast render loop. A limiting factor of my interface is that the piano roll is only four octaves wide. However, you can get around that by adjusting the oscillator octave. Also, while it is informative to visualize the spacial relationship of multiple tracks on the piano roll, it is a mess when the number of tracks exceeds three. But the main purpose is not to visualize everything at once, but to visualize one or two tracks plus the track pattern you're currently creating. This is made possible with a very flexible range selection capability.
+For javascript trackers, ZzFXM has the best interface and the smallest engine, but at three times the size, Sonant produces a better sound. Sonant is a [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) tracker created by Jake Taylor. The biggest additions I've made to the Sonant class of trackers is a piano roll, which some may argue makes it no longer a tracker. Also, except for PL_SYNTH's WASM engine, mine is the fastest javascript Sonant port. This is because my engine optimizes with precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only, blazingly fast render loop. A limitation of my interface is that the piano roll is only four octaves wide. However, you can get around that by adjusting the oscillator octave. Also, while it is informative to visualize the spacial relationship of multiple tracks on the piano roll, it is a mess when the number of tracks exceeds three. But the main purpose is not to visualize everything at once, but to visualize one or two tracks plus the track pattern you're currently creating. This is made possible with a very flexible range selection capability.
 
 </details>
 
