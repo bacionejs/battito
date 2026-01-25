@@ -202,7 +202,6 @@ function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
 
 function initSequencerHelpers(){
 let cols=Array(SC).fill(0),rows=Array(SR).fill(0);
-let bars=[...sequencer.cells[0].children];
 mode();
 
 function click({row,col}){
@@ -282,7 +281,7 @@ function clear(){pattern()?.forEach((_,i,a)=>a[i]=0);}
 Object.assign(mode,{next,run,toggle});
 }
 
-Object.assign(sequencer, {mode, cols, rows, click, track, sequences, pattern, range, hasNotes, scroll, bars});
+Object.assign(sequencer, {mode, cols, rows, click, track, sequences, pattern, range, hasNotes, scroll, bars:[...sequencer.cells[0].children]});
 }//
 
 
