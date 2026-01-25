@@ -43,7 +43,7 @@ line(piano,PC,"y",4);
 
 function initSequencer(){
 grid(sequencer,SC,SR,true);
-for(let i=0;i<8;i++){element("div",sequencer.cells[0],"meter");}
+for(let i=0;i<16;i++){element("div",sequencer.cells[0],"meter");}
 for(let i=1;i<SC+1;i++){sequencer.cells[i].textContent=String.fromCharCode(64+i);sequencer.cells[i].style.color=getColor(i-1);}
 for(let i=SC+1;i<(SC+1)*(SR+1);i+=SC+1){sequencer.cells[i].textContent=i/(SC+1);}
 initSequencerHelpers();
@@ -318,7 +318,7 @@ if(S){S.onended=null;S.stop();S.disconnect();S=null;}
 
 function loop(){
 if(!S?.buffer)return;
-analyser.getByteFrequencyData(A);sequencer.bars.forEach((b,i)=>{b.style.height=(A[i*2|0]*0.4)+"%";});
+analyser.getByteFrequencyData(A);sequencer.bars.forEach((b,i)=>{b.style.height=(A[i]*0.4)+"%";});
 let t=(C.currentTime-S.startTime)*SONG.bpm/PR/15;
 if(t>=sequences.length){if(raf)cancelAnimationFrame(raf);return;}
 currS=sequences[t|0];
