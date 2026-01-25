@@ -116,6 +116,10 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 The app is compatible with the most recent version of Chrome and Android Chrome as of January 2026. It's also compatible with the Edge browser and maybe some other Chromium-based browser. If you don't see a 48-note wide piano roll, then that's a good indication that your browser is either not compatible or not up to date. I haven't tested it on Apple devices. I'm a minimalist, and I don't want the app to go beyond its current 400 lines of code and complexity and time that compatibility might bring; I explicitly disable the app if run from Firefox. I developed it for a tablet in landscape mode, so the piano roll is very big and almost impossible to use on a phone. But it is possible. To use it on a phone, try clicking the full screen icon in the lower right of the app, and then use it in portrait mode, first setting your sequencer values and then scrolling to the left to lay down your notes.
 
+</details><details><summary>Comparison</summary>
+
+For javascript trackers, ZzFXM has the best interface and the smallest engine, but at three times the size, Sonant produces a better sound. The biggest additions I've made to the Sonant class of trackers is the piano roll, extensive range selection, and the ease of adding tracks while others are playing. Also, except for PL_SYNTH's WASM engine, mine is the fastest javascript port.
+
 </details><details><summary>Credits</summary>
 
 Battito ports Jake Taylor's [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant engine and optimizes with precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only, blazingly fast render loop.  
