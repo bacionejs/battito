@@ -99,13 +99,7 @@ sequencer.forEach(cell=>{
 });
 }
 
-function updateSliders(){
-let t=sequencer.track();
-sliders.forEach(s=>{
-  if(t!==null){s.disabled=false;s.value=t[s.key]||0;}
-  else{s.disabled=true;s.value=0;}
-});
-}
+function updateSliders(){let t=sequencer.track();sliders.forEach(s=>{if(t!==null){s.disabled=false;s.value=t[s.key]||0;}else{s.disabled=true;s.value=0;}});}
 
 function updateText(){let s=text.selectionStart;text.value=JSON.stringify(audio.song,null,2);text.setSelectionRange(s,s);}
 
@@ -144,18 +138,9 @@ t[e.target.key]=+e.target.value;
 update();audio.preview();
 }
 
-function handleSongInput(){try{
-let song=JSON.parse(text.value);audio.song=song;
-updatePiano();updateSliders();updateSequencer();audio.preview();
-}catch(e){}}
+function handleSongInput(){try{let song=JSON.parse(text.value);audio.song=song;updatePiano();updateSliders();updateSequencer();audio.preview();}catch(e){}}
 
-function makeLongPress(o,callback){
-let t=null,lp={
-  down(e){e.preventDefault();if(t!==null){clearTimeout(t);}t=setTimeout(()=>{t=null;callback(e);},800);},
-  up  (e){e.preventDefault();if(t!==null){clearTimeout(t);t=null;}}
-};
-o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);o.addEventListener("pointerleave",lp.up);
-}
+function makeLongPress(o,c){let t,h=f=>e=>(e.preventDefault(),f(e));o.onpointerdown=h(e=>t=setTimeout(c,800,e));o.onpointerup=o.onpointerleave=h(_=>clearTimeout(t));}
 
 }//
 
@@ -178,14 +163,10 @@ for(let i=0;i<cols*rows;i++){
   cell.row=r+a;cell.col=c+a;
   cells.push(cell);
 }
-e.forEach=f=>cells.forEach(f);
-e.cells=cells;
+e.forEach=f=>cells.forEach(f);e.cells=cells;
 }
 
-function line(e,width,dir,freq){
-let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];
-e.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});
-}
+function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});}
 
 function element(tag,parent=document.body,c=""){let e=parent.appendChild(document.createElement(tag));if(c)e.className=c;return e;}
 
@@ -239,9 +220,7 @@ let r=range(song);if(!r)return null;
 return r.tracks.some(t=>t.s.some(p=>p>0 && t.p[p-1]?.some(Boolean)))?r:null;
 }
 
-function sequences(){
-return rows.reduce((acc,on,r)=>{if(!on)return acc;for(let t of audio.song.tracks){if(t.s[r]){acc.push(r);break;}}return acc;},[]);
-}
+function sequences(){return rows.reduce((acc,on,r)=>{if(!on)return acc;for(let t of audio.song.tracks){if(t.s[r]){acc.push(r);break;}}return acc;},[]);}
 
 function track(){
 if(cols.filter(Boolean).length>1){return audio.song.tracks[LT];}
