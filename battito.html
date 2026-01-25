@@ -263,11 +263,6 @@ let v1=sequencer.scrollTop+h,v2=sequencer.scrollTop+sequencer.clientHeight;
 if(t<v1)sequencer.scrollTop=t-h; else if(b>v2)sequencer.scrollTop=b-sequencer.clientHeight;
 }
 
-function spectrum(meter){
-if(meter)bars.forEach((b,i,a)=>{b.style.height=(meter[Math.floor(i*(meter.length/a.length))]/255*100)+"%";});
-else     bars.forEach(bar=>bar.style.height="0%");
-}
-
 function mode(){
 let T=0;
 let t={
@@ -287,7 +282,7 @@ function clear(){pattern()?.forEach((_,i,a)=>a[i]=0);}
 Object.assign(mode,{next,run,toggle});
 }
 
-Object.assign(sequencer, {mode, cols, rows, click, track, sequences, pattern, range, hasNotes, scroll, spectrum});
+Object.assign(sequencer, {mode, cols, rows, click, track, sequences, pattern, range, hasNotes, scroll, bars});
 }//
 
 
@@ -300,7 +295,7 @@ Object.assign(sequencer, {mode, cols, rows, click, track, sequences, pattern, ra
 
 function initAudio(){
 let C=new AudioContext(),S=null,PLAYER=BattitoPlayer(C),SONG=PRESETS(),sequences,raf,currS,prevS,currP,prevP;
-let analyser=C.createAnalyser();analyser.fftSize=32;let meter=new Uint8Array(analyser.frequencyBinCount);
+let analyser=C.createAnalyser();analyser.fftSize=32;let A=new Uint8Array(analyser.frequencyBinCount);
 
 function start(){
 stop();
@@ -319,12 +314,11 @@ raf=requestAnimationFrame(loop);
 function stop(){try{
 if(raf){cancelAnimationFrame(raf);raf=null;}
 if(S){S.onended=null;S.stop();S.disconnect();S=null;}
-sequencer.spectrum(false);
 }catch(e){}}
 
 function loop(){
 if(!S?.buffer)return;
-analyser.getByteFrequencyData(meter);sequencer.spectrum(meter);
+analyser.getByteFrequencyData(A);sequencer.bars.forEach((b,i)=>{b.style.height=(A[i*2|0]*0.4)+"%";});
 let t=(C.currentTime-S.startTime)*SONG.bpm/PR/15;
 if(t>=sequences.length){if(raf)cancelAnimationFrame(raf);return;}
 currS=sequences[t|0];
