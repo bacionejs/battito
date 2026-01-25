@@ -118,7 +118,7 @@ The app is compatible with the most recent version of Chrome and Android Chrome 
 
 </details><details><summary>Comparison</summary>
 
-For javascript trackers, ZzFXM has the best interface and the smallest engine, but at three times the size, Sonant produces a better sound. The biggest additions I've made to the Sonant class of trackers is the piano roll, extensive range selection, and the ease of editing patterns while others are playing. Also, except for PL_SYNTH's WASM engine, mine is the fastest javascript port.
+For javascript trackers, ZzFXM has the best interface and the smallest engine, but at three times the size, Sonant produces a better sound. The biggest additions I've made to the Sonant class of trackers is a piano roll, extensive range selection, and the ease of editing patterns while others are playing. Also, except for PL_SYNTH's WASM engine, mine is the fastest javascript port.
 
 </details><details><summary>Credits</summary>
 
