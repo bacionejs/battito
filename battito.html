@@ -228,13 +228,14 @@ let i=rows.indexOf(1);if(!t.s[i])return null;
 return t.p[t.s[i]-1]||(t.p[t.s[i]-1]=Array(PR).fill(0));
 }
 
-function scroll(c){
-let s=sequencer,C=s.cells,[a,b,x,y]=["offsetTop","offsetHeight","scrollTop","clientHeight"],e=C[(c+1)*(SC+1)],o=e[a]-s[a],B=o+e[b];
-!c && (s[x]=0);(o<s[x]+C[0][b] && (s[x]=o-b)) || (B>s[x]+s[y] && (s[x]=B-s[y]))
+function scroll(curr){
+if(curr<SC){sequencer.scrollTop=0;return;}
+let s=sequencer,c=s.cells[(curr+1)*(SC+1)],h=s.cells[0].offsetHeight,t=c.offsetTop-s.offsetTop,b=t+c.offsetHeight;
+if(t<s.scrollTop+h)s.scrollTop=t-h;else if(b>s.scrollTop+s.clientHeight)s.scrollTop=b-s.clientHeight;
 }
 
 function mode(){
-let T=0;
+let T=0,active=()=>(T>0 && T<5);
 let t={
   0:()=>{m("ready...");clear();T=1;},
   1:()=>{},
@@ -245,7 +246,7 @@ let t={
   6:()=>{m("stepmode");T=0;}
 };
 function toggle(){if((timemode^=1)){run();}else{t[6]();}}
-function next(){if(T>0 && T<5)t[++T]();}
+function next(){if(active)t[++T]();}
 function run(note){if(T==0){t[0]();}else if(T==3){pattern()[audio.currp]=note;update();audio.preview(note);}}
 function m(s){message.textContent=s;message.classList.remove("show");message.offsetWidth;message.classList.add("show");}
 function clear(){pattern()?.forEach((_,i,a)=>a[i]=0);}
