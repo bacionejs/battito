@@ -116,7 +116,5 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 </details>
 
----
-
 [^1]: Jake Taylor's [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant
 
