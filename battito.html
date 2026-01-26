@@ -230,7 +230,7 @@ return t.p[t.s[i]-1]||(t.p[t.s[i]-1]=Array(PR).fill(0));
 }
 
 function scroll(curr){
-if(curr<SC){sequencer.scrollTop=0;return;}
+if(curr==0){sequencer.scrollTop=0;return;}
 let s=sequencer,c=s.cells[(curr+1)*(SC+1)],h=s.cells[0].offsetHeight,t=c.offsetTop-s.offsetTop,b=t+c.offsetHeight;
 if(t<s.scrollTop+h)s.scrollTop=t-h;else if(b>s.scrollTop+s.clientHeight)s.scrollTop=b-s.clientHeight;
 }
