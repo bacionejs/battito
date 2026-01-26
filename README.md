@@ -110,10 +110,6 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 ---
 
-</details><details><summary>Compatibility</summary>
-
-The app is compatible with Chromium-based browsers (versions current in January 2026). If you don't see a 48-note wide piano roll, then that's a good indication that your browser is either not compatible or not up to date. I haven't tested it on Apple devices. I'm a minimalist, and I don't want the app to grow beyond its current 400 lines of preciousness, and the complexity and time that compatibility might bring; I explicitly disable the app if run from Firefox. I developed it for a tablet in landscape mode, so the piano roll is large and almost impossible to use on a phone. But it is possible. To use it on a phone, try clicking the fullscreen icon in the lower right of the app, and then use it in portrait mode, first setting your sequencer values and then scrolling to the left to lay down your notes.
-
 </details><details><summary>Comparison</summary>
 
 For size-constrained javascript games, ZzFXM has a small music player. Weighing in at 1k larger is the better sounding Sonant, a [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) tracker by Jake Taylor. Except for PL_SYNTH's wasm engine, mine is the fastest javascript Sonant port. This is because my engine optimizes with precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only, blazingly fast render loop that makes editing a breeze. I use a piano roll, which some may argue makes it no longer a tracker. The piano roll covers only four octaves, but you can adjust the oscillator octave to compensate. While visualizing multiple tracks is informative, it becomes cluttered beyond three tracks. The main goal is to view one or two tracks along with the pattern you’re creating, made possible by a very flexible range-selection capability.
