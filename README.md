@@ -6,15 +6,6 @@ Battito is a tablet-centric music tracker with piano-roll, live-loop editing and
 
 Battito brings Sonant-class[^1] sound to JavaScript with blazing speed. Its engine precomputes pitch, sine waves, and LFOs for a mostly linear, arithmetic-only render loop, making editing effortless. A vertical piano roll lets you see multiple tracks at a time while entering notes in a single, intuitive step, with flexible range selection for precise control.
 
-</details><details><summary>Features</summary>
-
-- instrument/sequence/pattern editors
-- waveform/spectrum analyzers
-- instrument presets
-- step/time modes
-- live-loop editing
-- import/export
-
 </details><details><summary>Guide</summary>
 
 ---
