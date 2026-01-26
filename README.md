@@ -1,10 +1,10 @@
 <a href="//bacionejs.github.io/battito/battito.html" target="_blank"><img src="https://repository-images.githubusercontent.com/1048415375/59cbd670-4542-4af1-98c3-a787f6f8e9a2" width="100%" /></a>
 
-Battito is a tablet-centric music tracker with piano-roll, live-loop editing and a blazingly fast engine, for size-constrained games
+Battito is a tablet-centric music tracker with piano-roll, live-loop editing and a small, blazingly fast engine, for size-constrained games
 
 <details><summary>Purpose</summary>
 
-Battito brings Sonant-class[^1] sound to JavaScript with blazing speed. Its engine precomputes pitch, sine waves, and LFOs for a mostly linear, arithmetic-only render loop, making editing effortless. A vertical piano roll aligns with the sequencer, letting you see multiple tracks at a time while entering notes in a single, intuitive step, with flexible range selection for precise control.
+Battito brings Sonant-class[^1] sound to JavaScript with blazing speed. Its engine precomputes pitch, sine waves, and LFOs for a mostly linear, arithmetic-only render loop, making editing effortless. A vertical piano roll lets you see multiple tracks at a time while entering notes in a single, intuitive step, with flexible range selection for precise control.
 
 </details><details><summary>Features</summary>
 
