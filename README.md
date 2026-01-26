@@ -112,9 +112,11 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 </details><details><summary>Purpose</summary>
 
-Battito brings Sonant-class sound to JavaScript with blazing speed. Its engine precomputes pitch, sine waves, and LFOs for a mostly linear, arithmetic-only render loop, making editing effortless. A vertical piano roll aligns with the sequencer, letting you see multiple tracks at a time while entering notes in a single, intuitive step, with flexible range selection for precise control.
+Battito brings Sonant-class[^1] sound to JavaScript with blazing speed. Its engine precomputes pitch, sine waves, and LFOs for a mostly linear, arithmetic-only render loop, making editing effortless. A vertical piano roll aligns with the sequencer, letting you see multiple tracks at a time while entering notes in a single, intuitive step, with flexible range selection for precise control.
 
 </details>
 
 ---
+
+[^1]: Jake Taylor's [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant
 
