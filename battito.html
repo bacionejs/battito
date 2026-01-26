@@ -14,8 +14,7 @@ let canvas     =element("canvas",side,"canvas");
 let fullscreen =element("div",side,"fullscreen");
 let loading    =element("div",side,"loading");
 
-(function main(){
-if(navigator.userAgent.includes("Firefox"))return document.body.innerHTML="Tested on Android Chrome";
+(function(){
 initAudio();
 initPiano();
 initSequencer();
@@ -24,6 +23,7 @@ initText();
 initListeners();
 initStyle();
 tutorial();
+compatible();
 })();
 
 
@@ -165,6 +165,7 @@ e.forEach=f=>cells.forEach(f);e.cells=cells;
 function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});}
 function element(tag,parent=document.body,c=""){let e=parent.appendChild(document.createElement(tag));if(c)e.className=c;return e;}
 function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
+function compatible(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1 || navigator.userAgent.includes("Firefox"))return document.body.innerHTML="⚠️ Rendering error.<br>This app requires a modern chromium-based browser.";},200);}
 
 
 
@@ -235,7 +236,7 @@ if(t<s.scrollTop+h)s.scrollTop=t-h;else if(b>s.scrollTop+s.clientHeight)s.scroll
 }
 
 function mode(){
-let T=0,active=()=>(T>0 && T<5);
+let T=0;
 let t={
   0:()=>{m("ready...");clear();T=1;},
   1:()=>{},
@@ -246,7 +247,7 @@ let t={
   6:()=>{m("stepmode");T=0;}
 };
 function toggle(){if((timemode^=1)){run();}else{t[6]();}}
-function next(){if(active)t[++T]();}
+function next(){if(T>0 && T<5)t[++T]();}
 function run(note){if(T==0){t[0]();}else if(T==3){pattern()[audio.currp]=note;update();audio.preview(note);}}
 function m(s){message.textContent=s;message.classList.remove("show");message.offsetWidth;message.classList.add("show");}
 function clear(){pattern()?.forEach((_,i,a)=>a[i]=0);}
@@ -410,7 +411,7 @@ function SLIDERS(){return [
 [["nv","noise_fader",255],["vm","env_master",255]],
 ];}
 
-function PRESETS(){return {"bpm":120,"tracks":[
+function PRESETS(){return {"bpm":130,"tracks":[
 {"osc1_oct":9,"osc1_det":0,"osc1_detune":0,"osc1_xenv":1,"osc1_vol":255,"osc1_waveform":0,"osc2_oct":7,"osc2_det":0,"osc2_detune":0,"osc2_xenv":1,"osc2_vol":255,"osc2_waveform":0,"noise_fader":0,"env_attack":100,"env_sustain":0,"env_release":5970,"env_master":171,"fx_filter":2,"fx_freq":500,"fx_resonance":254,"fx_delay_time":1,"fx_delay_amt":31,"fx_pan_freq":4,"fx_pan_amt":21,"lfo_osc1_freq":0,"lfo_fx_freq":0,"lfo_freq":0,"lfo_amt":0,"lfo_waveform":0,
 "s":[],"p":[]},
 // "s":[1,1,1,1],"p":[[123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0]]},
