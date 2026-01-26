@@ -25,6 +25,7 @@ Optional
 - To change the tempo, edit the `bpm` value in the **textarea**.
 - Besides clicking sequencer column headers to preview instruments, you can also click the piano to hear what their pitches sound like.
 - Switch from **stepmode** to **timemode** by longpressing the piano. To help keep you in time, create a drum track and a cowbell lead-in. Also, lower the `bpm` temporarily to make it easier.
+- The piano roll is only 4 octaves wide but you can compensate by setting the oscillator octave.
 
 ---
 
