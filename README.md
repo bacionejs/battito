@@ -110,9 +110,9 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 ---
 
-</details><details><summary>Comparison</summary>
+</details><details><summary>Purpose</summary>
 
-Battito is based on Jake Taylor's rich-sounding [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant tracker written in C. For a javascript port, it achieves impressive speed by using precomputed pitch for **all notes**, precomputed **sine**, and precomputed **LFO**, resulting in a mostly linear, arithmetic-only render loop that makes editing a breeze. It uses a piano roll, which some may argue makes it no longer a tracker. The piano roll covers only four octaves, but you can adjust the oscillator octave to compensate. While visualizing multiple tracks is informative, it becomes cluttered beyond three tracks. The main goal is to view one or two tracks along with the pattern you’re creating, made possible by a very flexible range-selection capability.
+Battito brings Sonant-class sound to JavaScript with blazing speed. Its engine precomputes pitch, sine waves, and LFOs for a mostly linear, arithmetic-only render loop, making editing effortless. A vertical piano roll aligns with the sequencer, letting you see multiple tracks at a time while entering notes in a single, intuitive step, with flexible range selection for precise control.
 
 </details>
 
