@@ -26,6 +26,7 @@ Optional
 - Switch from **stepmode** to **timemode** by longpressing the piano. To help keep you in time, create a drum track and a cowbell lead-in. Also, lower the `bpm` temporarily to make it easier.
 - Besides clicking sequencer column headers to preview instruments, you can also click the piano to hear what their **pitch** sounds like.
 - The piano roll is only 4 octaves wide but you can compensate by setting the oscillator **octave**.
+- The app is ok on a tablet, but on a phone, it's very difficult. You can try to click the full screen icon in the lower right and use it in portrait, first setting your sequencer values and then scrolling to the left to lay down your notes.
 
 ---
 
