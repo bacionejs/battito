@@ -136,7 +136,14 @@ update();audio.preview();
 
 function handleSequencerClick({target}){sequencer.click(target);update();audio.start();}
 function handleSongInput(){try{let song=JSON.parse(text.value);audio.song=song;updatePiano();updateSliders();updateSequencer();audio.preview();}catch(e){}}
-function makeLongPress(o,c){let t,h=f=>e=>(e.preventDefault(),f(e));o.onpointerdown=h(e=>t=setTimeout(c,800,e));o.onpointerup=o.onpointerleave=h(_=>clearTimeout(t));}
+
+function makeLongPress(o,callback){
+let t=null,lp={
+  down(e){e.preventDefault();if(t!==null){clearTimeout(t);}t=setTimeout(()=>{t=null;callback(e);},800);},
+  up  (e){e.preventDefault();if(t!==null){clearTimeout(t);t=null;}}
+};
+o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);o.addEventListener("pointerleave",lp.up);
+}
 
 }//
 
