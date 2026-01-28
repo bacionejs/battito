@@ -320,10 +320,10 @@ preview=function(note){
   let s=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(song)});s.onended=()=>{if(playing===s){playing=null;}};s.connect(C.destination);s.start();playing=s;
   waveform(s.buffer.getChannelData(0));
 };
-function waveform(d){
-  let c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2,p=d.length/w/PR/4;
-  c.clearRect(0,0,w,h);c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[x*p|0]*m);}
-  c.lineWidth=2;c.strokeStyle="blue";c.stroke();
+function waveform(d,threshold=0.5){
+  let c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2;
+  let start=d.findIndex(v=>Math.abs(v)>=threshold),end=d.findLastIndex(v=>Math.abs(v)>=threshold);
+  c.clearRect(0,0,w,h);c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.lineWidth=2;c.strokeStyle="blue";c.stroke();
 }
 return preview(note);
 }catch(e){}}
@@ -426,7 +426,7 @@ let v=[
 [255,3,7,0,0,255,0,8,0,0,22,22,2193,0,0,3,4067,176,0,3,96,0,1,4,12,2,84,127,255],
 [255,2,7,0,0,154,2,7,0,9,2418,1075,10614,0,0,3,2962,255,0,5,124,0,1,6,117,3,73,0,240],
 [192,3,7,0,0,201,3,7,0,7,789,1234,13636,0,0,2,5839,254,0,6,195,0,1,6,121,6,147,0,191],
-[192,2,7,0,0,192,2,7,0,0,0,0,20000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+[192,2,7,0,0,192,2,7,0,0,0,0,20000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,192],
 ];
 let sliders=SLIDERS().flat().map(s=>s[1]);
 return {bpm:130,tracks:v.map(t=>{let obj={};sliders.forEach((k,i)=>obj[k]=t[i]);return Object.assign(obj,{s:[],p:[]});})};
