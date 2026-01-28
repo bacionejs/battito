@@ -184,8 +184,7 @@ function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(
 
 
 function initSequencerHelpers(){
-let cols=Array(SC).fill(0),rows=Array(SR).fill(0);
-mode();
+let cols=Array(SC).fill(0),rows=Array(SR).fill(0);mode();
 
 function click({row,col}){
 if(row===-1&& col===-1)toggleAll();
@@ -273,8 +272,8 @@ Object.assign(sequencer, {mode, cols, rows, click, track, sequences, pattern, ra
 
 
 function initAudio(){
-let C=new AudioContext(),S=null,PLAYER=BattitoPlayer(C),SONG=PRESETS(),sequences,raf,currS,prevS,currP,prevP;
-let analyser=C.createAnalyser();analyser.fftSize=32;let A=new Uint8Array(analyser.frequencyBinCount);
+let sequences,raf,currS,prevS,currP,prevP,C=new AudioContext(),S=null,PLAYER=BattitoPlayer(C),SONG=PRESETS();
+let analyser=C.createAnalyser();analyser.fftSize=32;let A=new Uint8Array(analyser.frequencyBinCount);preview();
 
 function start(){
 stop();
@@ -309,7 +308,7 @@ raf=requestAnimationFrame(loop);
 
 function point(grid,width,prev,curr,o=0){[[prev,"remove"],[curr,"add"]].forEach(([x,m])=>grid.cells[(x+o)*(width+o)]?.classList[m]("row-playing"));}
 
-function preview(note){try{
+function preview(){try{
 let playing=null;
 let base=new Array(PR).fill(0);
 preview=function(note){
@@ -325,7 +324,6 @@ function waveform(d,threshold=0.5){
   let start=d.findIndex(v=>Math.abs(v)>=threshold),end=d.findLastIndex(v=>Math.abs(v)>=threshold);
   c.clearRect(0,0,w,h);c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.lineWidth=2;c.strokeStyle="blue";c.stroke();
 }
-return preview(note);
 }catch(e){}}
 
 function download(){try{
