@@ -309,8 +309,7 @@ raf=requestAnimationFrame(loop);
 function point(grid,width,prev,curr,o=0){[[prev,"remove"],[curr,"add"]].forEach(([x,m])=>grid.cells[(x+o)*(width+o)]?.classList[m]("row-playing"));}
 
 function preview(){try{
-let playing=null;
-let base=new Array(PR).fill(0);
+let playing=null,base=new Array(PR).fill(0);
 preview=function(note){
   if(playing){playing.stop();playing=null;}
   let t=sequencer.track();if(t===null)return;
