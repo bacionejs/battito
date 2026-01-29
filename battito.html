@@ -82,18 +82,12 @@ sequencer.cols.forEach((on,tid)=>{if(!on)return;
 }
 
 function updateSequencer(){
-sequencer.forEach(cell=>{
-  cell.classList.remove("active","row-selected","col-selected");
-  let {row,col}=cell;
-  if(row===-1){
-    if(sequencer.cols[col])cell.classList.add("col-selected");
-  }else if(col===-1){
-    if(sequencer.rows[row])cell.classList.add("row-selected");
-  }else{
-    let r=row,c=col,t=audio.song.tracks[c];
-    if(sequencer.rows[r] && sequencer.cols[c]){cell.classList.add("active");}
-    cell.textContent=t.s[r]||"";
-  }
+let s=sequencer;
+s.forEach(cell=>{
+  cell.classList.remove("active");
+  let {row:r,col:c}=cell;
+  if(((r<0&&s.cols[c])||(c<0&&s.rows[r]))||(s.rows[r]&&s.cols[c]))cell.classList.add("active");
+  if(r>=0&&c>=0)cell.textContent=audio.song.tracks[c].s[r]||"";
 });
 }
 
@@ -186,9 +180,9 @@ function initSequencerHelpers(){
 let cols=Array(SC).fill(0),rows=Array(SR).fill(0);mode();
 
 function click({row,col}){
-if(row===-1&& col===-1)toggleAll();
-else if(row===-1){cols[col]=cols[col]?0:1;LT=col;audio.preview();}
-else if(col===-1){rows[row]=rows[row]?0:1;}
+if(row==-1 && col==-1)toggleAll();
+else if(row==-1){cols[col]=cols[col]?0:1;LT=col;audio.preview();}
+else if(col==-1){rows[row]=rows[row]?0:1;}
 else cell(row,col);
 }
 
@@ -359,9 +353,8 @@ body{display:flex;background:black;color:white;font-weight:bold;font-family:mono
 .meter{pointer-events:none;background:linear-gradient(to top,lime,orange,red);transition:height 50ms linear;}
 .col-header{position:sticky;top:0;background:black;z-index:1;}
 .cell{display:grid;place-items:center;border:1px solid silver;aspect-ratio:1/1;}
-.col-selected, .row-selected{background:gray !important;}
 .row-playing{border-left:3px solid orange !important;}
-.active{background:blue;}
+.active{background:gray;}
 .text{padding:10px;font-size:8px;white-space:pre;overflow:auto;background:transparent;color:white;outline:none;}
 .text, .canvas{height:25%;aspect-ratio:2/1;border:1px solid silver;border-top:none;}
 .fullscreen::before{content:"⛶"}
