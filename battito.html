@@ -44,8 +44,6 @@ line(piano,PC,"y",4);
 function initSequencer(){
 grid(sequencer,SC,SR,true);
 grid(sequencer.children[0],16,1,false,"meter");
-for(let i=1;i<SC+1;i++){sequencer.cells[i].textContent=String.fromCharCode(64+i);sequencer.cells[i].style.color=getColor(i-1);}
-for(let i=SC+1;i<(SC+1)*(SR+1);i+=SC+1){sequencer.cells[i].textContent=i/(SC+1);}
 initSequencerHelpers();
 }
 
@@ -156,13 +154,14 @@ o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);
 
 
 
-function grid(e,cols,rows,header,classname=""){
+function grid(e,cols,rows,header,classname="cell"){
 let cells=[],a=0;if(header){a=-1;cols++;rows++;}
 Object.assign(e.style,{gridTemplateColumns:"repeat("+cols+",1fr)",gridTemplateRows:"repeat("+rows+",1fr)"});
 for(let i=0;i<cols*rows;i++){
-  let c=i%cols,r=Math.floor(i/cols),classes="";
-  if(header===true){if(r===0){classes+=" col-header";}if(c===0){classes+=" row-header";}}
-  let cell=element("div",e,classname||classes+" cell");
+  let c=i%cols,r=Math.floor(i/cols),cell=element("div",e,classname);
+  if(header && !r){cell.classList.add("col-header");}
+  if(header && !r && c){cell.textContent=String.fromCharCode(64+i);cell.style.color=getColor(i-1);}
+  if(header && r && !c){cell.textContent=i/(SC+1);}
   cell.row=r+a;cell.col=c+a;
   cells.push(cell);
 }
@@ -272,57 +271,36 @@ Object.assign(sequencer, {mode, cols, rows, click, track, sequences, pattern, ra
 
 
 function initAudio(){
-let sequences,raf,currS,prevS,currP,prevP,C=new AudioContext(),S=null,PLAYER=BattitoPlayer(C),SONG=PRESETS();
-let analyser=C.createAnalyser();analyser.fftSize=32;let A=new Uint8Array(analyser.frequencyBinCount);preview();
+let sequences,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=BattitoPlayer(C),SONG=PRESETS();
+let analyser=C.createAnalyser();analyser.fftSize=32;let A=new Uint8Array(analyser.frequencyBinCount);
 
 function start(){
-stop();
+try{if(S){S.onended=null;S.stop();S.disconnect();S=null;}}catch(e){}
 sequences=sequencer.sequences();if(sequences.length===0)return;
 let json=sequencer.range(SONG);if(!json)return;
-loading.style.display="block";
-requestAnimationFrame(()=>requestAnimationFrame(()=>{try{
-S=C.createBufferSource();S.buffer=PLAYER.createbuffer(json);loading.style.display="none";
-S.connect(analyser);analyser.connect(C.destination);
-S.onended=()=>{start();};
-let startTime=C.currentTime;S.start(startTime);S.startTime=startTime;
-raf=requestAnimationFrame(loop);
-}catch(e){}}));
+loading.style.display="block";requestAnimationFrame(()=>requestAnimationFrame(()=>{try{
+S=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(json)});S.onended=start;loading.style.display="none";
+S.connect(analyser);analyser.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){}}));
 }
-
-function stop(){try{
-if(raf){cancelAnimationFrame(raf);raf=null;}
-if(S){S.onended=null;S.stop();S.disconnect();S=null;}
-}catch(e){}}
 
 function loop(){
 if(!S?.buffer)return;
 analyser.getByteFrequencyData(A);sequencer.bars.forEach((b,i)=>{b.style.height=(A[i]*0.4)+"%";});
-let t=(C.currentTime-S.startTime)*SONG.bpm/PR/15;
-if(t>=sequences.length){if(raf)cancelAnimationFrame(raf);return;}
-currS=sequences[t|0];
-currP=(t*PR|0)%PR;
+let t=(C.currentTime-S.startTime)*SONG.bpm/PR/15;currS=sequences[t|0];currP=(t*PR|0)%PR;
 if(currS!==prevS){point(sequencer,SC,prevS,currS,1);prevS=currS;sequencer.scroll(currS);updatePiano();}
 if(currP!==prevP){point(piano    ,PC,prevP,currP  );prevP=currP;if(currP==0)sequencer.mode.next();}
-raf=requestAnimationFrame(loop);
+requestAnimationFrame(loop);
 }
 
 function point(grid,width,prev,curr,o=0){[[prev,"remove"],[curr,"add"]].forEach(([x,m])=>grid.cells[(x+o)*(width+o)]?.classList[m]("row-playing"));}
 
-function preview(){try{
-let playing=null,base=new Array(PR).fill(0);
-preview=function(note){
-  if(playing){playing.stop();playing=null;}
-  let t=sequencer.track();if(t===null)return;
-  base[0]=note||t?.p[0]?.find(n=>n!==0)||147;
-  let song={bpm:SONG.bpm,tracks:[{...t,s:[1],p:[base]}]};
-  let s=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(song)});s.onended=()=>{if(playing===s){playing=null;}};s.connect(C.destination);s.start();playing=s;
-  waveform(s.buffer.getChannelData(0));
-};
-function waveform(d,threshold=0.5){
-  let c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2;
-  let start=d.findIndex(v=>Math.abs(v)>=threshold),end=d.findLastIndex(v=>Math.abs(v)>=threshold);
-  c.clearRect(0,0,w,h);c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.lineWidth=2;c.strokeStyle="blue";c.stroke();
-}
+function preview(note){try{
+P?.stop();let threshold=0.5,t=sequencer.track();if(t===null)return;
+let song={bpm:SONG.bpm,tracks:[{...t,s:[1],p:[{length:PR,0:note||t?.p[0]?.find(n=>n!==0)||147}]}]};
+P=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(song)});P.connect(C.destination);P.start();
+let d=P.buffer.getChannelData(0),c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2;
+let start=d.findIndex(v=>Math.abs(v)>=threshold),end=d.findLastIndex(v=>Math.abs(v)>=threshold);
+c.clearRect(0,0,w,h);c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.lineWidth=2;c.strokeStyle="blue";c.stroke();
 }catch(e){}}
 
 function download(){try{
@@ -351,7 +329,7 @@ function bufferToWav(){
 }
 }
 
-audio={stop,start,preview,download,get song(){return SONG;},set song(newSong){SONG=newSong;},get currp(){return currP;},get currs(){return currS;}};
+audio={start,preview,download,get song(){return SONG;},set song(newSong){SONG=newSong;},get currp(){return currP;},get currs(){return currS;}};
 }//
 
 
