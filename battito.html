@@ -86,8 +86,8 @@ let s=sequencer;
 s.forEach(cell=>{
   cell.classList.remove("active");
   let {row:r,col:c}=cell;
-  if(((r<0&&s.cols[c])||(c<0&&s.rows[r]))||(s.rows[r]&&s.cols[c]))cell.classList.add("active");
-  if(r>=0&&c>=0)cell.textContent=audio.song.tracks[c].s[r]||"";
+  if(((r<0 && s.cols[c]) || (c<0 && s.rows[r])) || (s.rows[r] && s.cols[c]))cell.classList.add("active");
+  if(r>=0 && c>=0)cell.textContent=audio.song.tracks[c].s[r]||"";
 });
 }
 
