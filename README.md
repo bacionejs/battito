@@ -1,12 +1,8 @@
 <a href="//bacionejs.github.io/battito/battito.html" target="_blank"><img src="https://repository-images.githubusercontent.com/1048415375/59cbd670-4542-4af1-98c3-a787f6f8e9a2" width="100%" /></a>
 
-Battito Beats is a tablet-centric music tracker with piano-roll, live-loop editing and a small, blazingly fast engine, for size-constrained games
+Battito Beats is a tablet-centric music tracker with Sonant-class[^1] sound, piano-roll, live-loop editing and a small, blazingly fast engine, for size-constrained games
 
-<details><summary>Purpose</summary>
-
-Battito brings Sonant-class[^1] sound to JavaScript with blazing speed. Its engine precomputes pitch, sine, and LFOs for a mostly linear, arithmetic-only render loop, making editing effortless. A vertical piano roll lets you see multiple tracks at a time while entering notes in a single, intuitive step, with flexible range selection for precise control.
-
-</details><details><summary>Guide</summary>
+<details><summary>Guide</summary>
 
 ---
 
@@ -109,5 +105,5 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 </details>
 
-[^1]: The Battito synth engine is an optimized port of Jake Taylor's [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant synth engine
+[^1]: The Battito synth engine is an optimized port of Jake Taylor's [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant synth engine. Optimizations: precomputed pitch, sine, and LFOs for a mostly linear, arithmetic-only render loop
 
