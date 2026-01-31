@@ -158,6 +158,15 @@ for(let i=0;i<cols*rows;i++){
 e.forEach=f=>cells.forEach(f);e.cells=cells;
 }
 
+
+
+
+
+
+
+
+
+
 function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});}
 function element(tag,parent=document.body,c=""){let e=parent.appendChild(document.createElement(tag));if(c)e.className=c;return e;}
 function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
