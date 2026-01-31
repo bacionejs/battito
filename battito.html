@@ -48,16 +48,16 @@ initSequencerHelpers();
 }
 
 function initSliders(){
-let list=[];
+let cells=[];
 SLIDERS().forEach((group,i)=>{
   group.forEach(([label,key,max])=>{
     let l=element("label",sliders);l.textContent=label;l.style.color=getColor(i);
     let s=element("input",sliders,"slider");
     s.type="range";s.key=key;s.max=max;s.disabled=true;
-    list.push(s);
+    cells.push(s);
   });
 });
-sliders.forEach=f=>list.forEach(f);
+sliders.cells=cells;
 }
 
 function initText(){updateText();}
@@ -72,7 +72,7 @@ function initText(){updateText();}
 
 
 function updatePiano(){
-piano.forEach(cell=>{cell.style.background="";});
+piano.cells.forEach(cell=>{cell.style.background="";});
 sequencer.cols.forEach((on,tid)=>{if(!on)return;
   let t=audio.song.tracks[tid];
   t.p[t.s[audio.currs]-1]?.forEach((note,step)=>{
@@ -88,7 +88,7 @@ for(let i=1,cell;(cell=sequencer.cells[i]);i++){
 }
 }
 
-function updateSliders(){let t=sequencer.track();sliders.forEach(s=>{if(t!==null){s.disabled=false;s.value=t[s.key]||0;}else{s.disabled=true;s.value=0;}});}
+function updateSliders(){let t=sequencer.track();sliders.cells.forEach(s=>{if(t!==null){s.disabled=false;s.value=t[s.key]||0;}else{s.disabled=true;s.value=0;}});}
 function updateText(){let s=text.selectionStart;text.value=JSON.stringify(audio.song,null,2);text.setSelectionRange(s,s);}
 function update(){updatePiano();updateSliders();updateSequencer();updateText();}
 
@@ -155,10 +155,10 @@ for(let i=0;i<cols*rows;i++){
   cell.row=r+a;cell.col=c+a;
   cells.push(cell);
 }
-e.forEach=f=>cells.forEach(f);e.cells=cells;
+e.cells=cells;
 }
 
-function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});}
+function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.cells.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});}
 function element(tag,parent=document.body,c=""){let e=parent.appendChild(document.createElement(tag));if(c)e.className=c;return e;}
 function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)return document.body.innerHTML="\u26A0 Rendering error.<br>This app requires a modern chromium-based browser.";},200);}
@@ -248,7 +248,7 @@ function clear(){pattern()?.forEach((_,i,a)=>a[i]=0);}
 Object.assign(timemode,{next,run,toggle});
 }
 
-Object.assign(sequencer, {toggle, timemode, cols, rows, click, track, sequences, pattern, range, hasNotes, scroll, bars:sequencer.children[0]});
+Object.assign(sequencer, {toggle, timemode, cols, rows, click, track, sequences, pattern, range, hasNotes, scroll, bars:sequencer.children[0].cells});
 }//
 
 
