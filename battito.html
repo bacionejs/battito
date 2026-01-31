@@ -48,16 +48,15 @@ initSequencerHelpers();
 }
 
 function initSliders(){
-let cells=[];
+sliders.cells=[];
 SLIDERS().forEach((group,i)=>{
   group.forEach(([label,key,max])=>{
     let l=element("label",sliders);l.textContent=label;l.style.color=getColor(i);
     let s=element("input",sliders,"slider");
     s.type="range";s.key=key;s.max=max;s.disabled=true;
-    cells.push(s);
+    sliders.cells.push(s);
   });
 });
-sliders.cells=cells;
 }
 
 function initText(){updateText();}
@@ -145,7 +144,7 @@ o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);
 
 
 function grid(e,cols,rows,header,classname="cell"){
-let cells=[],a=0;if(header){a=-1;cols++;rows++;}
+let a=0;e.cells=[];if(header){a=-1;cols++;rows++;}
 Object.assign(e.style,{gridTemplateColumns:"repeat("+cols+",1fr)",gridTemplateRows:"repeat("+rows+",1fr)"});
 for(let i=0;i<cols*rows;i++){
   let c=i%cols,r=Math.floor(i/cols),cell=element("div",e,classname);
@@ -153,9 +152,8 @@ for(let i=0;i<cols*rows;i++){
   if(header && !r && c){cell.textContent=String.fromCharCode(64+i);cell.style.color=getColor(i-1);}
   if(header && r && !c){cell.textContent=i/(SC+1);}
   cell.row=r+a;cell.col=c+a;
-  cells.push(cell);
+  e.cells.push(cell);
 }
-e.cells=cells;
 }
 
 function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.cells.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});}
