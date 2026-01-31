@@ -3,7 +3,7 @@
 document.title="Battito";//https://github.com/bacionejs/battito
 addEventListener("error",e=>{prompt("error",e.error.stack);});
 
-let audio,SC=8,SR=60,PC=48,PR=32,LT=0,timemode=0,C3=12*7+12*3+3;
+let audio,SC=8,SR=60,PC=48,PR=32,LT=0,timemodeon=0,C3=12*7+12*3+3;
 let piano      =element("div",document.body,"piano");
 let message    =element("div",piano,"message");
 let sliders    =element("div",document.body,"sliders");
@@ -109,12 +109,12 @@ sliders    .oninput=handleSliderInput;
 text       .oninput=handleSongInput;
 fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
 makeLongPress(canvas,audio.download);
-makeLongPress(piano,sequencer.mode.toggle);
+makeLongPress(piano,sequencer.timemode.toggle);
 [piano,sequencer,sliders].forEach(el=>{el.addEventListener('contextmenu',e=>e.preventDefault());});
 
 function handlePianoClick({target:{row:r,col}}){
 let note=col+C3,p=sequencer.pattern();if(p===null){audio.preview(note);return;}
-if(timemode){sequencer.mode.run(note);}
+if(timemodeon){sequencer.timemode.run(note);}
 else{if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(note);}
 }
 
@@ -174,7 +174,7 @@ function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(
 
 
 function initSequencerHelpers(){
-let cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1; mode();
+let cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1; timemode();
 
 function isActive({row,col}){return rows[row] && cols[col];}
 
@@ -231,7 +231,7 @@ let s=sequencer,c=s.cells[(curr+1)*(SC+1)],h=s.cells[0].offsetHeight,t=c.offsetT
 if(t<s.scrollTop+h)s.scrollTop=t-h;else if(b>s.scrollTop+s.clientHeight)s.scrollTop=b-s.clientHeight;
 }
 
-function mode(){
+function timemode(){
 let T=0;
 let t={
   0:()=>{m("ready...");clear();T=1;},
@@ -241,15 +241,15 @@ let t={
   4:()=>{m("reset?");T=0;},
   5:()=>{m("stepmode");T=0;}
 };
-function toggle(){if((timemode^=1)){run();}else{t[5]();}}
+function toggle(){if((timemodeon^=1)){run();}else{t[5]();}}
 function next(){if(T>0 && T<5)t[T++]();}
 function run(note){if(T==0){t[0]();}else if(T==3){pattern()[audio.currp]=note;update();audio.preview(note);}}
 function m(s){message.textContent=s;message.classList.remove("show");message.offsetWidth;message.classList.add("show");}
 function clear(){pattern()?.forEach((_,i,a)=>a[i]=0);}
-Object.assign(mode,{next,run,toggle});
+Object.assign(timemode,{next,run,toggle});
 }
 
-Object.assign(sequencer, {isActive, mode, cols, rows, click, track, sequences, pattern, range, hasNotes, scroll, bars:sequencer.children[0]});
+Object.assign(sequencer, {isActive, timemode, cols, rows, click, track, sequences, pattern, range, hasNotes, scroll, bars:sequencer.children[0]});
 }//
 
 
@@ -280,7 +280,7 @@ let t=(C.currentTime-S.startTime)*SONG.bpm/PR/15;if(t>=sequences.length)return;
 currS=sequences[t|0];
 currP=(t*PR|0)%PR;
 if(currS!==prevS){point(sequencer,SC,prevS,currS,1);prevS=currS;sequencer.scroll(currS);updatePiano();}
-if(currP!==prevP){point(piano    ,PC,prevP,currP  );prevP=currP;if(currP==0)sequencer.mode.next();}
+if(currP!==prevP){point(piano    ,PC,prevP,currP  );prevP=currP;if(currP==0)sequencer.timemode.next();}
 analyser.getByteFrequencyData(A);sequencer.bars.forEach((b,i)=>{b.style.height=(A[i]*0.4)+"%";});
 requestAnimationFrame(loop);
 }
