@@ -82,12 +82,10 @@ sequencer.cols.forEach((on,tid)=>{if(!on)return;
 }
 
 function updateSequencer(){
-let s=sequencer;
-s.forEach(cell=>{
-  cell.classList.remove("active");
-  let {row:r,col:c}=cell;
-  if(((r<0 && s.cols[c]) || (c<0 && s.rows[r])) || (s.rows[r] && s.cols[c]))cell.classList.add("active");
-  if(r>=0 && c>=0)cell.textContent=audio.song.tracks[c].s[r]||"";
+sequencer.forEach(cell=>{
+  if(cell.row==-1 && cell.col==-1)return;
+  cell.classList.toggle("active",sequencer.isActive(cell));
+  if(cell.row!=-1 && cell.col!=-1)cell.textContent=audio.song.tracks[cell.col].s[cell.row]||"";
 });
 }
 
@@ -177,27 +175,26 @@ function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(
 
 
 function initSequencerHelpers(){
-let cols=Array(SC).fill(0),rows=Array(SR).fill(0);mode();
+let cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1; mode();
+
+function isActive({row,col}){return rows[row] && cols[col];}
 
 function click({row,col}){
-if(row==-1 && col==-1)toggleAll();
-else if(row==-1){cols[col]=cols[col]?0:1;LT=col;audio.preview();}
-else if(col==-1){rows[row]=rows[row]?0:1;}
-else cell(row,col);
+if(row==-1 && col==-1){//corner
+  let i,mr=0,mc=0,all=true;
+  audio.song.tracks.forEach((t,c)=>{t.s.forEach((v,r)=>{if(v){if(c>mc)mc=c;if(r>mr)mr=r;}});});
+  for(i=0;i<=mr;i++)if(!rows[i])all=false;
+  for(i=0;i<=mc;i++)if(!cols[i])all=false;
+  for(i=0;i<rows.length;i++)rows[i]=(i<=mr)?(all?0:1):0;
+  for(i=0;i<cols.length;i++)cols[i]=(i<=mc)?(all?0:1):0;
+}else if(row==-1){//column-headers
+  cols[col]^=1;LT=col;audio.preview();
+}else if(col==-1){//row-headers
+  rows[row]^=1;
+}else{//grid-body
+  let t=audio.song.tracks[col],i=t.s[row]??0;
+  t.s[row]=(i+1)%10;if(t.s[row]>t.p.length){t.p.push(Array(PR).fill(0));}
 }
-
-function toggleAll(){
-let i,mr=0,mc=0,all=true;
-audio.song.tracks.forEach((t,c)=>{t.s.forEach((v,r)=>{if(v){if(c>mc)mc=c;if(r>mr)mr=r;}});});
-for(i=0;i<=mr;i++)if(!rows[i])all=false;
-for(i=0;i<=mc;i++)if(!cols[i])all=false;
-for(i=0;i<rows.length;i++)rows[i]=(i<=mr)?(all?0:1):0;
-for(i=0;i<cols.length;i++)cols[i]=(i<=mc)?(all?0:1):0;
-}
-
-function cell(row,col){
-let r=row,c=col,t=audio.song.tracks[c],i=t.s[r]??0;
-t.s[r]=(i+1)%10;if(t.s[r]>t.p.length){t.p.push(Array(PR).fill(0));}
 }
 
 function range(song){
@@ -252,7 +249,7 @@ function clear(){pattern()?.forEach((_,i,a)=>a[i]=0);}
 Object.assign(mode,{next,run,toggle});
 }
 
-Object.assign(sequencer, {mode, cols, rows, click, track, sequences, pattern, range, hasNotes, scroll, bars:sequencer.children[0]});
+Object.assign(sequencer, {isActive, mode, cols, rows, click, track, sequences, pattern, range, hasNotes, scroll, bars:sequencer.children[0]});
 }//
 
 
