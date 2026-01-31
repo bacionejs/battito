@@ -104,7 +104,7 @@ function update(){updatePiano();updateSliders();updateSequencer();updateText();}
 
 function initListeners(){
 piano      .onclick=handlePianoClick;
-sequencer  .onclick=handleSequencerClick;
+sequencer  .onclick=sequencer.click;
 sliders    .oninput=handleSliderInput;
 text       .oninput=handleSongInput;
 fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
@@ -124,7 +124,6 @@ t[e.target.key]=+e.target.value;
 update();audio.preview();
 }
 
-function handleSequencerClick({target}){sequencer.click(target);update();audio.start();}
 function handleSongInput(){try{let song=JSON.parse(text.value);audio.song=song;updatePiano();updateSliders();updateSequencer();audio.preview();}catch(e){}}
 
 function makeLongPress(o,callback){
@@ -179,7 +178,7 @@ let cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1; mode();
 
 function isActive({row,col}){return rows[row] && cols[col];}
 
-function click({row,col}){
+function click({target:{row,col}}){
 if(row==-1 && col==-1){//corner
   let i,mr=0,mc=0,all=true;
   audio.song.tracks.forEach((t,c)=>{t.s.forEach((v,r)=>{if(v){if(c>mc)mc=c;if(r>mr)mr=r;}});});
@@ -195,6 +194,7 @@ if(row==-1 && col==-1){//corner
   let t=audio.song.tracks[col],i=t.s[row]??0;
   t.s[row]=(i+1)%10;if(t.s[row]>t.p.length){t.p.push(Array(PR).fill(0));}
 }
+update();audio.start();
 }
 
 function range(song){
