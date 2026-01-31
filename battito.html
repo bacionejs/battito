@@ -82,11 +82,10 @@ sequencer.cols.forEach((on,tid)=>{if(!on)return;
 }
 
 function updateSequencer(){
-sequencer.forEach(cell=>{
-  if(cell.row==-1 && cell.col==-1)return;
+for(let i=1,cell;(cell=sequencer.cells[i]);i++){
   cell.classList.toggle("active",sequencer.isActive(cell));
-  if(cell.row!=-1 && cell.col!=-1)cell.textContent=audio.song.tracks[cell.col].s[cell.row]||"";
-});
+  if(cell.row!==-1 && cell.col!==-1)cell.textContent=audio.song.tracks[cell.col].s[cell.row]||"";
+}
 }
 
 function updateSliders(){let t=sequencer.track();sliders.forEach(s=>{if(t!==null){s.disabled=false;s.value=t[s.key]||0;}else{s.disabled=true;s.value=0;}});}
