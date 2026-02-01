@@ -1,6 +1,6 @@
 <a href="//bacionejs.github.io/battito/battito.html" target="_blank"><img src="https://repository-images.githubusercontent.com/1048415375/59cbd670-4542-4af1-98c3-a787f6f8e9a2" width="100%" /></a>
 
-Battito Beats [^1] is a tablet-centric music tracker with piano-roll, live-loop editing and a small, blazingly fast Sonant-class [^2] engine, for size-constrained games
+Battito Beats is a tablet-centric music tracker with piano-roll, live-loop editing and a small, blazingly fast Sonant-class [^1] engine, for size-constrained games
 
 <details><summary>Guide</summary>
 
@@ -105,7 +105,5 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 </details>
 
-[^1]: Public Domain.
-
-[^2]: Jake Taylor's [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) project.
+[^1]: Battito is an Public Domain optimized port of Jake Taylor's [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant.
 
