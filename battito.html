@@ -51,7 +51,7 @@ function initSliders(){
 sliders.cells=[];
 SLIDERS().forEach((group,i)=>{
   group.forEach(([label,key,max])=>{
-    let l=element("label",sliders);l.textContent=label;l.style.color=getColor(i);
+    let l=element("label",sliders);l.textContent=label;l.style.color=color(i);
     let s=element("input",sliders,"slider");
     s.type="range";s.key=key;s.max=max;s.disabled=true;
     sliders.cells.push(s);
@@ -73,7 +73,7 @@ piano.cells.forEach(cell=>{cell.style.background="";});
 sequencer.cols.forEach((on,tid)=>{if(!on)return;
   let t=audio.song.tracks[tid];
   t.p[t.s[audio.currs]-1]?.forEach((note,step)=>{
-    if(note && note>=C3 && note<=C3+PC){piano.cells[step*PC+note-C3].style.background=getColor(tid);}
+    if(note && note>=C3 && note<=C3+PC){piano.cells[step*PC+note-C3].style.background=color(tid);}
   });
 });
 }
@@ -147,7 +147,7 @@ Object.assign(e.style,{gridTemplateColumns:"repeat("+cols+",1fr)",gridTemplateRo
 for(let i=0;i<cols*rows;i++){
   let c=i%cols,r=Math.floor(i/cols),cell=element("div",e,classname);
   if(header && !r){cell.classList.add("col-header");}
-  if(header && !r && c){cell.textContent=String.fromCharCode(64+i);cell.style.color=getColor(i-1);}
+  if(header && !r && c){cell.textContent=String.fromCharCode(64+i);cell.style.color=color(i-1);}
   if(header && r && !c){cell.textContent=i/(SC+1);}
   cell.row=r+a;cell.col=c+a;
   e.cells.push(cell);
@@ -156,7 +156,7 @@ for(let i=0;i<cols*rows;i++){
 
 function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.cells.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});}
 function element(tag,parent=document.body,c=""){let e=parent.appendChild(document.createElement(tag));if(c)e.className=c;return e;}
-function getColor(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
+function color(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)return document.body.innerHTML="\u26A0 Rendering error.<br>This app requires a modern chromium-based browser.";},200);}
 
 
