@@ -242,7 +242,7 @@ Object.assign(sequencer, {toggle, timemode, cols, rows, click, track, sequences,
 
 
 function initAudio(){
-let sequences,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=BattitoPlayer(C),SONG=PRESETS();
+let sequences,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=PRESETS();
 let analyser=C.createAnalyser();analyser.fftSize=32;let A=new Uint8Array(analyser.frequencyBinCount);
 
 function start(){
@@ -287,9 +287,9 @@ function jsonToHtml(){
   let s="";
   s+="\n<\script>onload=()=>{addEventListener('click',play);document.body.textContent='Click to play'";
   s+="\nlet json="+JSON.stringify(sequencer.range(SONG));
-  s+="\nlet C=new AudioContext(),buffer=BattitoPlayer(C).createbuffer(json)";
+  s+="\nlet C=new AudioContext(),buffer=Battito(C).createbuffer(json)";
   s+="\nfunction play(){let S=C.createBufferSource();S.buffer=buffer;S.connect(C.destination);S.start();}//to loop: S.loop=true";
-  s+="\n"+BattitoPlayer;
+  s+="\n"+Battito;
   s+="\n}</\script>";
   return s;
 }
@@ -388,7 +388,7 @@ return {bpm:130,tracks:v.map(t=>{let obj={};sliders.forEach((k,i)=>obj[k]=t[i]);
 
 
 
-function BattitoPlayer(audiocontext){
+function Battito(audiocontext){
 let SIN=new Float32Array(1024);for(let i=0;i<1024;i++)SIN[i]=Math.sin(i*2*Math.PI/1024);let sin=(v)=>SIN[((v*1024)&1023)>>>0];
 let Q=new Float32Array(256);for(let n=0;n<256;n++){let f=0.00390625,m=1.059463094,l=128,i=n;if(i>l)i-=l;else{i=l-i;m=1/m;}while(i-->0)f*=m;Q[n]=f;}
 let O=(t,v)=>{let p=v-Math.floor(v);switch(t){case 0:return sin(p);case 1:return p<0.5?-1:1;case 2:return p-0.5;case 3:let v2=p*4;return v2<2?v2-1:3-v2;default:return sin(p);}};
