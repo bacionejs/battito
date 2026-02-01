@@ -221,20 +221,11 @@ if(t<s.scrollTop+h)s.scrollTop=t-h;else if(b>s.scrollTop+s.clientHeight)s.scroll
 }
 
 function timemode(){
-let T=0;
-let t={
-  0:()=>{m("ready...");clear();T=1;},
-  1:()=>{m("set...");update();},
-  2:()=>{m("GO!");},
-  3:()=>{m("wait...");},
-  4:()=>{m("reset?");T=0;},
-  5:()=>{m("stepmode");T=0;}
-};
-function toggle(){if((timemodeon^=1)){run();}else{t[5]();}}
-function next(){if(T>0 && T<5)t[T++]();}
-function run(note){if(T==0){t[0]();}else if(T==3){pattern()[audio.currp]=note;update();audio.preview(note);}}
-function m(s){message.textContent=s;message.classList.remove("show");message.offsetWidth;message.classList.add("show");}
-function clear(){pattern()?.forEach((_,i,a)=>a[i]=0);}
+let s=0,m=["ready...","set...","GO!","wait...","reset?"];
+function show(text){message.textContent=text;message.classList.remove("show");message.offsetWidth;message.classList.add("show");}
+function toggle(){timemodeon^=1;if(timemodeon){run();}else{show("stepmode");s=0;}}
+function next(){if(s>0&&s<5){show(m[s]);if(s===1)update();s++;if(s===5)s=0;}}
+function run(note){if(s===0){show(m[0]);pattern()?.fill(0);s=1;}else if(s===3){let p=pattern();if(p){p[audio.currp]=note;update();audio.preview(note);}}}
 Object.assign(timemode,{next,run,toggle});
 }
 
