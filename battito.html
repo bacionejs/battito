@@ -3,7 +3,7 @@
 document.title="Battito Beats";//https://github.com/bacionejs/battito
 addEventListener("error",e=>{prompt("error",e.error.stack);});
 
-let audio,SC=8,SR=60,PC=48,PR=32,LT=0,timemodeon=0,C3=12*7+12*3+3;
+let audio,timemodeon=0,LT=0,SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3;
 let piano      =element("div",document.body,"piano");
 let message    =element("div",piano,"message");
 let sliders    =element("div",document.body,"sliders");
@@ -81,7 +81,7 @@ sequencer.cols.forEach((on,tid)=>{if(!on)return;
 function updateSequencer(){
 for(let i=1,cell;(cell=sequencer.cells[i]);i++){
   sequencer.toggle(cell);
-  if(cell.row!==-1 && cell.col!==-1)cell.textContent=audio.song.tracks[cell.col].s[cell.row]||"";
+  if(cell.row!=-1 && cell.col!=-1)cell.textContent=audio.song.tracks[cell.col].s[cell.row]||"";
 }
 }
 
@@ -115,7 +115,7 @@ else{if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(not
 }
 
 function handleSliderInput(e){
-let t=sequencer.track();if(t==null)return;
+let t=sequencer.track();if(t===null)return;
 t[e.target.key]=+e.target.value;
 update();audio.preview();
 }
@@ -319,29 +319,21 @@ function initStyle(){element("style").textContent=`
 body{display:flex;background:black;color:white;font-weight:bold;font-family:monospace;}
 @keyframes fade{0%{opacity:1;}100%{opacity:0;}} .message.show{animation:fade 2s ease forwards;}
 .message{color:silver;font-size:3rem;top:50%;left:50%;translate:-50% -50%;position:absolute;z-index:2;pointer-events:none;opacity:0;}
-.piano{position:relative;}
-.piano, .sequencer{display:grid;}
-.side{background:black;}
-.piano{background:white;}
+.piano, .sequencer{display:grid;} .piano{background:white;}
 .sliders{display:flex;flex-direction:column;justify-content:space-evenly;font-size:8px;}
 .sliders > * {display:flex;flex-direction:column;align-items:center;}
-.sliders .slider{height:2px;}
-.sliders input[type="range"]::-webkit-slider-thumb{opacity:0;}
-.sequencer{height:50%;aspect-ratio:1/1;overflow-y:scroll;background:black;}
-.sequencer > :first-child{display:grid;grid-auto-flow:column;place-items:end stretch;}
+.sliders .slider{height:2px;} .sliders input[type="range"]::-webkit-slider-thumb{opacity:0;}
+.sequencer{height:50%;aspect-ratio:1/1;overflow-y:scroll;} .sequencer > :first-child{grid-auto-flow:column;place-items:end stretch;}
 .meter{pointer-events:none;background:linear-gradient(to top,lime,orange,red);transition:height 50ms linear;}
 .col-header{position:sticky;top:0;background:black;z-index:1;}
 .cell{display:grid;place-items:center;border:1px solid silver;aspect-ratio:1/1;}
-.row-playing{border-left:3px solid orange !important;}
-.active{background:gray;}
+.active{background:gray;} .row-playing{border-left:3px solid orange !important;}
 .text{padding:10px;font-size:8px;white-space:pre;overflow:auto;background:transparent;color:white;outline:none;}
-.text, .canvas{height:25%;aspect-ratio:2/1;border:1px solid silver;border-top:none;}
-.fullscreen::before{content:"⛶"}
-:fullscreen .fullscreen{display:none;}
+.text, .canvas{height:25%;aspect-ratio:2/1;border:1px solid silver;}
+.fullscreen::before{content:"⛶"} :fullscreen .fullscreen{display:none;} .loading::before{content:"loading..."}
 .fullscreen, .loading{line-height:0;position:relative;bottom:1rem;z-index:1;}
 .fullscreen{font-size:1rem;  text-align:right ;color:orange;right:0.5rem;}
 .loading   {font-size:0.3rem;text-align:center;color:silver;display:none;}
-.loading::before{content:"loading..."}
 `;
 }
 
