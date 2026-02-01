@@ -105,7 +105,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 </details>
 
-[^1] This project is released under the Unlicense (public domain). Pull requests are welcome to exist, but will not be merged.
+[^1]: This project is released under the Unlicense (public domain). Pull requests are welcome to exist, but will not be merged.
 
 [^2]: Jake Taylor's [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) project.
 
