@@ -192,7 +192,7 @@ update();audio.start();
 function range(song){
 let at=song.tracks.filter((_,c)=>cols[c]);if(!at.length)return null;
 let vi=rows.map((on,r)=>(on && at.some(t=>t.s[r]))?r:-1).filter(i=>i!==-1);if(!vi.length)return null;
-return {bpm:song.bpm,tracks:at.map(t=>({...t,p:structuredClone(t.p),s:vi.map(i=>t.s[i])}))};
+return {bpm:song.bpm,tracks:at.map(t=>({...t,s:vi.map(i=>t.s[i]),p:structuredClone(t.p)}))};
 }
 
 function hasNotes(song){
