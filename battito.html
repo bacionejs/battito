@@ -400,7 +400,7 @@ for(let i=0;i<TS.length;i++){
     let pi=T.s[si]-1;
     for(let ni=0;ni<PR;ni++){
       let n,o1fb=0.0,o2fb=0.0;
-      if(pi>=0 && (n=T.p[pi][ni])>0){
+      if(pi>=0&&(n=T.p[pi][ni])>0){
         o1fb=NOTE[n+(T.osc1_oct-8)*12+T.osc1_det]*(1+0.2*T.osc1_detune/255.0);
         o2fb=NOTE[n+(T.osc2_oct-8)*12+T.osc2_det]*(1+0.2*T.osc2_detune/255.0);
         let [a,s,r]=[T.env_attack,T.env_sustain,T.env_release];
@@ -424,8 +424,8 @@ for(let i=0;i<TS.length;i++){
   let DS=Math.floor(T.fx_delay_time*rowlen/2);if(DS>0){let DA=T.fx_delay_amt/255.0;for(let b=0;b<S-DS;b++){L[b+DS]+=R[b]*DA;R[b+DS]+=L[b]*DA;}}
   for(let b=0;b<S;b++){l[b]+=L[b];r[b]+=R[b];}
 }
-let X=0;for(let i=0;i<S;i++){let a=Math.abs(l[i]);if(a>X)X=a;a=Math.abs(r[i]);if(a>X)X=a;}if(X>0){let scale=1/X;for(let i=0;i<S;i++){l[i]*=scale;r[i]*=scale;}}
-let b=audiocontext.createBuffer(2,l.length,44100);b.getChannelData(0).set(l);b.getChannelData(1).set(r);
+let X=0;for(let i=0;i<S;i++){X=Math.max(X,Math.abs(l[i]),Math.abs(r[i]));}if(X>0){const scale=1/X;for(let i=0;i<S;i++){l[i]*=scale;r[i]*=scale;}}
+let b=audiocontext.createBuffer(2,l.length,44100);[l,r].forEach((data,i)=>b.copyToChannel(data,i));
 return b;
 };
 
