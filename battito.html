@@ -392,10 +392,6 @@ let rowlen=Math.ceil(15*44100/json.bpm);
 let TS=json.tracks;
 let SR=TS.reduce((m,t)=>t.s.length>m?t.s.length:m,0);
 let PR=TS.reduce((m,t)=>t.p.reduce((m2,p)=>p.length>m2?p.length:m2,m),0);
-
-
-
-
 let S=SR*PR*rowlen;
 let l=new Float32Array(S),r=new Float32Array(S),L=new Float32Array(S),R=new Float32Array(S);
 for(let i=0;i<TS.length;i++){
