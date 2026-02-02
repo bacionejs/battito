@@ -358,14 +358,14 @@ function SLIDERS(){return [
 
 function PRESETS(){
 let v=[
-[255,0,9,0,0,255,0,7,0,0,100,0,5970,1,1,2,500,254,0,0,0,0,0,1,31,4,21,0,171],
-[255,2,6,11,0,255,2,6,11,4,88,2000,7505,0,0,2,3144,51,0,7,179,0,1,6,60,4,64,0,255],
-[192,2,7,0,0,201,3,7,0,0,100,150,7505,0,0,2,5839,254,0,6,195,0,1,6,121,6,147,0,191],
-[255,0,9,0,0,255,0,9,0,12,100,0,14545,0,0,0,0,240,0,0,0,0,0,2,157,3,47,0,70],
-[255,3,7,0,0,255,0,8,0,0,22,22,2193,0,0,3,4067,176,0,3,96,0,1,4,12,2,84,127,255],
-[255,2,7,0,0,154,2,7,0,9,2418,1075,10614,0,0,3,2962,255,0,5,124,0,1,6,117,3,73,0,240],
-[192,3,7,0,0,201,3,7,0,7,789,1234,13636,0,0,2,5839,254,0,6,195,0,1,6,121,6,147,0,191],
-[192,2,7,0,0,192,2,7,0,0,0,0,20000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,192],
+[255,0,9,0,0,255,0,7,0,0,    100,0,5970,       1,1, 2,500,254,   0,0,0,0,0,    1,31,4,21,    0,171],
+[255,2,6,11,0,255,2,6,11,4,  88,2000,7505,     0,0, 2,3144,51,   0,7,179,0,1,  6,60,4,64,    0,255],
+[192,2,7,0,0,201,3,7,0,0,    100,150,7505,     0,0, 2,5839,254,  0,6,195,0,1,  6,121,6,147,  0,191],
+[255,0,9,0,0,255,0,9,0,12,   100,0,14545,      0,0, 0,0,240,     0,0,0,0,0,    2,157,3,47,   0,70],
+[255,3,7,0,0,255,0,8,0,0,    22,22,2193,       0,0, 3,4067,176,  0,3,96,0,1,   4,12,2,84,    127,255],
+[255,2,7,0,0,154,2,7,0,9,    2418,1075,10614,  0,0, 3,2962,255,  0,5,124,0,1,  6,117,3,73,   0,240],
+[192,3,7,0,0,201,3,7,0,7,    789,1234,13636,   0,0, 2,5839,254,  0,6,195,0,1,  6,121,6,147,  0,191],
+[192,2,7,0,0,192,2,7,0,0,    0,0,20000,        0,0, 0,0,0,       0,0,0,0,0,    0,0,0,0,      0,192],
 ];
 let sliders=SLIDERS().flat().map(s=>s[1]);
 return {bpm:130,tracks:v.map(t=>{let obj={};sliders.forEach((k,i)=>obj[k]=t[i]);return Object.assign(obj,{s:[],p:[]});})};
@@ -382,48 +382,53 @@ return {bpm:130,tracks:v.map(t=>{let obj={};sliders.forEach((k,i)=>obj[k]=t[i]);
 
 function Battito(audiocontext){
 let SIN=new Float32Array(1024);for(let i=0;i<1024;i++)SIN[i]=Math.sin(i*2*Math.PI/1024);let sin=(v)=>SIN[((v*1024)&1023)>>>0];
-let Q=new Float32Array(256);for(let n=0;n<256;n++){let f=0.00390625,m=1.059463094,l=128,i=n;if(i>l)i-=l;else{i=l-i;m=1/m;}while(i-->0)f*=m;Q[n]=f;}
-let O=(t,v)=>{let p=v-Math.floor(v);switch(t){case 0:return sin(p);case 1:return p<0.5?-1:1;case 2:return p-0.5;case 3:let v2=p*4;return v2<2?v2-1:3-v2;default:return sin(p);}};
+let NOTE=new Float32Array(256);for(let n=0;n<256;n++){let f=0.00390625,m=1.059463094,l=128,i=n;if(i>l)i-=l;else{i=l-i;m=1/m;}while(i-->0)f*=m;NOTE[n]=f;}
+let W=(t,v)=>{let p=v-Math.floor(v);switch(t){case 0:return sin(p);case 1:return p<0.5?-1:1;case 2:return p-0.5;case 3:let v2=p*4;return v2<2?v2-1:3-v2;default:return sin(p);}};
 let G=(f,m,n,l)=>{if(n>l)n-=l;else{n=l-n;m=1/m;}while(n-->0)f*=m;return f;};
 let R_S=1,rnd=()=>{R_S=Math.imul(R_S,0x15a4e35);return (R_S>>>0)%255/255.0;};
 
 let createbuffer=(json)=>{
-let rowLen=Math.ceil(15*44100/json.bpm),I=json.tracks;
-let E=0;I.forEach(t=>{if(t.s.length>E)E=t.s.length;});
-let PR=0;I.forEach(t=>t.p.forEach(p=>{if(p.length>PR)PR=p.length;}));
-let T=E*PR*rowLen;
-let l=new Float32Array(T),r=new Float32Array(T),L=new Float32Array(T),R=new Float32Array(T);
-for(let i=0;i<I.length;i++){
-  let B=I[i],P=0,lfo_step=G(1,2,B.lfo_freq,8)/rowLen,pan_step=G(1,2,B.fx_pan_freq,8)/rowLen;L.fill(0);R.fill(0);
-  for(let p=0;p<E;p++){
-    let C=B.s[p];
-    for(let row=0;row<PR;row++){
-      let n,osc1_freq_base=0.0,osc2_freq_base=0.0;
-      if(C>0&&(n=B.p[C-1][row])>0){
-        osc1_freq_base=Q[n+(B.osc1_oct-8)*12+B.osc1_det]*(1+0.2*B.osc1_detune/255.0);
-        osc2_freq_base=Q[n+(B.osc2_oct-8)*12+B.osc2_det]*(1+0.2*B.osc2_detune/255.0);
-        let [a,s,r]=[B.env_attack,B.env_sustain,B.env_release];
-        let [c1,c2,low,band]=[0,0,0,0],q=B.fx_resonance/255.0;
-        let D=a+s+r;
-        for(let j=0;j<D;j++){
-          let b=j+P;if(b>=T)break;let lfoR,e=1,f,rs,high,t;
-          lfoR=O(B.lfo_waveform,lfo_step*b)*(B.lfo_amt/512.0)+0.5;
+let rowlen=Math.ceil(15*44100/json.bpm);
+let TS=json.tracks;
+let SR=TS.reduce((m,t)=>t.s.length>m?t.s.length:m,0);
+let PR=TS.reduce((m,t)=>t.p.reduce((m2,p)=>p.length>m2?p.length:m2,m),0);
+
+
+
+
+let S=SR*PR*rowlen;
+let l=new Float32Array(S),r=new Float32Array(S),L=new Float32Array(S),R=new Float32Array(S);
+for(let i=0;i<TS.length;i++){
+  let T=TS[i],P=0,lfo_step=G(1,2,T.lfo_freq,8)/rowlen,panstep=G(1,2,T.fx_pan_freq,8)/rowlen;L.fill(0);R.fill(0);
+  for(let si=0;si<SR;si++){
+    let pi=T.s[si]-1;
+    for(let ni=0;ni<PR;ni++){
+      let n,o1fb=0.0,o2fb=0.0;
+      if(pi>=0 && (n=T.p[pi][ni])>0){
+        o1fb=NOTE[n+(T.osc1_oct-8)*12+T.osc1_det]*(1+0.2*T.osc1_detune/255.0);
+        o2fb=NOTE[n+(T.osc2_oct-8)*12+T.osc2_det]*(1+0.2*T.osc2_detune/255.0);
+        let [a,s,r]=[T.env_attack,T.env_sustain,T.env_release];
+        let [c1,c2,low,band]=[0,0,0,0],q=T.fx_resonance/255.0;
+        let envlen=a+s+r;
+        for(let j=0;j<envlen;j++){
+          let b=j+P;if(b>=S)break;let lfoR,e=1,f,rs,high,t;
+          lfoR=W(T.lfo_waveform,lfo_step*b)*(T.lfo_amt/512.0)+0.5;
           if(j<a)e=j/a;else if(j>=a+s)e-=(j-a-s)/r;
-          let t1=osc1_freq_base;if(B.lfo_osc1_freq)t1+=lfoR;if(B.osc1_xenv)t1*=e*e;c1+=t1;rs=O(B.osc1_waveform,c1)*(B.osc1_vol/255.0);
-          let t2=osc2_freq_base;if(B.osc2_xenv)t2*=e*e;c2+=t2;rs+=O(B.osc2_waveform,c2)*(B.osc2_vol/255.0);
-          if(B.noise_fader)rs+=O(0,rnd())*(B.noise_fader/255.0)*e;rs*=e;
-          f=B.fx_freq;if(B.lfo_fx_freq)f*=lfoR;f=1.5*(f*Math.PI/44100);
-          if(q>0){low+=f*band;high=q*(rs-band)-low;band+=f*high;switch(B.fx_filter){case 1:rs=high;break;case 2:rs=low;break;case 3:rs=band;break;case 4:rs=low+high;break;}}
-          t=O(0,pan_step*b)*(B.fx_pan_amt/512.0)+0.5;rs*=B.env_master*0.006;L[b]+=rs*(1-t);R[b]+=rs*t;
+          let t1=o1fb;if(T.lfo_osc1_freq)t1+=lfoR;if(T.osc1_xenv)t1*=e*e;c1+=t1;rs=W(T.osc1_waveform,c1)*(T.osc1_vol/255.0);
+          let t2=o2fb;if(T.osc2_xenv)t2*=e*e;c2+=t2;rs+=W(T.osc2_waveform,c2)*(T.osc2_vol/255.0);
+          if(T.noise_fader)rs+=W(0,rnd())*(T.noise_fader/255.0)*e;rs*=e;
+          f=T.fx_freq;if(T.lfo_fx_freq)f*=lfoR;f=1.5*(f*Math.PI/44100);
+          if(q>0){low+=f*band;high=q*(rs-band)-low;band+=f*high;switch(T.fx_filter){case 1:rs=high;break;case 2:rs=low;break;case 3:rs=band;break;case 4:rs=low+high;break;}}
+          t=W(0,panstep*b)*(T.fx_pan_amt/512.0)+0.5;rs*=T.env_master*0.006;L[b]+=rs*(1-t);R[b]+=rs*t;
         }
       }
-      P+=rowLen;
+      P+=rowlen;
     }
   }
-  let D_S=Math.floor(B.fx_delay_time*rowLen/2);if(D_S>0){let D_A=B.fx_delay_amt/255.0;for(let b=0;b<T-D_S;b++){L[b+D_S]+=R[b]*D_A;R[b+D_S]+=L[b]*D_A;}}
-  for(let b=0;b<T;b++){l[b]+=L[b];r[b]+=R[b];}
+  let DS=Math.floor(T.fx_delay_time*rowlen/2);if(DS>0){let DA=T.fx_delay_amt/255.0;for(let b=0;b<S-DS;b++){L[b+DS]+=R[b]*DA;R[b+DS]+=L[b]*DA;}}
+  for(let b=0;b<S;b++){l[b]+=L[b];r[b]+=R[b];}
 }
-let X=0;for(let i=0;i<T;i++){let a=Math.abs(l[i]);if(a>X)X=a;a=Math.abs(r[i]);if(a>X)X=a;}if(X>0){let scale=1/X;for(let i=0;i<T;i++){l[i]*=scale;r[i]*=scale;}}
+let X=0;for(let i=0;i<S;i++){let a=Math.abs(l[i]);if(a>X)X=a;a=Math.abs(r[i]);if(a>X)X=a;}if(X>0){let scale=1/X;for(let i=0;i<S;i++){l[i]*=scale;r[i]*=scale;}}
 let b=audiocontext.createBuffer(2,l.length,44100);b.getChannelData(0).set(l);b.getChannelData(1).set(r);
 return b;
 };
