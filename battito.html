@@ -385,33 +385,34 @@ let SIN=new Float32Array(1024);for(let i=0;i<1024;i++)SIN[i]=Math.sin(i*2*Math.P
 let NOTE=new Float32Array(256);for(let n=0;n<256;n++){let f=0.00390625,m=1.059463094,l=128,i=n;if(i>l)i-=l;else{i=l-i;m=1/m;}while(i-->0)f*=m;NOTE[n]=f;}
 let W=(t,v)=>{let p=v-Math.floor(v);switch(t){case 0:return sin(p);case 1:return p<0.5?-1:1;case 2:return p-0.5;case 3:let v2=p*4;return v2<2?v2-1:3-v2;default:return sin(p);}};
 let G=(f,m,n,l)=>{if(n>l)n-=l;else{n=l-n;m=1/m;}while(n-->0)f*=m;return f;};
-let R_S=1,rnd=()=>{R_S=Math.imul(R_S,0x15a4e35);return (R_S>>>0)%255/255.0;};
+let R_S=1,rnd=()=>{R_S=Math.imul(R_S,0x15a4e35);return (R_S>>>0)%255/255;};
 let FBASE=1.5*Math.PI/44100
 
 let createbuffer=(json)=>{
 let rowlen=Math.ceil(15*44100/json.bpm);
-let TS=json.tracks;
-let SR=TS.reduce((smax,t)=>t.s.length>smax?t.s.length:smax,0);
-let PR=TS.reduce((max,t)=>t.p.reduce((nmax,p)=>p.length>nmax?p.length:nmax,max),0);
+let SR=json.tracks.reduce((smax,t)=>t.s.length>smax?t.s.length:smax,0);
+let PR=json.tracks.reduce((max,t)=>t.p.reduce((nmax,p)=>p.length>nmax?p.length:nmax,max),0);
 let S=SR*PR*rowlen;
 let LL=new Float32Array(S),RR=new Float32Array(S),L=new Float32Array(S),R=new Float32Array(S);
-for(let i=0;i<TS.length;i++){
-  let T=TS[i],P=0,lfostep=G(1,2,T.lfo_freq,8)/rowlen,panstep=G(1,2,T.fx_pan_freq,8)/rowlen;L.fill(0);R.fill(0);
-  let {env_master,lfo_amt,fx_pan_amt,osc1_vol,osc2_vol,noise_fader,fx_resonance,lfo_osc1_freq,osc1_xenv,osc2_xenv,fx_filter,fx_freq,lfo_fx_freq,osc1_oct,osc1_det,osc1_detune,osc2_oct,osc2_det,osc2_detune,env_attack,env_sustain,env_release,osc1_waveform,osc2_waveform,lfo_waveform,fx_delay_time,fx_delay_amt}=T;
+for(let i=0,T;(T=json.tracks[i]);i++){
+  let {env_master,lfo_amt,fx_pan_amt,osc1_vol,osc2_vol,noise_fader,fx_resonance,lfo_osc1_freq,osc1_xenv,osc2_xenv,fx_filter,fx_freq,lfo_fx_freq,osc1_oct,osc1_det,osc1_detune,osc2_oct,osc2_det,osc2_detune,env_attack,env_sustain,env_release,osc1_waveform,osc2_waveform,lfo_waveform,fx_delay_time,fx_delay_amt,lfo_freq,fx_pan_freq}=T;
   env_master*=0.006;lfo_amt/=512;fx_pan_amt/=512;osc1_vol/=255;osc2_vol/=255;noise_fader/=255;fx_resonance/=255;
-  let [a,s,r]=[env_attack,env_sustain,env_release],envlen=a+s+r,ai=1/a,ri=1/r;
+  osc1_det+=(osc1_oct-8)*12;osc1_detune=1+0.2*osc1_detune/255;
+  osc2_det+=(osc2_oct-8)*12;osc2_detune=1+0.2*osc2_detune/255;
+  let P=0,lfostep=G(1,2,lfo_freq,8)/rowlen,panstep=G(1,2,fx_pan_freq,8)/rowlen;L.fill(0);R.fill(0);
+  let envlen=env_attack+env_sustain+env_release,ai=1/env_attack,ri=1/env_release;
   for(let si=0;si<SR;si++){
     let pi=T.s[si]-1;
     for(let ni=0;ni<PR;ni++){
-      let n,o1fb=0.0,o2fb=0.0;
+      let n,o1fb=0,o2fb=0;
       if(pi>=0&&(n=T.p[pi][ni])>0){
-        o1fb=NOTE[n+(osc1_oct-8)*12+osc1_det]*(1+0.2*osc1_detune/255.0);
-        o2fb=NOTE[n+(osc2_oct-8)*12+osc2_det]*(1+0.2*osc2_detune/255.0);
+        o1fb=NOTE[n+osc1_det]*osc1_detune;
+        o2fb=NOTE[n+osc2_det]*osc2_detune;
         let [c1,c2,low,band]=[0,0,0,0];
         for(let j=0;j<envlen;j++){
           let b=j+P;if(b>=S)break;let lfoR,e=1,f,rs,high,t;
           lfoR=W(lfo_waveform,lfostep*b)*lfo_amt+0.5;
-          if(j<a)e=j*ai;else if(j>=a+s)e-=(j-a-s)*ri;
+          if(j<env_attack)e=j*ai;else if(j>=env_attack+env_sustain)e-=(j-env_attack-env_sustain)*ri;
           let t1=o1fb;if(lfo_osc1_freq)t1+=lfoR;if(osc1_xenv)t1*=e*e;c1+=t1;rs=W(osc1_waveform,c1)*osc1_vol;
           let t2=o2fb;if(osc2_xenv)t2*=e*e;c2+=t2;rs+=W(osc2_waveform,c2)*osc2_vol;
           if(noise_fader)rs+=(rnd()*2-1)*noise_fader*e;rs*=e;
@@ -423,7 +424,7 @@ for(let i=0;i<TS.length;i++){
       P+=rowlen;
     }
   }
-  let DS=Math.floor(fx_delay_time*rowlen/2);if(DS>0){let DA=fx_delay_amt/255.0;for(let b=0;b<S-DS;b++){L[b+DS]+=R[b]*DA;R[b+DS]+=L[b]*DA;}}
+  let DS=Math.floor(fx_delay_time*rowlen/2);if(DS>0){let DA=fx_delay_amt/255;for(let b=0;b<S-DS;b++){L[b+DS]+=R[b]*DA;R[b+DS]+=L[b]*DA;}}
   for(let b=0;b<S;b++){LL[b]+=L[b];RR[b]+=R[b];}
 }
 let X=0;for(let i=0;i<S;i++){X=Math.max(X,Math.abs(LL[i]),Math.abs(RR[i]));}
