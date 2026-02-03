@@ -195,7 +195,7 @@ let vi=rows.map((on,r)=>(on && at.some(t=>t.s[r]))?r:-1).filter(i=>i!==-1);if(!v
 return {bpm:song.bpm,tracks:at.map(t=>({...t,s:vi.map(i=>t.s[i]),p:structuredClone(t.p)}))};
 }
 
-function hasNotes(song){
+function hasnotes(song){
 let r=range(song);if(!r)return null;
 return r.tracks.some(t=>t.s.some(p=>p>0 && t.p[p-1]?.some(Boolean)))?r:null;
 }
@@ -229,7 +229,7 @@ function run(note){if(s===0){show(m[0]);pattern()?.fill(0);s=1;}else if(s===3){l
 Object.assign(timemode,{next,run,toggle});
 }
 
-Object.assign(sequencer, {toggle, timemode, cols, rows, click, track, sequences, pattern, range, hasNotes, scroll});
+Object.assign(sequencer, {toggle, timemode, cols, rows, click, track, sequences, pattern, range, hasnotes, scroll});
 }//
 
 
@@ -277,7 +277,7 @@ c.clearRect(0,0,w,h);c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*
 }catch(e){}}
 
 function download(){try{
-if(!sequencer.hasNotes(SONG))return alert("Nothing to save. Please select song or range");
+if(!sequencer.hasnotes(SONG))return alert("Nothing to save. Please select song or range");
 let a=element("a"),file="battito_song_"+Date.now();
 a.href=URL.createObjectURL(bufferToWav());a.download=file+".wav";a.click();
 a.href=URL.createObjectURL(new File([jsonToHtml()],""));a.download=file+".html";a.click();
