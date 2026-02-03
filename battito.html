@@ -369,7 +369,6 @@ let v=[
 [192,2,7,0,0,192,2,7,0,0,    0,0,20000,        0,0, 0,0,0,       0,0,0,0,0,    0,0,0,0,      0,192],
 ];
 let sliders=SLIDERS().flat().map(s=>s[1]);
-// prompt("",sliders);
 return {bpm:130,tracks:v.map(t=>{let obj={};sliders.forEach((k,i)=>obj[k]=t[i]);return Object.assign(obj,{s:[],p:[]});})};
 }
 
