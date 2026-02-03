@@ -369,6 +369,7 @@ let v=[
 [192,2,7,0,0,192,2,7,0,0,    0,0,20000,        0,0, 0,0,0,       0,0,0,0,0,    0,0,0,0,      0,192],
 ];
 let sliders=SLIDERS().flat().map(s=>s[1]);
+// prompt("",sliders);
 return {bpm:130,tracks:v.map(t=>{let obj={};sliders.forEach((k,i)=>obj[k]=t[i]);return Object.assign(obj,{s:[],p:[]});})};
 }
 
@@ -396,7 +397,8 @@ let PR=json.tracks.reduce((max,t)=>t.p.reduce((nmax,p)=>p.length>nmax?p.length:n
 let S=SR*PR*rowlen;
 let LL=new Float32Array(S),RR=new Float32Array(S),L=new Float32Array(S),R=new Float32Array(S);
 for(let i=0,T;(T=json.tracks[i]);i++){
-  let {env_master,lfo_amt,fx_pan_amt,osc1_vol,osc2_vol,noise_fader,fx_resonance,lfo_osc1_freq,osc1_xenv,osc2_xenv,fx_filter,fx_freq,lfo_fx_freq,osc1_oct,osc1_det,osc1_detune,osc2_oct,osc2_det,osc2_detune,env_attack,env_sustain,env_release,osc1_waveform,osc2_waveform,lfo_waveform,fx_delay_time,fx_delay_amt,lfo_freq,fx_pan_freq}=T;
+  let {osc1_vol,osc1_waveform,osc1_oct,osc1_det,osc1_detune,osc2_vol,osc2_waveform,osc2_oct,osc2_det,osc2_detune,env_attack,env_sustain,env_release,osc1_xenv,osc2_xenv}=T;
+  let {fx_filter,fx_freq,fx_resonance,lfo_waveform,lfo_freq,lfo_amt,lfo_osc1_freq,lfo_fx_freq,fx_delay_time,fx_delay_amt,fx_pan_freq,fx_pan_amt,noise_fader,env_master}=T;
   env_master*=0.006;lfo_amt/=512;fx_pan_amt/=512;osc1_vol/=255;osc2_vol/=255;noise_fader/=255;fx_resonance/=255;
   osc1_det+=(osc1_oct-8)*12;osc1_detune=1+0.2*osc1_detune/255;
   osc2_det+=(osc2_oct-8)*12;osc2_detune=1+0.2*osc2_detune/255;
