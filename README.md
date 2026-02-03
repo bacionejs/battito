@@ -1,4 +1,4 @@
-<a href="//bacionejs.github.io/battito/battito.html" target="_blank"><img src="https://repository-images.githubusercontent.com/1048415375/79865bc6-fab9-47c4-abfe-6a0c6a745c86" width="100%" /></a>
+<a href="//bacionejs.github.io/battito/battito.html" target="_blank"><img src="https://repository-images.githubusercontent.com/1048415375/5982d166-8567-49f5-bb03-adea6bfe133e" width="100%" /></a>
 
 Battito Beats is a tablet-centric music tracker with piano-roll, live-loop editing and a small Sonant-class[^1] engine, for size-constrained games
 
