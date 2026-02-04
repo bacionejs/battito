@@ -148,8 +148,8 @@ for(let i=0;i<cols*rows;i++){
   let c=i%cols,r=Math.floor(i/cols),cell=element("div",e,classname);
   if(header){
     if(!r     ){cell.classList.add("col-header");}
-    if(!r && c){cell.textContent=String.fromCharCode(64+i);cell.style.color=color(i-1);}
-    if(r && !c){cell.textContent=i/(SC+1);}
+    if(!r && c){cell.textContent=String.fromCharCode(64+c);cell.style.color=color(c+a);}
+    if(r && !c){cell.textContent=r;}
   }
   cell.row=r+a;cell.col=c+a;
   e.cells.push(cell);
