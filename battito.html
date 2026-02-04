@@ -11,8 +11,8 @@ let side       =element("div",document.body,"side");
 let sequencer  =element("div",side,"sequencer");
 let text       =element("textarea",side,"text");
 let canvas     =element("canvas",side,"canvas");
-let fullscreen =element("div",side,"fullscreen");
-let loading    =element("div",side,"loading");
+let fullscreen =element("div",side,"fullscreen","\u26F6");
+let loading    =element("div",side,"loading","loading...");
 
 (function(){
 initAudio();
@@ -314,7 +314,6 @@ body{background:silver;display:flex;font-weight:bold;font-family:monospace;}
 .active{background:gray;} .row-playing{border-left:3px solid orange !important;}
 .text{padding:10px;font-size:8px;white-space:pre;overflow:auto;background:transparent;color:white;outline:none;}
 .text, .canvas{height:25%;aspect-ratio:2/1;border:1px solid silver;}
-.fullscreen::before{content:"⛶"} .loading::before{content:"loading..."}
 .fullscreen, .loading{line-height:0;position:relative;bottom:1rem;z-index:1;}
 .fullscreen{font-size:1rem;  text-align:right ;color:orange;right:0.5rem;} :fullscreen .fullscreen{display:none;}
 .loading   {font-size:0.3rem;text-align:center;color:silver;display:none;}
