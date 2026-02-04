@@ -171,8 +171,6 @@ function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(
 function initSequencerHelpers(){
 let cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1; timemode();
 
-function toggle(cell){cell.classList.toggle("active",rows[cell.row] && cols[cell.col]);}
-
 function click({target:{row,col}}){
 if(row==-1 && col==-1){     //corner
   let mr=0,mc=0; audio.song.tracks.forEach((t,c)=>t.s.forEach((v,r)=>{if(v){mr=Math.max(mr,r);mc=Math.max(mc,c);}}));
@@ -205,6 +203,7 @@ function track(){return cols[LT] && audio.song.tracks[LT] || null;}
 function sequences(){return rows.reduce((acc,on,r)=>{if(!on)return acc;for(let t of audio.song.tracks){if(t.s[r]){acc.push(r);break;}}return acc;},[]);}
 function hasnotes(song){let r=range(song);return r?.tracks.some(t=>t.s.some(p=>p>0&&t.p[p-1]?.some(Boolean)))?r:null;}
 function scroll(n){sequencer.cells[(n+1)*(SC+1)].scrollIntoView({block:'center',behavior:'smooth'});}
+function toggle(cell){cell.classList.toggle("active",rows[cell.row] && cols[cell.col]);}
 
 function timemode(){
 let s=0,m=["ready...","set...","GO!","wait...","reset?"];
