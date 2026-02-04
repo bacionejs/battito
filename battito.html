@@ -48,15 +48,12 @@ initSequencerHelpers();
 }
 
 function initSliders(){
-sliders.cells=[];
-SLIDERS().forEach((group,i)=>{
-  group.forEach(([label,key,max])=>{
+sliders.cells=SLIDERS().flatMap((group,i)=>
+  group.map(([label,key,max])=>{
     let l=element("label",sliders);l.textContent=label;l.style.color=color(i);
-    let s=element("input",sliders,"slider");
-    s.type="range";s.key=key;s.max=max;s.disabled=true;
-    sliders.cells.push(s);
-  });
-});
+    return Object.assign(element("input",sliders,"slider"),{type:"range",key,max,disabled:true});
+  })
+);
 }
 
 
