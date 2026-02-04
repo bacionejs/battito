@@ -195,10 +195,7 @@ let vi=rows.map((on,r)=>(on && at.some(t=>t.s[r]))?r:-1).filter(i=>i!==-1);if(!v
 return {bpm:song.bpm,tracks:at.map(t=>({...t,s:vi.map(i=>t.s[i]),p:structuredClone(t.p)}))};
 }
 
-function hasnotes(song){
-let r=range(song);if(!r)return null;
-return r.tracks.some(t=>t.s.some(p=>p>0 && t.p[p-1]?.some(Boolean)))?r:null;
-}
+function hasnotes(song){let r=range(song);return r?.tracks.some(t=>t.s.some(p=>p>0&&t.p[p-1]?.some(Boolean)))?r:null;}
 
 function sequences(){return rows.reduce((acc,on,r)=>{if(!on)return acc;for(let t of audio.song.tracks){if(t.s[r]){acc.push(r);break;}}return acc;},[]);}
 
