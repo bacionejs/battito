@@ -146,9 +146,11 @@ let a=0;e.cells=[];if(header){a=-1;cols++;rows++;}
 Object.assign(e.style,{gridTemplateColumns:"repeat("+cols+",1fr)",gridTemplateRows:"repeat("+rows+",1fr)"});
 for(let i=0;i<cols*rows;i++){
   let c=i%cols,r=Math.floor(i/cols),cell=element("div",e,classname);
-  if(header && !r){cell.classList.add("col-header");}
-  if(header && !r && c){cell.textContent=String.fromCharCode(64+i);cell.style.color=color(i-1);}
-  if(header && r && !c){cell.textContent=i/(SC+1);}
+  if(header){
+    if(!r     ){cell.classList.add("col-header");}
+    if(!r && c){cell.textContent=String.fromCharCode(64+i);cell.style.color=color(i-1);}
+    if(r && !c){cell.textContent=i/(SC+1);}
+  }
   cell.row=r+a;cell.col=c+a;
   e.cells.push(cell);
 }
