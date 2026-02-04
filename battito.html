@@ -153,7 +153,7 @@ for(let i=0;i<cols*rows;i++){
 }
 }
 
-function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)return document.body.innerHTML="⚠ Rendering error.<br>This app requires a modern chromium-based browser.";},200);}
+function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)return document.body.innerHTML="⚠ Rendering error<br>This app requires a modern chromium-based browser";},200);}
 function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.cells.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});}
 function element(tag,parent=document.body,c="",v=""){let e=parent.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
 function color(i){let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
