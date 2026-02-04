@@ -183,8 +183,8 @@ if(row==-1 && col==-1){     //corner
 }else if(col==-1){          //row-headers
   rows[row]^=1;
 }else{                      //grid-body
-  let t=audio.song.tracks[col],np=((t.s[row]||0)+1)%10;
-  t.s[row]=np;if(np>0 && !t.p[np-1]){t.p[np-1]=Array(PR).fill(0);}
+  let t=audio.song.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;
+  if(np)t.p[np-1]??=Array(PR).fill(0);
 }
 update();audio.start();
 }
