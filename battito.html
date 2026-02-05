@@ -385,7 +385,7 @@ return {createbuffer};
 
 
 function tutorial(){
-element("style").textContent=".tut-pointer,.tut-message{position:fixed;z-index:2;} .tut-message{padding:1ch;}"
+element("style").textContent=".tut-pointer,.tut-message{position:fixed;z-index:2;} .tut-message{padding:1ch;font-size:2ch;background:orange;}"
 let ci=0,p,song,clicks,S,P;let m=element("button",document.body,"tut-message","Click here to watch a 25 second tutorial");m.onclick=init;setTimeout(()=>m?.remove(),3000);
 
 function init(){m.remove();S=sequencer;P=piano;p=element("div",document.body,"tut-pointer","👉");p.style.transition="transform .1s ease";initSong();initClicks();move();}
