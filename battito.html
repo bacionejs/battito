@@ -51,7 +51,7 @@ for(let i=1,cell;(cell=sequencer.cells[i]);i++){
 }
 
 function updateSliders(){let t=sequencer.track();sliders.cells.forEach(s=>{if(t!==null){s.disabled=false;s.value=t[s.key]||0;}else{s.disabled=true;s.value=0;}});}
-function updateText(){let s=text.selectionStart;text.value=JSON.stringify(audio.song,null,2);text.setSelectionRange(s,s);}
+function updateText(){if(text===document.activeElement)return;let s=text.selectionStart;text.value=JSON.stringify(audio.song,null,2);text.setSelectionRange(s,s);}
 function update(){updatePiano();updateSliders();updateSequencer();updateText();}
 
 
@@ -66,8 +66,8 @@ function update(){updatePiano();updateSliders();updateSequencer();updateText();}
 function initListeners(){
 piano      .onclick=handlePianoClick;
 sequencer  .onclick=sequencer.click;
-sliders    .oninput=handleSliderInput;
-text       .oninput=handleSongInput;
+sliders    .oninput=(e)=>{sequencer.track()[e.target.key]=+e.target.value;update();audio.preview();};
+text       .oninput=()=>{try{let song=JSON.parse(text.value);audio.song=song;update();audio.preview();}catch(e){}};
 fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
 makeLongPress(canvas,audio.download);
 makeLongPress(piano,sequencer.timemode.toggle);
@@ -78,14 +78,6 @@ let note=col+C3,p=sequencer.pattern();if(p===null){audio.preview(note);return;}
 if(timemodeon){sequencer.timemode.run(note);}
 else{if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(note);}
 }
-
-function handleSliderInput(e){
-let t=sequencer.track();if(t===null)return;
-t[e.target.key]=+e.target.value;
-update();audio.preview();
-}
-
-function handleSongInput(){try{let song=JSON.parse(text.value);audio.song=song;updatePiano();updateSliders();updateSequencer();audio.preview();}catch(e){}}
 
 function makeLongPress(o,callback){
 let t=null,lp={
