@@ -56,15 +56,6 @@ sliders.cells=SLIDERS().flatMap((group,i)=>
 );
 }
 
-
-
-
-
-
-
-
-
-
 function updatePiano(){
 piano.cells.forEach(cell=>{cell.style.background="";});
 sequencer.cols.forEach((on,tid)=>{if(!on)return;
@@ -73,6 +64,13 @@ sequencer.cols.forEach((on,tid)=>{if(!on)return;
     if(note && note>=C3 && note<=C3+PC){piano.cells[step*PC+note-C3].style.background=color(tid);}
   });
 });
+}
+
+function updateSequencer(){
+for(let i=1,cell;(cell=sequencer.cells[i]);i++){
+  sequencer.toggle(cell);
+  if(cell.row!=-1 && cell.col!=-1)cell.textContent=audio.song.tracks[cell.col].s[cell.row]||"";
+}
 }
 
 function updateSliders(){let t=sequencer.track();sliders.cells.forEach(s=>{if(t!==null){s.disabled=false;s.value=t[s.key]||0;}else{s.disabled=true;s.value=0;}});}
