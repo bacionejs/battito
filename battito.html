@@ -32,7 +32,6 @@ compatibility();
 
 
 
-
 function updatePiano(){
 piano.cells.forEach(cell=>{cell.style.background="";});
 sequencer.cols.forEach((on,tid)=>{if(!on)return;
@@ -41,7 +40,13 @@ sequencer.cols.forEach((on,tid)=>{if(!on)return;
 });
 }
 
-function updateSequencer(){for(let i=1,cell;(cell=sequencer.cells[i]);i++){sequencer.toggle(cell);if(cell.row!=-1&&cell.col!=-1)cell.textContent=audio.song.tracks[cell.col].s[cell.row]||"";}}
+function updateSequencer(){
+for(let i=1,cell;(cell=sequencer.cells[i]);i++){
+  sequencer.toggle(cell);
+  if(cell.row!=-1&&cell.col!=-1)cell.textContent=audio.song.tracks[cell.col].s[cell.row]||"";
+}
+}
+
 function updateSliders(){let t=sequencer.track();sliders.cells.forEach(s=>{if(t!==null){s.disabled=false;s.value=t[s.key]||0;}else{s.disabled=true;s.value=0;}});}
 function updateText(){if(text===document.activeElement)return;let s=text.selectionStart;text.value=JSON.stringify(audio.song,null,2);text.setSelectionRange(s,s);}
 function update(){updatePiano();updateSliders();updateSequencer();updateText();}
