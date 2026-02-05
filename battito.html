@@ -297,9 +297,7 @@ let s=[
 [["mw","lfo_waveform",3],["ms","lfo_freq",16],["ma","lfo_amt",255],["m1","lfo_osc1_freq",1],["mc","lfo_fx_freq",1]],
 [["ds","fx_delay_time",16],["da","fx_delay_amt",248],["ps","fx_pan_freq",16],["pa","fx_pan_amt",255]],
 [["nv","noise_fader",255],["vm","env_master",255]]
-];
-
-let v=[
+],v=[
 [255,0,9,0,0,255,0,7,0,0,    100,0,5970,       1,1, 2,500,254,   0,0,0,0,0,    1,31,4,21,    0,171],
 [255,2,6,11,0,255,2,6,11,4,  88,2000,7505,     0,0, 2,3144,51,   0,7,179,0,1,  6,60,4,64,    0,255],
 [192,2,7,0,0,201,3,7,0,0,    100,150,7505,     0,0, 2,5839,254,  0,6,195,0,1,  6,121,6,147,  0,191],
@@ -318,7 +316,7 @@ p.cells=s.flatMap((group,i)=>group.map(([label,key,max])=>{
 
 function presets(){return {bpm:130,tracks:v.map(t=>{let o={};s.flat().map(s=>s[1]).forEach((k,i)=>o[k]=t[i]);return Object.assign(o,{s:[],p:[]});})};}
 
-return {sliders,presets};
+let o={sliders,presets}; config=function(){return o;}; return o;
 }//
 
 
