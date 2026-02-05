@@ -105,6 +105,15 @@ makeLongPress(canvas,audio.download);
 makeLongPress(piano,sequencer.timemode.toggle);
 [piano,sequencer,sliders].forEach(el=>{el.addEventListener('contextmenu',e=>e.preventDefault());});
 
+
+
+
+
+
+
+
+
+
 function handlePianoClick({target:{row:r,col}}){
 let note=col+C3,p=sequencer.pattern();if(p===null){audio.preview(note);return;}
 if(timemodeon){sequencer.timemode.run(note);}
@@ -139,9 +148,9 @@ o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);
 
 
 function grid(e,cols,rows,header,classname="cell"){
-let a=0;e.cells=[];if(header){a=-1;cols++;rows++;}
+let a=0;if(header){a=-1;cols++;rows++;}
 Object.assign(e.style,{gridTemplateColumns:"repeat("+cols+",1fr)",gridTemplateRows:"repeat("+rows+",1fr)"});
-for(let i=0;i<cols*rows;i++){
+e.cells=Array(cols * rows).fill().map((_, i) => {
   let c=i%cols,r=Math.floor(i/cols),cell=element("div",e,classname);
   if(header){
     if(!r     ){cell.classList.add("col-header");}
@@ -149,8 +158,8 @@ for(let i=0;i<cols*rows;i++){
     if(r && !c){cell.textContent=r;}
   }
   cell.row=r+a;cell.col=c+a;
-  e.cells.push(cell);
-}
+  return cell;
+});
 }
 
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)return document.body.innerHTML="⚠ Rendering error<br>This app requires a modern chromium-based browser";},200);}
