@@ -99,7 +99,7 @@ o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);
 function grid(e,cols,rows,header,classname="cell"){
 let a=0;if(header){a=-1;cols++;rows++;}
 Object.assign(e.style,{gridTemplateColumns:"repeat("+cols+",1fr)",gridTemplateRows:"repeat("+rows+",1fr)"});
-e.cells=Array(cols * rows).fill().map((_, i) => {
+e.cells=Array(cols*rows).fill().map((_,i)=>{
   let c=i%cols,r=Math.floor(i/cols),cell=element("div",e,classname);
   if(header){
     if(!r     ){cell.classList.add("col-header");}
