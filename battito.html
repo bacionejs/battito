@@ -37,17 +37,11 @@ function updatePiano(){
 piano.cells.forEach(cell=>{cell.style.background="";});
 sequencer.cols.forEach((on,tid)=>{if(!on)return;
   let t=audio.song.tracks[tid];
-  t.p[t.s[audio.currs]-1]?.forEach((note,step)=>(note-C3)>=0 && (note-C3)<=PC && (piano.cells[step*PC+note-C3].style.background=color(tid)));
+  t.p[t.s[audio.currs]-1]?.forEach((note,step)=>note && (piano.cells[step*PC+note-C3].style.background=color(tid)));
 });
 }
 
-function updateSequencer(){
-for(let i=1,cell;(cell=sequencer.cells[i]);i++){
-  sequencer.toggle(cell);
-  if(cell.row!=-1 && cell.col!=-1)cell.textContent=audio.song.tracks[cell.col].s[cell.row]||"";
-}
-}
-
+function updateSequencer(){for(let i=1,cell;(cell=sequencer.cells[i]);i++){sequencer.toggle(cell);if(cell.row!=-1&&cell.col!=-1)cell.textContent=audio.song.tracks[cell.col].s[cell.row]||"";}}
 function updateSliders(){let t=sequencer.track();sliders.cells.forEach(s=>{if(t!==null){s.disabled=false;s.value=t[s.key]||0;}else{s.disabled=true;s.value=0;}});}
 function updateText(){if(text===document.activeElement)return;let s=text.selectionStart;text.value=JSON.stringify(audio.song,null,2);text.setSelectionRange(s,s);}
 function update(){updatePiano();updateSliders();updateSequencer();updateText();}
@@ -70,22 +64,19 @@ fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.doc
 makeLongPress(canvas,audio.download);
 makeLongPress(piano,sequencer.timemode.toggle);
 [piano,sequencer,sliders].forEach(el=>{el.addEventListener('contextmenu',e=>e.preventDefault());});
-
 function handlePianoClick({target:{row:r,col}}){
-let note=col+C3,p=sequencer.pattern();if(p===null){audio.preview(note);return;}
-if(timemodeon){sequencer.timemode.run(note);}
-else{if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(note);}
+  let note=col+C3,p=sequencer.pattern();if(p===null){audio.preview(note);return;}
+  if(timemodeon){sequencer.timemode.run(note);}
+  else{if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(note);}
 }
-
 function makeLongPress(o,callback){
-let t=null,lp={
-  down(e){e.preventDefault();if(t!==null){clearTimeout(t);}t=setTimeout(()=>{t=null;callback(e);},800);},
-  up  (e){e.preventDefault();if(t!==null){clearTimeout(t);t=null;}}
-};
-o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);o.addEventListener("pointerleave",lp.up);
+  let t=null,lp={
+    down(e){e.preventDefault();if(t!==null){clearTimeout(t);}t=setTimeout(()=>{t=null;callback(e);},800);},
+    up  (e){e.preventDefault();if(t!==null){clearTimeout(t);t=null;}}
+  };
+  o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);o.addEventListener("pointerleave",lp.up);
 }
-
-}//
+}
 
 
 
