@@ -14,7 +14,6 @@ let canvas     =element("canvas",side,"canvas");
 let fullscreen =element("div",side,"fullscreen","⛶");
 let loading    =element("div",side,"loading","loading...");
 
-(function(){
 initAudio();
 grid(piano,PC,PR); line(piano,PC,"x",12); line(piano,PC,"y",4);
 grid(sequencer,SC,SR,true); grid(sequencer.children[0],16,1,false,"meter"); initSequencerHelpers();
@@ -24,7 +23,6 @@ initListeners();
 initStyle();
 tutorial();
 compatibility();
-})();
 
 
 
