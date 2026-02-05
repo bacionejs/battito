@@ -429,9 +429,9 @@ return {createbuffer};
 
 
 function tutorial(){
-let ci=0,p,song,clicks,S,P;let m=element("div",document.body,"tut-message");m.onclick=init;setTimeout(()=>m?.remove(),3000);initStyle();
+let ci=0,p,song,clicks,S,P;let m=element("div",document.body,"tut-message","Click here to watch a 25 second tutorial");m.onclick=init;setTimeout(()=>m?.remove(),3000);initStyle();
 
-function init(){m.remove();S=sequencer;P=piano;p=element("div",document.body,"tut-pointer");p.style.transition="transform .1s ease";initSong();initClicks();move();}
+function init(){m.remove();S=sequencer;P=piano;p=element("div",document.body,"tut-pointer","👉");p.style.transition="transform .1s ease";initSong();initClicks();move();}
 function move(){if(ci>=clicks.length)return p.remove();let e=clicks[ci++]();let r=e.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;click(e);}
 function click(e){setTimeout(()=>{p.style.transform="scale(.5)";e.dispatchEvent(new MouseEvent("click",{bubbles:true}));setTimeout(()=>{p.style.transform="";setTimeout(move,100);},100);},100);}
 function make(clickon,c,r){return ()=>clickon.cells.find(x=>x.row===r&&x.col===c);}
@@ -452,8 +452,6 @@ function initSong(){song=[
 function initStyle(){
 element("style").textContent=""
 +".tut-pointer,.tut-message{position:fixed;z-index:2;}"
-+".tut-pointer::before{content:'👉';}"
-+".tut-message::before{content:'Click here to watch a 25 second tutorial';}"
 +".tut-message{background:orange;color:black;padding:10;border-radius:5px;top:6dvh;border:2px outset orange;text-align:center;left:50%;transform:translateX(-50%);}"
 ;
 }
