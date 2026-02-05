@@ -105,15 +105,6 @@ makeLongPress(canvas,audio.download);
 makeLongPress(piano,sequencer.timemode.toggle);
 [piano,sequencer,sliders].forEach(el=>{el.addEventListener('contextmenu',e=>e.preventDefault());});
 
-
-
-
-
-
-
-
-
-
 function handlePianoClick({target:{row:r,col}}){
 let note=col+C3,p=sequencer.pattern();if(p===null){audio.preview(note);return;}
 if(timemodeon){sequencer.timemode.run(note);}
