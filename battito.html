@@ -18,7 +18,7 @@ let loading    =element("div",side,"loading","loading...");
 initAudio();
 initPiano();
 initSequencer();
-initSliders();
+config().sliders(sliders);
 updateText();
 initListeners();
 initStyle();
@@ -45,15 +45,6 @@ function initSequencer(){
 grid(sequencer,SC,SR,true);
 grid(sequencer.children[0],16,1,false,"meter");
 initSequencerHelpers();
-}
-
-function initSliders(){
-sliders.cells=SLIDERS().flatMap((group,i)=>
-  group.map(([label,key,max])=>{
-    element("label",sliders,"",label).style.color=color(i);
-    return Object.assign(element("input",sliders,"slider"),{type:"range",key,max,disabled:true});
-  })
-);
 }
 
 
@@ -226,7 +217,7 @@ Object.assign(sequencer, {toggle, timemode, cols, rows, click, track, sequences,
 
 
 function initAudio(){
-let sequences,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=PRESETS();
+let sequences,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=config().presets();
 let analyser=C.createAnalyser();analyser.fftSize=32;let A=new Uint8Array(analyser.frequencyBinCount);
 
 function start(){
@@ -329,7 +320,8 @@ body{background:silver;display:flex;font-weight:bold;font-family:monospace;}
 
 
 
-function SLIDERS(){return [
+function config(){
+let s=[
 [["1v","osc1_vol",255],["1w","osc1_waveform",3],["1o","osc1_oct",16],["1s","osc1_det",11],["1d","osc1_detune",255]],
 [["2v","osc2_vol",255],["2w","osc2_waveform",3],["2o","osc2_oct",16],["2s","osc2_det",11],["2d","osc2_detune",255]],
 [["ea","env_attack",200000],["es","env_sustain",200000],["er","env_release",200000],["e1","osc1_xenv",1],["e2","osc2_xenv",1]],
@@ -337,9 +329,8 @@ function SLIDERS(){return [
 [["mw","lfo_waveform",3],["ms","lfo_freq",16],["ma","lfo_amt",255],["m1","lfo_osc1_freq",1],["mc","lfo_fx_freq",1]],
 [["ds","fx_delay_time",16],["da","fx_delay_amt",248],["ps","fx_pan_freq",16],["pa","fx_pan_amt",255]],
 [["nv","noise_fader",255],["vm","env_master",255]]
-];}
+];
 
-function PRESETS(){
 let v=[
 [255,0,9,0,0,255,0,7,0,0,    100,0,5970,       1,1, 2,500,254,   0,0,0,0,0,    1,31,4,21,    0,171],
 [255,2,6,11,0,255,2,6,11,4,  88,2000,7505,     0,0, 2,3144,51,   0,7,179,0,1,  6,60,4,64,    0,255],
@@ -350,9 +341,17 @@ let v=[
 [192,3,7,0,0,201,3,7,0,7,    789,1234,13636,   0,0, 2,5839,254,  0,6,195,0,1,  6,121,6,147,  0,191],
 [192,2,7,0,0,192,2,7,0,0,    0,0,20000,        0,0, 0,0,0,       0,0,0,0,0,    0,0,0,0,      0,192],
 ];
-let sliders=SLIDERS().flat().map(s=>s[1]);
-return {bpm:130,tracks:v.map(t=>{let obj={};sliders.forEach((k,i)=>obj[k]=t[i]);return Object.assign(obj,{s:[],p:[]});})};
-}
+
+function sliders(p){
+p.cells=s.flatMap((group,i)=>group.map(([label,key,max])=>{
+  element("label",p,"",label).style.color=color(i);
+  return Object.assign(element("input",p,"slider"),{type:"range",key,max,disabled:true});
+}));}
+
+function presets(){return {bpm:130,tracks:v.map(t=>{let o={};s.flat().map(s=>s[1]).forEach((k,i)=>o[k]=t[i]);return Object.assign(o,{s:[],p:[]});})};}
+
+return {sliders,presets};
+}//
 
 
 
