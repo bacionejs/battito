@@ -158,7 +158,7 @@ return t.p[t.s[i]-1]||=Array(PR).fill(0);
 function track(){return cols[LT] && audio.song.tracks[LT] || null;}
 function sequences(){return rows.reduce((acc,on,r)=>{if(!on)return acc;for(let t of audio.song.tracks){if(t.s[r]){acc.push(r);break;}}return acc;},[]);}
 function hasnotes(song){let r=range(song);return r?.tracks.some(t=>t.s.some(p=>p>0&&t.p[p-1]?.some(Boolean)))?r:null;}
-function scroll(n){sequencer.cells[(n+1)*(SC+1)].scrollIntoView({block:'center',behavior:'smooth'});}
+function scroll(n){sequencer.cells[(n+1)*(SC+1)].scrollIntoView({block:'center',inline:'nearest',behavior:'smooth'});}
 function toggle(cell){cell.classList.toggle("active",rows[cell.row] && cols[cell.col]);}
 
 function timemode(){
@@ -385,7 +385,7 @@ return {createbuffer};
 
 
 function tutorial(){
-element("style").textContent=".tut-pointer,.tut-message{position:fixed;z-index:2;} .tut-message{padding:1ch;font-size:2em;}"
+element("style").textContent=".tut-pointer,.tut-message{position:fixed;z-index:2;} .tut-message{padding:1ch;}"
 let ci=0,p,song,clicks,S,P;let m=element("button",document.body,"tut-message","Click here to watch a 25 second tutorial");m.onclick=init;setTimeout(()=>m?.remove(),3000);
 
 function init(){m.remove();S=sequencer;P=piano;p=element("div",document.body,"tut-pointer","👉");p.style.transition="transform .1s ease";initSong();initClicks();move();}
