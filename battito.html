@@ -405,7 +405,8 @@ return {createbuffer};
 
 
 function tutorial(){
-let ci=0,p,song,clicks,S,P;let m=element("div",document.body,"tut-message","Click here to watch a 25 second tutorial");m.onclick=init;setTimeout(()=>m?.remove(),3000);initStyle();
+element("style").textContent=".tut-pointer,.tut-message{position:fixed;z-index:2;} .tut-message{padding:20dvh;text-align:center;}"
+let ci=0,p,song,clicks,S,P;let m=element("div",document.body,"tut-message","Click here to watch a 25 second tutorial");m.onclick=init;setTimeout(()=>m?.remove(),3000);
 
 function init(){m.remove();S=sequencer;P=piano;p=element("div",document.body,"tut-pointer","👉");p.style.transition="transform .1s ease";initSong();initClicks();move();}
 function move(){if(ci>=clicks.length)return p.remove();let e=clicks[ci++]();let r=e.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;click(e);}
@@ -423,13 +424,6 @@ function initSong(){song=[
 [[1,1,1,1],[[123,,,,123,,,,123,,,,123,,,,123,,,,123,,,,123,,,,123]]],
 [[1,1,1,1],[[,,124,,,,,,,,,,,,124,,124]]],
 [[1,1,2,3],[[135,,,,,,,,159,,157,,159,,,,,,,,,,,,147,154,,159],[138,,,,,,,,150,,159,,162,,,,,,,,,,150,,162,150,,159],[149,,,,,,,,149,,150,,154,,,,,,,,,,,,147,157,,159]]]];
-}
-
-function initStyle(){
-element("style").textContent=""
-+".tut-pointer,.tut-message{position:fixed;z-index:2;}"
-+".tut-message{background:orange;color:black;padding:10;border-radius:5px;top:6dvh;border:2px outset orange;text-align:center;left:50%;transform:translateX(-50%);}"
-;
 }
 
 }//
