@@ -66,7 +66,7 @@ function update(){updatePiano();updateSliders();updateSequencer();updateText();}
 function initListeners(){
 piano      .onclick=handlePianoClick;
 sequencer  .onclick=sequencer.click;
-sliders    .oninput=(e)=>{sequencer.track()[e.target.key]=+e.target.value;update();audio.preview();};
+sliders    .oninput=e=>(sequencer.track()[e.target.key]=+e.target.value,update(),audio.preview());
 text       .oninput=()=>{try{let song=JSON.parse(text.value);audio.song=song;update();audio.preview();}catch(e){}};
 fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
 makeLongPress(canvas,audio.download);
