@@ -37,9 +37,7 @@ function updatePiano(){
 piano.cells.forEach(cell=>{cell.style.background="";});
 sequencer.cols.forEach((on,tid)=>{if(!on)return;
   let t=audio.song.tracks[tid];
-  t.p[t.s[audio.currs]-1]?.forEach((note,step)=>{
-    if(note>=C3 && note<=C3+PC){piano.cells[step*PC+note-C3].style.background=color(tid);}
-  });
+  t.p[t.s[audio.currs]-1]?.forEach((note,step)=>(note-C3)>=0 && (note-C3)<=PC && (piano.cells[step*PC+note-C3].style.background=color(tid)));
 });
 }
 
