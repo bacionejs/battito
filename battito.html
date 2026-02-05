@@ -299,7 +299,7 @@ let s=[
 function sliders(p){p.cells=s.flatMap((group,i)=>group.map(([label,key,max])=>(element("label",p,"",label).style.color=color(i),Object.assign(element("input",p,"slider"),{type:"range",key,max,disabled:true}))));}
 function presets(){return {bpm:130,tracks:v.map(t=>{let o={};s.flat().map(s=>s[1]).forEach((k,i)=>o[k]=t[i]);return Object.assign(o,{s:[],p:[]});})};}
 let o={sliders,presets}; config=function(){return o;}; return o;
-}//
+}
 
 
 
