@@ -334,8 +334,8 @@ for(let i=0,T;(T=json.tracks[i]);i++){
   osc2_det+=(osc2_oct-8)*12;osc2_detune=1+0.2*osc2_detune/255;
   let lfostep=G(1,2,lfo_freq,8)/rowlen,panstep=G(1,2,fx_pan_freq,8)/rowlen;L.fill(0);R.fill(0);
   let envlen=env_attack+env_sustain+env_release,ai=1/env_attack,ri=1/env_release;
-  for(let step=0,P=0;step<SR*PR;step++,P+=rowlen){
-    let n=T.p?.[T.s[step/PR|0]-1]?.[step%PR];
+  for(let step=0;step<SR*PR;step++){
+    let n=T.p?.[T.s[step/PR|0]-1]?.[step%PR],P=step*rowlen;
     if(n){
       let o1fb=NOTE[n+osc1_det]*osc1_detune,o2fb=NOTE[n+osc2_det]*osc2_detune,[c1,c2,low,band]=[0,0,0,0];
       for(let j=0;j<envlen;j++){
