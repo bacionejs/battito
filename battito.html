@@ -125,18 +125,13 @@ function initSequencerHelpers(){
 let cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1; timemode();
 
 function click({target:{row,col}}){
-if(row==-1 && col==-1){     //corner
+if(row==-1 && col==-1){//corner-toggleall
   let mr=0,mc=0; audio.song.tracks.forEach((t,c)=>t.s.forEach((v,r)=>{if(v){mr=Math.max(mr,r);mc=Math.max(mc,c);}}));
   let as=rows.slice(0,mr+1).every(Boolean) && cols.slice(0,mc+1).every(Boolean);
-  rows.fill(0);cols.fill(0);if(!as){rows.fill(1,0,mr+1);cols.fill(1,0,mc+1);}
-}else if(row==-1){          //column-headers
-  cols[col]^=1;LT=col;audio.preview();
-}else if(col==-1){          //row-headers
-  rows[row]^=1;
-}else{                      //grid-body
-  let t=audio.song.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;
-  if(np)t.p[np-1]??=Array(PR).fill(0);
-}
+  rows.fill(0);cols.fill(0);if(!as){rows.fill(1,0,mr+1);cols.fill(1,0,mc+1);}}
+else if(row==-1){cols[col]^=1;LT=col;audio.preview();}//column-headers
+else if(col==-1){rows[row]^=1;}//row-headers
+else{let t=audio.song.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;if(np)t.p[np-1]??=Array(PR).fill(0);}//grid-body
 update();audio.start();
 }
 
