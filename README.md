@@ -13,7 +13,7 @@ Steps
 ---
 
 Optional
-- There are 8 preset instruments, but you can also select a track and configure the **synth** with the sliders (see the Instruments section)
+- There are 8 preset instruments, but you can also select a track and configure the **synth** (see the Instruments section)
 - To **export** html/wav, long-press the waveform visualizer. Use the html file for your game and the wav file for whatever else. It will export whatever is selected: whole song or ranges. The exported game-ready html file (engine+song) is 2k zipped, thousands of times smaller than a wav file.
 - To **export** a sound effect, like an explosion, create one note on the first row of the piano, and export a range.
 - To save your work for future use, copy the **textarea** to a separate text editor. To **import**, paste in the textarea.
