@@ -17,7 +17,7 @@ let loading    =element("div",side,"loading","loading...");
 initAudio();
 grid(piano,PC,PR); line(piano,PC,"x",12); line(piano,PC,"y",4);
 grid(sequencer,SC,SR,true); grid(sequencer.children[0],16,1,false,"meter"); initSequencerHelpers();
-config().sliders(sliders);
+instrument().sliders(sliders);
 updateText();
 initListeners();
 initStyle();
@@ -180,7 +180,7 @@ Object.assign(sequencer, {toggle, timemode, cols, rows, click, track, sequences,
 
 
 function initAudio(){
-let sequences,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=config().presets();
+let sequences,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instrument().presets();
 let analyser=C.createAnalyser();analyser.fftSize=32;let A=new Uint8Array(analyser.frequencyBinCount);
 
 function start(){
@@ -283,7 +283,7 @@ body{background:silver;display:flex;font-weight:bold;font-family:monospace;}
 
 
 
-function config(){
+function instrument(){
 let s=[
 [["1v","osc1_vol",255],["1w","osc1_waveform",3],["1o","osc1_oct",16],["1s","osc1_det",11],["1d","osc1_detune",255]],
 [["2v","osc2_vol",255],["2w","osc2_waveform",3],["2o","osc2_oct",16],["2s","osc2_det",11],["2d","osc2_detune",255]],
@@ -304,7 +304,7 @@ let s=[
 ];
 function sliders(p){p.cells=s.flatMap((group,i)=>group.map(([label,key,max])=>(element("label",p,"",label).style.color=color(i),Object.assign(element("input",p,"slider"),{type:"range",key,max,disabled:true}))));}
 function presets(){return {bpm:130,tracks:v.map(t=>{let o={};s.flat().map(s=>s[1]).forEach((k,i)=>o[k]=t[i]);return Object.assign(o,{s:[],p:[]});})};}
-let o={sliders,presets}; config=function(){return o;}; return o;
+let o={sliders,presets}; instrument=function(){return o;}; return o;
 }
 
 
