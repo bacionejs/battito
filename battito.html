@@ -319,11 +319,11 @@ let NOTE=new Float32Array(256);
 for(let n=0;n<256;n++){let f=0.00390625,m=1.059463094,l=128,i=n;if(i>l)i-=l;else{i=l-i;m=1/m;}while(i-->0)f*=m;NOTE[n]=f;}
 let G=(f,m,n,l)=>{if(n>l)n-=l;else{n=l-n;m=1/m;}while(n-->0)f*=m;return f;};
 let R_S=1,rnd=()=>{R_S=Math.imul(R_S,0x15a4e35);return (R_S>>>0)%255/255;};
-let FBASE=1.5*Math.PI/44100
+let SAMPLERATE=44100,FBASE=1.5*Math.PI/SAMPLERATE;
 return {createbuffer(json){
-let rowlen=Math.ceil(15*44100/json.bpm);
-let SR=json.tracks.reduce((smax,t)=>t.s.length>smax?t.s.length:smax,0);
-let PR=json.tracks.reduce((max,t)=>t.p.reduce((nmax,p)=>p.length>nmax?p.length:nmax,max),0);
+let rowlen=Math.ceil(15*SAMPLERATE/json.bpm);
+let SR=Math.max(...json.tracks.map(t=>t.s.length));
+let PR=Math.max(...json.tracks.flatMap(t=>t.p.map(p=>p.length)));
 let S=SR*PR*rowlen;
 let LL=new Float32Array(S),RR=new Float32Array(S),L=new Float32Array(S),R=new Float32Array(S);
 for(let i=0,T;(T=json.tracks[i]);i++){
@@ -356,7 +356,7 @@ for(let i=0,T;(T=json.tracks[i]);i++){
 }
 let X=0;for(let i=0;i<S;i++){X=Math.max(X,Math.abs(LL[i]),Math.abs(RR[i]));}
 if(X>0){let scale=1/X;for(let i=0;i<S;i++){LL[i]*=scale;RR[i]*=scale;}}
-let buffer=audiocontext.createBuffer(2,LL.length,44100);[LL,RR].forEach((data,i)=>buffer.copyToChannel(data,i));
+let buffer=audiocontext.createBuffer(2,LL.length,SAMPLERATE);[LL,RR].forEach((data,i)=>buffer.copyToChannel(data,i));
 return buffer;
 }};}
 
