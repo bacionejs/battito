@@ -337,8 +337,7 @@ for(let i=0,T;(T=json.tracks[i]);i++){
   for(let step=0;step<SR*PR;step++){
     let n=T.p?.[T.s[step/PR|0]-1]?.[step%PR];
     if(n){
-      let o1fb=NOTE[n+osc1_det]*osc1_detune,o2fb=NOTE[n+osc2_det]*osc2_detune;
-      let [c1,c2,low,band]=[0,0,0,0];
+      let o1fb=NOTE[n+osc1_det]*osc1_detune,o2fb=NOTE[n+osc2_det]*osc2_detune,[c1,c2,low,band]=[0,0,0,0];
       for(let j=0;j<envlen;j++){
         let b=j+P;if(b>=S)break;let lfoR,e=1,f,rs,high,t;
         lfoR=W(lfo_waveform,lfostep*b)*lfo_amt+0.5;
