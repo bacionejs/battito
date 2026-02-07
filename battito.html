@@ -46,18 +46,43 @@ e.cells=Array(cols*rows).fill().map((_,i)=>{
 });}
 
 function initListeners(){
-piano      .onclick=handlePianoClick;
+piano      .onclick=pianoClick;
 sequencer  .onclick=sequencer.click;
 sliders    .oninput=e=>(sequencer.track()[e.target.key]=+e.target.value,update(),audio.preview());
 text       .oninput=()=>{try{let song=JSON.parse(text.value);audio.song=song;update();audio.preview();}catch(e){}};
 fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
-makeLongPress(canvas,audio.download);
+makeLongPress(canvas,download);
 makeLongPress(piano,sequencer.timemode.toggle);
 [piano,sequencer,sliders].forEach(el=>{el.addEventListener("contextmenu",e=>e.preventDefault());});
-function handlePianoClick({target:{row:r,col}}){
+function pianoClick({target:{row:r,col}}){
   let note=col+C3,p=sequencer.pattern();if(p===null){audio.preview(note);return;}
   if(timemodeon){sequencer.timemode.run(note);}
   else{if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(note);}
+}
+function download(){try{
+  if(!sequencer.hasnotes(audio.song))return alert("Nothing to save. Please select song or range");
+  let a=element("a"),file="battito_song_"+Date.now();
+  a.href=URL.createObjectURL(bufferToWav());a.download=file+".wav";a.click();
+  a.href=URL.createObjectURL(new File([jsonToHtml()],""));a.download=file+".html";a.click();
+  URL.revokeObjectURL(a.href);a.remove();
+  }catch(e){alert(e.message);}
+  function jsonToHtml(){
+    let s="";
+    s+="\n<\script>onload=()=>{addEventListener('click',play);document.body.textContent='Click to play'";
+    s+="\nlet json="+JSON.stringify(sequencer.range(audio.song));
+    s+="\nlet C=new AudioContext(),buffer=Battito(C).createbuffer(json)";
+    s+="\nfunction play(){let S=C.createBufferSource();S.buffer=buffer;S.connect(C.destination);S.start();}//to loop: S.loop=true";
+    s+="\n"+Battito;
+    s+="\n}</\script>";
+    return s;
+  }
+  function bufferToWav(){
+    let b=audio.buffer,c=b.numberOfChannels,l=b.length*c*2+44,o=new ArrayBuffer(l),v=new DataView(o),a=[],p=0,f=x=>{v.setUint16(p,x,1);p+=2;},F=x=>{v.setUint32(p,x,1);p+=4;};
+    F(0x46464952);F(l-8);F(0x45564157);F(0x20746d66);F(16);f(1);f(c);F(b.sampleRate);F(b.sampleRate*c*2);f(c*2);f(16);F(0x61746164);F(l-p-4);
+    for(let i=0;i<c;i++)a.push(b.getChannelData(i));
+    for(let i=0,j=0;p<l;j++)for(i=0;i<c;i++){let s=a[i][j];s=s<-1?-1:s>1?1:s;s=(s<0?s*32768:s*32767)|0;v.setInt16(p,s,1);p+=2;}
+    return new Blob([o],{type:"audio/wav"});
+  }
 }
 function makeLongPress(o,callback){
   let t=null,lp={
@@ -139,32 +164,8 @@ function preview(note){try{
   let start=d.findIndex(v=>Math.abs(v)>=threshold),end=d.findLastIndex(v=>Math.abs(v)>=threshold);
   c.clearRect(0,0,w,h);c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.lineWidth=2;c.strokeStyle="blue";c.stroke();
 }catch(e){}}
-function download(){try{
-  if(!sequencer.hasnotes(SONG))return alert("Nothing to save. Please select song or range");
-  let a=element("a"),file="battito_song_"+Date.now();
-  a.href=URL.createObjectURL(bufferToWav());a.download=file+".wav";a.click();
-  a.href=URL.createObjectURL(new File([jsonToHtml()],""));a.download=file+".html";a.click();
-  URL.revokeObjectURL(a.href);a.remove();
-  }catch(e){alert(e.message);}
-  function jsonToHtml(){
-    let s="";
-    s+="\n<\script>onload=()=>{addEventListener('click',play);document.body.textContent='Click to play'";
-    s+="\nlet json="+JSON.stringify(sequencer.range(SONG));
-    s+="\nlet C=new AudioContext(),buffer=Battito(C).createbuffer(json)";
-    s+="\nfunction play(){let S=C.createBufferSource();S.buffer=buffer;S.connect(C.destination);S.start();}//to loop: S.loop=true";
-    s+="\n"+Battito;
-    s+="\n}</\script>";
-    return s;
-  }
-  function bufferToWav(){
-    let b=S.buffer,c=b.numberOfChannels,l=b.length*c*2+44,o=new ArrayBuffer(l),v=new DataView(o),a=[],p=0,f=x=>{v.setUint16(p,x,1);p+=2;},F=x=>{v.setUint32(p,x,1);p+=4;};
-    F(0x46464952);F(l-8);F(0x45564157);F(0x20746d66);F(16);f(1);f(c);F(b.sampleRate);F(b.sampleRate*c*2);f(c*2);f(16);F(0x61746164);F(l-p-4);
-    for(let i=0;i<c;i++)a.push(b.getChannelData(i));
-    for(let i=0,j=0;p<l;j++)for(i=0;i<c;i++){let s=a[i][j];s=s<-1?-1:s>1?1:s;s=(s<0?s*32768:s*32767)|0;v.setInt16(p,s,1);p+=2;}
-    return new Blob([o],{type:"audio/wav"});
-  }
-}
-audio={start,preview,download,get song(){return SONG;},set song(newSong){SONG=newSong;},get currp(){return currP;},get currs(){return currS;}};
+
+audio={start,preview,get buffer(){return S.buffer},get song(){return SONG;},set song(newSong){SONG=newSong;},get currp(){return currP;},get currs(){return currS;}};
 }
 
 function initStyle(){element("style").textContent=`
