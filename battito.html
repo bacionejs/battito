@@ -164,7 +164,6 @@ function preview(note){try{
   let start=d.findIndex(v=>Math.abs(v)>=threshold),end=d.findLastIndex(v=>Math.abs(v)>=threshold);
   c.clearRect(0,0,w,h);c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.lineWidth=2;c.strokeStyle="blue";c.stroke();
 }catch(e){}}
-
 audio={start,preview,get buffer(){return S.buffer},get song(){return SONG;},set song(newSong){SONG=newSong;},get currp(){return currP;},get currs(){return currS;}};
 }
 
