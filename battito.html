@@ -31,17 +31,13 @@ function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Le
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
 function color(i){if(i===null)return "";let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
 
-function grid(e,cols,rows,header,classname="cell"){
-let a=0;if(header){a=-1;cols++;rows++;}
+function grid(e,cols,rows,classname="cell"){
 Object.assign(e.style,{gridTemplateColumns:"repeat("+cols+",1fr)",gridTemplateRows:"repeat("+rows+",1fr)"});
 e.cells=Array(cols*rows).fill().map((_,i)=>{
-  let c=i%cols,r=Math.floor(i/cols),cell=element("div",e,classname);
-  if(header){
-    if(!r     ){cell.classList.add("col-header");}
-    if(!r && c){cell.textContent=String.fromCharCode(64+c);cell.style.color=color(c+a);}
-    if(r && !c){cell.textContent=r;}
-  }
-  cell.row=r+a;cell.col=c+a;
+  let cell=element("div",e,classname);cell.col=i%cols,cell.row=(i/cols)|0;if(cols%2==0)return cell;
+  let r=--cell.row,c=--cell.col;
+  if(r==-1){cell.classList.add("col-header");if(c!=-1){cell.textContent=String.fromCharCode(65+c);cell.style.color=color(c);}
+  }else if(c==-1){cell.textContent=r+1;}
   return cell;
 });}
 
@@ -94,7 +90,7 @@ function makeLongPress(o,callback){
 }
 
 function initSequencer(){
-grid(sequencer,SC,SR,true); grid(sequencer.children[0],16,1,false,"meter"); 
+grid(sequencer,SC+1,SR+1); grid(sequencer.children[0],16,1,"meter"); 
 let P=Array(PC*PR),cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1; timemode();
 function toggle(cell){cell.classList.toggle("active",rows[cell.row] && cols[cell.col]);}
 function scroll(n){let t=sequencer.cells[(n+1)*(SC+1)],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
