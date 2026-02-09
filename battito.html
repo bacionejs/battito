@@ -39,7 +39,7 @@ e.cells=Array(cols*rows).fill().map((_,i)=>{
 });}
 
 function initListeners(){
-piano      .onclick=pianoClick;
+piano      .onclick=pianoclick;
 sequencer  .onclick=sequencer.click;
 sliders    .oninput=e=>(sequencer.track()[e.target.key]=+e.target.value,update(),audio.preview());
 text       .oninput=()=>{try{let song=JSON.parse(text.value);audio.song=song;update();audio.preview();}catch(e){}};
@@ -47,7 +47,7 @@ fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.doc
 makeLongPress(canvas,download);
 makeLongPress(piano,sequencer.timemode.toggle);
 [piano,sequencer,sliders].forEach(el=>{el.addEventListener("contextmenu",e=>e.preventDefault());});
-function pianoClick({target:{row:r,col}}){
+function pianoclick({target:{row:r,col}}){
   let note=col+C3,p=sequencer.pattern();if(p===null){audio.preview(note);return;}
   if(timemodeon){sequencer.timemode.run(note);}
   else{if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(note);}
