@@ -70,9 +70,9 @@ function download(){try{
     return s;
   }
   function bufferToWav(){
-    let os=44,b=audio.buffer,l=b.length*4+os,o=new ArrayBuffer(l),v=new DataView(o),u8=new Uint8Array(o);
+    let os=44,b=audio.buffer,d=b.length*4,o=new ArrayBuffer(d+os),v=new DataView(o),u8=new Uint8Array(o);
     u8.set([82,73,70,70,0,0,0,0,87,65,86,69,102,109,116,32,16,0,0,0,1,0,2,0,68,172,0,0,16,177,2,0,4,0,16,0,100,97,116,97,0,0,0,0]);
-    v.setUint32(4,l-8,true); v.setUint32(40,l-os,true);
+    v.setUint32(4,d+36,true); v.setUint32(40,d,true);
     for(let j=0;j<b.length;j++) for(let i=0;i<2;i++){let s=b.getChannelData(i)[j]; s=s<-1?-1:s>1?1:s;v.setInt16(os,s<0?s*32768:s*32767,true); os+=2;}
     return new Blob([o],{type:"audio/wav"});
   }
