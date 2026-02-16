@@ -61,12 +61,11 @@ function download(){try{
   }catch(e){alert(e.message);}
   function jsonToHtml(){
     let s="";
-    s+="\n<\script>onload=()=>{addEventListener('click',play);document.body.textContent='Click to play'";
-    s+="\nlet json="+JSON.stringify(sequencer.range(audio.song));
+    s+="\n<\script>onload=()=>{document.body.textContent='Click to play'\naddEventListener('click',song().play,{once:true});";
+    s+="\nfunction song(){\nlet json="+JSON.stringify(sequencer.range(audio.song));
     s+="\nlet C=new AudioContext(),buffer=Battito(C).createbuffer(json)";
-    s+="\nfunction play(){let S=C.createBufferSource();S.buffer=buffer;S.connect(C.destination);S.start();}//to loop: S.loop=true";
-    s+="\n"+Battito;
-    s+="\n}</\script>";
+    s+="\nfunction play(){let S=C.createBufferSource();S.buffer=buffer;S.connect(C.destination);S.loop=true;S.start();}";
+    s+="\n"+Battito+"\nreturn {play}\n}\n}</\script>";
     return s;
   }
   function bufferToWav(){
