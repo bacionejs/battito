@@ -3,7 +3,7 @@
 document.title="Battito Beats";//https://github.com/bacionejs/battito
 addEventListener("error",e=>{prompt("error",e.error.stack);});
 
-let audio,timemodeon=0,LT=0,SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3;
+let audio,meter,timemodeon=0,LT=0,SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3;
 let piano      =element("div",document.body,"piano");
 let message    =element("div",piano,"message");
 let sliders    =element("div",document.body,"sliders");
@@ -85,7 +85,7 @@ function makeLongPress(o,callback){
 }
 
 function initSequencer(){
-grid(sequencer,SC+1,SR+1); grid(sequencer.children[0],16,1,"meter"); 
+grid(sequencer,SC+1,SR+1); grid(sequencer.children[0],16,1,"meter"); meter=sequencer.children[0].cells;
 let P=Array(PC*PR),cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1; timemode();
 function toggle(cell){cell.classList.toggle("active",rows[cell.row] && cols[cell.col]);}
 function scroll(n){let t=sequencer.cells[(n+1)*(SC+1)],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
@@ -144,7 +144,7 @@ function loop(){
   currP=(t*PR|0)%PR;
   if(currS!==prevS){point(sequencer,SC,prevS,currS,1);prevS=currS;piano.update();sequencer.scroll(currS);}
   if(currP!==prevP){point(piano    ,PC,prevP,currP  );prevP=currP;if(timemodeon && currP==0)sequencer.timemode.next();}
-  analyser.getByteFrequencyData(A);sequencer.children[0].cells.forEach((b,i)=>{b.style.height=(A[i]*0.4)+"%";});
+  analyser.getByteFrequencyData(A);meter.forEach((b,i)=>{b.style.height=(A[i]*0.4)+"%";});
   requestAnimationFrame(loop);
 }
 function preview(note){try{
