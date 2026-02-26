@@ -141,7 +141,7 @@ For Ambidumbi, a fairly complex song, the hot inner loop runs 39,208,609 times a
 
 ---
 
-Having a tutorial that basically runs itself was really important because my interface is buttonless and not immediately obvious. The tutorial is only 25 seconds long and plays a simplified version of Beatnic, showing how to use the sequencer and piano automatically. Originally the code was huge, but I pared it down so it just generates a sequence of “clicks” that point to the right cells and trigger them in order, with a little animated pointer and simple timing. It builds a tiny song in `initSong`, maps which sequencer cells and piano keys to hit, and then just steps through them, scaling the pointer for a click effect.
+Having a tutorial that basically runs itself was really important because my interface is buttonless and not immediately obvious. The tutorial is only 25 seconds long and plays a simplified version of Beatnic, showing how to use the sequencer and piano automatically. Originally the code was huge, but I pared it down so it just generates a sequence of “clicks” that point to the right cells and trigger them in order, with a little animated pointer and simple timing. It builds a tiny song, maps which sequencer cells and piano keys to hit, and then just steps through them, scaling the pointer for a click effect.
 
 ---
 
