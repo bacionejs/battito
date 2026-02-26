@@ -109,7 +109,46 @@ This is just a dumping ground for me talking about the techniques behind Battito
 
 ---
 
-I'll discuss first one of the least interesting parts, the waveform analyzer. Originally, I had made the analyzer like everybody else, include the envelope as a background, remove delay, and plot the sample, but I grew increasingly frustrated with showing the envelope. As you increase one value, the others necessarily need to decrease to fit in a fixed area. And besides, the waveform is almost identical to the envelope, making it superfluous. Not only can you see the shape of the envelope from the sample, you can also see the envelope just by looking at the slider positions for the envelope. This led me to remove the envelope entirely. Also, this leads to another issue. Similar to the necessity of removing delay, as delay can be several seconds long and won't fit into a fixed area without losing the ability to visualize the waveform as it becomes more confined in a fixed area, the envelope can also be several seconds of time, and fitting it into a fixed area makes that it's difficult to see the waveform. One solution is to cut off the waveform after two seconds, but then we're back to why did we remove delay? It was to fit something into an absolute fixed time. So I decided to do something different and just come in from both ends of the sample until a certain threshold was met and plot that. After testing it with several types of samples, it seemed to look reasonable. The logic becomes basically: `for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}`
+I'll discuss first one of the least interesting parts, the waveform analyzer. Originally, I had made the analyzer like everybody else, include the envelope as a background, remove delay, and plot the sample, but I grew increasingly frustrated with showing the envelope. As you increase one value, the others necessarily need to decrease to fit in a fixed area. And besides, the waveform is almost identical to the envelope, making it superfluous. Not only can you see the shape of the envelope from the sample, you can also see the envelope just by looking at the slider positions for the envelope. This led me to remove the envelope entirely. Also, this leads to another issue. Similar to the necessity of removing delay, as delay can be several seconds long and won't fit into a fixed area without losing the ability to visualize the waveform as it becomes more confined in a fixed area, the envelope can also be several seconds of time, and fitting it into a fixed area makes that it's difficult to see the waveform. One solution is to cut off the waveform after two seconds, but then we're back to why did we remove delay? It was to fit something into a fixed space. So I decided to do something different and just come in from both ends of the sample until a certain threshold was met and plot that. After testing it with several types of samples and tweaking the threshold, it seemed to look reasonable. The logic becomes basically: `for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}`
+
+
+
+
+
+---
+
+The main motivation for creating another tracker was that the trackers that are used for size-constrained games typically have editors that are number-centric, and being a music noob, it was difficult for me to reason about while composing a song. And so I decided to make a tracker with a piano roll, which necessarily is Huge and takes up more than half of the screen area. Initially I only had preset instruments, but eventually when I included the ability to configure the synth, I needed to include a widget and to make it small, I opted for a very generic set of sliders, of which there are 29 for two oscillators, envelopes, effects, etc. I didn't have room for nice labeling, so I grouped them by color and a very small label abbreviation. I changed some names to be more generic like Modulation instead of LFO, and included a rundown of building a synth sound in the readme. Even the on and off values are sliders, which isn't obvious from looking at the sliders, but is reasonably coherent if you read the instrument section of the readme.
+
+
+
+
+
+---
+
+With very little space remaining, I decided to rely on a text version of the underlying data, initially as a way to import and export and to set the beats per minute, but also the user can change the underlying data live, for example, changing the sound of a synth or even the notes being played.
+
+
+
+
+---
+
+Just for fun, I decided to try to make the interface buttonless. There are sliders, but besides that, there are no obvious buttons. You could consider the piano row is just a huge grid of buttons, but there are no obvious buttons. There are two long-press functions. For example, if you long-press on the waveform, it exports the song as a WAV file and an HTML file. The HTML file you would use in your game, and the WAV file is for whatever. And there's also a long press on the piano that will take you into time mode instead of step mode, which is the last thing I added to the application. Also, you could consider all the cells in the sequencer as buttons, the top left corner of the sequencer toggles the whole song off and on, and the columns and rows allow you to select a range of the song, especially useful for editing a small group of patterns. Also, the sequencer body can be thought of as a bunch of buttons, because you click in the cells to select a pattern ID.
+
+---
+
+Also, to keep things simple, the sequencer is hard-coded to 8-instrument, 60-phrases and 9-patterns per track so that at 60 beats per minute that will give you a fairly robust song up to eight minutes.
+
+
+
+
+
+---
+
+As an afterthought, I included a spectrum analyzer. Not that it's useful, but it's nice eye candy to have. While the spectrum analyzer eats up a lot of CPU, its code is very simple and relies on a style trick and a very simple loop.
+`.meter{background:linear-gradient(to top,lime,orange,red);transition:height 50ms linear;}`
+`meter.forEach((b,i)=>{b.style.height=(A[i]*0.4)+"%";})`
+
+
 
 
 </details>
