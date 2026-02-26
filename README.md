@@ -118,10 +118,6 @@ The main motivation for creating another tracker was that the trackers that are 
 
 ---
 
-With very little space remaining, I decided to rely on a text version of the underlying data, initially as a way to import and export and to set the beats per minute, but also the user can change the underlying data live, for example, changing the sound of a synth or even the notes being played.
-
----
-
 Just for fun, I decided to try to make the interface buttonless. There are sliders, but besides that, there are no obvious buttons. You could consider the piano row is just a huge grid of buttons, but there are no obvious buttons. There are two long-press functions. For example, if you long-press on the waveform, it exports the song as a WAV file and an HTML file. The HTML file you would use in your game, and the WAV file is for whatever. And there's also a long press on the piano that will take you into time mode instead of step mode, which is the last thing I added to the application. Also, you could consider all the cells in the sequencer as buttons, the top left corner of the sequencer toggles the whole song off and on, and the columns and rows allow you to select a range of the song, especially useful for editing a small group of patterns. Also, the sequencer body can be thought of as a bunch of buttons, because you click in the cells to select a pattern ID.
 
 ---
@@ -137,13 +133,13 @@ As an afterthought, I included a spectrum analyzer. Not that it's useful, but it
 ---
 
 Initially, I built my app around the pl_synth wasm port, but eventually, just for fun, I decided to create my own port of the original Jake Taylor Sonant. The initial port of his C code wasn't too difficult, but being javascript, it was very slow to process a song. And so I kept adding optimizations.
-The main thing I did in this code to make it fast is precompute as much as possible and reduce repeated math inside the hot loops. The waveforms are fully generated ahead of time in SIN, SQUARE, SAW, and TRI, and the note frequencies for all 256 notes are precomputed so the inner loop doesn’t have to do exponentiation for every sample. I also simplified multiplications and divisions for envelopes and detuning by pre-scaling constants outside the loops, and the LFO and panning steps are calculated once per track per buffer instead of per sample. Everything that could be pulled out of the inner per-sample loop is pulled out, so the loop only does what it absolutely has to: fetch a sample from a waveform, mix oscillators, apply envelope, add optional noise, apply the filter, pan, and write into the buffer. Delay and master scaling happen after the main loops, so the hot path stays tight. The result is that even with multiple tracks, two oscillators per note, filters, envelopes, and noise, the CPU only does what’s necessary to generate the song without wasting cycles on recomputation.
+The main thing I did in this code to make it fast is precompute as much as possible and reduce repeated math inside the hot loop. The waveforms are fully generated ahead of time in SIN, SQUARE, SAW, and TRI, and the note frequencies for all 256 notes are precomputed so the inner loop doesn’t have to do exponentiation for every sample. I also simplified multiplications and divisions for envelopes and detuning by pre-scaling constants outside the loops, and the LFO and panning steps are calculated once per track per buffer instead of per sample. Everything that could be pulled out of the inner per-sample loop is pulled out, so the loop only does what it absolutely has to: fetch a sample from a waveform, mix oscillators, apply envelope, add optional noise, apply the filter, pan, and write into the buffer. Delay and master scaling happen after the main loops, so the hot path stays tight. The result is that even with multiple tracks, two oscillators per note, filters, envelopes, and noise, the CPU only does what’s necessary to generate the song without wasting cycles on recomputation.
 
 For Ambidumbi, a fairly complex song, the hot inner loop runs 39,208,609 times and produces the final audio in 4243ms.
 
 ---
 
-Having a tutorial that basically runs itself was really important because my interface is buttonless and not immediately obvious. The tutorial is only 25 seconds long and plays a simplified version of Beatnik, showing how to use the sequencer and piano automatically. Originally the code was huge, but I pared it down so it just generates a sequence of “clicks” that point to the right cells and trigger them in order, with a little animated pointer and simple timing. It builds a tiny song in initSong, maps which sequencer cells and piano keys to hit, and then just steps through them, scaling the pointer for a click effect. The result is fully automated: you can watch the tutorial, see which cells to press, and even hear a song without ever needing to touch anything.
+Having a tutorial that basically runs itself was really important because my interface is buttonless and not immediately obvious. The tutorial is only 25 seconds long and plays a simplified version of Beatnic, showing how to use the sequencer and piano automatically. Originally the code was huge, but I pared it down so it just generates a sequence of “clicks” that point to the right cells and trigger them in order, with a little animated pointer and simple timing. It builds a tiny song in `initSong`, maps which sequencer cells and piano keys to hit, and then just steps through them, scaling the pointer for a click effect.
 
 ---
 
@@ -161,7 +157,7 @@ For colors I do not pick explicit values. I have a function that automatically g
 
 ---
 
-Early on I ran into problems making the app look the same in Chrome and Firefox. Eventually I gave up on Firefox and just block the app from running if it detects Firefox. I do not do it explicitly, but one of the main things that breaks in Firefox is the sizing of the grid elements. So I just check the grid size and if it is wrong I show a message telling the user to use a Chromium-based browser. I just didn't have the energy for compatibility.
+Early on I ran into problems making the app look the same in Chrome and Firefox. Eventually I gave up on Firefox and just block it. I do not do it explicitly, but one of the main things that breaks in Firefox is the sizing of the grid elements. So I just check the grid size and if it is wrong I show a message telling the user to use a Chromium-based browser. I just didn't have the energy for compatibility.
 
 ---
 
