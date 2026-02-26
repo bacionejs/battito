@@ -116,7 +116,7 @@ Also, to keep things simple, the sequencer is hard-coded to 8-tracks, 9-patterns
 
 Initially, I built my app around the pl_synth wasm port, but eventually, just for fun, I decided to create my own port of the original Jake Taylor Sonant synth engine. The initial port of Jake's C code wasn't too difficult, but being javascript, it was very slow to process a song, so I added some optimizations.  
 
-The application is less than 300 lines, and I didn't want to add things that aren't absolutely necessary, but there are few extras that help round it out: a tutorial, a waveform analyzer, a spectrum analyzer, and support for timemode in addition to the standard stepmode.  
+The application is less than 300 lines, and I didn't want to add things that aren't absolutely necessary, but there are a few extras that help round it out: a tutorial, a waveform analyzer, a spectrum analyzer, and support for timemode in addition to the standard stepmode.  
   
 Since the piano roll takes up so much space, I had to squish the 29 instrument controls into a simple stack of sliders which are impossible to understand without reading the instruments section.  
 
