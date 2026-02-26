@@ -108,7 +108,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 ---
 
-The main motivation for creating another tracker was that the trackers that are used for size-constrained games typically have editors that are number-centric, and being a music noob, it was difficult for me to reason about while composing a song. And so I decided to make a tracker with a piano roll. Also, since an Android tablet is the only device I have, I wanted it to be very touch-friendly. And yes, I program on an Android tablet using Termux, Neovim, and Apache.  
+The main motivation for creating another tracker is that the trackers which are used for size-constrained games typically have editors that are number-centric, and being a music noob, it was difficult for me to reason about while composing a song. And so I decided to make a tracker with a piano roll. Also, since an Android tablet is the only device I have, I wanted it to be very touch-friendly. And yes, I program on an Android tablet using Termux, Neovim, and Apache.  
   
 Just for fun, I decided to try to make the interface buttonless. There are sliders, but besides that, there are no obvious controls.  
 
@@ -118,7 +118,7 @@ Initially, I built my app around the pl_synth wasm port, but eventually, just fo
 
 The application is less than 300 lines, and I didn't want to add things that aren't absolutely necessary, but there are few extras that help round it out: a tutorial, a waveform analyzer, a spectrum analyzer, and support for timemode in addition to the standard stepmode.  
   
-Since the piano roll takes up so much space, I had to squish the 29 instrument controls into a simple stack of sliders which are impossible to understand without reading the instrument section.  
+Since the piano roll takes up so much space, I had to squish the 29 instrument controls into a simple stack of sliders which are impossible to understand without reading the instruments section.  
 
 To eliminate controls for saving, loading and BPM, I have a text widget, which has the added benefit of allowing fine tweaks that are difficult with the sliders. And like all the other widgets, changes are live.
 
@@ -150,7 +150,7 @@ Unlike the waveform analyzer, the spectrum analyzer is basically just eye candy,
 
 ---
 
-Export is accomplished by long pressing on the waveform widget; the JavaScript necessary to paste into your game is exported. But just for fun I also export the WAV file. The WAV format has a forty four byte header followed by the raw audio samples. Some fields in the header are thirty two bit unsigned integers like the total file size and some are sixteen bit integers like the number of channels or bits per sample. I use a Uint8Array to hold all the bytes because I need a plain byte container and I use a DataView to write multi byte numbers at precise positions and make sure they are little endian as WAV requires. I use setInt16 for the actual audio samples because PCM audio is sixteen bit signed integers so each float sample between minus one and one gets scaled and written as an Int16. I use setUint32 for header fields that need four bytes.
+Export is accomplished by long pressing on the waveform widget; the JavaScript necessary to paste into your game is exported. But just for fun I also export the WAV file. The WAV format has a 44 byte header followed by the raw audio samples. Some fields in the header are 32 bit unsigned integers like the total file size and some are 16 bit integers like the number of channels or bits per sample. I use a Uint8Array to hold all the bytes because I need a plain byte container and I use a DataView to write multi byte numbers at precise positions and make sure they are little endian as WAV requires. I use setInt16 for the actual audio samples because PCM audio is 16 bit signed integers so each float sample between minus one and one gets scaled and written as an Int16. I use setUint32 for header fields that need 4 bytes.
 
 ---
 
