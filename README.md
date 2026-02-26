@@ -151,6 +151,10 @@ As an afterthought, I included a spectrum analyzer. Not that it's useful, but it
 
 
 
+---
+
+Initially, I built my app around the pl_synth wasm port, but eventually, just for fun, I decided to create my own port of the original Jake Taylor Sonant. The initial port of his C code wasn't too difficult, but being javascript, it was very slow to process a song. And so I kept adding optimizations, the two big ones being precomputed waveforms and precomputed note frequencies. For Ambidumbi, a fairly complex song, the hot inner loop runs 39,208,609 times and produces the final audio in 4243ms.
+
 
 </details>
 
