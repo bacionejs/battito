@@ -114,7 +114,7 @@ Just for fun, I decided to try to make the interface buttonless. There are slide
 
 Also, to keep things simple, the sequencer is hard-coded to 8-tracks, 9-patterns per track and 60-phrases so that at 60 beats per minute you can create a fairly robust song up to 8 minutes long.  
 
-Initially, I built my app around the pl_synth wasm port, but eventually, just for fun, I decided to create my own port of the original Jake Taylor Sonant synth engine. The initial port of Jake's C code wasn't too difficult, but being javascript, it was very slow to process a song, so I added some optimizations.  
+Initially, I built my app around the pl_synth wasm port, but eventually, just for fun, I created my own port of the original Jake Taylor Sonant synth engine. The initial port of Jake's C code wasn't too difficult, but being javascript, it was very slow to process a song, so I added some optimizations.  
 
 The application is less than 300 lines, and I didn't want to add things that aren't absolutely necessary, but there are a few extras that help round it out: a tutorial, a waveform analyzer, a spectrum analyzer, and support for timemode in addition to the standard stepmode.  
   
@@ -150,7 +150,8 @@ Unlike the waveform analyzer, the spectrum analyzer is basically just eye candy,
 
 ---
 
-Export is accomplished by long pressing on the waveform widget; the JavaScript necessary to paste into your game is exported. But just for fun I also export the WAV file. The WAV format has a 44 byte header followed by the raw audio samples. Some fields in the header are 32 bit unsigned integers like the total file size and some are 16 bit integers like the number of channels or bits per sample. I use a Uint8Array to hold all the bytes because I need a plain byte container and I use a DataView to write multi byte numbers at precise positions and make sure they are little endian as WAV requires. I use setInt16 for the actual audio samples because PCM audio is 16 bit signed integers so each float sample between -1 and 1 gets scaled and written as an Int16. I use setUint32 for header fields that need 4 bytes. This reduces what usually is a complex set of code to just a few lines:
+Export is accomplished by long pressing on the waveform widget; the JavaScript necessary to paste into your game is exported. But just for fun I also export the WAV file. The WAV format has a 44 byte header followed by the raw audio samples. Some fields in the header are 32 bit unsigned integers like the total file size and some are 16 bit integers like the number of channels or bits per sample. Some of the header bytes are simply ASCII values for the chunk identifiers like "RIFF", "WAVE", "fmt " and "data". I use a Uint8Array to hold all the bytes because I need a plain byte container, and I use a DataView to write multi byte numbers at precise positions and make sure they are little endian as WAV requires. I use setInt16 for the actual audio samples because PCM audio is 16 bit signed integers, so each float sample between -1 and 1 gets scaled and written as an Int16. I use setUint32 for header fields that need 4 bytes. This reduces what is usually a complex set of code to just a few lines:
+
 ```
   function bufferToWav(){
     let os=44,b=audio.buffer,d=b.length*4,o=new ArrayBuffer(d+os),v=new DataView(o),u8=new Uint8Array(o);
