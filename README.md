@@ -153,7 +153,11 @@ As an afterthought, I included a spectrum analyzer. Not that it's useful, but it
 
 ---
 
-Initially, I built my app around the pl_synth wasm port, but eventually, just for fun, I decided to create my own port of the original Jake Taylor Sonant. The initial port of his C code wasn't too difficult, but being javascript, it was very slow to process a song. And so I kept adding optimizations, the two big ones being precomputed waveforms and precomputed note frequencies. For Ambidumbi, a fairly complex song, the hot inner loop runs 39,208,609 times and produces the final audio in 4243ms.
+Initially, I built my app around the pl_synth wasm port, but eventually, just for fun, I decided to create my own port of the original Jake Taylor Sonant. The initial port of his C code wasn't too difficult, but being javascript, it was very slow to process a song. And so I kept adding optimizations.
+The main thing I did in this code to make it fast is precompute as much as possible and reduce repeated math inside the hot loops. The waveforms are fully generated ahead of time in SIN, SQUARE, SAW, and TRI, and the note frequencies for all 256 notes are precomputed so the inner loop doesn’t have to do exponentiation for every sample. I also simplified multiplications and divisions for envelopes and detuning by pre-scaling constants outside the loops, and the LFO and panning steps are calculated once per track per buffer instead of per sample. Everything that could be pulled out of the inner per-sample loop is pulled out, so the loop only does what it absolutely has to: fetch a sample from a waveform, mix oscillators, apply envelope, add optional noise, apply the filter, pan, and write into the buffer. Delay and master scaling happen after the main loops, so the hot path stays tight. The result is that even with multiple tracks, two oscillators per note, filters, envelopes, and noise, the CPU only does what’s necessary to generate the song without wasting cycles on recomputation.
+
+For Ambidumbi, a fairly complex song, the hot inner loop runs 39,208,609 times and produces the final audio in 4243ms.
+
 
 
 </details>
