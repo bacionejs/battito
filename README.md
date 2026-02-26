@@ -108,7 +108,7 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 ---
 
-The main motivation for creating another tracker is that the trackers which are used for size-constrained games typically have editors that are number-centric, and being a music noob, it was difficult for me to reason about while composing a song. And so I decided to make a tracker with a piano roll. Also, since an Android tablet is the only device I have, I wanted it to be very touch-friendly. And yes, I program on an Android tablet using Termux, Neovim, and Apache.  
+The main motivation for creating another tracker is that the trackers which are used for size-constrained games typically have editors that are number-centric, and being a music noob, it was difficult for me to reason about while composing a song. And so I decided to make a tracker with a piano roll. Also, since an Android tablet is the only device I have, I wanted it to be very touch-friendly. And yes, I program on an Android tablet (using Termux, Neovim, and Apache).  
   
 Just for fun, I decided to try to make the interface buttonless. There are sliders, but besides that, there are no obvious controls.  
 
