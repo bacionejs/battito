@@ -153,7 +153,7 @@ function preview(note){try{
   P=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(song)});P.connect(C.destination);P.start();
   let d=P.buffer.getChannelData(0),c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2;
   let start=d.findIndex(v=>Math.abs(v)>=threshold),end=d.findLastIndex(v=>Math.abs(v)>=threshold);
-  c.clearRect(0,0,w,h);c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.lineWidth=2;c.strokeStyle="blue";c.stroke();
+  c.clearRect(0,0,w,h);c.lineWidth=2;c.strokeStyle="blue";c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.stroke();
 }catch(e){}}
 audio={start,preview,get buffer(){return S.buffer},get song(){return SONG;},set song(newSong){SONG=newSong;},get currp(){return currP;},get currs(){return currS;}};
 }
