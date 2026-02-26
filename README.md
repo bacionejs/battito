@@ -144,7 +144,7 @@ The audio function is basically a wrapper around the audio context. It keeps tra
 
 ---
 
-The waveform analyzer is very helpful for visualizing the synth you're configuring. Originally, I included the envelope outline, but eventually removed it because representing variable ASR values as relative terms in a fixed area is misleading, and it basically mirrors the shape of the waveform anyway. For the same reason (fitting unknown times into a fixed area), delay also has to be removed. So I use a simpler strategy by finding the most relevant portions of a sample. This allows me to keep delay in the visualizer while also simplifying the code. The logic becomes basically: `for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}`  
+The waveform analyzer is very helpful for visualizing the synth you're configuring. Originally, I included the envelope outline, but eventually removed it because representing variable ASR values as relative terms in a fixed area is misleading, and it basically mirrors the shape of the waveform anyway. For the same reason (fitting unknown times into a fixed area), delay has to be removed. So I use a simpler strategy by finding the `start` and `end` of the most relevant portions of a sample. This allows me to keep delay in the visualizer while also simplifying the code. The logic becomes basically: `for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}`  
   
 Unlike the waveform analyzer, the spectrum analyzer is basically just eye candy, but easy to implement with a style trick and a simple loop: `.meter{background:linear-gradient(to top,lime,orange,red);transition:height 50ms linear;}`  `meter.forEach((b,i)=>{b.style.height=(A[i]*0.4)+"%";})`
 
