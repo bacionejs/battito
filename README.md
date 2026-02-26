@@ -112,24 +112,13 @@ This is just a dumping ground for me talking about the techniques behind Battito
 I'll discuss first one of the least interesting parts, the waveform analyzer. Originally, I had made the analyzer like everybody else, include the envelope as a background, remove delay, and plot the sample, but I grew increasingly frustrated with showing the envelope. As you increase one value, the others necessarily need to decrease to fit in a fixed area. And besides, the waveform is almost identical to the envelope, making it superfluous. Not only can you see the shape of the envelope from the sample, you can also see the envelope just by looking at the slider positions for the envelope. This led me to remove the envelope entirely. Also, this leads to another issue. Similar to the necessity of removing delay, as delay can be several seconds long and won't fit into a fixed area without losing the ability to visualize the waveform as it becomes more confined in a fixed area, the envelope can also be several seconds of time, and fitting it into a fixed area makes that it's difficult to see the waveform. One solution is to cut off the waveform after two seconds, but then we're back to why did we remove delay? It was to fit something into a fixed space. So I decided to do something different and just come in from both ends of the sample until a certain threshold was met and plot that. After testing it with several types of samples and tweaking the threshold, it seemed to look reasonable. The logic becomes basically:  
 `for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}`
 
-
-
-
-
 ---
 
 The main motivation for creating another tracker was that the trackers that are used for size-constrained games typically have editors that are number-centric, and being a music noob, it was difficult for me to reason about while composing a song. And so I decided to make a tracker with a piano roll, which necessarily is Huge and takes up more than half of the screen area. Initially I only had preset instruments, but eventually when I included the ability to configure the synth, I needed to include a widget and to make it small, I opted for a very generic set of sliders, of which there are 29 for two oscillators, envelopes, effects, etc. I didn't have room for nice labeling, so I grouped them by color and a very small label abbreviation. I changed some names to be more generic like Modulation instead of LFO, and included a rundown of building a synth sound in the readme. Even the on and off values are sliders, which isn't obvious from looking at the sliders, but is reasonably coherent if you read the instrument section of the readme.
 
-
-
-
-
 ---
 
 With very little space remaining, I decided to rely on a text version of the underlying data, initially as a way to import and export and to set the beats per minute, but also the user can change the underlying data live, for example, changing the sound of a synth or even the notes being played.
-
-
-
 
 ---
 
@@ -139,17 +128,11 @@ Just for fun, I decided to try to make the interface buttonless. There are slide
 
 Also, to keep things simple, the sequencer is hard-coded to 8-instrument, 60-phrases and 9-patterns per track so that at 60 beats per minute that will give you a fairly robust song up to eight minutes.
 
-
-
-
-
 ---
 
 As an afterthought, I included a spectrum analyzer. Not that it's useful, but it's nice eye candy to have. While the spectrum analyzer eats up a lot of CPU, its code is very simple and relies on a style trick and a very simple loop.
 `.meter{background:linear-gradient(to top,lime,orange,red);transition:height 50ms linear;}`
 `meter.forEach((b,i)=>{b.style.height=(A[i]*0.4)+"%";})`
-
-
 
 ---
 
@@ -158,7 +141,49 @@ The main thing I did in this code to make it fast is precompute as much as possi
 
 For Ambidumbi, a fairly complex song, the hot inner loop runs 39,208,609 times and produces the final audio in 4243ms.
 
+---
 
+Having a tutorial that basically runs itself was really important because my interface is buttonless and not immediately obvious. The tutorial is only 25 seconds long and plays a simplified version of Beatnik, showing how to use the sequencer and piano automatically. Originally the code was huge, but I pared it down so it just generates a sequence of “clicks” that point to the right cells and trigger them in order, with a little animated pointer and simple timing. It builds a tiny song in initSong, maps which sequencer cells and piano keys to hit, and then just steps through them, scaling the pointer for a click effect. The result is fully automated: you can watch the tutorial, see which cells to press, and even hear a song without ever needing to touch anything.
+
+---
+
+I style everything so it just works without thinking. I use grid layouts a lot; grid-template-columns makes it easy to size sequencer columns, piano keys, or anything else evenly without doing math. Then I use aspect ratios so squares stay squares and rectangles keep their shape no matter the screen.
+
+---
+
+By long pressing on the waveform widget, the JavaScript necessary to paste into your game is exported, but as an afterthought, I decided to also export the WAV file. And since it wasn't absolutely necessary for my application, I wanted to ensure that the code was very small. 
+
+When I make a WAV file by hand I need to write exact bytes into a buffer. The WAV format has a forty four byte header followed by the raw audio samples. Some fields in the header are thirty two bit unsigned integers like the total file size and some are sixteen bit integers like the number of channels or bits per sample. I use a Uint8Array to hold all the bytes because I need a plain byte container and I use a DataView to write multi byte numbers at precise positions and make sure they are little endian as WAV requires. I use setInt16 for the actual audio samples because PCM audio is sixteen bit signed integers so each float sample between minus one and one gets scaled and written as an Int16. I use setUint32 for header fields that need four bytes. This way I can make the file completely valid, very small, and without any extra libraries.
+
+---
+
+For colors I do not pick explicit values. I have a function that automatically generates colors across a reasonable range. I use this same function for both the sequencer and the piano roll. That means the color of a track in the sequencer always matches the color of its notes on the piano roll. This makes it easy to see multiple tracks at once on the same piano roll because each track keeps a consistent color and stands out visually.
+
+---
+
+Early on I ran into problems making the app look the same in Chrome and Firefox. Eventually I gave up on Firefox and just block the app from running if it detects Firefox. I do not do it explicitly, but one of the main things that breaks in Firefox is the sizing of the grid elements. So I just check the grid size and if it is wrong I show a message telling the user to use a Chromium-based browser. I just didn't have the energy for compatibility.
+
+---
+
+The grid function that builds my widgets works in a slightly unusual way. When you pass it an even number of columns, it just makes a regular grid. But if you pass an odd number, it switches into Excel-style mode and adds column headers across the top and row headers down the side, like A, B, C, D and 1, 2, 3, 4.
+
+---
+
+The sequencer is the most complex part of the app outside of the synth function. It handles all the logic for selecting tracks and rows, updating patterns. Each function is focused on one aspect, like `toggle` flipping cells, `scroll` keeping the view centered, `hasnotes` checking for active notes, `track` returning the current track, `sequences` collecting active rows, `phrase` flattening notes for the piano roll, `click` handling all grid interactions, `range` returning the active subset of the song, `pattern` giving the current row pattern.
+
+To avoid having a bunch of buttons, all playback is controlled from the sequencer, so whenever you select a column and row to put notes it automatically starts, which can be a little annoying because you can’t make edits in silence.
+
+---
+
+Time mode is a special mode that lets you insert notes in real time as the song plays, showing ready set go messages and automatically advancing through the steps, whereas step mode is the default where you edit one row at a time and nothing moves until you manually change it. In other words, time mode is live and dynamic, letting you play along with the sequence, while step mode is static and precise, letting you carefully set each note.
+
+---
+
+The text area links straight to the underlying data, so you can see exactly what’s stored and even tweak it by hand. This also means I don’t have to add controls for saving, loading, etc.
+
+---
+
+The audio function is basically a wrapper around the audio context. It keeps track of the current sequence and step, starts the buffer when the sequencer triggers something, and updates the visuals automatically, using the `point` function to highlight which row is playing at any given moment. It also has a `preview` function that can play a single note on demand and draws the waveform in the canvas so you can see what you’re hearing.
 
 </details>
 
