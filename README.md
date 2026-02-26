@@ -124,7 +124,7 @@ To eliminate controls for saving, loading and BPM, there is a text widget, which
 
 I style everything so it just works without thinking. I use grid layouts a lot; grid-template-columns makes it easy to size sequencer columns, piano keys, or anything else evenly without doing math. Then I use aspect ratios so squares stay squares and rectangles keep their shape no matter the screen.
 
-Early on I ran into problems making the app look the same in Chrome and Firefox. Eventually I gave up on Firefox and just block it, not explicitly but by analyzing one its known failure points on initialization.
+Early on I ran into problems making the app look the same in Chrome and Firefox. Eventually I gave up on Firefox and just block it, not explicitly but by analyzing one its known failure points on initialization. Sorry, I just don't have the energy to implement compatibility.
 
 ---
 
