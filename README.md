@@ -136,7 +136,7 @@ The main thing I did in the synth engine code to make it fast is precompute as m
 
 ---
 
-The sequencer is the most complex part of the app outside of the synth function. It handles all the logic for selecting tracks and rows and updating patterns. Each function is focused on one aspect, like `toggle` flipping cells, `scroll` keeping the view centered, `hasnotes` checking for active notes, `track` returning the current track, `sequences` collecting active rows, `phrase` flattening notes for the piano roll, `click` handling all grid interactions, `range` returning the active subset of the song, `pattern` giving the current row pattern. To avoid having a bunch of buttons, all playback is controlled from the sequencer, so whenever you select a column and row to put notes it automatically starts, which can be a little annoying because you can’t make edits in silence.
+The sequencer is the most complex part of the app outside of the synth function. It handles all the logic for selecting tracks and rows and updating patterns. Each function is focused on one aspect, like `toggle` flipping cells, `scroll` keeping the view centered, `hasnotes` checking for active notes, `track` returning the current track, `sequences` collecting active rows, `phrase` flattening notes for the piano roll, `click` handling all grid interactions, `range` returning the active subset of the song, `pattern` giving the current row pattern. To avoid having a bunch of buttons, all playback is controlled from the sequencer, so whenever you select a column and row, it automatically starts, which could be a little annoying if you would rather make edits in silence.
 
 ---
 
