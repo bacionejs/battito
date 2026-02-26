@@ -114,7 +114,7 @@ Just for fun, I decided to try to make the interface buttonless. There are slide
 
 Also, to keep things simple, the sequencer is hard-coded to 8-tracks, 9-patterns per track and 60-phrases so that at 60 beats per minute you can create a fairly robust song up to 8 minutes long.  
 
-I created my own port of the original Jake Taylor Sonant synth engine. The initial port of Jake's C code wasn't too difficult, but being javascript, it was very slow to process a song, so I added some optimizations.  
+I created my own port of the original Jake Taylor Sonant synth engine. The initial port wasn't too difficult, but being javascript, it was very slow to process a song, so I added some optimizations.  
 
 The application is less than 300 lines, and I didn't want to add things that aren't absolutely necessary, but there are a few extras that help round it out: a tutorial, a waveform analyzer, a spectrum analyzer, and support for timemode in addition to the standard stepmode.  
   
