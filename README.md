@@ -122,7 +122,7 @@ Just for fun, I decided to try to make the interface buttonless. There are slide
 
 ---
 
-Also, to keep things simple, the sequencer is hard-coded to 8-instrument, 60-phrases and 9-patterns per track so that at 60 beats per minute that will give you a fairly robust song up to eight minutes.
+Also, to keep things simple, the sequencer is hard-coded to 8-instrument, 60-phrases and 9-patterns per track so that at 60 beats per minute that will give you a fairly robust song up to 8 minutes.
 
 ---
 
