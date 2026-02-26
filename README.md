@@ -103,6 +103,15 @@ Blends white noise with the oscillators. Essential for percussion (snares, hats)
 
 ---
 
+</details><details><summary>Developer Notes</summary>
+
+This is just a dumping ground for me talking about the techniques behind Battito.
+
+---
+
+I'll discuss first one of the least interesting parts, the waveform analyzer. Originally, I had made the analyzer like everybody else, include the envelope as a background, remove delay, and plot the sample, but I grew increasingly frustrated with showing the envelope. As you increase one value, the others necessarily need to decrease to fit in a fixed area. And besides, the waveform is almost identical to the envelope, making it superfluous. Not only can you see the shape of the envelope from the sample, you can also see the envelope just by looking at the slider positions for the envelope. This led me to remove the envelope entirely. Also, this leads to another issue. Similar to the necessity of removing delay, as delay can be several seconds long and won't fit into a fixed area without losing the ability to visualize the waveform as it becomes more confined in a fixed area. That is, that the envelope can be very short in time or several seconds in time, and fitting it into a fixed area causes problems. Mainly, a plot of several seconds into a small area means that it's difficult to see the waveform. One solution is to cut off the waveform after two seconds, but then we're back to why did we remove delay? It was to fit something into an absolute fixed time. So I decided to do something different and just come in from both ends of the sample until a certain threshold was met and plot that. After testing it with several types of samples, it seemed to look reasonable. The logic becomes basically: `for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}`
+
+
 </details>
 
 [^1]: The Battito synth function is a port of Jake Taylor's [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant.
