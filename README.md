@@ -120,7 +120,7 @@ The application is less than 300 lines, and I didn't want to add things that are
   
 Since the piano roll takes up so much space, I had to squish the 29 instrument controls into a simple stack of sliders which are impossible to understand without reading the instruments section.  
 
-To eliminate controls for saving, loading and BPM, there is a text widget, which has the added benefit of allowing fine tweaks that are difficult with the sliders. And like all the other widgets, changes are live.
+To eliminate controls for saving and loading, there is a text widget, which has the added benefit of allowing fine tweaks that are difficult with the sliders. And like all the other widgets, changes are live.
 
 I style everything so it just works without thinking. I use grid layouts a lot; grid-template-columns makes it easy to size sequencer columns, piano keys, or anything else evenly without doing math. Then I use aspect ratios so squares stay squares and rectangles keep their shape no matter the screen.
 
