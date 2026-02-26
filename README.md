@@ -109,7 +109,7 @@ This is just a dumping ground for me talking about the techniques behind Battito
 
 ---
 
-I'll discuss first one of the least interesting parts, the waveform analyzer. Originally, I had made the analyzer like everybody else, include the envelope as a background, remove delay, and plot the sample, but I grew increasingly frustrated with showing the envelope. As you increase one value, the others necessarily need to decrease to fit in a fixed area. And besides, the waveform is almost identical to the envelope, making it superfluous. Not only can you see the shape of the envelope from the sample, you can also see the envelope just by looking at the slider positions for the envelope. This led me to remove the envelope entirely. Also, this leads to another issue. Similar to the necessity of removing delay, as delay can be several seconds long and won't fit into a fixed area without losing the ability to visualize the waveform as it becomes more confined in a fixed area, the envelope can also be several seconds of time, and fitting it into a fixed area makes that it's difficult to see the waveform. One solution is to cut off the waveform after two seconds, but then we're back to why did we remove delay? It was to fit something into a fixed space. So I decided to do something different and just come in from both ends of the sample until a certain threshold was met and plot that. After testing it with several types of samples and tweaking the threshold, it seemed to look reasonable. The logic becomes basically:  
+I'll discuss first one of the least interesting parts, the waveform analyzer. Originally, I had made the analyzer like everybody else, include the envelope as a background, remove delay, and plot the sample, but I grew increasingly frustrated with showing the envelope. As you increase one value, the others necessarily need to decrease to fit in a fixed area. And besides, the waveform is almost identical to the envelope, making it superfluous. Not only can you see the shape of the envelope from the sample, you can also see the envelope just by looking at the slider positions for the envelope. This led me to remove the envelope entirely. Also, this leads to another issue. Similar to the necessity of removing delay, as delay can be several seconds long and won't fit into a fixed area without losing the ability to visualize the waveform as it becomes more confined in a fixed area, the envelope can also be several seconds of time, and fitting it into a fixed area makes it difficult to see the waveform. One solution is to cut off the waveform after two seconds, but then we're back to why did we remove delay? It was to fit something into a fixed space. So I decided to do something different and just come in from both ends of the sample until a certain threshold was met and plot that. After testing it with several types of samples and tweaking the threshold, it seemed to look reasonable. The logic becomes basically:  
 `for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}`
 
 ---
@@ -122,12 +122,14 @@ Just for fun, I decided to try to make the interface buttonless. There are slide
 
 ---
 
-Also, to keep things simple, the sequencer is hard-coded to 8-instrument, 60-phrases and 9-patterns per track so that at 60 beats per minute that will give you a fairly robust song up to 8 minutes.
+Also, to keep things simple, the sequencer is hard-coded to 8-tracks, 9-patterns per track and 60-phrases so that at 60 beats per minute that will give you a fairly robust song up to 8 minutes.
 
 ---
 
-As an afterthought, I included a spectrum analyzer. Not that it's useful, but it's nice eye candy to have. While the spectrum analyzer eats up a lot of CPU, its code is very simple and relies on a style trick and a very simple loop.
-`.meter{background:linear-gradient(to top,lime,orange,red);transition:height 50ms linear;}`
+As an afterthought, I included a spectrum analyzer. Not that it's useful, but it's nice eye candy to have. While the spectrum analyzer eats up a lot of CPU, its code is very simple and relies on a style trick and a very simple loop:  
+  
+`.meter{background:linear-gradient(to top,lime,orange,red);transition:height 50ms linear;}`  
+  
 `meter.forEach((b,i)=>{b.style.height=(A[i]*0.4)+"%";})`
 
 ---
@@ -149,11 +151,11 @@ I style everything so it just works without thinking. I use grid layouts a lot; 
 
 By long pressing on the waveform widget, the JavaScript necessary to paste into your game is exported, but as an afterthought, I decided to also export the WAV file. And since it wasn't absolutely necessary for my application, I wanted to ensure that the code was very small. 
 
-When I make a WAV file by hand I need to write exact bytes into a buffer. The WAV format has a forty four byte header followed by the raw audio samples. Some fields in the header are thirty two bit unsigned integers like the total file size and some are sixteen bit integers like the number of channels or bits per sample. I use a Uint8Array to hold all the bytes because I need a plain byte container and I use a DataView to write multi byte numbers at precise positions and make sure they are little endian as WAV requires. I use setInt16 for the actual audio samples because PCM audio is sixteen bit signed integers so each float sample between minus one and one gets scaled and written as an Int16. I use setUint32 for header fields that need four bytes. This way I can make the file completely valid, very small, and without any extra libraries.
+When I make a WAV file by hand I need to write exact bytes into a buffer. The WAV format has a forty four byte header followed by the raw audio samples. Some fields in the header are thirty two bit unsigned integers like the total file size and some are sixteen bit integers like the number of channels or bits per sample. I use a Uint8Array to hold all the bytes because I need a plain byte container and I use a DataView to write multi byte numbers at precise positions and make sure they are little endian as WAV requires. I use setInt16 for the actual audio samples because PCM audio is sixteen bit signed integers so each float sample between minus one and one gets scaled and written as an Int16. I use setUint32 for header fields that need four bytes.
 
 ---
 
-For colors I do not pick explicit values. I have a function that automatically generates colors across a reasonable range. I use this same function for both the sequencer and the piano roll. That means the color of a track in the sequencer always matches the color of its notes on the piano roll. This makes it easy to see multiple tracks at once on the same piano roll because each track keeps a consistent color and stands out visually.
+For colors I do not pick explicit values. I have a function that automatically generates colors across a reasonable range. I use this same function for both the sequencer and the piano roll. That means the color of a track in the sequencer always matches the color of its notes on the piano roll. This makes it easy to see multiple tracks at once on the same piano roll because each track keeps a consistent color.
 
 ---
 
