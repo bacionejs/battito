@@ -112,9 +112,9 @@ The main motivation for creating another tracker is that the trackers which are 
   
 Just for fun, I decided to try to make the interface buttonless. There are sliders, but besides that, there are no obvious controls.  
 
-Also, to keep things simple, the sequencer is hard-coded to 8-tracks, 9-patterns per track and 60-phrases so that at 60 beats per minute that will give you a fairly robust song up to 8 minutes.  
+Also, to keep things simple, the sequencer is hard-coded to 8-tracks, 9-patterns per track and 60-phrases so that at 60 beats per minute you can create a fairly robust song up to 8 minutes.  
 
-Initially, I built my app around the pl_synth wasm port, but eventually, just for fun, I decided to create my own port of the original Jake Taylor Sonant. The initial port of his C code wasn't too difficult, but being javascript, it was very slow to process a song, so I added some optimizations.  
+Initially, I built my app around the pl_synth wasm port, but eventually, just for fun, I decided to create my own port of the original Jake Taylor Sonant. The initial port of Jake's C code wasn't too difficult, but being javascript, it was very slow to process a song, so I added some optimizations.  
 
 The application is less than 300 lines, and I didn't want to add things that aren't absolutely necessary, but there are few extras that help round it out: a tutorial, a waveform analyzer, a spectrum analyzer, and support for timemode in addition to the standard stepmode.  
   
@@ -136,11 +136,11 @@ The main thing I did in the synth engine code to make it fast is precompute as m
 
 ---
 
-The sequencer is the most complex part of the app outside of the synth function. It handles all the logic for selecting tracks and rows, updating patterns. Each function is focused on one aspect, like `toggle` flipping cells, `scroll` keeping the view centered, `hasnotes` checking for active notes, `track` returning the current track, `sequences` collecting active rows, `phrase` flattening notes for the piano roll, `click` handling all grid interactions, `range` returning the active subset of the song, `pattern` giving the current row pattern. To avoid having a bunch of buttons, all playback is controlled from the sequencer, so whenever you select a column and row to put notes it automatically starts, which can be a little annoying because you can’t make edits in silence.
+The sequencer is the most complex part of the app outside of the synth function. It handles all the logic for selecting tracks and rows and updating patterns. Each function is focused on one aspect, like `toggle` flipping cells, `scroll` keeping the view centered, `hasnotes` checking for active notes, `track` returning the current track, `sequences` collecting active rows, `phrase` flattening notes for the piano roll, `click` handling all grid interactions, `range` returning the active subset of the song, `pattern` giving the current row pattern. To avoid having a bunch of buttons, all playback is controlled from the sequencer, so whenever you select a column and row to put notes it automatically starts, which can be a little annoying because you can’t make edits in silence.
 
 ---
 
-The audio function is basically a wrapper around the audio context. It keeps track of the current sequence and step, starts the buffer when the sequencer triggers something, and updates the visuals automatically, using the `point` function to highlight which row is playing at any given moment. It also has a `preview` function that can play a single note on demand and draws the waveform in the canvas so you can see what you’re hearing.
+The audio function is basically a wrapper around the audio context. It keeps track of the current sequence and step, starts the buffer when the sequencer triggers something, and updates the visuals, using the `point` function to highlight which row is playing at any given moment. It also has a `preview` function that can play a single note on demand and draws the waveform in the canvas so you can see what you’re hearing.
 
 ---
 
@@ -150,7 +150,7 @@ Unlike the waveform analyzer, the spectrum analyzer is basically just eye candy,
 
 ---
 
-Export is accomplished by long pressing on the waveform widget; the JavaScript necessary to paste into your game is exported. But just for fun I also export the WAV file. The WAV format has a 44 byte header followed by the raw audio samples. Some fields in the header are 32 bit unsigned integers like the total file size and some are 16 bit integers like the number of channels or bits per sample. I use a Uint8Array to hold all the bytes because I need a plain byte container and I use a DataView to write multi byte numbers at precise positions and make sure they are little endian as WAV requires. I use setInt16 for the actual audio samples because PCM audio is 16 bit signed integers so each float sample between minus one and one gets scaled and written as an Int16. I use setUint32 for header fields that need 4 bytes.
+Export is accomplished by long pressing on the waveform widget; the JavaScript necessary to paste into your game is exported. But just for fun I also export the WAV file. The WAV format has a 44 byte header followed by the raw audio samples. Some fields in the header are 32 bit unsigned integers like the total file size and some are 16 bit integers like the number of channels or bits per sample. I use a Uint8Array to hold all the bytes because I need a plain byte container and I use a DataView to write multi byte numbers at precise positions and make sure they are little endian as WAV requires. I use setInt16 for the actual audio samples because PCM audio is 16 bit signed integers so each float sample between -1 and 1 gets scaled and written as an Int16. I use setUint32 for header fields that need 4 bytes.
 
 ---
 
