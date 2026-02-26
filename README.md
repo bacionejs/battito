@@ -150,7 +150,7 @@ Unlike the waveform analyzer, the spectrum analyzer is basically just eye candy,
 
 ---
 
-Export is triggered by long-pressing the waveform widget, producing the JavaScript to paste into your game, and an optional WAV file.
+Export is triggered by long-pressing the waveform widget, producing the JavaScript to paste into your game, and an **optional** WAV file.
   
 The exported JavaScript is wrapped in a complete HTML test app. It embeds the song data as JSON, includes the synth engine (player), encapsulates everything inside a `song()` function, and registers a one-time click listener so the track plays.
 ```
