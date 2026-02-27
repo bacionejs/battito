@@ -149,11 +149,7 @@ function loop(){
 }
 function vu(v,s){
   let k=0,r=(currS+1)*(SC+1)+1;
-  sequencer.cols.forEach((o,i)=>{
-    let c=sequencer.cells[r+i]; if(!o||!v?.[k]) return c.style.background="";
-    let p=Math.min(100,Math.sqrt((v[k++][s]||0)*5)*100);
-    c.style.background="linear-gradient(0deg,lime "+p+"%,#0000 0)";
-  });
+  sequencer.cols.forEach((on,i)=>{sequencer.cells[r+i].style.background=on?"linear-gradient(0deg,lime "+Math.min(100,Math.sqrt((v[k++][s]||0)*5)*100)+"%,#0000 0)":"";});
 }
 function preview(note){try{
   P?.stop();let threshold=0.5,t=sequencer.track();if(t===null)return;
