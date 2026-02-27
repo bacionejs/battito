@@ -143,7 +143,7 @@ function loop(){
   currS=sequences[t|0];
   currP=(t*PR|0)%PR;
   if(currS!==prevS){prevS=currS;piano.update();sequencer.update();sequencer.scroll(currS);}
-  if(currP!==prevP){vu(S.buffer.v,t*PR|0);point(piano,PC,prevP,currP);prevP=currP;if(timemodeon && currP==0)sequencer.timemode.next();}
+  if(currP!==prevP){vu(S.buffer.vu,t*PR|0);point(piano,PC,prevP,currP);prevP=currP;if(timemodeon && currP==0)sequencer.timemode.next();}
   analyser.getByteFrequencyData(A);meter.forEach((b,i)=>{b.style.height=(A[i]*0.4)+"%";});
   requestAnimationFrame(loop);
 }
@@ -241,14 +241,14 @@ for(let n=0;n<256;n++){let f=0.00390625,m=1.059463094,l=128,i=n;if(i>l)i-=l;else
 let G=(f,m,n,l)=>{if(n>l)n-=l;else{n=l-n;m=1/m;}while(n-->0)f*=m;return f;};
 let R_S=1,rnd=()=>{R_S=Math.imul(R_S,0x15a4e35);return (R_S>>>0)%255/255;};
 let SAMPLERATE=44100,FBASE=1.5*Math.PI/SAMPLERATE;
-let V=(n,r)=>{let o=[];return{add:c=>o.push([...Array(n)].map((_,i)=>Math.max(...c.slice(i*r,i*r+r).map(Math.abs)))),out:o}}
+let VU=(n,r)=>{let o=[];return{add:c=>{let p=new Float32Array(n);for(let i=0,m,s,j;i<n;i++){m=0;s=i*r;for(j=0;j<r;j++){let a=Math.abs(c[s+j]);if(a>m)m=a}p[i]=m}o.push(p)},out:o}}
 return {createbuffer(json){
 let rowlen=Math.ceil(15*SAMPLERATE/json.bpm);
 let SR=Math.max(...json.tracks.map(t=>t.s.length));
 let PR=Math.max(...json.tracks.flatMap(t=>t.p.map(p=>p.length)));
 let S=SR*PR*rowlen;
 let LL=new Float32Array(S),RR=new Float32Array(S),L=new Float32Array(S),R=new Float32Array(S);
-let v=V(SR*PR,rowlen);
+let vu=VU(SR*PR,rowlen);
 for(let i=0,T;(T=json.tracks[i]);i++){
   let {osc1_vol,osc1_waveform,osc1_oct,osc1_det,osc1_detune,osc2_vol,osc2_waveform,osc2_oct,osc2_det,osc2_detune,env_attack,env_sustain,env_release,osc1_xenv,osc2_xenv}=T;
   let {fx_filter,fx_freq,fx_resonance,lfo_waveform,lfo_freq,lfo_amt,lfo_osc1_freq,lfo_fx_freq,fx_delay_time,fx_delay_amt,fx_pan_freq,fx_pan_amt,noise_fader,env_master}=T;
@@ -276,12 +276,12 @@ for(let i=0,T;(T=json.tracks[i]);i++){
   }
   let DS=Math.floor(fx_delay_time*rowlen/2);if(DS>0){let DA=fx_delay_amt/255;for(let b=0;b<S-DS;b++){L[b+DS]+=R[b]*DA;R[b+DS]+=L[b]*DA;}}
   for(let b=0;b<S;b++){LL[b]+=L[b];RR[b]+=R[b];}
-  v.add(L);
+  vu.add(L);
 }
 let X=0;for(let i=0;i<S;i++){X=Math.max(X,Math.abs(LL[i]),Math.abs(RR[i]));}
 if(X>0){let scale=1/X;for(let i=0;i<S;i++){LL[i]*=scale;RR[i]*=scale;}}
 let buffer=audiocontext.createBuffer(2,LL.length,SAMPLERATE);[LL,RR].forEach((data,i)=>buffer.copyToChannel(data,i));
-buffer.v=v.out;
+buffer.vu=vu.out;
 return buffer;
 }};}
 
