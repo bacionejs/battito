@@ -152,7 +152,7 @@ function vu(v,s){
   sequencer.cols.forEach((o,i)=>{
     let c=sequencer.cells[r+i]; if(!o||!v?.[k]) return c.style.background="";
     let p=Math.min(100,Math.sqrt((v[k++][s]||0)*5)*100);
-    c.style.background="linear-gradient(to top,lime "+p+"%,black "+p+"%)";
+    c.style.background="linear-gradient(0deg,lime "+p+"%,#0000 0)";
   });
 }
 function preview(note){try{
