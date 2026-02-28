@@ -4,7 +4,7 @@ document.title="Battito Beats";//https://github.com/bacionejs/battito
 addEventListener("error",e=>{prompt("error",e.error.stack);});
 
 let {min,max,sqrt,abs}=Math;
-let audio,meter,timemodeon=0,LT=0,SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3;
+let audio,timemodeon=0,LT=0,SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3;
 let piano      =element("div",document.body,"piano");
 let message    =element("div",piano,"message");
 let sliders    =element("div",document.body,"sliders");
@@ -18,9 +18,9 @@ let widgets=[piano,sliders,sequencer,text]; function update(){widgets.forEach(o=
 piano  .update=function(){sequencer.phrase().forEach((v,i)=>piano.cells[i].style.background=color(v));}
 sliders.update=function(){let t=sequencer.track();sliders.cells.forEach(s=>{if(t!==null){s.disabled=false;s.value=t[s.key]||0;}else{s.disabled=true;s.value=0;}});}
 text   .update=function(){if(text===document.activeElement)return;let s=text.selectionStart;text.value=JSON.stringify(audio.song,null,2);text.setSelectionRange(s,s);}
-initAudio();
 grid(piano,PC,PR); line(piano,PC,"x",12); line(piano,PC,"y",4);
 initSequencer();
+initAudio();
 instruments().init(sliders);
 initListeners();
 initStyle();
@@ -86,7 +86,7 @@ function makeLongPress(o,callback){
 }
 
 function initSequencer(){
-grid(sequencer,SC+1,SR+1); grid(sequencer.children[0],16,1,"meter"); meter=sequencer.children[0].cells;
+grid(sequencer,SC+1,SR+1); grid(sequencer.children[0],16,1,"meter");
 let P=Array(PC*PR),cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1; timemode();
 function toggle(cell){cell.style.background=rows[cell.row] && cols[cell.col]?"gray":"";}
 function scroll(n){let t=sequencer.cells[(n+1)*(SC+1)],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
@@ -128,7 +128,7 @@ Object.assign(sequencer, {update:updateSequencer, phrase, toggle, timemode, cols
 
 function initAudio(){
 let sequences,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets();
-let analyser=C.createAnalyser();analyser.fftSize=32;let A=new Uint8Array(analyser.frequencyBinCount);
+let analyser=C.createAnalyser(),meter=sequencer.children[0].cells;analyser.fftSize=32;let A=new Uint8Array(analyser.frequencyBinCount);
 function point(grid,width,prev,curr,o=0){[[prev,"remove"],[curr,"add"]].forEach(([x,m])=>grid.cells[(x+o)*(width+o)]?.classList[m]("row-playing"));}
 function gradient(a){return "linear-gradient(0deg,lime,orange,red "+min(100,sqrt((a||0)*2)*100)+"%,#0000 0)";}
 function vu(r,s,v){let k=0;sequencer.cols.forEach((on,i)=>{if(!on)return;sequencer.cells[r+i].style.background=gradient(v[k++][s]);});}
