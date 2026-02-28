@@ -86,7 +86,7 @@ function makeLongPress(o,callback){
 }
 
 function initSequencer(){
-grid(sequencer,SC+1,SR+1); grid(sequencer.children[0],16,1,"meter");
+grid(sequencer,SC+1,SR+1); grid(sequencer.children[0],16,1,"fu");
 let P=Array(PC*PR),cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1; timemode();
 function toggle(cell){cell.style.background=rows[cell.row] && cols[cell.col]?"gray":"";}
 function scroll(n){let t=sequencer.cells[(n+1)*(SC+1)],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
@@ -128,11 +128,11 @@ Object.assign(sequencer, {update:updateSequencer, phrase, toggle, timemode, cols
 
 function initAudio(){
 let sequences,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets();
-let analyser=C.createAnalyser(),meter=sequencer.children[0].cells;analyser.fftSize=32;let A=new Uint8Array(analyser.frequencyBinCount);
+let analyser=C.createAnalyser();analyser.fftSize=32;let A=new Uint8Array(analyser.frequencyBinCount);
 function point(grid,width,prev,curr,o=0){[[prev,"remove"],[curr,"add"]].forEach(([x,m])=>grid.cells[(x+o)*(width+o)]?.classList[m]("row-playing"));}
 function gradient(a){return "linear-gradient(0deg,lime,orange,red "+min(100,sqrt((a||0)*2)*100)+"%,#0000 0)";}
 function vu(r,s,v){let k=0;sequencer.cols.forEach((on,i)=>{if(!on)return;sequencer.cells[r+i].style.background=gradient(v[k++][s]);});}
-function fu(){analyser.getByteFrequencyData(A);meter.forEach((b,i)=>{b.style.height=(A[i]*0.4)+"%";});}
+function fu(){analyser.getByteFrequencyData(A);sequencer.children[0].cells.forEach((b,i)=>{b.style.height=(A[i]*0.4)+"%";});}
 function start(){
   try{if(S){S.onended=null;S.stop();S.disconnect();S=null;}}catch(e){}
   sequences=sequencer.sequences();if(sequences.length===0)return;
@@ -171,7 +171,7 @@ body{background:silver;display:flex;font-weight:bold;font-family:monospace;}
 .sliders > * {display:flex;flex-direction:column;align-items:center;}
 .sliders .slider{height:2px;} .sliders input[type="range"]::-webkit-slider-thumb{opacity:0;}
 .sequencer{height:50%;aspect-ratio:1/1;overflow-y:scroll;} .sequencer > :first-child{grid-auto-flow:column;place-items:end stretch;}
-.meter{pointer-events:none;background:linear-gradient(to top,lime,orange,red);transition:height 50ms linear;}
+.fu{pointer-events:none;background:linear-gradient(to top,lime,orange,red);transition:height 50ms linear;}
 .col-header{position:sticky;top:0;background:black;z-index:1;}
 .cell{display:grid;place-items:center;border:1px solid silver;aspect-ratio:1/1;}
 .row-playing{border-left:3px solid orange !important;}
