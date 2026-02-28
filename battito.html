@@ -264,7 +264,7 @@ for(let i=0,T;(T=json.tracks[i]);i++){
         let t2=o2fb;if(osc2_xenv)t2*=e*e;c2+=t2;rs+=W(osc2_waveform,c2)*osc2_vol;
         if(noise_fader)rs+=(rnd()*2-1)*noise_fader*e;rs*=e;
         f=fx_freq;if(lfo_fx_freq)f*=lfoR;f*=FBASE;
-        if(fx_resonance){low+=f*band;high=fx_resonance*(rs-band)-low;band+=f*high;switch(fx_filter){case 1:rs=high;break;case 2:rs=low;break;case 3:rs=band;break;case 4:rs=low+high;break;}}
+        low+=f*band;high=fx_resonance*(rs-band)-low;band+=f*high;switch(fx_filter){case 1:rs=high;break;case 2:rs=low;break;case 3:rs=band;break;case 4:rs=low+high;break;}
         t=W(0,panstep*b)*fx_pan_amt+0.5;rs*=env_master;L[b]+=rs*(1-t);R[b]+=rs*t;
       }
     }
