@@ -267,7 +267,7 @@ for(let i=0,T;(T=json.tracks[i]);i++){//8
         t=W(0,pan)*fx_pan_amt+0.5;rs*=env_master;L[b]+=rs*(1-t);R[b]+=rs*t;
       }
     }
-    }
+  }
   let DS=Math.floor(fx_delay_time*rowlen/2);if(DS>0){let DA=fx_delay_amt/255;for(let b=0;b<S-DS;b++){L[b+DS]+=R[b]*DA;R[b+DS]+=L[b]*DA;}}
   for(let b=0;b<S;b++){LL[b]+=L[b];RR[b]+=R[b];}
   vu.add(L);
