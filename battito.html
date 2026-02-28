@@ -253,19 +253,17 @@ for(let i=0,T;(T=json.tracks[i]);i++){//8
   let lfostep=G(1,2,lfo_freq,8)/rowlen,panstep=G(1,2,fx_pan_freq,8)/rowlen;L.fill(0);R.fill(0);
   let envlen=env_attack+env_sustain+env_release,ai=1/env_attack,ri=1/env_release;
   for(let step=0;step<SR*PR;step++){//4608
-    let n=T.p?.[T.s[step/PR|0]-1]?.[step%PR],P=step*rowlen;
-    if(n){
-      let o1fb=NOTE[n+osc1_det]*osc1_detune,o2fb=NOTE[n+osc2_det]*osc2_detune,c1=0,c2=0,low=0,band=0,lfo=lfostep*P,pan=panstep*P;
-      for(let j=0;j<envlen;j++){//39,208,609
-        let b=j+P;if(b>=S)break;lfo+=lfostep;pan+=panstep;let lfoR=W(lfo_waveform,lfo)*lfo_amt+0.5,e=1,f,rs,high,t;
-        if(j<env_attack)e=j*ai;else if(j>=env_attack+env_sustain)e-=(j-env_attack-env_sustain)*ri;
-        let t1=o1fb;if(lfo_osc1_freq)t1+=lfoR;if(osc1_xenv)t1*=e*e;c1+=t1;rs=W(osc1_waveform,c1)*osc1_vol;
-        let t2=o2fb;if(osc2_xenv)t2*=e*e;c2+=t2;rs+=W(osc2_waveform,c2)*osc2_vol;
-        if(noise_fader)rs+=(rnd()*2-1)*noise_fader*e;rs*=e;
-        f=fx_freq;if(lfo_fx_freq)f*=lfoR;f*=FBASE;
-        low+=f*band;high=fx_resonance*(rs-band)-low;band+=f*high;switch(fx_filter){case 1:rs=high;break;case 2:rs=low;break;case 3:rs=band;break;case 4:rs=low+high;break;}
-        t=W(0,pan)*fx_pan_amt+0.5;rs*=env_master;L[b]+=rs*(1-t);R[b]+=rs*t;
-      }
+    let n=T.p?.[T.s[step/PR|0]-1]?.[step%PR],P=step*rowlen;if(!n)continue;
+    let o1fb=NOTE[n+osc1_det]*osc1_detune,o2fb=NOTE[n+osc2_det]*osc2_detune,c1=0,c2=0,low=0,band=0,lfo=lfostep*P,pan=panstep*P;
+    for(let j=0;j<envlen;j++){//39,208,609
+      let b=j+P;if(b>=S)break;lfo+=lfostep;pan+=panstep;let lfoR=W(lfo_waveform,lfo)*lfo_amt+0.5,e=1,f,rs,high,t;
+      if(j<env_attack)e=j*ai;else if(j>=env_attack+env_sustain)e-=(j-env_attack-env_sustain)*ri;
+      let t1=o1fb;if(lfo_osc1_freq)t1+=lfoR;if(osc1_xenv)t1*=e*e;c1+=t1;rs=W(osc1_waveform,c1)*osc1_vol;
+      let t2=o2fb;if(osc2_xenv)t2*=e*e;c2+=t2;rs+=W(osc2_waveform,c2)*osc2_vol;
+      if(noise_fader)rs+=(rnd()*2-1)*noise_fader*e;rs*=e;
+      f=fx_freq;if(lfo_fx_freq)f*=lfoR;f*=FBASE;
+      low+=f*band;high=fx_resonance*(rs-band)-low;band+=f*high;switch(fx_filter){case 1:rs=high;break;case 2:rs=low;break;case 3:rs=band;break;case 4:rs=low+high;break;}
+      t=W(0,pan)*fx_pan_amt+0.5;rs*=env_master;L[b]+=rs*(1-t);R[b]+=rs*t;
     }
   }
   let DS=Math.floor(fx_delay_time*rowlen/2);if(DS>0){let DA=fx_delay_amt/255;for(let b=0;b<S-DS;b++){L[b+DS]+=R[b]*DA;R[b+DS]+=L[b]*DA;}}
