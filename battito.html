@@ -197,7 +197,7 @@ let presets={bpm:130,tracks:[
 {v1:192,w1:2,o1:7,s1:0,d1:0,v2:192,w2:2,o2:7,s2:0,d2:0,ea:0,es:0,er:20000,e1:0,e2:0,ct:0,ca:0,cr:0,mw:0,ms:0,ma:0,m1:0,mc:0,ds:0,da:0,ps:0,pa:0,nv:0,vm:192,s:[],p:[]},
 ]};
 s=s.flatMap((group,i)=>Object.entries(group).map(([k,m])=>[k,m,i]));
-function init(p){p.cells=s.map(([key,max,i])=>{element("label",p,"",key).style.color=color(i);return Object.assign(element("input",p,"slider"),{type:"range",key,max,disabled:true});});}
+function init(p){p.cells=s.map(([key,max,i])=>(element("label",p,"",key).style.color=color(i),Object.assign(element("input",p,"slider"),{type:"range",key,max,disabled:true})));}
 let o={init,presets};instruments=()=>o;return o;
 }
 
