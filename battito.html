@@ -17,7 +17,7 @@ let loading    =element("div",side,"loading","loading...");
 let widgets=[piano,sliders,sequencer,text]; function update(){widgets.forEach(o=>o.update())}
 piano  .update=function(){sequencer.phrase().forEach((v,i)=>piano.cells[i].style.background=color(v));}
 sliders.update=function(){let t=sequencer.track();sliders.cells.forEach(s=>{if(t!==null){s.disabled=false;s.value=t[s.key]||0;}else{s.disabled=true;s.value=0;}});}
-text   .update=function(){if(text===document.activeElement)return;let s=text.selectionStart;text.value=JSON.stringify(audio.song,null,2);text.setSelectionRange(s,s);}
+text   .update=function(){if(text===document.activeElement)return;let s=text.selectionStart;text.value=format(audio.song);text.setSelectionRange(s,s);}
 grid(piano,PC,PR); line(piano,PC,"x",12); line(piano,PC,"y",4);
 initSequencer();
 initAudio();
@@ -31,6 +31,7 @@ function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(
 function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.cells.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});}
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
 function color(i){if(i===null)return "";let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
+function format(data){return JSON.stringify(data).replace(/("v1"|"s"|"p")/g,(m)=>m=='"v1"'?'\n\n'+m:'\n'+m);}
 function grid(e,cols,rows,classname="cell"){
 e.style.gridTemplateColumns="repeat("+cols+",1fr)";
 e.cells=Array(cols*rows).fill().map((_,i)=>{
