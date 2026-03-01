@@ -31,7 +31,7 @@ function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(
 function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.cells.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});}
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
 function color(i){if(i===null)return "";let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
-function format(data){return JSON.stringify(data).replace(/("v1")/g,'\n$1');}
+function format(data){return JSON.stringify(data).replace(/({)/g,'\n$1');}
 function grid(e,cols,rows,classname="cell"){
 e.style.gridTemplateColumns="repeat("+cols+",1fr)";
 e.cells=Array(cols*rows).fill().map((_,i)=>{
@@ -185,27 +185,22 @@ body{background:silver;display:flex;font-weight:bold;font-family:monospace;}
 }
 
 function instruments(){
-let s=[
-  [["v1",255],["w1",3],["o1",16],["s1",11],["d1",255]],
-  [["v2",255],["w2",3],["o2",16],["s2",11],["d2",255]],
-  [["ea",200000],["es",200000],["er",200000],["e1",1],["e2",1]],
-  [["ct",4],["ca",11025],["cr",255]],
-  [["mw",3],["ms",16],["ma",255],["m1",1],["mc",1]],
-  [["ds",16],["da",248],["ps",16],["pa",255]],
-  [["nv",255],["vm",255]]
-],v=[
-  [255,0,9,0,0,255,0,7,0,0,    100,0,5970,       1,1, 2,500,254,   0,0,0,0,0,    1,31,4,21,    0,171],
-  [255,2,6,11,0,255,2,6,11,4,  88,2000,7505,     0,0, 2,3144,51,   0,7,179,0,1,  6,60,4,64,    0,255],
-  [192,2,7,0,0,201,3,7,0,0,    100,150,7505,     0,0, 2,5839,254,  0,6,195,0,1,  6,121,6,147,  0,191],
-  [255,0,9,0,0,255,0,9,0,12,   100,0,14545,      0,0, 0,0,240,     0,0,0,0,0,    2,157,3,47,   0,70],
-  [255,3,7,0,0,255,0,8,0,0,    22,22,2193,       0,0, 3,4067,176,  0,3,96,0,1,   4,12,2,84,    127,255],
-  [255,2,7,0,0,154,2,7,0,9,    2418,1075,10614,  0,0, 3,2962,255,  0,5,124,0,1,  6,117,3,73,   0,240],
-  [192,3,7,0,0,201,3,7,0,7,    789,1234,13636,   0,0, 2,5839,254,  0,6,195,0,1,  6,121,6,147,  0,191],
-  [192,2,7,0,0,192,2,7,0,0,    0,0,20000,        0,0, 0,0,0,       0,0,0,0,0,    0,0,0,0,      0,192],
+let s=[{v1:255,w1:3,o1:16,s1:11,d1:255},{v2:255,w2:3,o2:16,s2:11,d2:255},{ea:200000,es:200000,er:200000,e1:1,e2:1},{ct:4,ca:11025,cr:255},{mw:3,ms:16,ma:255,m1:1,mc:1},{ds:16,da:248,ps:16,pa:255},{nv:255,vm:255}];
+let v=[
+[255,0,9,0,0,255,0,7,0,0,    100,0,5970,       1,1, 2,500,254,   0,0,0,0,0,    1,31,4,21,    0,171],
+[255,2,6,11,0,255,2,6,11,4,  88,2000,7505,     0,0, 2,3144,51,   0,7,179,0,1,  6,60,4,64,    0,255],
+[192,2,7,0,0,201,3,7,0,0,    100,150,7505,     0,0, 2,5839,254,  0,6,195,0,1,  6,121,6,147,  0,191],
+[255,0,9,0,0,255,0,9,0,12,   100,0,14545,      0,0, 0,0,240,     0,0,0,0,0,    2,157,3,47,   0,70],
+[255,3,7,0,0,255,0,8,0,0,    22,22,2193,       0,0, 3,4067,176,  0,3,96,0,1,   4,12,2,84,    127,255],
+[255,2,7,0,0,154,2,7,0,9,    2418,1075,10614,  0,0, 3,2962,255,  0,5,124,0,1,  6,117,3,73,   0,240],
+[192,3,7,0,0,201,3,7,0,7,    789,1234,13636,   0,0, 2,5839,254,  0,6,195,0,1,  6,121,6,147,  0,191],
+[192,2,7,0,0,192,2,7,0,0,    0,0,20000,        0,0, 0,0,0,       0,0,0,0,0,    0,0,0,0,      0,192],
 ];
-function init(p){p.cells=s.flatMap((group,i)=>group.map(([key,max])=>{element("label",p,"",key).style.color=color(i);return Object.assign(element("input",p,"slider"),{type:"range",key,max,disabled:true});}));}
-function presets(){return {bpm:130,tracks:v.map(t=>{let o={};s.flat().map(s=>s[0]).forEach((k,i)=>o[k]=t[i]);return Object.assign(o,{s:[],p:[]});})};}
-let o={init,presets};instruments=function(){return o;};return o;
+let keys=s.flatMap(Object.keys);
+let data=s.flatMap((g,i)=>Object.entries(g).map(([k,m])=>[k,m,i]));
+function init(p){p.cells=data.map(([key,max,i])=>{element("label",p,"",key).style.color=color(i);return Object.assign(element("input",p,"slider"),{type:"range",key,max,disabled:true});});}
+function presets(){return {bpm:130,tracks:v.map(t=>({...Object.fromEntries(keys.map((k,i)=>[k,t[i]])),s:[],p:[]}))};}
+let o={init,presets};instruments=()=>o;return o;
 }
 
 function tutorial(){
