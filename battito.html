@@ -27,8 +27,6 @@ initStyle();
 tutorial();
 compatibility();
 
-let aaa=`{"bpm":130,"tracks":[{"v1":255,"w1":0,"o1":9,"s1":0,"d1":0,"v2":255,"w2":0,"o2":7,"s2":0,"d2":0,"ea":100,"es":0,"er":5970,"e1":1,"e2":1,"ct":2,"ca":500,"cr":254,"mw":0,"ms":0,"ma":0,"m1":0,"mc":0,"ds":1,"da":31,"ps":4,"pa":21,"nv":0,"vm":171,"s":[1,1,1,1],"p":[[123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0]]},{"v1":255,"w1":2,"o1":6,"s1":11,"d1":0,"v2":255,"w2":2,"o2":6,"s2":11,"d2":4,"ea":88,"es":2000,"er":7505,"e1":0,"e2":0,"ct":2,"ca":3144,"cr":51,"mw":0,"ms":7,"ma":179,"m1":0,"mc":1,"ds":6,"da":60,"ps":4,"pa":64,"nv":0,"vm":255,"s":[1,1,1,1],"p":[[0,0,124,0,0,0,0,0,0,0,0,0,0,0,124,0,124,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]},{"v1":192,"w1":2,"o1":7,"s1":0,"d1":0,"v2":201,"w2":3,"o2":7,"s2":0,"d2":0,"ea":100,"es":150,"er":7505,"e1":0,"e2":0,"ct":2,"ca":5839,"cr":254,"mw":0,"ms":6,"ma":195,"m1":0,"mc":1,"ds":6,"da":121,"ps":6,"pa":147,"nv":0,"vm":191,"s":[1,1,2,3],"p":[[135,0,0,0,0,0,0,0,159,0,157,0,159,0,0,0,0,0,0,0,0,0,0,0,147,154,0,159,0,0,0,0],[138,0,0,0,0,0,0,0,150,0,159,0,162,0,0,0,0,0,0,0,0,0,150,0,162,150,0,159,0,0,0,0],[149,0,0,0,0,0,0,0,149,0,150,0,154,0,0,0,0,0,0,0,0,0,0,0,147,157,0,159,0,0,0,0]]},{"v1":255,"w1":0,"o1":9,"s1":0,"d1":0,"v2":255,"w2":0,"o2":9,"s2":0,"d2":12,"ea":100,"es":0,"er":14545,"e1":0,"e2":0,"ct":0,"ca":0,"cr":240,"mw":0,"ms":0,"ma":0,"m1":0,"mc":0,"ds":2,"da":157,"ps":3,"pa":47,"nv":0,"vm":70,"s":[],"p":[]},{"v1":255,"w1":3,"o1":7,"s1":0,"d1":0,"v2":255,"w2":0,"o2":8,"s2":0,"d2":0,"ea":22,"es":22,"er":2193,"e1":0,"e2":0,"ct":3,"ca":4067,"cr":176,"mw":0,"ms":3,"ma":96,"m1":0,"mc":1,"ds":4,"da":12,"ps":2,"pa":84,"nv":127,"vm":255,"s":[],"p":[]},{"v1":255,"w1":2,"o1":7,"s1":0,"d1":0,"v2":154,"w2":2,"o2":7,"s2":0,"d2":9,"ea":2418,"es":1075,"er":10614,"e1":0,"e2":0,"ct":3,"ca":2962,"cr":255,"mw":0,"ms":5,"ma":124,"m1":0,"mc":1,"ds":6,"da":117,"ps":3,"pa":73,"nv":0,"vm":240,"s":[],"p":[]},{"v1":192,"w1":3,"o1":7,"s1":0,"d1":0,"v2":201,"w2":3,"o2":7,"s2":0,"d2":7,"ea":789,"es":1234,"er":13636,"e1":0,"e2":0,"ct":2,"ca":5839,"cr":254,"mw":0,"ms":6,"ma":195,"m1":0,"mc":1,"ds":6,"da":121,"ps":6,"pa":147,"nv":0,"vm":191,"s":[],"p":[]},{"v1":192,"w1":2,"o1":7,"s1":0,"d1":0,"v2":192,"w2":2,"o2":7,"s2":0,"d2":0,"ea":0,"es":0,"er":20000,"e1":0,"e2":0,"ct":0,"ca":0,"cr":0,"mw":0,"ms":0,"ma":0,"m1":0,"mc":0,"ds":0,"da":0,"ps":0,"pa":0,"nv":0,"vm":192,"s":[],"p":[]}]}`; audio.song=JSON.parse(aaa); update();
-
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="⚠ Rendering error<br>This app requires a modern chromium-based browser";},200);}
 function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.cells.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});}
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
@@ -187,20 +185,19 @@ body{background:silver;display:flex;font-weight:bold;font-family:monospace;}
 }
 
 function instruments(){
-let v=[
-[255,0,9,0,0,255,0,7,0,0,    100,0,5970,       1,1, 2,500,254,   0,0,0,0,0,    1,31,4,21,    0,171],
-[255,2,6,11,0,255,2,6,11,4,  88,2000,7505,     0,0, 2,3144,51,   0,7,179,0,1,  6,60,4,64,    0,255],
-[192,2,7,0,0,201,3,7,0,0,    100,150,7505,     0,0, 2,5839,254,  0,6,195,0,1,  6,121,6,147,  0,191],
-[255,0,9,0,0,255,0,9,0,12,   100,0,14545,      0,0, 0,0,240,     0,0,0,0,0,    2,157,3,47,   0,70],
-[255,3,7,0,0,255,0,8,0,0,    22,22,2193,       0,0, 3,4067,176,  0,3,96,0,1,   4,12,2,84,    127,255],
-[255,2,7,0,0,154,2,7,0,9,    2418,1075,10614,  0,0, 3,2962,255,  0,5,124,0,1,  6,117,3,73,   0,240],
-[192,3,7,0,0,201,3,7,0,7,    789,1234,13636,   0,0, 2,5839,254,  0,6,195,0,1,  6,121,6,147,  0,191],
-[192,2,7,0,0,192,2,7,0,0,    0,0,20000,        0,0, 0,0,0,       0,0,0,0,0,    0,0,0,0,      0,192],
-];
+let presets={bpm:130,tracks:[
+{v1:255,w1:0,o1:9,s1:0,d1:0,v2:255,w2:0,o2:7,s2:0,d2:0,ea:100,es:0,er:5970,e1:1,e2:1,ct:2,ca:500,cr:254,mw:0,ms:0,ma:0,m1:0,mc:0,ds:1,da:31,ps:4,pa:21,nv:0,vm:171,s:[],p:[]},
+{v1:255,w1:2,o1:6,s1:11,d1:0,v2:255,w2:2,o2:6,s2:11,d2:4,ea:88,es:2000,er:7505,e1:0,e2:0,ct:2,ca:3144,cr:51,mw:0,ms:7,ma:179,m1:0,mc:1,ds:6,da:60,ps:4,pa:64,nv:0,vm:255,s:[],p:[]},
+{v1:192,w1:2,o1:7,s1:0,d1:0,v2:201,w2:3,o2:7,s2:0,d2:0,ea:100,es:150,er:7505,e1:0,e2:0,ct:2,ca:5839,cr:254,mw:0,ms:6,ma:195,m1:0,mc:1,ds:6,da:121,ps:6,pa:147,nv:0,vm:191,s:[],p:[]},
+{v1:255,w1:0,o1:9,s1:0,d1:0,v2:255,w2:0,o2:9,s2:0,d2:12,ea:100,es:0,er:14545,e1:0,e2:0,ct:0,ca:0,cr:240,mw:0,ms:0,ma:0,m1:0,mc:0,ds:2,da:157,ps:3,pa:47,nv:0,vm:70,s:[],p:[]},
+{v1:255,w1:3,o1:7,s1:0,d1:0,v2:255,w2:0,o2:8,s2:0,d2:0,ea:22,es:22,er:2193,e1:0,e2:0,ct:3,ca:4067,cr:176,mw:0,ms:3,ma:96,m1:0,mc:1,ds:4,da:12,ps:2,pa:84,nv:127,vm:255,s:[],p:[]},
+{v1:255,w1:2,o1:7,s1:0,d1:0,v2:154,w2:2,o2:7,s2:0,d2:9,ea:2418,es:1075,er:10614,e1:0,e2:0,ct:3,ca:2962,cr:255,mw:0,ms:5,ma:124,m1:0,mc:1,ds:6,da:117,ps:3,pa:73,nv:0,vm:240,s:[],p:[]},
+{v1:192,w1:3,o1:7,s1:0,d1:0,v2:201,w2:3,o2:7,s2:0,d2:7,ea:789,es:1234,er:13636,e1:0,e2:0,ct:2,ca:5839,cr:254,mw:0,ms:6,ma:195,m1:0,mc:1,ds:6,da:121,ps:6,pa:147,nv:0,vm:191,s:[],p:[]},
+{v1:192,w1:2,o1:7,s1:0,d1:0,v2:192,w2:2,o2:7,s2:0,d2:0,ea:0,es:0,er:20000,e1:0,e2:0,ct:0,ca:0,cr:0,mw:0,ms:0,ma:0,m1:0,mc:0,ds:0,da:0,ps:0,pa:0,nv:0,vm:192,s:[],p:[]},
+]};
 let s=[{v1:255,w1:3,o1:16,s1:11,d1:255},{v2:255,w2:3,o2:16,s2:11,d2:255},{ea:200000,es:200000,er:200000,e1:1,e2:1},{ct:4,ca:11025,cr:255},{mw:3,ms:16,ma:255,m1:1,mc:1},{ds:16,da:248,ps:16,pa:255},{nv:255,vm:255}];
-let data=s.flatMap((g,i)=>Object.entries(g).map(([k,m])=>[k,m,i]));
-function init(p){p.cells=data.map(([key,max,i])=>{element("label",p,"",key).style.color=color(i);return Object.assign(element("input",p,"slider"),{type:"range",key,max,disabled:true});});}
-function presets(){return {bpm:130,tracks:v.map(t=>({...Object.fromEntries(s.flatMap(Object.keys).map((k,i)=>[k,t[i]])),s:[],p:[]}))};}
+s=s.flatMap((group,i)=>Object.entries(group).map(([k,m])=>[k,m,i]));
+function init(p){p.cells=s.map(([key,max,i])=>(element("label",p,"",key).style.color=color(i),Object.assign(element("input",p,"slider"),{type:"range",key,max,disabled:true})));}
 let o={init,presets};instruments=()=>o;return o;
 }
 
@@ -234,43 +231,45 @@ let G=(f,m,n,l)=>{if(n>l)n-=l;else{n=l-n;m=1/m;}while(n-->0)f*=m;return f;};
 let R_S=1,rnd=()=>{R_S=Math.imul(R_S,0x15a4e35);return (R_S>>>0)%255/255;};
 let SAMPLERATE=44100,FBASE=1.5*Math.PI/SAMPLERATE;
 let VU=(n,r)=>{let o=[];return{add:c=>{let p=new Float32Array(n);for(let i=0,m,s,j;i<n;i++){m=0;s=i*r;for(j=0;j<r;j++){let a=Math.abs(c[s+j]);if(a>m)m=a}p[i]=m}o.push(p)},out:o}}
-return {createbuffer(json){
-let rowlen=Math.ceil(15*SAMPLERATE/json.bpm);
-let SR=Math.max(...json.tracks.map(t=>t.s.length));
-let PR=Math.max(...json.tracks.flatMap(t=>t.p.map(p=>p.length)));
-let S=SR*PR*rowlen;
-let LL=new Float32Array(S),RR=new Float32Array(S),L=new Float32Array(S),R=new Float32Array(S);
-let vu=VU(SR*PR,rowlen);
-for(let T of json.tracks){
-  let {v1,w1,o1,s1,d1,v2,w2,o2,s2,d2,ea,es,er,e1,e2,ct,ca,cr,mw,ms,ma,m1,mc,ds,da,ps,pa,nv,vm}=T;
-  vm*=0.006;ma/=512;pa/=512;v1/=255;v2/=255;nv/=255;cr/=255;
-  s1+=(o1-8)*12;d1=1+0.2*d1/255;
-  s2+=(o2-8)*12;d2=1+0.2*d2/255;
-  let lfostep=G(1,2,ms,8)/rowlen,panstep=G(1,2,ps,8)/rowlen;L.fill(0);R.fill(0);
-  let envlen=ea+es+er,ai=1/ea,ri=1/er;
-  for(let step=0;step<SR*PR;step++){
-    let n=T.p?.[T.s[step/PR|0]-1]?.[step%PR],P=step*rowlen;if(!n)continue;
-    let o1fb=NOTE[n+s1]*d1,o2fb=NOTE[n+s2]*d2,c1=0,c2=0,low=0,band=0,lfo=lfostep*P,pan=panstep*P;
-    for(let j=0;j<envlen;j++){
-      let b=j+P;if(b>=S)break;lfo+=lfostep;pan+=panstep;let lfoR=W(mw,lfo)*ma+0.5,e=1,f,rs,high,t;
-      if(j<ea)e=j*ai;else if(j>=ea+es)e-=(j-ea-es)*ri;
-      let t1=o1fb;if(m1)t1+=lfoR;if(e1)t1*=e*e;c1+=t1;rs=W(w1,c1)*v1;
-      let t2=o2fb;if(e2)t2*=e*e;c2+=t2;rs+=W(w2,c2)*v2;
-      if(nv)rs+=(rnd()*2-1)*nv*e;rs*=e;
-      f=ca;if(mc)f*=lfoR;f*=FBASE;
-      low+=f*band;high=cr*(rs-band)-low;band+=f*high;switch(ct){case 1:rs=high;break;case 2:rs=low;break;case 3:rs=band;break;case 4:rs=low+high;break;}
-      t=W(0,pan)*pa+0.5;rs*=vm;L[b]+=rs*(1-t);R[b]+=rs*t;
+function createbuffer(json){
+  let rowlen=Math.ceil(15*SAMPLERATE/json.bpm);
+  let SR=Math.max(...json.tracks.map(t=>t.s.length));
+  let PR=Math.max(...json.tracks.flatMap(t=>t.p.map(p=>p.length)));
+  let S=SR*PR*rowlen;
+  let LL=new Float32Array(S),RR=new Float32Array(S),L=new Float32Array(S),R=new Float32Array(S);
+  let vu=VU(SR*PR,rowlen);
+  for(let T of json.tracks){
+    let {v1,w1,o1,s1,d1,v2,w2,o2,s2,d2,ea,es,er,e1,e2,ct,ca,cr,mw,ms,ma,m1,mc,ds,da,ps,pa,nv,vm}=T;
+    vm*=0.006;ma/=512;pa/=512;v1/=255;v2/=255;nv/=255;cr/=255;
+    s1+=(o1-8)*12;d1=1+0.2*d1/255;
+    s2+=(o2-8)*12;d2=1+0.2*d2/255;
+    let lfostep=G(1,2,ms,8)/rowlen,panstep=G(1,2,ps,8)/rowlen;L.fill(0);R.fill(0);
+    let envlen=ea+es+er,ai=1/ea,ri=1/er;
+    for(let step=0;step<SR*PR;step++){
+      let n=T.p?.[T.s[step/PR|0]-1]?.[step%PR],P=step*rowlen;if(!n)continue;
+      let o1fb=NOTE[n+s1]*d1,o2fb=NOTE[n+s2]*d2,c1=0,c2=0,low=0,band=0,lfo=lfostep*P,pan=panstep*P;
+      for(let j=0;j<envlen;j++){
+        let b=j+P;if(b>=S)break;lfo+=lfostep;pan+=panstep;let lfoR=W(mw,lfo)*ma+0.5,e=1,f,rs,high,t;
+        if(j<ea)e=j*ai;else if(j>=ea+es)e-=(j-ea-es)*ri;
+        let t1=o1fb;if(m1)t1+=lfoR;if(e1)t1*=e*e;c1+=t1;rs=W(w1,c1)*v1;
+        let t2=o2fb;if(e2)t2*=e*e;c2+=t2;rs+=W(w2,c2)*v2;
+        if(nv)rs+=(rnd()*2-1)*nv*e;rs*=e;
+        f=ca;if(mc)f*=lfoR;f*=FBASE;
+        low+=f*band;high=cr*(rs-band)-low;band+=f*high;switch(ct){case 1:rs=high;break;case 2:rs=low;break;case 3:rs=band;break;case 4:rs=low+high;break;}
+        t=W(0,pan)*pa+0.5;rs*=vm;L[b]+=rs*(1-t);R[b]+=rs*t;
+      }
     }
+    let DS=Math.floor(ds*rowlen/2);if(DS>0){let DA=da/255;for(let b=0;b<S-DS;b++){L[b+DS]+=R[b]*DA;R[b+DS]+=L[b]*DA;}}
+    for(let b=0;b<S;b++){LL[b]+=L[b];RR[b]+=R[b];}
+    vu.add(L);
   }
-  let DS=Math.floor(ds*rowlen/2);if(DS>0){let DA=da/255;for(let b=0;b<S-DS;b++){L[b+DS]+=R[b]*DA;R[b+DS]+=L[b]*DA;}}
-  for(let b=0;b<S;b++){LL[b]+=L[b];RR[b]+=R[b];}
-  vu.add(L);
+  let X=0;for(let i=0;i<S;i++){X=Math.max(X,Math.abs(LL[i]),Math.abs(RR[i]));}
+  if(X>0){let scale=1/X;for(let i=0;i<S;i++){LL[i]*=scale;RR[i]*=scale;}}
+  let buffer=audiocontext.createBuffer(2,LL.length,SAMPLERATE);[LL,RR].forEach((data,i)=>buffer.copyToChannel(data,i));
+  buffer.vu=vu.out;
+  return buffer;
 }
-let X=0;for(let i=0;i<S;i++){X=Math.max(X,Math.abs(LL[i]),Math.abs(RR[i]));}
-if(X>0){let scale=1/X;for(let i=0;i<S;i++){LL[i]*=scale;RR[i]*=scale;}}
-let buffer=audiocontext.createBuffer(2,LL.length,SAMPLERATE);[LL,RR].forEach((data,i)=>buffer.copyToChannel(data,i));
-buffer.vu=vu.out;
-return buffer;
-}};}
+return {createbuffer};
+}
 
 }</script>
