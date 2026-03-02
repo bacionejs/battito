@@ -17,8 +17,8 @@ let loading    =element("div",side,"loading","loading...");
 let widgets=[piano,sliders,sequencer,text]; function update(){widgets.forEach(o=>o.update())}
 piano     .update=function(){sequencer.phrase().forEach((v,i)=>this.cells[i].style.background=color(v));}
 sequencer .update=function(){for(let i=1,c;(c=this.cells[i]);i++){this.toggle(c);if(c.row!=-1 && c.col!=-1)c.textContent=audio.song.tracks[c.col].s[c.row]||"";}}
-sliders   .update=function(){let t=sequencer.track();this.cells.forEach(s=>{if(t!==null){s.disabled=false;s.value=t[s.key]||0;}else{s.disabled=true;s.value=0;}});}
-text      .update=function(){if(this===document.activeElement)return;let s=this.selectionStart;this.value=format(audio.song);this.setSelectionRange(s,s);}
+sliders   .update=function(){let t=sequencer.track();this.cells.forEach(s=>{if(t!=null){s.disabled=false;s.value=t[s.key]||0;}else{s.disabled=true;s.value=0;}});}
+text      .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(audio.song);this.setSelectionRange(s,s);}
 grid(piano,PC,PR); line(piano,PC,"x",12); line(piano,PC,"y",4);
 initSequencer();
 initAudio();
@@ -31,7 +31,7 @@ compatibility();
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="⚠ Rendering error<br>This app requires a modern chromium-based browser";},200);}
 function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.cells.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});}
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
-function color(i){if(i===null)return "";let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
+function color(i){if(i==null)return "";let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
 function format(data){return JSON.stringify(data).replace(/({)/g,'\n$1');}
 
 function grid(e,cols,rows,classname="cell"){
@@ -52,7 +52,7 @@ makeLongPress(canvas,download);
 makeLongPress(piano,sequencer.timemode.toggle);
 [piano,sequencer,sliders].forEach(el=>{el.addEventListener("contextmenu",e=>e.preventDefault());});
 function pianoclick({target:{row:r,col}}){
-  let note=col+C3,p=sequencer.pattern();if(p===null){audio.preview(note);return;}
+  let note=col+C3,p=sequencer.pattern();if(p==null){audio.preview(note);return;}
   if(timemodeon){sequencer.timemode.run(note);}
   else{if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(note);}
 }
@@ -81,8 +81,8 @@ function download(){try{
 }
 function makeLongPress(o,callback){
   let t=null,lp={
-    down(e){e.preventDefault();if(t!==null){clearTimeout(t);}t=setTimeout(()=>{t=null;callback(e);},800);},
-    up  (e){e.preventDefault();if(t!==null){clearTimeout(t);t=null;}}
+    down(e){e.preventDefault();if(t!=null){clearTimeout(t);}t=setTimeout(()=>{t=null;callback(e);},800);},
+    up  (e){e.preventDefault();if(t!=null){clearTimeout(t);t=null;}}
   };
   o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);o.addEventListener("pointerleave",lp.up);
 }
@@ -109,7 +109,7 @@ function click({target:{row,col}}){
 }
 function range(song){
   let at=song.tracks.filter((_,c)=>cols[c]);if(!at.length)return null;
-  let vi=rows.map((on,r)=>(on && at.some(t=>t.s[r]))?r:-1).filter(i=>i!==-1);if(!vi.length)return null;
+  let vi=rows.map((on,r)=>(on && at.some(t=>t.s[r]))?r:-1).filter(i=>i!=-1);if(!vi.length)return null;
   return {bpm:song.bpm,tracks:at.map(t=>({...t,s:vi.map(i=>t.s[i]),p:structuredClone(t.p)}))};
 }
 function pattern(){
@@ -121,8 +121,8 @@ function timemode(){
   let s=0,m=["ready...","set...","GO!","wait...","reset?"];
   function show(text){message.textContent=text;message.classList.remove("show");message.offsetWidth;message.classList.add("show");}
   function toggle(){timemodeon^=1;if(timemodeon){run();}else{show("stepmode");s=0;}}
-  function next(){if(s>0&&s<5){show(m[s]);if(s===1)update();s++;if(s===5)s=0;}}
-  function run(note){if(s===0){show(m[0]);pattern()?.fill(0);s=1;}else if(s===3){let p=pattern();if(p){p[audio.currp]=note;update();audio.preview(note);}}}
+  function next(){if(s>0&&s<5){show(m[s]);if(s==1)update();s++;if(s==5)s=0;}}
+  function run(note){if(s==0){show(m[0]);pattern()?.fill(0);s=1;}else if(s==3){let p=pattern();if(p){p[audio.currp]=note;update();audio.preview(note);}}}
   Object.assign(timemode,{next,run,toggle});
 }
 Object.assign(sequencer, {phrase, toggle, timemode, cols, rows, click, track, sequences, pattern, range, hasnotes, scroll});
@@ -137,7 +137,7 @@ function fu(){analyser.getByteFrequencyData(A);sequencer.children[0].cells.forEa
 function vu(t){let k=0,r=(currS+1)*(SC+1)+1;t=t*PR|0;sequencer.cols.forEach((on,i)=>{if(!on)return;sequencer.cells[r+i].style.background=gradient(S.buffer.vu[k++][t]);});}
 function start(){
   try{if(S){S.onended=null;S.stop();S.disconnect();S=null;}}catch(e){}
-  sequences=sequencer.sequences();if(sequences.length===0)return;
+  sequences=sequencer.sequences();if(sequences.length==0)return;
   let json=sequencer.range(SONG);if(!json)return;
   loading.style.display="block";requestAnimationFrame(()=>requestAnimationFrame(()=>{try{
   S=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(json)});S.onended=start;loading.style.display="none";
@@ -148,13 +148,13 @@ function loop(){
   let t=(C.currentTime-S.startTime)*SONG.bpm/PR/15;if(t>=sequences.length)return;
   currS=sequences[t|0];
   currP=(t*PR|0)%PR;
-  if(currS!==prevS){prevS=currS;piano.update();sequencer.update();sequencer.scroll(currS);}
-  if(currP!==prevP){fu();vu(t);point(piano,PC,prevP,currP);prevP=currP;if(timemodeon && currP==0)sequencer.timemode.next();}
+  if(currS!=prevS){prevS=currS;piano.update();sequencer.update();sequencer.scroll(currS);}
+  if(currP!=prevP){fu();vu(t);point(piano,PC,prevP,currP);prevP=currP;if(timemodeon && currP==0)sequencer.timemode.next();}
   requestAnimationFrame(loop);
 }
 function preview(note){try{
-  P?.stop();let threshold=0.5,t=sequencer.track();if(t===null)return;
-  let song={bpm:SONG.bpm,tracks:[{...t,s:[1],p:[{length:PR,0:note||t?.p[0]?.find(n=>n!==0)||147}]}]};
+  P?.stop();let threshold=0.5,t=sequencer.track();if(t==null)return;
+  let song={bpm:SONG.bpm,tracks:[{...t,s:[1],p:[{length:PR,0:note||t?.p[0]?.find(n=>n!=0)||147}]}]};
   P=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(song)});P.connect(C.destination);P.start();
   let d=P.buffer.getChannelData(0),c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2;
   let start=d.findIndex(v=>abs(v)>=threshold),end=d.findLastIndex(v=>abs(v)>=threshold);
@@ -215,7 +215,7 @@ let ci=0,p,song,clicks,S,P;let m=element("button",document.body,"tut-message","C
 function init(){m.remove();S=sequencer;P=piano;p=element("div",document.body,"tut-pointer","👉");p.style.transition="transform .1s ease";initSong();initClicks();move();}
 function move(){if(ci>=clicks.length)return p.remove();let e=clicks[ci++]();let r=e.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;click(e);}
 function click(e){setTimeout(()=>{p.style.transform="scale(.5)";e.dispatchEvent(new MouseEvent("click",{bubbles:true}));setTimeout(()=>{p.style.transform="";setTimeout(move,100);},100);},100);}
-function make(clickon,c,r){return ()=>clickon.cells.find(x=>x.row===r&&x.col===c);}
+function make(clickon,c,r){return ()=>clickon.cells.find(x=>x.row==r&&x.col==c);}
 function toggle(c,r){return Array(2).fill(0).flatMap(()=>[make(S,c,-1),make(S,-1,r)]);}
 function initClicks(){let notes=new Map();
   let sequencerclicks=song.flatMap((t,c)=>t[0].flatMap((pid,r)=>(notes.set(c+"-"+pid,{c,r,a:t[1][pid-1]}),Array(pid).fill(0).map(()=>make(S,c,r)))));
