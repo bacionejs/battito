@@ -186,18 +186,16 @@ body{background:silver;display:flex;font-weight:bold;font-family:monospace;}
 }
 
 function instruments(){
-let schema={
-  vco1: {v1:255,w1:3,o1:16,s1:11,d1:255},
-  vco2: {v2:255,w2:3,o2:16,s2:11,d2:255},
-  env:  {ea:2e5,es:2e5,er:2e5,e1:1,e2:1},
-  flt:  {ct:4,ca:11025,cr:255},
-  mod:  {mw:3,ms:16,ma:255,m1:1,mc:1},
-  fx:   {ds:16,da:248,ps:16,pa:255},
-  mst:  {nv:255,vm:255}
-};
-let s=Object.values(schema).flatMap((group,color)=>Object.entries(group).map(([key,max])=>[key,max,color]));
+let s=[
+  {v1:255,w1:3,o1:16,s1:11,d1:255},//oscillators: volumn, waveform, octave, semitone, detune
+  {v2:255,w2:3,o2:16,s2:11,d2:255},
+  {ea:2e5,es:2e5,er:2e5,e1:1,e2:1},//envelope: attack, sustain, release, modulate the pitch of oscillator 1 or 2
+  {ct:4,ca:11025,cr:255},          //cutoff: high/low/band/notch, amount, resonance
+  {mw:3,ms:16,ma:255,m1:1,mc:1},   //modulation: waveform, speed, amount, modulate the pitch of oscillator 1, modulate the cutoff frequency
+  {ds:16,da:248,ps:16,pa:255},     //delay and pan: speed and amount
+  {nv:255,vm:255}                  //noise and master volumn
+].flatMap((group,color)=>Object.entries(group).map(([key,max])=>[key,max,color]));
 let presets={bpm:130,tracks:[
-  /* vco1           vco2           env                  flt         mod             fx             mst */
   [255,0,9,0,0,     255,0,7,0,0,   100,0,5970,1,1,      2,500,254,  0,0,0,0,0,      1,31,4,21,     0,171],
   [255,2,6,11,0,    255,2,6,11,4,  88,2000,7505,0,0,    2,3144,51,  0,7,179,0,1,    6,60,4,64,     0,255],
   [192,2,7,0,0,     201,3,7,0,0,   100,150,7505,0,0,    2,5839,254, 0,6,195,0,1,    6,121,6,147,   0,191],
