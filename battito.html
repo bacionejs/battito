@@ -33,7 +33,6 @@ function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.cre
 function color(i){if(i===null)return "";let hue=((i+5)*360)/9;return "hsl("+hue+",70%,50%)";}
 function format(data){return JSON.stringify(data).replace(/({)/g,'\n$1');}
 
-
 function grid(e,cols,rows,classname="cell"){
 e.style.gridTemplateColumns="repeat("+cols+",1fr)";
 e.cells=Array(cols*rows).fill().map((_,i)=>{
