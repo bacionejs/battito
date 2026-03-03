@@ -39,10 +39,10 @@ e.cells=Array(cols*rows).fill().map((_,i)=>{
 });}
 
 function initUpdates(){
-piano     .update=function(){sequencer.phrase().forEach((v,i)=>this.cells[i].style.background=color(v));}
-sequencer .update=function(){for(let i=1,c;(c=this.cells[i]);i++){this.toggle(c);if(c.row!=-1 && c.col!=-1)c.textContent=audio.song.tracks[c.col].s[c.row]||"";}}
-sliders   .update=function(){let t=sequencer.track();this.cells.forEach(s=>{if(t!=null){s.disabled=false;s.value=t[s.key]||0;}else{s.disabled=true;s.value=0;}});}
-text      .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(audio.song);this.setSelectionRange(s,s);}
+piano      .update=function(){sequencer.phrase().forEach((v,i)=>this.cells[i].style.background=color(v));}
+sequencer  .update=function(){for(let i=1,c;(c=this.cells[i]);i++){this.toggle(c);if(c.row!=-1 && c.col!=-1)c.textContent=audio.song.tracks[c.col].s[c.row]||"";}}
+sliders    .update=function(){let t=sequencer.track();this.cells.forEach(s=>{if(t!=null){s.disabled=false;s.value=t[s.key]||0;}else{s.disabled=true;s.value=0;}});}
+text       .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(audio.song);this.setSelectionRange(s,s);}
 let widgets=[piano,sliders,sequencer,text]; return ()=>widgets.forEach(o=>o.update());
 }
 
