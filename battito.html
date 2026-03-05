@@ -55,6 +55,7 @@ fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.doc
 makeLongPress(canvas,download);
 makeLongPress(piano,sequencer.timemode.toggle);
 [piano,sequencer,sliders].forEach(el=>{el.addEventListener("contextmenu",e=>e.preventDefault());});
+function makeLongPress(e,c){let t;e.onpointerdown=e=>{t=setTimeout(_=>c(e),800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
 function pianoclick({target:{row:r,col}}){
   let note=col+C3,p=sequencer.pattern();if(p==null){audio.preview(note);return;}
   if(timemodeon){sequencer.timemode.run(note);}
@@ -82,13 +83,6 @@ function download(){try{
     v.setUint32(4,d+36,1); v.setUint32(40,d,1); for(let j=0,i,s;j<b.length;j++)for(i=0;i<2;i++,os+=2)v.setInt16(os,(s=b.getChannelData(i)[j])*32767-(s<0),1);
     return new Blob([o],{type:"audio/wav"});
   }
-}
-function makeLongPress(o,callback){
-  let t=null,lp={
-    down(e){e.preventDefault();if(t!=null){clearTimeout(t);}t=setTimeout(()=>{t=null;callback(e);},800);},
-    up  (e){e.preventDefault();if(t!=null){clearTimeout(t);t=null;}}
-  };
-  o.addEventListener("pointerdown",lp.down);o.addEventListener("pointerup",lp.up);o.addEventListener("pointerleave",lp.up);
 }
 }
 
