@@ -173,9 +173,9 @@ body{background:silver;display:flex;font-weight:bold;font-family:monospace;}
 @keyframes fade{0%{opacity:1;}100%{opacity:0;}} .message.show{animation:fade 2s ease forwards;}
 .message{color:silver;font-size:3rem;top:50%;left:50%;translate:-50% -50%;position:absolute;z-index:2;pointer-events:none;opacity:0;}
 .piano, .sequencer{display:grid;} .piano{background:white;} .side{background:black;color:white;}
-.sliders{display:flex;flex-direction:column;justify-content:space-evenly;font-size:10px;background:black;}
+.sliders{display:flex;flex-direction:column;justify-content:space-evenly;font-size:8px;background:black;}
 .sliders > * {display:flex;flex-direction:column;align-items:center;}
-.sliders .slider{height:3px;} .sliders input[type="range"]::-webkit-slider-thumb{opacity:0;}
+.sliders .slider{height:1px;} .sliders input[type="range"]::-webkit-slider-thumb{opacity:0;}
 .sequencer{height:50%;aspect-ratio:1/1;overflow-y:scroll;} .sequencer > :first-child{grid-auto-flow:column;place-items:end stretch;}
 .fu{pointer-events:none;height:100%;}
 .col-header{position:sticky;top:0;background:black;z-index:1;}
