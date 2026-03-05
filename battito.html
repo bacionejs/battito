@@ -55,7 +55,7 @@ fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.doc
 makeLongPress(canvas,download);
 makeLongPress(piano,sequencer.timemode.toggle);
 [piano,sequencer,sliders].forEach(el=>{el.addEventListener("contextmenu",e=>e.preventDefault());});
-function makeLongPress(e,c){let t;e.onpointerdown=e=>{t=setTimeout(_=>c(e),800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
+function makeLongPress(e,c){let t;e.onpointerdown=_=>{t=setTimeout(_=>c(),800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
 function pianoclick({target:{row:r,col}}){
   let note=col+C3,p=sequencer.pattern();if(p==null){audio.preview(note);return;}
   if(timemodeon){sequencer.timemode.run(note);}
