@@ -159,10 +159,10 @@ function loop(){
 function preview(note){try{
   P?.stop();let threshold=0.5,t=sequencer.track();if(t==null)return;
   let song={bpm:SONG.bpm,tracks:[{...t,s:[1],p:[{length:PR,0:note||t?.p[0]?.find(n=>n!=0)||147}]}]};
-  P=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(song)});P.connect(C.destination);P.start();
+  P=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(song)});P.connect(C.destination);P.start();//hear
   let d=P.buffer.getChannelData(0),c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2;
   let start=d.findIndex(v=>abs(v)>=threshold),end=d.findLastIndex(v=>abs(v)>=threshold);
-  c.clearRect(0,0,w,h);c.lineWidth=2;c.strokeStyle="blue";c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.stroke();
+  c.clearRect(0,0,w,h);c.lineWidth=2;c.strokeStyle="blue";c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.stroke();//see
 }catch(e){}}
 audio={start,preview,get buffer(){return S.buffer},get song(){return SONG;},set song(newSong){SONG=newSong;},get currp(){return currP;},get currs(){return currS;}};
 }
