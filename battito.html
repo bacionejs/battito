@@ -95,8 +95,8 @@ function hasnotes(){return range()?.tracks.some(t=>t.s.some(s=>s&&t.p[s-1]?.some
 function phrase(){P.fill(null);cols.forEach((on,tid)=>{if(!on)return;let t=audio.song.tracks[tid];t.p[t.s[audio.currs]-1]?.forEach((note,step)=>note && (P[step*PC+note-C3]=tid));});return P;}
 function track(){return cols[LT] && audio.song.tracks[LT] || null;}
 function tracks(){let a=audio.song.tracks.filter((_,c)=>cols[c]); return a.length?a:null;}
-function sequences(){let a=rows.flatMap((on,r)=>on&&cols.some((c,i)=>c&&audio.song.tracks[i].s[r])?r:[]); return a.length?a:null;}
-function range(){let t,s;return (t=tracks()) && (s=sequences()) && {bpm:audio.song.bpm,tracks:t.map(t=>({...t,s:s.map(i=>t.s[i]),p:structuredClone(t.p)}))} || null;}
+function sequences(){let a=rows.flatMap((on,r)=>on&&cols.some((on,c)=>on&&audio.song.tracks[c].s[r])?r:[]); return a.length?a:null;}
+function range(){let t,s;return (t=tracks()) && (s=sequences()) && {bpm:audio.song.bpm,tracks:t.map(t=>({...t,s:s.map(i=>t.s[i]),p:t.p}))} || null;}
 function pattern(){let t=track();let a=rows.indexOf(1);if(!t||rows.filter(Boolean).length!==1||!t.s[a]){return null;}return t.p[t.s[a]-1]||=Array(PR).fill(0);}
 function click({target:{row,col}}){
   if(row==-1 && col==-1){//corner-toggleall
