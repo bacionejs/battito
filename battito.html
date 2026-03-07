@@ -62,7 +62,7 @@ function pianoclick({target:{row:r,col}}){
   else{if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(note);}
 }
 function download(){try{
-  if(!sequencer.hasnotes(audio.song))return alert("Nothing to save. Please select song or range");
+  if(!sequencer.hasnotes())return alert("Nothing to save. Please select song or range");
   let a=element("a"),file="battito_song_"+Date.now();
   a.href=URL.createObjectURL(bufferToWav());a.download=file+".wav";a.click();
   a.href=URL.createObjectURL(new File([jsonToHtml()],""));a.download=file+".html";a.click();
@@ -91,10 +91,13 @@ grid(sequencer,SC+1,SR+1); grid(sequencer.children[0],16,1,"fu");
 let P=Array(PC*PR),cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1; timemode();
 function toggle(cell){cell.style.background=rows[cell.row] && cols[cell.col]?"gray":"";}
 function scroll(n){let t=sequencer.cells[(n+1)*(SC+1)],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
-function hasnotes(song){let r=range(song);return r?.tracks.some(t=>t.s.some(p=>p>0&&t.p[p-1]?.some(Boolean)))?r:null;}
-function track(){return cols[LT] && audio.song.tracks[LT] || null;}
-function sequences(){return rows.flatMap((on,r)=>on&&audio.song.tracks.some(t=>t.s[r])?r:[]);}
+function hasnotes(){return range()?.tracks.some(t=>t.s.some(s=>s&&t.p[s-1]?.some(Boolean)));}
 function phrase(){P.fill(null);cols.forEach((on,tid)=>{if(!on)return;let t=audio.song.tracks[tid];t.p[t.s[audio.currs]-1]?.forEach((note,step)=>note && (P[step*PC+note-C3]=tid));});return P;}
+function track(){return cols[LT] && audio.song.tracks[LT] || null;}
+function tracks(){let a=audio.song.tracks.filter((_,c)=>cols[c]); return a.length?a:null;}
+function sequences(){let a=rows.flatMap((on,r)=>on&&cols.some((c,i)=>c&&audio.song.tracks[i].s[r])?r:[]); return a.length?a:null;}
+function range(){let t,s;return (t=tracks()) && (s=sequences()) && {bpm:audio.song.bpm,tracks:t.map(t=>({...t,s:s.map(i=>t.s[i]),p:structuredClone(t.p)}))} || null;}
+function pattern(){let t=track();let a=rows.indexOf(1);if(!t||rows.filter(Boolean).length!==1||!t.s[a]){return null;}return t.p[t.s[a]-1]||=Array(PR).fill(0);}
 function click({target:{row,col}}){
   if(row==-1 && col==-1){//corner-toggleall
     let mr=0,mc=0; audio.song.tracks.forEach((t,c)=>t.s.forEach((v,r)=>{if(v){mr=max(mr,r);mc=max(mc,c);}}));
@@ -104,18 +107,6 @@ function click({target:{row,col}}){
   }else if(col==-1){rows[row]^=1;//row-headers
   }else{let t=audio.song.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;if(np)t.p[np-1]??=Array(PR).fill(0);}//grid-body
   update();audio.start();
-}
-function range(s){
-  let t=[],v=[],a=[],i,r,x;
-  for(i=0;x=s.tracks[i];i++)if(cols[i])t.push(x);
-  for(x of t)for(i=0;i<x.s.length;i++)a[i]|=x.s[i];
-  for(r=0;r<rows.length;r++)if(rows[r]&&a[r])v.push(r);
-  return t[0]&&v[0]+1?{bpm:s.bpm,tracks:t.map(x=>({...x,s:v.map(i=>x.s[i]),p:JSON.parse(JSON.stringify(x.p))}))}:null;
-}
-function pattern(){
-  let t=track(); if(!t||rows.filter(Boolean).length!=1)return null;
-  let i=rows.indexOf(1); if(!t.s[i])return null;
-  return t.p[t.s[i]-1]||=Array(PR).fill(0);
 }
 function timemode(){
   let s=0,m=["ready...","set...","GO!","wait...","reset?"];
@@ -137,8 +128,8 @@ function vu(t){let k=0,r=(currS+1)*(SC+1)+1;t=t*PR|0;sequencer.cols.forEach((on,
 function gradient(a){return "linear-gradient(#000 "+(100-a*100)+"%,#0000 0),linear-gradient(in hsl,red,lime)"}
 function start(){
   try{if(S){S.onended=null;S.stop();S.disconnect();S=null;}}catch(e){}
-  sequences=sequencer.sequences();if(sequences.length==0)return;
-  let json=sequencer.range(SONG);if(!json)return;
+  sequences=sequencer.sequences();if(!sequences)return;
+  let json=sequencer.range();if(!json)return;
   loading.style.display="block";requestAnimationFrame(()=>requestAnimationFrame(()=>{try{
   S=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(json)});S.onended=start;loading.style.display="none";
   S.connect(analyser);analyser.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){}}));
@@ -153,7 +144,7 @@ function loop(){
   requestAnimationFrame(loop);
 }
 function preview(note){try{
-  P?.stop();let threshold=0.5,t=sequencer.track();if(t==null)return;
+  P?.stop();let threshold=0.5,t=sequencer.track();if(!t)return;
   let song={bpm:SONG.bpm,tracks:[{...t,s:[1],p:[{length:PR,0:note||t?.p[0]?.find(n=>n!=0)||147}]}]};
   P=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(song)});P.connect(C.destination);P.start();//hear
   let d=P.buffer.getChannelData(0),c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2;
