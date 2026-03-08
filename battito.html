@@ -3,15 +3,6 @@
 document.title="Battito Beats";//https://github.com/bacionejs/battito
 addEventListener("error",e=>{prompt("error",e.error.stack);});
 
-
-
-
-
-
-
-
-
-
 let {min,max,sqrt,abs}=Math;
 let audio,LT=0,SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3;
 let piano      =element("div",document.body,"piano");
@@ -31,7 +22,7 @@ initStyle();
 tutorial();
 compatibility();
 
-show();function show(){let e,i,s;(show=(m,t)=>{if(!e){e=element("div",side,"msg");s=e.style};e.textContent=m;s.display="block";clearTimeout(i);if(t)i=setTimeout(()=>s.display="none",t);}).hide=()=>s.display="none";}
+function show(){let e,i,s;(show=(m,t)=>{if(!e){e=element("div",side,"msg");s=e.style};e.textContent=m;s.display="block";clearTimeout(i);if(t)i=setTimeout(()=>s.display="none",t);}).hide=()=>s.display="none";}show();
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="⚠ Rendering error<br>This app requires a modern chromium-based browser";},200);}
 function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.cells.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});}
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
