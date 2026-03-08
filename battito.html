@@ -46,7 +46,7 @@ let widgets=[piano,sliders,sequencer,text]; return ()=>widgets.forEach(o=>o.upda
 }
 
 function initListeners(){
-piano      .onclick=({target:{row:r,col}})=>{let note=col+C3,p;if(!(p=sequencer.pattern())){audio.preview(note);return;}if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(note);};
+piano      .onclick=({target:{row:r,col}})=>{let n=col+C3,p;if(!(p=sequencer.pattern()))return audio.preview(n);p[r]=p[r]==n?0:n;update();audio.preview(n);};
 sequencer  .onclick=sequencer.click;
 sliders    .oninput=e=>(sequencer.track()[e.target.key]=+e.target.value,update(),audio.preview());
 text       .oninput=()=>{try{let song=JSON.parse(text.value);audio.song=song;update();audio.preview();}catch(e){}};
