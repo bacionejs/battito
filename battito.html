@@ -3,11 +3,11 @@
 document.title="Battito Beats";//https://github.com/bacionejs/battito
 addEventListener("error",e=>{prompt("error",e.error.stack);});
 
-let {min,max,sqrt,abs}=Math;
+let {min,max,sqrt,abs}=Math,body=document.body;
 let audio,LT=0,SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3;
-let piano      =element("div",document.body,"piano");
-let sliders    =element("div",document.body,"sliders");
-let side       =element("div",document.body,"side");
+let piano      =element("div",body,"piano");
+let sliders    =element("div",body,"sliders");
+let side       =element("div",body,"side");
 let sequencer  =element("div",side,"sequencer");
 let text       =element("textarea",side,"text");
 let canvas     =element("canvas",side,"canvas");
@@ -22,10 +22,10 @@ initStyle();
 tutorial();
 compatibility();
 
-function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="⚠ Rendering error<br>This app requires a modern chromium-based browser";},200);}
+function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)body.innerHTML="⚠ Rendering error<br>This app requires a modern chromium-based browser";},200);}
 function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.cells.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});}
 function message(){let i,e=element("div",side,"message"),d=(s)=>e.style.display=s?"block":"none";(message=(m,t)=>{e.textContent=m;d(1);clearTimeout(i);if(t)i=setTimeout(d,t);}).hide=d;}message();
-function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
+function element(tag,p=body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
 function makeLongPress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
 function color(i){if(i==null)return "";return "hsl("+(120+(i*(360/SC)))+",100%,50%)";}
 function format(data){return JSON.stringify(data).replace(/({)/g,'\n$1');}
