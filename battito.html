@@ -4,9 +4,8 @@ document.title="Battito Beats";//https://github.com/bacionejs/battito
 addEventListener("error",e=>{prompt("error",e.error.stack);});
 
 let {min,max,sqrt,abs}=Math;
-let audio,timemodeon=0,LT=0,SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3;
+let audio,LT=0,SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3;
 let piano      =element("div",document.body,"piano");
-let message    =element("div",piano,"message");
 let sliders    =element("div",document.body,"sliders");
 let side       =element("div",document.body,"side");
 let sequencer  =element("div",side,"sequencer");
@@ -53,13 +52,11 @@ sliders    .oninput=e=>(sequencer.track()[e.target.key]=+e.target.value,update()
 text       .oninput=()=>{try{let song=JSON.parse(text.value);audio.song=song;update();audio.preview();}catch(e){}};
 fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
 makeLongPress(canvas,download);
-makeLongPress(piano,sequencer.timemode.toggle);
 [piano,sequencer,sliders].forEach(el=>{el.addEventListener("contextmenu",e=>e.preventDefault());});
 function makeLongPress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
 function pianoclick({target:{row:r,col}}){
   let note=col+C3,p=sequencer.pattern();if(p==null){audio.preview(note);return;}
-  if(timemodeon){sequencer.timemode.run(note);}
-  else{if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(note);}
+  if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(note);
 }
 function download(){try{
   if(!sequencer.hasnotes())return alert("Nothing to save. Please select song or range");
@@ -88,7 +85,7 @@ function download(){try{
 
 function initSequencer(){
 grid(sequencer,SC+1,SR+1); grid(sequencer.children[0],16,1,"fu");
-let P=Array(PC*PR),cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1; timemode();
+let P=Array(PC*PR),cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1;
 function track(){return cols[LT] && audio.song.tracks[LT] || null;}
 function toggle(cell){cell.style.background=rows[cell.row] && cols[cell.col]?"gray":"";}
 function tracks(){let a=audio.song.tracks.filter((_,c)=>cols[c]); return a.length?a:null;}
@@ -106,15 +103,7 @@ function click({target:{row,col}}){
   else{let t=audio.song.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;if(np)t.p[np-1]??=Array(PR).fill(0);}//grid-body
   update();audio.start();
 }
-function timemode(){
-  let s=0,m=["ready...","set...","GO!","wait...","reset?"];
-  function next(){if(s>0&&s<5){show(m[s]);if(s==1)update();s++;if(s==5)s=0;}}
-  function toggle(){timemodeon^=1;if(timemodeon){run();}else{show("stepmode");s=0;}}
-  function show(text){message.textContent=text;message.classList.remove("show");message.offsetWidth;message.classList.add("show");}
-  function run(note){if(s==0){show(m[0]);pattern()?.fill(0);s=1;}else if(s==3){let p=pattern();if(p){p[audio.currp]=note;update();audio.preview(note);}}}
-  Object.assign(timemode,{next,run,toggle});
-}
-Object.assign(sequencer, {phrase, toggle, timemode, cols, rows, click, track, sequences, pattern, range, hasnotes, scroll});
+Object.assign(sequencer, {phrase, toggle, cols, rows, click, track, sequences, pattern, range, hasnotes, scroll});
 }
 
 function initAudio(){
@@ -138,7 +127,7 @@ function loop(){
   currS=sequences[t|0];
   currP=(t*PR|0)%PR;
   if(currS!=prevS){prevS=currS;piano.update();sequencer.update();sequencer.scroll(currS);}
-  if(currP!=prevP){fu();vu(t);point(piano,PC,prevP,currP);prevP=currP;if(timemodeon && currP==0)sequencer.timemode.next();}
+  if(currP!=prevP){fu();vu(t);point(piano,PC,prevP,currP);prevP=currP;}
   requestAnimationFrame(loop);
 }
 function preview(note){try{
@@ -155,8 +144,6 @@ audio={start,preview,get buffer(){return S.buffer},get song(){return SONG;},set 
 function initStyle(){element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;}
 body{background:silver;display:flex;font-weight:bold;font-family:monospace;}
-@keyframes fade{0%{opacity:1;}100%{opacity:0;}} .message.show{animation:fade 2s ease forwards;}
-.message{color:silver;font-size:3rem;top:20%;left:20%;position:absolute;z-index:2;pointer-events:none;opacity:0;}
 .piano, .sequencer{display:grid;} .piano{background:white;} .side{background:black;color:white;}
 .sliders{display:flex;flex-direction:column;justify-content:space-evenly;font-size:8px;background:black;}
 .sliders > * {display:flex;flex-direction:column;align-items:center;}
