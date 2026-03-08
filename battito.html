@@ -46,7 +46,7 @@ let widgets=[piano,sliders,sequencer,text]; return ()=>widgets.forEach(o=>o.upda
 }
 
 function initListeners(){
-piano      .onclick=pianoclick;
+piano      .onclick=({target:{row:r,col}})=>{let note=col+C3,p;if(!(p=sequencer.pattern())){audio.preview(note);return;}if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(note);};
 sequencer  .onclick=sequencer.click;
 sliders    .oninput=e=>(sequencer.track()[e.target.key]=+e.target.value,update(),audio.preview());
 text       .oninput=()=>{try{let song=JSON.parse(text.value);audio.song=song;update();audio.preview();}catch(e){}};
@@ -54,10 +54,6 @@ fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.doc
 makeLongPress(canvas,download);
 oncontextmenu=e=>e.target.tagName=="TEXTAREA";
 function makeLongPress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
-function pianoclick({target:{row:r,col}}){
-  let note=col+C3,p=sequencer.pattern();if(p==null){audio.preview(note);return;}
-  if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(note);
-}
 function download(){try{
   if (!sequencer.hasnotes()) return show("Nothing to save. Please select song or range",3000);
   let a=element("a"),file="battito_song_"+Date.now();
