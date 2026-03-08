@@ -107,7 +107,7 @@ Object.assign(sequencer, {phrase, toggle, cols, rows, click, track, sequences, p
 }
 
 function initAudio(){
-let sequences,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets;
+let sequences,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets;
 let analyser=C.createAnalyser();analyser.fftSize=32;let A=new Uint8Array(analyser.frequencyBinCount);
 function point(grid,width,prev,curr,o=0){[[prev,"remove"],[curr,"add"]].forEach(([x,m])=>grid.cells[(x+o)*(width+o)]?.classList[m]("row-playing"));}
 function fu(){analyser.getByteFrequencyData(A);sequencer.children[0].cells.forEach((b,i)=>b.style.background=gradient(A[i]/255));}
@@ -115,8 +115,8 @@ function vu(t){let k=0,r=(currS+1)*(SC+1)+1;t=t*PR|0;sequencer.cols.forEach((on,
 function gradient(a){return "linear-gradient(#000 "+(100-a*100)+"%,#0000 0),linear-gradient(in hsl,red,lime)"}
 function start(){
   try{if(S){S.onended=null;S.stop();S.disconnect();S=null;}}catch(e){}
-  sequences=sequencer.sequences();if(!sequences)return;
-  let json=sequencer.range();if(!json)return;
+  if(!(sequences=sequencer.sequences()))return;
+  if(!(json=sequencer.range()))return;
   loading.style.display="block";requestAnimationFrame(()=>requestAnimationFrame(()=>{try{
   S=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(json)});S.onended=start;loading.style.display="none";
   S.connect(analyser);analyser.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){}}));
@@ -131,7 +131,7 @@ function loop(){
   requestAnimationFrame(loop);
 }
 function preview(note){try{
-  P?.stop();let threshold=0.5,t=sequencer.track();if(!t)return;
+  P?.stop();let threshold=0.5,t;if(!(t=sequencer.track()))return;
   let n={bpm:SONG.bpm,tracks:[{...t,s:[1],p:[{length:PR,0:note||t?.p?.[0]?.find(Boolean)||147}]}]};
   P=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(n)});P.connect(C.destination);P.start();//hear
   let d=P.buffer.getChannelData(0),c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2;
