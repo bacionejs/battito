@@ -24,7 +24,7 @@ compatibility();
 
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="⚠ Rendering error<br>This app requires a modern chromium-based browser";},200);}
 function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.cells.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});}
-function show(){let i,e=element("div",side,"msg"),d=(s)=>e.style.display=s?"block":"none";(show=(m,t)=>{e.textContent=m;d(1);clearTimeout(i);if(t)i=setTimeout(d,t);}).hide=d;}show();
+function message(){let i,e=element("div",side,"message"),d=(s)=>e.style.display=s?"block":"none";(message=(m,t)=>{e.textContent=m;d(1);clearTimeout(i);if(t)i=setTimeout(d,t);}).hide=d;}message();
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
 function makeLongPress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
 function color(i){if(i==null)return "";return "hsl("+(120+(i*(360/SC)))+",100%,50%)";}
@@ -54,7 +54,7 @@ text       .oninput=()=>{try{let song=JSON.parse(text.value);audio.song=song;upd
 fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
 makeLongPress(canvas,download);
 function download(){try{
-  if (!sequencer.hasnotes()) return show("Nothing to save. Please select song or range",3000);
+  if (!sequencer.hasnotes()) return message("Nothing to save. Please select song or range",3000);
   let a=element("a"),file="battito_song_"+Date.now();
   a.href=URL.createObjectURL(bufferToWav());a.download=file+".wav";a.click();
   a.href=URL.createObjectURL(new File([jsonToHtml()],""));a.download=file+".html";a.click();
@@ -112,8 +112,8 @@ function start(){
   try{if(S){S.onended=null;S.stop();S.disconnect();S=null;}}catch(e){}
   if(!(sequences=sequencer.sequences()))return;
   if(!(json=sequencer.range()))return;
-  show("loading...");requestAnimationFrame(()=>requestAnimationFrame(()=>{try{
-  S=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(json)});S.onended=start;show.hide();
+  message("loading...");requestAnimationFrame(()=>requestAnimationFrame(()=>{try{
+  S=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(json)});S.onended=start;message.hide();
   S.connect(analyser);analyser.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){}}));
 }
 function loop(){
@@ -152,7 +152,7 @@ body{background:silver;display:flex;font-weight:bold;font-family:monospace;}
 .text, .canvas{height:25%;aspect-ratio:2/1;border:1px solid silver;}
 .fullscreen, .msg{line-height:0;position:relative;bottom:1rem;z-index:1;}
 .fullscreen{font-size:1rem;  text-align:right ;color:orange;right:0.5rem;} :fullscreen .fullscreen{display:none;}
-.msg{font-size:0.3rem;text-align:center;color:silver;display:none;pointer-events:none;}
+.message{font-size:0.3rem;text-align:center;color:silver;display:none;pointer-events:none;}
 `;
 }
 
