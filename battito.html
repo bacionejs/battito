@@ -26,6 +26,7 @@ function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(
 function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.cells.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});}
 function show(){let i,e=element("div",side,"msg"),d=(s)=>e.style.display=s?"block":"none";(show=(m,t)=>{e.textContent=m;d(1);clearTimeout(i);if(t)i=setTimeout(d,t);}).hide=d;}show();
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
+function makeLongPress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
 function color(i){if(i==null)return "";return "hsl("+(120+(i*(360/SC)))+",100%,50%)";}
 function format(data){return JSON.stringify(data).replace(/({)/g,'\n$1');}
 
@@ -52,8 +53,6 @@ sliders    .oninput=e=>(sequencer.track()[e.target.key]=+e.target.value,update()
 text       .oninput=()=>{try{let song=JSON.parse(text.value);audio.song=song;update();audio.preview();}catch(e){}};
 fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
 makeLongPress(canvas,download);
-oncontextmenu=e=>e.target.tagName=="TEXTAREA";
-function makeLongPress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
 function download(){try{
   if (!sequencer.hasnotes()) return show("Nothing to save. Please select song or range",3000);
   let a=element("a"),file="battito_song_"+Date.now();
