@@ -3,6 +3,15 @@
 document.title="Battito Beats";//https://github.com/bacionejs/battito
 addEventListener("error",e=>{prompt("error",e.error.stack);});
 
+
+
+
+
+
+
+
+
+
 let {min,max,sqrt,abs}=Math;
 let audio,LT=0,SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3;
 let piano      =element("div",document.body,"piano");
@@ -12,7 +21,6 @@ let sequencer  =element("div",side,"sequencer");
 let text       =element("textarea",side,"text");
 let canvas     =element("canvas",side,"canvas");
 let fullscreen =element("div",side,"fullscreen","⛶");
-let loading    =element("div",side,"loading","loading...");
 let update=initUpdates();
 grid(piano,PC,PR); line(piano,PC,"x",12); line(piano,PC,"y",4);
 initSequencer();
@@ -23,6 +31,7 @@ initStyle();
 tutorial();
 compatibility();
 
+show();function show(){let e,i,s;(show=(m,t)=>{if(!e){e=element("div",side,"msg");s=e.style};e.textContent=m;s.display="block";clearTimeout(i);if(t)i=setTimeout(()=>s.display="none",t);}).hide=()=>s.display="none";}
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="⚠ Rendering error<br>This app requires a modern chromium-based browser";},200);}
 function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.cells.forEach((cell,i)=>{rule(i)&&(cell.style["border"+side+"Color"]="black");});}
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
@@ -52,14 +61,14 @@ sliders    .oninput=e=>(sequencer.track()[e.target.key]=+e.target.value,update()
 text       .oninput=()=>{try{let song=JSON.parse(text.value);audio.song=song;update();audio.preview();}catch(e){}};
 fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
 makeLongPress(canvas,download);
-[piano,sequencer,sliders].forEach(el=>{el.addEventListener("contextmenu",e=>e.preventDefault());});
+oncontextmenu=e=>e.target.tagName=="TEXTAREA";
 function makeLongPress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
 function pianoclick({target:{row:r,col}}){
   let note=col+C3,p=sequencer.pattern();if(p==null){audio.preview(note);return;}
   if(p[r]==note){p[r]=0;update();return;}p[r]=note;update();audio.preview(note);
 }
 function download(){try{
-  if(!sequencer.hasnotes())return alert("Nothing to save. Please select song or range");
+  if (!sequencer.hasnotes()) return show("Nothing to save. Please select song or range",3000);
   let a=element("a"),file="battito_song_"+Date.now();
   a.href=URL.createObjectURL(bufferToWav());a.download=file+".wav";a.click();
   a.href=URL.createObjectURL(new File([jsonToHtml()],""));a.download=file+".html";a.click();
@@ -117,8 +126,8 @@ function start(){
   try{if(S){S.onended=null;S.stop();S.disconnect();S=null;}}catch(e){}
   if(!(sequences=sequencer.sequences()))return;
   if(!(json=sequencer.range()))return;
-  loading.style.display="block";requestAnimationFrame(()=>requestAnimationFrame(()=>{try{
-  S=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(json)});S.onended=start;loading.style.display="none";
+  show("loading...");requestAnimationFrame(()=>requestAnimationFrame(()=>{try{
+  S=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(json)});S.onended=start;show.hide();
   S.connect(analyser);analyser.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){}}));
 }
 function loop(){
@@ -155,9 +164,9 @@ body{background:silver;display:flex;font-weight:bold;font-family:monospace;}
 .row-playing{border-left:3px solid orange !important;}
 .text{padding:10px;font-size:8px;white-space:pre;overflow:auto;background:transparent;color:white;outline:none;}
 .text, .canvas{height:25%;aspect-ratio:2/1;border:1px solid silver;}
-.fullscreen, .loading{line-height:0;position:relative;bottom:1rem;z-index:1;}
+.fullscreen, .msg{line-height:0;position:relative;bottom:1rem;z-index:1;}
 .fullscreen{font-size:1rem;  text-align:right ;color:orange;right:0.5rem;} :fullscreen .fullscreen{display:none;}
-.loading   {font-size:0.3rem;text-align:center;color:silver;display:none;}
+.msg{font-size:0.3rem;text-align:center;color:silver;display:none;pointer-events:none;}
 `;
 }
 
