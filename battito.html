@@ -102,7 +102,6 @@ async function start(){
   await yieldto(message,"loading..."); try{S=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(json)});message.hide();
   S.onended=start;S.connect(analyser);analyser.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){};
 }
-
 function loop(){
   if(!S?.buffer)return;
   let t=(C.currentTime-S.startTime)*SONG.bpm/PR/15;if(t>=sequences.length)return;
