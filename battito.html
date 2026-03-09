@@ -98,8 +98,7 @@ function vu(t){let k=0,r=(currS+1)*(SC+1)+1;t=t*PR|0;sequencer.cols.forEach((on,
 function gradient(a){return "linear-gradient(#000 "+(100-a*100)+"%,#0000 0),linear-gradient(in hsl,red,lime)"}
 function start(){
   try{if(S){S.onended=null;S.stop();S.disconnect();S=null;}}catch(e){}
-  if(!(sequences=sequencer.sequences()))return;
-  if(!(json=sequencer.range()))return;
+  if(!((sequences=sequencer.sequences()) && (json=sequencer.range())))return;
   message("loading...");requestAnimationFrame(()=>requestAnimationFrame(()=>{try{
   S=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(json)});S.onended=start;message.hide();
   S.connect(analyser);analyser.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){}}));
