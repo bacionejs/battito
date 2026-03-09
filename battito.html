@@ -79,8 +79,7 @@ function gradient(a){return "linear-gradient(#000 "+(100-a*100)+"%,#0000 0),line
 function source(s){return Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(s)});}
 async function start(){
   try{if(S){S.onended=null;S.stop();S.disconnect();S=null;}}catch(e){};if(!((sequences=sequencer.sequences()) && (json=sequencer.range())))return;
-  await yieldto(message,"loading..."); try{S=source(json);message.hide();
-  S.onended=start;S.connect(analyser);analyser.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){};
+  await yieldto(message,"loading..."); try{S=source(json);message.hide(); S.onended=start;S.connect(analyser);analyser.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){};
 }
 function loop(){
   if(!S?.buffer)return;
