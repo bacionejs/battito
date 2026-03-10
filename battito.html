@@ -24,8 +24,7 @@ function yieldto(f,...a){f(...a);return new Promise(r=>setTimeout(r,0));}
 function grid(e,cols,rows,classname="cell"){
 e.style.gridTemplateColumns="repeat("+cols+",1fr)";
 e.cells=Array(cols*rows).fill().map((_,i)=>{
-  let cell=element("div",e,classname);cell.col=i%cols,cell.row=(i/cols)|0;if(cols%2==0)return cell;
-  let r=--cell.row,c=--cell.col;
+  let cell=element("div",e,classname);cell.col=i%cols,cell.row=(i/cols)|0;if(cols%2==0)return cell; let r=--cell.row,c=--cell.col;
   if(r==-1){cell.classList.add("col-header");if(c!=-1){cell.textContent=String.fromCharCode(65+c);cell.style.color=color(c);}}else if(c==-1){cell.textContent=r+1;}return cell;
 });}
 
