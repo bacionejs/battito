@@ -72,7 +72,7 @@ Object.assign(sequencer,{phrase,toggle,cols,rows,click,track,sequences:()=>Q,pat
 function initAudio(){
 let K,Q,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets;
 let analyser=C.createAnalyser();analyser.fftSize=32;let A=new Uint8Array(analyser.frequencyBinCount);
-function next(){if(!S?.buffer)return null;let s=(C.currentTime-S.startTime)*SONG.bpm/PR/15;if(s>=Q.length)return null;currS=Q[s|0];currP=(s%1)*PR|0;K=s*PR|0;return true;}
+function next(){if(!S?.buffer)return null;let s=(C.currentTime-S.startTime)*(SONG.bpm*(4/60))/PR; if(s>=Q.length)return null;currS=Q[s|0];currP=(s%1)*PR|0;K=s*PR|0;return true;}
 function point(grid,width,prev,curr,o=0){[[prev,"remove"],[curr,"add"]].forEach(([x,m])=>grid.cells[(x+o)*(width+o)]?.classList[m]("row-playing"));}
 function fu(){analyser.getByteFrequencyData(A);sequencer.children[0].cells.forEach((b,i)=>b.style.background=gradient(A[i]/255));}
 function vu(){let r=(currS+1)*(SC+1)+1;for(let i=0,t=0;i<SC;i++){if(sequencer.cols[i]){sequencer.cells[r+i].style.background=gradient(S.buffer.vu[t++][K]);}}}
@@ -188,7 +188,7 @@ let R_S=1,rnd=()=>{R_S=Math.imul(R_S,0x15a4e35);return (R_S>>>0)%255/255;};
 let SAMPLERATE=44100,FBASE=1.5*Math.PI/SAMPLERATE;
 let VU=(n,r)=>{let o=[];return{add:c=>{let p=new Float32Array(n);for(let i=0,m,s,j;i<n;i++){m=0;s=i*r;for(j=0;j<r;j++){let a=Math.abs(c[s+j]);if(a>m)m=a}p[i]=m}o.push(p)},out:o}}
 function createbuffer(json){
-  let rowlen=Math.ceil(15*SAMPLERATE/json.bpm);
+  let rowlen=Math.ceil(SAMPLERATE*((1/json.bpm)*(60/4)));
   let SR=Math.max(...json.tracks.map(t=>t.s.length));
   let PR=Math.max(...json.tracks.flatMap(t=>t.p.map(p=>p.length)));
   let S=SR*PR*rowlen;
