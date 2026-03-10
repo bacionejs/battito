@@ -48,13 +48,13 @@ makeLongPress(canvas,download);
 
 function initSequencer(){
 grid(sequencer,SC+1,SR+1); grid(sequencer.children[0],16,1,"fu");
-let P=Array(PC*PR),cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1;
+let Q,P=Array(PC*PR),cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1;
 function track(){return cols[LT] && audio.song.tracks[LT] || null;}
 function toggle(cell){cell.style.background=rows[cell.row] && cols[cell.col]?"gray":"";}
 function tracks(){let a=audio.song.tracks.filter((_,c)=>cols[c]); return a.length?a:null;}
 function hasnotes(){return range()?.tracks.some(t=>t.s.some(s=>s && t.p[s-1]?.some(Boolean)));}
 function sequences(){let a=rows.flatMap((on,r)=>on && cols.some((on,c)=>on && audio.song.tracks[c].s[r])?r:[]); return a.length?a:null;}
-function range(){let t,s;return (t=tracks()) && (s=sequences()) && {bpm:audio.song.bpm,tracks:t.map(t=>({...t,s:s.map(i=>t.s[i]),p:t.p}))} || null;}
+function range(){let t;return (t=tracks()) && (Q=sequences()) && {bpm:audio.song.bpm,tracks:t.map(t=>({...t,s:Q.map(i=>t.s[i]),p:t.p}))};}
 function pattern(){let t=track();let a=rows.indexOf(1);if(!t||rows.filter(Boolean).length!==1||!t.s[a]){return null;}return t.p[t.s[a]-1]||=Array(PR).fill(0);}
 function scroll(n){let t=sequencer.cells[(n+1)*(SC+1)],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
 function phrase(){P.fill(null);let t,d=i=>cols[i] && (t=audio.song.tracks[i],t.p[t.s[audio.currs]-1]?.forEach((n,s)=>n && (P[s*PC+n-C3]=i)));for(let i=0;i<cols.length;i++)d(i);d(LT);return P;}
@@ -66,28 +66,26 @@ function click({target:{row,col}}){
   else{let t=audio.song.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;if(np)t.p[np-1]??=Array(PR).fill(0);}//grid-body
   update();audio.start();
 }
-Object.assign(sequencer, {phrase, toggle, cols, rows, click, track, sequences, pattern, range, hasnotes, scroll});
+Object.assign(sequencer,{phrase,toggle,cols,rows,click,track,sequences:()=>Q,pattern,range,hasnotes,scroll});
 }
 
 function initAudio(){
-let speed,sequences,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets;
+let K,Q,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets;
 let analyser=C.createAnalyser();analyser.fftSize=32;let A=new Uint8Array(analyser.frequencyBinCount);
+function next(){if(!S?.buffer)return null;let s=(C.currentTime-S.startTime)*SONG.bpm/PR/15;if(s>=Q.length)return null;currS=Q[s|0];currP=(s%1)*PR|0;K=s*PR|0;return true;}
 function point(grid,width,prev,curr,o=0){[[prev,"remove"],[curr,"add"]].forEach(([x,m])=>grid.cells[(x+o)*(width+o)]?.classList[m]("row-playing"));}
 function fu(){analyser.getByteFrequencyData(A);sequencer.children[0].cells.forEach((b,i)=>b.style.background=gradient(A[i]/255));}
-function vu(s){let k=0,r=(currS+1)*(SC+1)+1;s=s*PR|0;sequencer.cols.forEach((on,i)=>{if(!on)return;sequencer.cells[r+i].style.background=gradient(S.buffer.vu[k++][s]);});}
+function vu(){let k=0,r=(currS+1)*(SC+1)+1;sequencer.cols.forEach((on,i)=>{if(!on)return;sequencer.cells[r+i].style.background=gradient(S.buffer.vu[k++][K]);});}
 function gradient(a){return "linear-gradient(#000 "+(100-a*100)+"%,#0000 0),linear-gradient(in hsl,red,lime)"}
 function source(s){return Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(s)});}
 async function start(){
-  try{if(S){S.onended=null;S.stop();S.disconnect();S=null;}}catch(e){};if(!((sequences=sequencer.sequences()) && (json=sequencer.range())))return; speed=SONG.bpm/PR/15;
+  if(S){S.onended=null;S.stop();S.disconnect();S=null;};if(!(json=sequencer.range()))return;Q=sequencer.sequences();
   await yieldto(message,"loading..."); try{S=source(json);message.hide(); S.onended=start;S.connect(analyser);analyser.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){};
 }
 function loop(){
-  if(!S?.buffer)return;
-  let s=(C.currentTime-S.startTime)*speed;if(s>=sequences.length)return;
-  currS=sequences[s|0];
-  currP=(s*PR|0)%PR;
+  if(!next())return;
   if(currS!=prevS){prevS=currS;piano.update();sequencer.update();sequencer.scroll(currS);}
-  if(currP!=prevP){fu();vu(s);point(piano,PC,prevP,currP);prevP=currP;}
+  if(currP!=prevP){fu();vu();point(piano,PC,prevP,currP);prevP=currP;}
   requestAnimationFrame(loop);
 }
 function preview(note){try{
@@ -98,7 +96,7 @@ function preview(note){try{
   let start=d.findIndex(v=>abs(v)>=threshold),end=d.findLastIndex(v=>abs(v)>=threshold);
   c.clearRect(0,0,w,h);c.lineWidth=2;c.strokeStyle="blue";c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.stroke();//see
 }catch(e){}}
-audio={start,preview,get buffer(){return S.buffer},get song(){return SONG;},set song(newSong){SONG=newSong;},get currp(){return currP;},get currs(){return currS;}};
+audio={start,preview,get buffer(){return S.buffer},get song(){return SONG;},set song(newSong){SONG=newSong;},get currs(){return currS;}};
 }
 
 function initStyle(){element("style").textContent=`
@@ -146,7 +144,7 @@ URL.revokeObjectURL(a.href);a.remove();
 }catch(e){alert(e.message);}
 function jsonToHtml(){return `
   <\script>onload=()=>{document.body.textContent='Click to play'; addEventListener('click',song().play,{once:true});
-  function song(){let json=${JSON.stringify(sequencer.range(audio.song))};
+  function song(){let json=${JSON.stringify(sequencer.range())};
   let C=new AudioContext(),buffer=Battito(C).createbuffer(json);
   function play(){let S=C.createBufferSource();S.buffer=buffer;S.connect(C.destination);S.loop=true;S.start();}
   ${Battito}; return {play}}}</\script>
