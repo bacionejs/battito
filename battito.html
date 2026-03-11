@@ -69,22 +69,21 @@ Object.assign(sequencer,{phrase,toggle,cols,rows,click,track,sequences:()=>Q,pat
 }
 
 function initAudio(){
-let K,Q,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets;
-let analyser=C.createAnalyser();analyser.fftSize=32;let A=new Uint8Array(analyser.frequencyBinCount);
+let K,Q,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets,F=C.createAnalyser();F.fftSize=32;F.a=new Uint8Array(F.frequencyBinCount);
+F.draw=()=>{F.getByteFrequencyData(F.a);sequencer.children[0].cells.forEach((b,i)=>b.style.background=gradient(F.a[i]/255));}
+function vu(){let r=(currS+1)*(SC+1)+1;for(let i=0,t=0;i<SC;i++){if(sequencer.cols[i]){sequencer.cells[r+i].style.background=gradient(S.buffer.vu[t++][K]);}}}
 function next(){if(!S?.buffer)return null;let s=(C.currentTime-S.startTime)*((SONG.bpm/60)*4)/PR; if(s>=Q.length)return null;currS=Q[s|0];currP=(s%1)*PR|0;K=s*PR|0;return true;}
 function point(grid,width,prev,curr,o=0){[[prev,"remove"],[curr,"add"]].forEach(([x,m])=>grid.cells[(x+o)*(width+o)]?.classList[m]("row-playing"));}
-function fu(){analyser.getByteFrequencyData(A);sequencer.children[0].cells.forEach((b,i)=>b.style.background=gradient(A[i]/255));}
-function vu(){let r=(currS+1)*(SC+1)+1;for(let i=0,t=0;i<SC;i++){if(sequencer.cols[i]){sequencer.cells[r+i].style.background=gradient(S.buffer.vu[t++][K]);}}}
 function gradient(a){return "linear-gradient(#000 "+(100-a*100)+"%,#0000 0),linear-gradient(in hsl,red,lime)"}
 function source(s){return Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(s)});}
 async function start(){
   if(S){S.onended=null;S.stop();S.disconnect();S=null;};if(!(json=sequencer.range()))return;Q=sequencer.sequences();
-  await yieldto(message,"loading..."); try{S=source(json);message.hide(); S.onended=start;S.connect(analyser);analyser.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){};
+  await yieldto(message,"loading..."); try{S=source(json);message.hide(); S.onended=start;S.connect(F);F.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){};
 }
 function loop(){
   if(!next())return;
   if(currS!=prevS){prevS=currS;piano.update();sequencer.update();sequencer.scroll(currS);}
-  if(currP!=prevP){fu();vu();point(piano,PC,prevP,currP);prevP=currP;}
+  if(currP!=prevP){F.draw();vu();point(piano,PC,prevP,currP);prevP=currP;}
   requestAnimationFrame(loop);
 }
 function preview(note){try{
