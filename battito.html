@@ -9,15 +9,13 @@ let sequencer  =element("div",side,"sequencer");
 let text       =element("textarea",side,"text");
 let canvas     =element("canvas",side,"canvas");
 let fullscreen =element("div",side,"fullscreen","⛶");
-let update=initUpdates(); initPiano(); initSequencer(); initAudio(); instruments().init(sliders); initListeners(); initStyle(); tutorial(); compatibility();
+let update=initUpdates(); grid(piano,PC,PR); initSequencer(); initAudio(); instruments().init(sliders); initListeners(); initStyle(); tutorial(); compatibility();
 
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)body.innerHTML="⚠ Rendering error<br>This app requires a modern chromium-based browser";},200);}
-function line(e,width,dir,freq){let [rule,side]=dir=="x"?[i=>!(i%width%freq),"Left"]:[i=>!((i/width|0)%freq),"Top"];e.cells.forEach((cell,i)=>{rule(i) && (cell.style["border"+side+"Color"]="black");});}
 function message(){let i,e=element("div",side,"message"),d=(s)=>e.style.display=s?"block":"none";(message=(m,t)=>{e.textContent=m;d(1);clearTimeout(i);if(t)i=setTimeout(d,t);}).hide=d;}message();
 function element(tag,p=body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
 function makeLongPress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
 function color(i){if(i==null)return "";return "hsl("+(120+(i*(360/SC)))+",100%,50%)";}
-function initPiano(){grid(piano,PC,PR); line(piano,PC,"x",12); line(piano,PC,"y",4);}
 function format(data){return JSON.stringify(data).replace(/({)/g,'\n$1');}
 function yieldto(f,...a){f(...a);return new Promise(r=>setTimeout(r,0));}
 
@@ -99,7 +97,7 @@ audio={start,preview,get buffer(){return S.buffer},get song(){return SONG;},set 
 function initStyle(){element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;}
 body{background:silver;display:flex;font-weight:bold;font-family:monospace;}
-.piano, .sequencer{display:grid;} .piano{background:white;} .side{background:black;color:white;}
+.piano, .sequencer{display:grid;} .side{background:black;color:white;}
 .sliders{display:flex;flex-direction:column;justify-content:space-evenly;font-size:8px;background:black;}
 .sliders > * {display:flex;flex-direction:column;align-items:center;}
 .sliders .slider{height:1px;} .sliders input[type="range"]::-webkit-slider-thumb{opacity:0;}
@@ -112,6 +110,7 @@ body{background:silver;display:flex;font-weight:bold;font-family:monospace;}
 .fullscreen, .message{line-height:0;position:relative;bottom:1rem;z-index:1;}
 .fullscreen{font-size:1rem;text-align:right;color:orange;right:0.5rem;} :fullscreen .fullscreen{display:none;}
 .message{font-size:0.3rem;text-align:center;color:silver;display:none;pointer-events:none;}
+.piano{background:repeating-linear-gradient(90deg,#0000 0,#0000 calc(100%/48*11.9),#000 calc(100%/48*12)),repeating-linear-gradient(#0000 0,#0000 calc(100%/32*3.9),#000 calc(100%/32*4)),#fff;}
 `;}
 
 function instruments(){
