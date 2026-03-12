@@ -46,7 +46,7 @@ makeLongPress(canvas,download);
 }
 
 function initSequencer(){
-grid(sequencer,SC+1,SR+1); grid(sequencer.children[0],16,1,"fu");
+grid(sequencer,SC+1,SR+1);
 let Q,P=Array(PC*PR),cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1;
 function track(){return cols[LT] && audio.song.tracks[LT] || null;}
 function toggle(cell){cell.style.background=rows[cell.row] && cols[cell.col]?"gray":"";}
@@ -69,8 +69,7 @@ Object.assign(sequencer,{phrase,toggle,cols,rows,click,track,sequences:()=>Q,pat
 }
 
 function initAudio(){
-let K,Q,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets,F=C.createAnalyser();F.fftSize=32;F.a=new Uint8Array(F.frequencyBinCount);
-F.draw=()=>{F.getByteFrequencyData(F.a);sequencer.children[0].cells.forEach((b,i)=>b.style.background=gradient(F.a[i]/255));}
+let K,Q,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets;
 function vu(){let r=(currS+1)*(SC+1)+1;for(let i=0,t=0;i<SC;i++){if(sequencer.cols[i]){sequencer.cells[r+i].style.background=gradient(S.buffer.vu[t++][K]);}}}
 function next(){if(!S?.buffer)return null;let s=(C.currentTime-S.startTime)*((SONG.bpm/60)*4)/PR; if(s>=Q.length)return null;currS=Q[s|0];currP=(s%1)*PR|0;K=s*PR|0;return true;}
 function point(grid,width,prev,curr,o=0){[[prev,"remove"],[curr,"add"]].forEach(([x,m])=>grid.cells[(x+o)*(width+o)]?.classList[m]("row-playing"));}
@@ -78,12 +77,12 @@ function gradient(a){return "linear-gradient(#000 "+(100-a*100)+"%,#0000 0),line
 function source(s){return Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(s)});}
 async function start(){
   if(S){S.onended=null;S.stop();S.disconnect();S=null;};if(!(json=sequencer.range()))return;Q=sequencer.sequences();
-  await yieldto(message,"loading..."); try{S=source(json);message.hide(); S.onended=start;S.connect(F);F.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){};
+  await yieldto(message,"loading..."); try{S=source(json);message.hide(); S.onended=start;S.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){};
 }
 function loop(){
   if(!next())return;
   if(currS!=prevS){prevS=currS;piano.update();sequencer.update();sequencer.scroll(currS);}
-  if(currP!=prevP){F.draw();vu();point(piano,PC,prevP,currP);prevP=currP;}
+  if(currP!=prevP){vu();point(piano,PC,prevP,currP);prevP=currP;}
   requestAnimationFrame(loop);
 }
 function preview(note){try{
@@ -105,7 +104,6 @@ body{background:silver;display:flex;font-weight:bold;font-family:monospace;}
 .sliders > * {display:flex;flex-direction:column;align-items:center;}
 .sliders .slider{height:1px;} .sliders input[type="range"]::-webkit-slider-thumb{opacity:0;}
 .sequencer{height:50%;aspect-ratio:1/1;overflow-y:scroll;} .sequencer > :first-child{grid-auto-flow:column;place-items:end stretch;}
-.fu{pointer-events:none;height:100%;}
 .col-header{position:sticky;top:0;background:black;z-index:1;}
 .cell{display:grid;place-items:center;border:1px solid silver;aspect-ratio:1/1;}
 .row-playing{border-left:3px solid orange !important;}
