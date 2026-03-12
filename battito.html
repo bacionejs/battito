@@ -70,7 +70,7 @@ function initAudio(){
 let K,Q,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets;
 function vu(){let r=(currS+1)*(SC+1)+1;for(let i=0,t=0;i<SC;i++){if(sequencer.cols[i]){sequencer.cells[r+i].style.background=gradient(S.buffer.vu[t++][K]);}}}
 function next(){if(!S?.buffer)return null;let s=(C.currentTime-S.startTime)*((SONG.bpm/60)*4)/PR; if(s>=Q.length)return null;currS=Q[s|0];currP=(s%1)*PR|0;K=s*PR|0;return true;}
-function point(prev,curr){[[prev,"remove"],[curr,"add"]].forEach(([x,m])=>piano.cells[x*PC]?.classList[m]("row-playing"));}
+function point(){[[prevP,"remove"],[currP,"add"]].forEach(([x,m])=>piano.cells[x*PC]?.classList[m]("row-playing"));}
 function gradient(a){return "linear-gradient(#000 "+(100-a*100)+"%,#0000 0),linear-gradient(in hsl,red,lime)"}
 function source(s){return Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(s)});}
 async function start(){
@@ -80,7 +80,7 @@ async function start(){
 function loop(){
   if(!next())return;
   if(currS!=prevS){prevS=currS;piano.update();sequencer.update();sequencer.scroll(currS);}
-  if(currP!=prevP){vu();point(prevP,currP);prevP=currP;}
+  if(currP!=prevP){vu();point();prevP=currP;}
   requestAnimationFrame(loop);
 }
 function preview(note){try{
