@@ -1,7 +1,7 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width"><script> onload=()=>{
 
 addEventListener("error",e=>{prompt("error",e.error.stack);}); document.title="Battito Beats";//https://github.com/bacionejs/battito
-let audio,LT=0,SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,{min,max,sqrt,abs}=Math,body=document.body;
+let audio,LT=0,SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,Q,{min,max,sqrt,abs}=Math,body=document.body;
 let piano      =element("div",body,"piano");
 let sliders    =element("div",body,"sliders");
 let side       =element("div",body,"side");
@@ -45,7 +45,7 @@ makeLongPress(canvas,download);
 
 function initSequencer(){
 grid(sequencer,SC+1,SR+1);
-let Q,P=Array(PC*PR),cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1;
+let P=Array(PC*PR),cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1;
 function track(){return cols[LT] && audio.song.tracks[LT] || null;}
 function toggle(cell){cell.style.background=rows[cell.row] && cols[cell.col]?"gray":"";}
 function tracks(){let a=audio.song.tracks.filter((_,c)=>cols[c]); return a.length?a:null;}
@@ -63,18 +63,18 @@ function click({target:{row,col}}){
   else{let t=audio.song.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;if(np)t.p[np-1]??=Array(PR).fill(0);}//grid-body
   update();audio.start();
 }
-Object.assign(sequencer,{phrase,toggle,cols,rows,click,track,sequences:()=>Q,pattern,range,hasnotes,scroll});
+Object.assign(sequencer,{phrase,toggle,cols,rows,click,track,pattern,range,hasnotes,scroll});
 }
 
 function initAudio(){
-let K,Q,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets;
+let K,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets;
 function vu(){let r=(currS+1)*(SC+1)+1;for(let i=0,t=0;i<SC;i++){if(sequencer.cols[i]){sequencer.cells[r+i].style.background=gradient(S.buffer.vu[t++][K]);}}}
 function next(){if(!S?.buffer)return null;let s=(C.currentTime-S.startTime)*((SONG.bpm/60)*4)/PR; if(s>=Q.length)return null;currS=Q[s|0];currP=(s%1)*PR|0;K=s*PR|0;return true;}
 function point(){[[prevP,"remove"],[currP,"add"]].forEach(([x,m])=>piano.cells[x*PC]?.classList[m]("row-playing"));}
 function gradient(a){return "linear-gradient(#000 "+(100-a*100)+"%,#0000 0),linear-gradient(in hsl,red,lime)"}
 function source(s){return Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(s)});}
 async function start(){
-  if(S){S.onended=null;S.stop();S.disconnect();S=null;};if(!(json=sequencer.range()))return;Q=sequencer.sequences();
+  if(S){S.onended=null;S.stop();S.disconnect();S=null;};if(!(json=sequencer.range()))return;
   await yieldto(message,"loading..."); try{S=source(json);message.hide(); S.onended=start;S.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){};
 }
 function loop(){
