@@ -44,8 +44,8 @@ makeLongPress(canvas,download);
 }
 
 function init(){
-grid(piano,PC,PR); grid(Q,SC+1,SR+1); 
-let sequences,vustep,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets,LT=0,cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1;
+grid(piano,PC,PR); grid(Q,SC+1,SR+1); let LT=0,rowskeys=[...Array(SR).keys()],cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1;
+let sequences,vustep,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets;
 function track(){return cols[LT] && SONG.tracks[LT] || null;}
 function toggle(cell){cell.style.background=rows[cell.row] && cols[cell.col]?"gray":"";}
 function pattern(){let t=track();let a=rows.indexOf(1);if(!t||rows.filter(Boolean).length!==1||!t.s[a]){return null;}return t.p[t.s[a]-1]||=Array(PR).fill(0);}
@@ -54,7 +54,7 @@ function on(){let c=0,r=0;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>{if(v){c
 function phrase(){let P=Array(PC*PR).fill(null);let t,d=i=>cols[i] && (t=SONG.tracks[i],t.p[t.s[currS]-1]?.forEach((n,s)=>n && (P[s*PC+n-C3]=i))); for(let i=0;i<SC;i++)d(i);d(LT);return P;}
 function tracks(){let a=SONG.tracks.filter((_,c)=>cols[c]); return a.length?a:null;}
 function hasnotes(){return range()?.tracks.some(t=>t.s.some(s=>s && t.p[s-1]?.some(Boolean)));}
-function range(){let t;return (t=tracks()) && (sequences=rows.map((_,i)=>i).filter(r=>rows[r]&&t.some(t=>t.s[r]))) && {bpm:SONG.bpm,tracks:t.map(t=>({...t,s:sequences.map(i=>t.s[i]),p:t.p}))};}
+function range(){let t;return (t=tracks()) && (sequences=rowskeys.filter(r=>rows[r]&&t.some(t=>t.s[r]))) && {bpm:SONG.bpm,tracks:t.map(t=>({...t,s:sequences.map(i=>t.s[i]),p:t.p}))};}
 function vu(){let r=(currS+1)*(SC+1)+1;for(let i=0,t=0;i<SC;i++){if(cols[i]){Q.cells[r+i].style.background=gradient(S.buffer.vu[t++][vustep]);}}}
 function next(){if(!S?.buffer)return null;let s=(C.currentTime-S.startTime)*((SONG.bpm/60)*4)/PR; if(s>=sequences.length)return null;currS=sequences[s|0];currP=(s%1)*PR|0;vustep=s*PR|0;return true;}
 function point(){[[prevP,"remove"],[currP,"add"]].forEach(([x,m])=>piano.cells[x*PC]?.classList[m]("row-playing"));}
