@@ -44,17 +44,15 @@ makeLongPress(canvas,download);
 }
 
 function initSequencer(){
-grid(sequencer,SC+1,SR+1);
-let P=Array(PC*PR),cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1;
-function track(){return cols[LT] && audio.song.tracks[LT] || null;}
+grid(sequencer,SC+1,SR+1); let P=Array(PC*PR),cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1;
+function track(){return tracks()?.[LT];}
 function toggle(cell){cell.style.background=rows[cell.row] && cols[cell.col]?"gray":"";}
 function tracks(){let a=audio.song.tracks.filter((_,c)=>cols[c]); return a.length?a:null;}
 function hasnotes(){return range()?.tracks.some(t=>t.s.some(s=>s && t.p[s-1]?.some(Boolean)));}
-function sequences(){let a=rows.flatMap((on,r)=>on && cols.some((on,c)=>on && audio.song.tracks[c].s[r])?r:[]); return a.length?a:null;}
-function range(){let t;return (t=tracks()) && (Q=sequences()) && {bpm:audio.song.bpm,tracks:t.map(t=>({...t,s:Q.map(i=>t.s[i]),p:t.p}))};}
 function pattern(){let t=track();let a=rows.indexOf(1);if(!t||rows.filter(Boolean).length!==1||!t.s[a]){return null;}return t.p[t.s[a]-1]||=Array(PR).fill(0);}
 function scroll(n){let t=sequencer.cells[(n+1)*(SC+1)],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
-function phrase(){P.fill(null);let t,d=i=>cols[i] && (t=audio.song.tracks[i],t.p[t.s[audio.currs]-1]?.forEach((n,s)=>n && (P[s*PC+n-C3]=i)));for(let i=0;i<cols.length;i++)d(i);d(LT);return P;}
+function range(){let t;return (t=tracks()) && (Q=rows.map((_,i)=>i).filter(r=>rows[r]&&t.some(t=>t.s[r]))) && {bpm:audio.song.bpm,tracks:t.map(t=>({...t,s:Q.map(i=>t.s[i]),p:t.p}))};}
+function phrase(){P.fill(null);let t,d=i=>cols[i] && (t=audio.song.tracks[i],t.p[t.s[audio.currs]-1]?.forEach((n,s)=>n && (P[s*PC+n-C3]=i))); for(let i=0;i<SC;i++)d(i);d(LT);return P;}
 function on(){let c=0,r=0;audio.song.tracks.forEach((t,i)=>t.s.forEach((v,j)=>{if(v){c=max(c,i);r=max(r,j);}}));return {c,r,all:rows.slice(0,r+1).every(Boolean) && cols.slice(0,c+1).every(Boolean)};}
 function click({target:{row,col}}){
   if(row==-1 && col==-1){let {c,r,all}=on();rows.fill(0);cols.fill(0);if(!all){rows.fill(1,0,r+1);cols.fill(1,0,c+1);}}//corner-toggleall
