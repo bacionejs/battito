@@ -72,10 +72,8 @@ function loop(){
 }
 function preview(note){try{
   P?.stop();let threshold=0.5,t;if(!(t=track()))return;
-  let n={bpm:SONG.bpm,tracks:[{...t,s:[1],p:[{length:PR,0:note||t?.p?.[0]?.find(Boolean)||147}]}]};
-  P=source(n);P.connect(C.destination);P.start();//hear
-  let d=P.buffer.getChannelData(0),c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2;
-  let start=d.findIndex(v=>abs(v)>=threshold),end=d.findLastIndex(v=>abs(v)>=threshold);
+  P=source({bpm:SONG.bpm,tracks:[{...t,s:[1],p:[{length:PR,0:note||t?.p?.[0]?.find(Boolean)||147}]}]});P.connect(C.destination);P.start();//hear
+  let d=P.buffer.getChannelData(0),c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2,start=d.findIndex(v=>abs(v)>=threshold),end=d.findLastIndex(v=>abs(v)>=threshold);
   c.clearRect(0,0,w,h);c.lineWidth=2;c.strokeStyle="blue";c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.stroke();//see
 }catch(e){}}
 Object.assign(Q,{range,hasnotes,buffer:()=>S.buffer});
@@ -161,10 +159,8 @@ function initSong(){song=[
 
 function Battito(audiocontext){
 let WS=1024,[SIN,SQUARE,SAW,TRI]=WAVES=Array.from({length:4},()=>new Float32Array(WS)),W=(t,v)=>(WAVES[t]||SIN)[((v*WS)&(WS-1))>>>0];
-for(let i=0;i<WS;i++)SIN[i]=Math.sin(i*2*Math.PI/WS);
-for(let i=0;i<WS;i++){let p=i/WS;SQUARE[i]=p<0.5?-1:1;SAW[i]=p-0.5;let v2=p*4;TRI[i]=v2<2?v2-1:3-v2;}
-let NOTE=new Float32Array(256);
-for(let n=0;n<256;n++){let f=0.00390625,m=1.059463094,l=128,i=n;if(i>l)i-=l;else{i=l-i;m=1/m;}while(i-->0)f*=m;NOTE[n]=f;}
+for(let i=0;i<WS;i++)SIN[i]=Math.sin(i*2*Math.PI/WS); for(let i=0;i<WS;i++){let p=i/WS;SQUARE[i]=p<0.5?-1:1;SAW[i]=p-0.5;let v2=p*4;TRI[i]=v2<2?v2-1:3-v2;}
+let NOTE=new Float32Array(256); for(let n=0;n<256;n++){let f=0.00390625,m=1.059463094,l=128,i=n;if(i>l)i-=l;else{i=l-i;m=1/m;}while(i-->0)f*=m;NOTE[n]=f;}
 let G=(f,m,n,l)=>{if(n>l)n-=l;else{n=l-n;m=1/m;}while(n-->0)f*=m;return f;};
 let R_S=1,rnd=()=>{R_S=Math.imul(R_S,0x15a4e35);return (R_S>>>0)%255/255;};
 let SAMPLERATE=44100,FBASE=1.5*Math.PI/SAMPLERATE;
@@ -173,8 +169,7 @@ function createbuffer(json){
   let rowlen=Math.ceil(SAMPLERATE*((60/json.bpm)/4));
   let SR=Math.max(...json.tracks.map(t=>t.s.length));
   let PR=Math.max(...json.tracks.flatMap(t=>t.p.map(p=>p.length)));
-  let S=SR*PR*rowlen;
-  let LL=new Float32Array(S),RR=new Float32Array(S),L=new Float32Array(S),R=new Float32Array(S);
+  let S=SR*PR*rowlen,LL=new Float32Array(S),RR=new Float32Array(S),L=new Float32Array(S),R=new Float32Array(S);
   let vu=VU(SR*PR,rowlen);
   for(let T of json.tracks){
     let {v1,w1,o1,s1,d1,v2,w2,o2,s2,d2,ea,es,er,e1,e2,ct,ca,cr,mw,ms,ma,m1,mc,ds,da,ps,pa,nv,vm}=T;
