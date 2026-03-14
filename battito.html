@@ -27,7 +27,7 @@ e.cells=Array(cols*rows).fill().map((_,i)=>{
 });}
 
 function initUpdates(){
-piano      .update=function(){sequencer.phrase().forEach((v,i)=>this.cells[i].style.background=color(v));}
+piano      .update=function(){audio.phrase().forEach((v,i)=>this.cells[i].style.background=color(v));}
 sequencer  .update=function(){for(let i=1,c;(c=this.cells[i]);i++){this.toggle(c);if(c.row!=-1 && c.col!=-1)c.textContent=audio.song.tracks[c.col].s[c.row]||"";}}
 sliders    .update=function(){let t=sequencer.track();this.cells.forEach(s=>{if(t!=null){s.disabled=false;s.value=t[s.key];}else{s.disabled=true;s.value=0;}});}
 text       .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(audio.song);this.setSelectionRange(s,s);}
@@ -44,7 +44,7 @@ makeLongPress(canvas,download);
 }
 
 function initSequencer(){
-grid(sequencer,SC+1,SR+1); let P=Array(PC*PR),cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1;
+grid(sequencer,SC+1,SR+1); let cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1;
 function track(){return cols[LT] && audio.song.tracks[LT] || null;}
 function toggle(cell){cell.style.background=rows[cell.row] && cols[cell.col]?"gray":"";}
 function tracks(){let a=audio.song.tracks.filter((_,c)=>cols[c]); return a.length?a:null;}
@@ -52,7 +52,6 @@ function hasnotes(){return range()?.tracks.some(t=>t.s.some(s=>s && t.p[s-1]?.so
 function pattern(){let t=track();let a=rows.indexOf(1);if(!t||rows.filter(Boolean).length!==1||!t.s[a]){return null;}return t.p[t.s[a]-1]||=Array(PR).fill(0);}
 function scroll(n){let t=sequencer.cells[(n+1)*(SC+1)],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
 function range(){let t;return (t=tracks()) && (Q=rows.map((_,i)=>i).filter(r=>rows[r]&&t.some(t=>t.s[r]))) && {bpm:audio.song.bpm,tracks:t.map(t=>({...t,s:Q.map(i=>t.s[i]),p:t.p}))};}
-function phrase(){P.fill(null);let t,d=i=>cols[i] && (t=audio.song.tracks[i],t.p[t.s[audio.currS]-1]?.forEach((n,s)=>n && (P[s*PC+n-C3]=i))); for(let i=0;i<SC;i++)d(i);d(LT);return P;}
 function on(){let c=0,r=0;audio.song.tracks.forEach((t,i)=>t.s.forEach((v,j)=>{if(v){c=max(c,i);r=max(r,j);}}));return {c,r,all:rows.slice(0,r+1).every(Boolean) && cols.slice(0,c+1).every(Boolean)};}
 function click({target:{row,col}}){
   if(row==-1 && col==-1){let {c,r,all}=on();rows.fill(0);cols.fill(0);if(!all){rows.fill(1,0,r+1);cols.fill(1,0,c+1);}}//corner-toggleall
@@ -61,11 +60,12 @@ function click({target:{row,col}}){
   else{let t=audio.song.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;if(np)t.p[np-1]??=Array(PR).fill(0);}//grid-body
   update();audio.start();
 }
-Object.assign(sequencer,{phrase,toggle,cols,rows,click,track,pattern,range,hasnotes,scroll});
+Object.assign(sequencer,{toggle,cols,rows,click,track,pattern,range,hasnotes,scroll});
 }
 
 function initAudio(){
 let K,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets;
+function phrase(){let P=Array(PC*PR).fill(null);let t,d=i=>sequencer.cols[i] && (t=SONG.tracks[i],t.p[t.s[currS]-1]?.forEach((n,s)=>n && (P[s*PC+n-C3]=i))); for(let i=0;i<SC;i++)d(i);d(LT);return P;}
 function vu(){let r=(currS+1)*(SC+1)+1;for(let i=0,t=0;i<SC;i++){if(sequencer.cols[i]){sequencer.cells[r+i].style.background=gradient(S.buffer.vu[t++][K]);}}}
 function next(){if(!S?.buffer)return null;let s=(C.currentTime-S.startTime)*((SONG.bpm/60)*4)/PR; if(s>=Q.length)return null;currS=Q[s|0];currP=(s%1)*PR|0;K=s*PR|0;return true;}
 function point(){[[prevP,"remove"],[currP,"add"]].forEach(([x,m])=>piano.cells[x*PC]?.classList[m]("row-playing"));}
@@ -89,7 +89,7 @@ function preview(note){try{
   let start=d.findIndex(v=>abs(v)>=threshold),end=d.findLastIndex(v=>abs(v)>=threshold);
   c.clearRect(0,0,w,h);c.lineWidth=2;c.strokeStyle="blue";c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.stroke();//see
 }catch(e){}}
-audio={start,preview,get buffer(){return S.buffer},get currS(){return currS;},get song(){return SONG;},set song(newSong){SONG=newSong;}};
+audio={phrase,start,preview,get buffer(){return S.buffer},get song(){return SONG;},set song(newSong){SONG=newSong;}};
 }
 
 function initStyle(){element("style").textContent=`
