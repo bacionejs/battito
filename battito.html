@@ -9,7 +9,7 @@ let Q          =element("div",side,"sequencer");
 let text       =element("textarea",side,"text");
 let canvas     =element("canvas",side,"canvas");
 let fullscreen =element("div",side,"fullscreen","⛶");
-let update=initUpdates(); init(); instruments().init(sliders); initListeners(); initStyle(); tutorial(); compatibility();
+init(); instruments().init(sliders); initStyle(); tutorial(); compatibility();
 
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)body.innerHTML="⚠ Rendering error<br>This app requires a modern chromium-based browser";},200);}
 function message(){let i,e=element("div",side,"message"),d=(s)=>e.style.display=s?"block":"none";(message=(m,t)=>{e.textContent=m;d(1);clearTimeout(i);if(t)i=setTimeout(d,t);}).hide=d;}message();
@@ -26,26 +26,10 @@ e.cells=Array(cols*rows).fill().map((_,i)=>{
   if(r==-1){cell.classList.add("col-header");if(c!=-1){cell.textContent=String.fromCharCode(65+c);cell.style.color=color(c);}}else if(c==-1){cell.textContent=r+1;}return cell;
 });}
 
-function initUpdates(){
-piano      .update=function(){Q.phrase().forEach((v,i)=>this.cells[i].style.background=color(v));}
-Q          .update=function(){for(let i=1,c;(c=this.cells[i]);i++){this.toggle(c);if(c.row!=-1 && c.col!=-1)c.textContent=Q.getsong().tracks[c.col].s[c.row]||"";}}
-sliders    .update=function(){let t=Q.track();this.cells.forEach(s=>{if(t!=null){s.disabled=false;s.value=t[s.key];}else{s.disabled=true;s.value=0;}});}
-text       .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(Q.getsong());this.setSelectionRange(s,s);}
-let widgets=[piano,sliders,Q,text]; return ()=>widgets.forEach(o=>o.update());
-}
-
-function initListeners(){
-piano      .onclick=({target:{row:r,col}})=>{let n=col+C3,p; Q.preview(n); if(!(p=Q.pattern()))return;p[r]=p[r]==n?0:n;update();};
-Q          .onclick=Q.click;
-sliders    .oninput=e=>(Q.track()[e.target.key]=+e.target.value,update(),Q.preview());
-text       .oninput=()=>{try{let song=JSON.parse(text.value);Q.setsong(song);update();Q.preview();}catch(e){}};
-fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
-makeLongPress(canvas,download);
-}
-
 function init(){
 grid(piano,PC,PR); grid(Q,SC+1,SR+1); let LT=0,rowskeys=[...Array(SR).keys()],cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1;
 let sequences,vustep,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets;
+let widgets=[piano,sliders,Q,text]; let update=()=>widgets.forEach(o=>o.update());
 function track(){return cols[LT] && SONG.tracks[LT] || null;}
 function toggle(cell){cell.style.background=rows[cell.row] && cols[cell.col]?"gray":"";}
 function pattern(){let t=track();let a=rows.indexOf(1);if(!t||rows.filter(Boolean).length!==1||!t.s[a]){return null;}return t.p[t.s[a]-1]||=Array(PR).fill(0);}
@@ -60,6 +44,16 @@ function next(){if(!S?.buffer)return null;let s=(C.currentTime-S.startTime)*((SO
 function point(){[[prevP,"remove"],[currP,"add"]].forEach(([x,m])=>piano.cells[x*PC]?.classList[m]("row-playing"));}
 function gradient(a){return "linear-gradient(#000 "+(100-a*100)+"%,#0000 0),linear-gradient(in hsl,red,lime)"}
 function source(s){return Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(s)});}
+piano      .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v));}
+Q          .update=function(){for(let i=1,c;(c=this.cells[i]);i++){toggle(c);if(c.row!=-1 && c.col!=-1)c.textContent=SONG.tracks[c.col].s[c.row]||"";}}
+sliders    .update=function(){let t=track();this.cells.forEach(s=>{if(t!=null){s.disabled=false;s.value=t[s.key];}else{s.disabled=true;s.value=0;}});}
+text       .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s);}
+piano      .onclick=({target:{row:r,col}})=>{let n=col+C3,p; preview(n); if(!(p=pattern()))return;p[r]=p[r]==n?0:n;update();};
+Q          .onclick=click;
+sliders    .oninput=e=>(track()[e.target.key]=+e.target.value,update(),preview());
+text       .oninput=()=>{try{let song=JSON.parse(text.value);SONG=song;update();preview();}catch(e){}};
+fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
+makeLongPress(canvas,download);
 function click({target:{row,col}}){
   if(row==-1 && col==-1){let {c,r,all}=on();rows.fill(0);cols.fill(0);if(!all){rows.fill(1,0,r+1);cols.fill(1,0,c+1);}}//corner-toggleall
   else if(row==-1){cols[col]^=1;LT=col;preview();}//column-headers
@@ -85,7 +79,7 @@ function preview(note){try{
   let start=d.findIndex(v=>abs(v)>=threshold),end=d.findLastIndex(v=>abs(v)>=threshold);
   c.clearRect(0,0,w,h);c.lineWidth=2;c.strokeStyle="blue";c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.stroke();//see
 }catch(e){}}
-Object.assign(Q,{preview,range,toggle,click,track,pattern,hasnotes,phrase,buffer:()=>S.buffer,getsong:()=>SONG,setsong:(newSong)=>SONG=newSong});
+Object.assign(Q,{range,hasnotes,buffer:()=>S.buffer});
 }
 
 function initStyle(){element("style").textContent=`
