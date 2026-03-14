@@ -30,6 +30,16 @@ function init(){
 grid(piano,PC,PR); grid(Q,SC+1,SR+1); let LT=0,rowskeys=[...Array(SR).keys()],cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1;
 let sequences,vustep,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets;
 let widgets=[piano,sliders,Q,text]; let update=()=>widgets.forEach(o=>o.update());
+piano      .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v));}
+Q          .update=function(){for(let i=1,c;(c=this.cells[i]);i++){toggle(c);if(c.row!=-1 && c.col!=-1)c.textContent=SONG.tracks[c.col].s[c.row]||"";}}
+sliders    .update=function(){let t=track();this.cells.forEach(s=>{if(t!=null){s.disabled=false;s.value=t[s.key];}else{s.disabled=true;s.value=0;}});}
+text       .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s);}
+piano      .onclick=({target:{row:r,col}})=>{let n=col+C3,p; preview(n); if(!(p=pattern()))return;p[r]=p[r]==n?0:n;update();};
+Q          .onclick=click;
+sliders    .oninput=e=>(track()[e.target.key]=+e.target.value,update(),preview());
+text       .oninput=()=>{try{let song=JSON.parse(text.value);SONG=song;update();preview();}catch(e){}};
+fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
+makeLongPress(canvas,download);
 function track(){return cols[LT] && SONG.tracks[LT] || null;}
 function toggle(cell){cell.style.background=rows[cell.row] && cols[cell.col]?"gray":"";}
 function pattern(){let t=track();let a=rows.indexOf(1);if(!t||rows.filter(Boolean).length!==1||!t.s[a]){return null;}return t.p[t.s[a]-1]||=Array(PR).fill(0);}
@@ -44,16 +54,6 @@ function next(){if(!S?.buffer)return null;let s=(C.currentTime-S.startTime)*((SO
 function point(){[[prevP,"remove"],[currP,"add"]].forEach(([x,m])=>piano.cells[x*PC]?.classList[m]("row-playing"));}
 function gradient(a){return "linear-gradient(#000 "+(100-a*100)+"%,#0000 0),linear-gradient(in hsl,red,lime)"}
 function source(s){return Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(s)});}
-piano      .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v));}
-Q          .update=function(){for(let i=1,c;(c=this.cells[i]);i++){toggle(c);if(c.row!=-1 && c.col!=-1)c.textContent=SONG.tracks[c.col].s[c.row]||"";}}
-sliders    .update=function(){let t=track();this.cells.forEach(s=>{if(t!=null){s.disabled=false;s.value=t[s.key];}else{s.disabled=true;s.value=0;}});}
-text       .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s);}
-piano      .onclick=({target:{row:r,col}})=>{let n=col+C3,p; preview(n); if(!(p=pattern()))return;p[r]=p[r]==n?0:n;update();};
-Q          .onclick=click;
-sliders    .oninput=e=>(track()[e.target.key]=+e.target.value,update(),preview());
-text       .oninput=()=>{try{let song=JSON.parse(text.value);SONG=song;update();preview();}catch(e){}};
-fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
-makeLongPress(canvas,download);
 function click({target:{row,col}}){
   if(row==-1 && col==-1){let {c,r,all}=on();rows.fill(0);cols.fill(0);if(!all){rows.fill(1,0,r+1);cols.fill(1,0,c+1);}}//corner-toggleall
   else if(row==-1){cols[col]^=1;LT=col;preview();}//column-headers
