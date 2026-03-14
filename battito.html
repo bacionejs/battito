@@ -1,35 +1,24 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width"><script> onload=()=>{
 
 addEventListener("error",e=>{prompt("error",e.error.stack);}); document.title="Battito Beats";//https://github.com/bacionejs/battito
-let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,{min,max,sqrt,abs}=Math,body=document.body;
-let piano      =element("div",body,"piano");
-let sliders    =element("div",body,"sliders");
-let side       =element("div",body,"side");
+let piano      =element("div",document.body,"piano");
+let sliders    =element("div",document.body,"sliders");
+let side       =element("div",document.body,"side");
 let Q          =element("div",side,"sequencer");
 let text       =element("textarea",side,"text");
 let canvas     =element("canvas",side,"canvas");
 let fullscreen =element("div",side,"fullscreen","⛶");
 init(); instruments().init(sliders); initStyle(); tutorial(); compatibility();
 
-function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)body.innerHTML="⚠ Rendering error<br>This app requires a modern chromium-based browser";},200);}
-function message(){let i,e=element("div",side,"message"),d=(s)=>e.style.display=s?"block":"none";(message=(m,t)=>{e.textContent=m;d(1);clearTimeout(i);if(t)i=setTimeout(d,t);}).hide=d;}message();
-function element(tag,p=body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
-function makeLongPress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
-function color(i){if(i==null)return "";return "hsl("+(120+(i*(360/SC)))+",100%,50%)";}
-function format(data){return JSON.stringify(data).replace(/({)/g,'\n$1');}
-function yieldto(f,...a){f(...a);return new Promise(r=>setTimeout(r,0));}
-
-function grid(e,cols,rows,classname="cell"){
-e.style.gridTemplateColumns="repeat("+cols+",1fr)";
-e.cells=Array(cols*rows).fill().map((_,i)=>{
-  let cell=element("div",e,classname);cell.col=i%cols,cell.row=(i/cols)|0;if(cols%2==0)return cell; let r=--cell.row,c=--cell.col;
-  if(r==-1){cell.classList.add("col-header");if(c!=-1){cell.textContent=String.fromCharCode(65+c);cell.style.color=color(c);}}else if(c==-1){cell.textContent=r+1;}return cell;
-});}
+function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="⚠ Rendering error<br>This app requires a modern chromium-based browser";},200);}
+function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
+function color(i){if(i==null)return "";return "hsl("+(120+(i*(360/8)))+",100%,50%)";}
 
 function init(){
-grid(piano,PC,PR); grid(Q,SC+1,SR+1); let LT=0,rowskeys=[...Array(SR).keys()],cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1;
+let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,{max,abs}=Math,LT=0,rowskeys=[...Array(SR).keys()],cols=Array(SC).fill(0),rows=Array(SR).fill(0); rows[-1]=cols[-1]=1;
 let sequences,vustep,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets;
-let widgets=[piano,sliders,Q,text]; let update=()=>widgets.forEach(o=>o.update());
+let widgets=[piano,sliders,Q,text],update=()=>widgets.forEach(o=>o.update());
+grid(piano,PC,PR); grid(Q,SC+1,SR+1);
 piano      .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v));}
 Q          .update=function(){for(let i=1,c;(c=this.cells[i]);i++){toggle(c);if(c.row!=-1 && c.col!=-1)c.textContent=SONG.tracks[c.col].s[c.row]||"";}}
 sliders    .update=function(){let t=track();this.cells.forEach(s=>{if(t!=null){s.disabled=false;s.value=t[s.key];}else{s.disabled=true;s.value=0;}});}
@@ -40,6 +29,10 @@ sliders    .oninput=e=>(track()[e.target.key]=+e.target.value,update(),preview()
 text       .oninput=()=>{try{let song=JSON.parse(text.value);SONG=song;update();preview();}catch(e){}};
 fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
 makeLongPress(canvas,download);
+function message(){let i,e=element("div",side,"message"),d=(s)=>e.style.display=s?"block":"none";(message=(m,t)=>{e.textContent=m;d(1);clearTimeout(i);if(t)i=setTimeout(d,t);}).hide=d;}message();
+function makeLongPress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
+function format(data){return JSON.stringify(data).replace(/({)/g,'\n$1');}
+function yieldto(f,...a){f(...a);return new Promise(r=>setTimeout(r,0));}
 function track(){return cols[LT] && SONG.tracks[LT] || null;}
 function toggle(cell){cell.style.background=rows[cell.row] && cols[cell.col]?"gray":"";}
 function pattern(){let t=track();let a=rows.indexOf(1);if(!t||rows.filter(Boolean).length!==1||!t.s[a]){return null;}return t.p[t.s[a]-1]||=Array(PR).fill(0);}
@@ -54,6 +47,12 @@ function next(){if(!S?.buffer)return null;let s=(C.currentTime-S.startTime)*((SO
 function point(){[[prevP,"remove"],[currP,"add"]].forEach(([x,m])=>piano.cells[x*PC]?.classList[m]("row-playing"));}
 function gradient(a){return "linear-gradient(#000 "+(100-a*100)+"%,#0000 0),linear-gradient(in hsl,red,lime)"}
 function source(s){return Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(s)});}
+function grid(e,cols,rows,classname="cell"){
+  e.style.gridTemplateColumns="repeat("+cols+",1fr)";
+  e.cells=Array(cols*rows).fill().map((_,i)=>{
+    let cell=element("div",e,classname);cell.col=i%cols,cell.row=(i/cols)|0;if(cols%2==0)return cell; let r=--cell.row,c=--cell.col;
+    if(r==-1){cell.classList.add("col-header");if(c!=-1){cell.textContent=String.fromCharCode(65+c);cell.style.color=color(c);}}else if(c==-1){cell.textContent=r+1;}return cell;
+  });}
 function click({target:{row,col}}){
   if(row==-1 && col==-1){let {c,r,all}=on();rows.fill(0);cols.fill(0);if(!all){rows.fill(1,0,r+1);cols.fill(1,0,c+1);}}//corner-toggleall
   else if(row==-1){cols[col]^=1;LT=col;preview();}//column-headers
@@ -142,16 +141,16 @@ function bufferToWav(){
 
 function tutorial(){
 element("style").textContent=".tut-pointer,.tut-message{position:fixed;z-index:2;} .tut-message{padding:1ch;font-size:2ch;background:orange;}"
-let ci=0,p,song,clicks,S,P;let m=element("button",document.body,"tut-message","Click here to watch a 25 second tutorial");m.onclick=init;setTimeout(()=>m?.remove(),3000);
-function init(){m.remove();S=Q;P=piano;p=element("div",document.body,"tut-pointer","👉");p.style.transition="transform .1s ease";initSong();initClicks();move();}
+let ci=0,p,song,clicks;let m=element("button",document.body,"tut-message","Click here to watch a 25 second tutorial");m.onclick=init;setTimeout(()=>m?.remove(),3000);
+function init(){m.remove();p=element("div",document.body,"tut-pointer","👉");p.style.transition="transform .1s ease";initSong();initClicks();move();}
 function move(){if(ci>=clicks.length)return p.remove();let e=clicks[ci++]();let r=e.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;click(e);}
 function click(e){setTimeout(()=>{p.style.transform="scale(.5)";e.dispatchEvent(new MouseEvent("click",{bubbles:true}));setTimeout(()=>{p.style.transform="";setTimeout(move,100);},100);},100);}
 function make(clickon,c,r){return ()=>clickon.cells.find(x=>x.row==r&&x.col==c);}
-function toggle(c,r){return Array(2).fill(0).flatMap(()=>[make(S,c,-1),make(S,-1,r)]);}
+function toggle(c,r){return Array(2).fill(0).flatMap(()=>[make(Q,c,-1),make(Q,-1,r)]);}
 function initClicks(){let notes=new Map();
-  let sequencerclicks=song.flatMap((t,c)=>t[0].flatMap((pid,r)=>(notes.set(c+"-"+pid,{c,r,a:t[1][pid-1]}),Array(pid).fill(0).map(()=>make(S,c,r)))));
-  let pianoclicks=[...notes.values()].flatMap(({c,r,a})=>toggle(c,r).toSpliced(2,0,...a.flatMap((n,r)=>n?[make(P,n-123,r)]:[])));
-  clicks=[...sequencerclicks,...pianoclicks,make(S,-1,-1)];
+  let sequencerclicks=song.flatMap((t,c)=>t[0].flatMap((pid,r)=>(notes.set(c+"-"+pid,{c,r,a:t[1][pid-1]}),Array(pid).fill(0).map(()=>make(Q,c,r)))));
+  let pianoclicks=[...notes.values()].flatMap(({c,r,a})=>toggle(c,r).toSpliced(2,0,...a.flatMap((n,r)=>n?[make(piano,n-123,r)]:[])));
+  clicks=[...sequencerclicks,...pianoclicks,make(Q,-1,-1)];
 }
 function initSong(){song=[
   [[1,1,1,1],[[123,,,,123,,,,123,,,,123,,,,123,,,,123,,,,123,,,,123]]],
