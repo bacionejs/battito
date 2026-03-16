@@ -171,8 +171,8 @@ function createbuffer(json){
   let rowlen=Math.ceil(SAMPLERATE*((60/json.bpm)/4));
   let SR=Math.max(...json.tracks.map(t=>t.s.length));
   let PR=Math.max(...json.tracks.flatMap(t=>t.p.map(p=>p.length)));
-  let TS=SR*PR,S=TS*rowlen,LL=new Float32Array(S),RR=new Float32Array(S),L=new Float32Array(S),R=new Float32Array(S);
-  let vu=VU(TS,rowlen);
+  let TR=SR*PR,S=TR*rowlen,LL=new Float32Array(S),RR=new Float32Array(S),L=new Float32Array(S),R=new Float32Array(S);
+  let vu=VU(TR,rowlen);
   for(let T of json.tracks){
     let {v1,w1,o1,s1,d1,v2,w2,o2,s2,d2,ea,es,er,e1,e2,ct,ca,cr,mw,ms,ma,m1,mc,ds,da,ps,pa,nv,vm}=T;
     vm*=0.006;ma/=512;pa/=512;v1/=255;v2/=255;nv/=255;cr/=255;
@@ -180,7 +180,7 @@ function createbuffer(json){
     s2+=(o2-8)*12;d2=1+0.2*d2/255;
     let lfostep=G(1,2,ms,8)/rowlen,panstep=G(1,2,ps,8)/rowlen;L.fill(0);R.fill(0);
     let envlen=ea+es+er,ai=1/ea,ri=1/er;
-    for(let step=0;step<TS;step++){
+    for(let step=0;step<TR;step++){
       let n=T.p?.[T.s[step/PR|0]-1]?.[step%PR],P=step*rowlen;if(!n)continue;
       let o1fb=NOTE[n+s1]*d1,o2fb=NOTE[n+s2]*d2,c1=0,c2=0,low=0,band=0,lfo=lfostep*P,pan=panstep*P;
       for(let j=0;j<envlen;j++){
