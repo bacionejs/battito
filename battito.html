@@ -61,7 +61,7 @@ function click({target:{row,col}}){
   else{let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;if(np)t.p[np-1]??=Array(PR).fill(0);}//grid-body
   update();start();
 }
-async function start(){
+function start(){
   if(S){S.onended=null;S.stop();S.disconnect();S=null;};if(!(json=range()))return;
   try{let t0=performance.now();S=source(json);message(t0); S.onended=start;S.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){message(e);};
 }
