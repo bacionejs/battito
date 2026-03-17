@@ -30,7 +30,6 @@ text       .oninput=()=>{try{let song=JSON.parse(text.value);SONG=song;update();
 fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
 makeLongPress(canvas,download);
 oncontextmenu=e=>e.target.tagName=="TEXTAREA";
-function message(m){let e=element("div",side,"message");message=m=>{if(typeof m=="number"){m="Processed in "+((performance.now()-m)|0)+" milliseconds";} e.textContent=m};message(m);}
 function makeLongPress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
 function format(data){return JSON.stringify(data).replace(/({)/g,'\n$1');}
 function track(){return cols[LT]&&SONG.tracks[LT]||null;}
@@ -63,7 +62,7 @@ function click({target:{row,col}}){
 }
 function start(){
   if(S){S.onended=null;S.stop();S.disconnect();S=null;};if(!(json=range()))return;
-  try{let t0=performance.now();S=source(json);message(t0);S.onended=start;S.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){message(e);};
+  try{S=source(json);S.onended=start;S.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){};
 }
 function loop(){
   if(!next())return;
@@ -117,7 +116,7 @@ let o={init,presets};instruments=()=>o;return o;
 }
 
 function download(){try{
-if (!Q.hasnotes()) return message("Nothing to save. Please select song or range",3000);
+if (!Q.hasnotes()) return alert("Nothing to save. Please select song or range");
 let a=element("a"),file="battito_song_"+Date.now();
 a.href=URL.createObjectURL(bufferToWav());a.download=file+".wav";a.click();
 a.href=URL.createObjectURL(new File([jsonToHtml()],""));a.download=file+".html";a.click();
