@@ -30,10 +30,9 @@ text       .oninput=()=>{try{let song=JSON.parse(text.value);SONG=song;update();
 fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
 makeLongPress(canvas,download);
 oncontextmenu=e=>e.target.tagName=="TEXTAREA";
-function message(){let i,e=element("div",side,"message"),d=(s)=>e.style.display=s?"block":"none";(message=(m,t)=>{e.textContent=m;d(1);clearTimeout(i);if(t)i=setTimeout(d,t);}).hide=d;}message();
+function message(m){let e=element("div",side,"message");message=m=>{if(typeof m=="number"){m="Processed in "+((performance.now()-m)|0)+" milliseconds";} e.textContent=m};message(m);}
 function makeLongPress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
 function format(data){return JSON.stringify(data).replace(/({)/g,'\n$1');}
-function yieldto(f,...a){f(...a);return new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));}
 function track(){return cols[LT] && SONG.tracks[LT] || null;}
 function toggle(cell){cell.style.background=rows[cell.row] && cols[cell.col]?"gray":"";}
 function scroll(n){let t=Q.cells[(n+1)*(SC+1)],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
@@ -64,7 +63,7 @@ function click({target:{row,col}}){
 }
 async function start(){
   if(S){S.onended=null;S.stop();S.disconnect();S=null;};if(!(json=range()))return;
-  await yieldto(message,"loading..."); try{S=source(json);message.hide(); S.onended=start;S.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){message(e);};
+  try{let t0=performance.now();S=source(json);message(t0); S.onended=start;S.connect(C.destination);S.start(S.startTime=C.currentTime);loop();}catch(e){message(e);};
 }
 function loop(){
   if(!next())return;
@@ -96,7 +95,7 @@ body{background:silver;display:flex;font-weight:bold;font-family:monospace;}
 .text, .canvas{height:25%;aspect-ratio:2/1;border:1px solid silver;}
 .fullscreen, .message{line-height:0;position:relative;bottom:1rem;z-index:1;}
 .fullscreen{font-size:1rem;text-align:right;color:orange;right:0.5rem;} :fullscreen .fullscreen{display:none;}
-.message{font-size:0.3rem;text-align:center;color:silver;display:none;pointer-events:none;}
+.message{font-size:0.3rem;text-align:center;color:silver;pointer-events:none;}
 .piano{background:repeating-linear-gradient(90deg,#0000 0,#0000 calc(100%/48*11.9),#000 calc(100%/48*12)),repeating-linear-gradient(#0000 0,#0000 calc(100%/32*3.9),#000 calc(100%/32*4)),white;}
 `;}
 
