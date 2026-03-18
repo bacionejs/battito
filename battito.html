@@ -8,28 +8,26 @@ let Q          =element("div",side,"sequencer");
 let text       =element("textarea",side,"text");
 let canvas     =element("canvas",side,"canvas");
 let fullscreen =element("div",side,"fullscreen","⛶");
-init(); instruments().init(sliders); initStyle(); tutorial(); compatibility();
-
-function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="⚠ Rendering error<br>This app requires a modern chromium-based browser";},200);}
-function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
-function color(i){if(i==null)return "";return "hsl("+(120+(i*(360/8)))+",100%,50%)";}
-
-function init(){
+piano          .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v));}
+Q              .update=function(){for(let i=1,c;(c=this.cells[i]);i++){toggle(c);if(c.row!=-1&&c.col!=-1)c.textContent=SONG.tracks[c.col].s[c.row]||"";}}
+sliders        .update=function(){let t=track();this.cells.forEach(s=>{if(t!=null){s.disabled=false;s.value=t[s.key];}else{s.disabled=true;s.value=0;}});}
+text           .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s);}
+piano          .onclick=({target:{row:r,col}})=>{let n=col+C3,p;preview(n);if(!(p=pattern()))return;p[r]=p[r]==n?0:n;update();};
+Q              .onclick=click;
+sliders        .oninput=e=>(track()[e.target.key]=+e.target.value,update(),preview());
+text           .oninput=()=>{try{let song=JSON.parse(text.value);SONG=song;update();preview();}catch(e){}};
+fullscreen     .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
+makeLongPress(canvas,download);
+oncontextmenu=e=>e.target.tagName=="TEXTAREA";
 let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,{max,abs}=Math,LT=0,cols=Array(SC).fill(0),rows=Array(SR).fill(0);rows[-1]=cols[-1]=1;
 let sequences,vustep,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets;
 let widgets=[piano,sliders,Q,text],update=()=>widgets.forEach(o=>o.update());
 grid(piano,PC,PR);grid(Q,SC+1,SR+1);
-piano      .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v));}
-Q          .update=function(){for(let i=1,c;(c=this.cells[i]);i++){toggle(c);if(c.row!=-1&&c.col!=-1)c.textContent=SONG.tracks[c.col].s[c.row]||"";}}
-sliders    .update=function(){let t=track();this.cells.forEach(s=>{if(t!=null){s.disabled=false;s.value=t[s.key];}else{s.disabled=true;s.value=0;}});}
-text       .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s);}
-piano      .onclick=({target:{row:r,col}})=>{let n=col+C3,p;preview(n);if(!(p=pattern()))return;p[r]=p[r]==n?0:n;update();};
-Q          .onclick=click;
-sliders    .oninput=e=>(track()[e.target.key]=+e.target.value,update(),preview());
-text       .oninput=()=>{try{let song=JSON.parse(text.value);SONG=song;update();preview();}catch(e){}};
-fullscreen .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
-makeLongPress(canvas,download);
-oncontextmenu=e=>e.target.tagName=="TEXTAREA";
+instruments().init(sliders); initStyle(); tutorial(); compatibility();
+
+function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="⚠ Rendering error<br>This app requires a modern chromium-based browser";},200);}
+function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
+function color(i){if(i==null)return "";return "hsl("+(120+(i*(360/8)))+",100%,50%)";}
 function makeLongPress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
 function format(data){return JSON.stringify(data).replace(/({)/g,'\n$1');}
 function track(){return cols[LT]&&SONG.tracks[LT]||null;}
@@ -76,8 +74,6 @@ function preview(note){try{
   let d=P.buffer.getChannelData(0),c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2,start=d.findIndex(v=>abs(v)>=threshold),end=d.findLastIndex(v=>abs(v)>=threshold);
   c.clearRect(0,0,w,h);c.lineWidth=2;c.strokeStyle="blue";c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.stroke();//see
 }catch(e){}}
-Object.assign(Q,{range,hasnotes,buffer:()=>S.buffer});
-}
 
 function initStyle(){element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;}
@@ -115,7 +111,7 @@ let o={init,presets};instruments=()=>o;return o;
 }
 
 function download(){try{
-if (!Q.hasnotes()) return alert("Nothing to save. Please select song or range");
+if (!hasnotes()) return alert("Nothing to save. Please select song or range");
 let a=element("a"),file="battito_song_"+Date.now();
 a.href=URL.createObjectURL(bufferToWav());a.download=file+".wav";a.click();
 a.href=URL.createObjectURL(new File([jsonToHtml()],""));a.download=file+".html";a.click();
@@ -123,13 +119,13 @@ URL.revokeObjectURL(a.href);a.remove();
 }catch(e){alert(e.message);}
 function jsonToHtml(){return `
   <\script>onload=()=>{document.body.textContent='Click to play'; addEventListener('click',song().play,{once:true});
-  function song(){let json=${JSON.stringify(Q.range())};
+  function song(){let json=${JSON.stringify(range())};
   let C=new AudioContext(),buffer=Battito(C).createbuffer(json);
   function play(){let S=C.createBufferSource();S.buffer=buffer;S.connect(C.destination);S.loop=true;S.start();}
   ${Battito}; return {play}}}</\script>
 `;}
 function bufferToWav(){
-  let os=44,b=Q.buffer(),d=b.length*4,o=new ArrayBuffer(d+os),v=new DataView(o),u8=new Uint8Array(o);
+  let os=44,b=S.buffer,d=b.length*4,o=new ArrayBuffer(d+os),v=new DataView(o),u8=new Uint8Array(o);
   u8.set([82,73,70,70,0,0,0,0,87,65,86,69,102,109,116,32,16,0,0,0,1,0,2,0,68,172,0,0,16,177,2,0,4,0,16,0,100,97,116,97,0,0,0,0]);
   v.setUint32(4,d+36,1); v.setUint32(40,d,1); for(let j=0,i,s;j<b.length;j++)for(i=0;i<2;i++,os+=2)v.setInt16(os,(s=b.getChannelData(i)[j])*32767-(s<0),1);
   return new Blob([o],{type:"audio/wav"});
