@@ -1,13 +1,13 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width"><script> onload=()=>{
 
 addEventListener("error",e=>{prompt("error",e.error.stack);}); document.title="🎼 Battito Beats";//https://github.com/bacionejs/battito
+let fullscreen =element("div",side,"fullscreen","⛶");
 let piano      =element("div",document.body,"piano");
 let sliders    =element("div",document.body,"sliders");
 let side       =element("div",document.body,"side");
 let Q          =element("div",side,"sequencer");
 let text       =element("textarea",side,"text");
 let canvas     =element("canvas",side,"canvas");
-let fullscreen =element("div",side,"fullscreen","⛶");
 piano          .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v));}
 Q              .update=function(){for(let i=1,c;(c=this.cells[i]);i++){toggle(c);if(c.row!=-1&&c.col!=-1)c.textContent=SONG.tracks[c.col].s[c.row]||"";}}
 sliders        .update=function(){let t=track();this.cells.forEach(s=>{if(t!=null){s.disabled=false;s.value=t[s.key];}else{s.disabled=true;s.value=0;}});}
@@ -74,6 +74,8 @@ function preview(note){try{
   let d=P.buffer.getChannelData(0),c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2,start=d.findIndex(v=>abs(v)>=threshold),end=d.findLastIndex(v=>abs(v)>=threshold);
   c.clearRect(0,0,w,h);c.lineWidth=2;c.strokeStyle="blue";c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.stroke();//see
 }catch(e){}}
+
+let aaa=`{"bpm":130,"tracks":[{"v1":255,"w1":0,"o1":9,"s1":0,"d1":0,"v2":255,"w2":0,"o2":7,"s2":0,"d2":0,"ea":100,"es":0,"er":5970,"e1":1,"e2":1,"ct":2,"ca":500,"cr":254,"mw":0,"ms":0,"ma":0,"m1":0,"mc":0,"ds":1,"da":31,"ps":4,"pa":21,"nv":0,"vm":171,"s":[1,1,1,1],"p":[[123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0,123,0,0,0]]},{"v1":255,"w1":2,"o1":6,"s1":11,"d1":0,"v2":255,"w2":2,"o2":6,"s2":11,"d2":4,"ea":88,"es":2000,"er":7505,"e1":0,"e2":0,"ct":2,"ca":3144,"cr":51,"mw":0,"ms":7,"ma":179,"m1":0,"mc":1,"ds":6,"da":60,"ps":4,"pa":64,"nv":0,"vm":255,"s":[1,1,1,1],"p":[[0,0,124,0,0,0,0,0,0,0,0,0,0,0,124,0,124,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]},{"v1":192,"w1":2,"o1":7,"s1":0,"d1":0,"v2":201,"w2":3,"o2":7,"s2":0,"d2":0,"ea":100,"es":150,"er":7505,"e1":0,"e2":0,"ct":2,"ca":5839,"cr":254,"mw":0,"ms":6,"ma":195,"m1":0,"mc":1,"ds":6,"da":121,"ps":6,"pa":147,"nv":0,"vm":191,"s":[1,1,2,3],"p":[[135,0,0,0,0,0,0,0,159,0,157,0,159,0,0,0,0,0,0,0,0,0,0,0,147,154,0,159,0,0,0,0],[138,0,0,0,0,0,0,0,150,0,159,0,162,0,0,0,0,0,0,0,0,0,150,0,162,150,0,159,0,0,0,0],[149,0,0,0,0,0,0,0,149,0,150,0,154,0,0,0,0,0,0,0,0,0,0,0,147,157,0,159,0,0,0,0]]},{"v1":255,"w1":0,"o1":9,"s1":0,"d1":0,"v2":255,"w2":0,"o2":9,"s2":0,"d2":12,"ea":100,"es":0,"er":14545,"e1":0,"e2":0,"ct":0,"ca":0,"cr":240,"mw":0,"ms":0,"ma":0,"m1":0,"mc":0,"ds":2,"da":157,"ps":3,"pa":47,"nv":0,"vm":70,"s":[],"p":[]},{"v1":255,"w1":3,"o1":7,"s1":0,"d1":0,"v2":255,"w2":0,"o2":8,"s2":0,"d2":0,"ea":22,"es":22,"er":2193,"e1":0,"e2":0,"ct":3,"ca":4067,"cr":176,"mw":0,"ms":3,"ma":96,"m1":0,"mc":1,"ds":4,"da":12,"ps":2,"pa":84,"nv":127,"vm":255,"s":[],"p":[]},{"v1":255,"w1":2,"o1":7,"s1":0,"d1":0,"v2":154,"w2":2,"o2":7,"s2":0,"d2":9,"ea":2418,"es":1075,"er":10614,"e1":0,"e2":0,"ct":3,"ca":2962,"cr":255,"mw":0,"ms":5,"ma":124,"m1":0,"mc":1,"ds":6,"da":117,"ps":3,"pa":73,"nv":0,"vm":240,"s":[],"p":[]},{"v1":192,"w1":3,"o1":7,"s1":0,"d1":0,"v2":201,"w2":3,"o2":7,"s2":0,"d2":7,"ea":789,"es":1234,"er":13636,"e1":0,"e2":0,"ct":2,"ca":5839,"cr":254,"mw":0,"ms":6,"ma":195,"m1":0,"mc":1,"ds":6,"da":121,"ps":6,"pa":147,"nv":0,"vm":191,"s":[],"p":[]},{"v1":192,"w1":2,"o1":7,"s1":0,"d1":0,"v2":192,"w2":2,"o2":7,"s2":0,"d2":0,"ea":0,"es":0,"er":20000,"e1":0,"e2":0,"ct":0,"ca":0,"cr":0,"mw":0,"ms":0,"ma":0,"m1":0,"mc":0,"ds":0,"da":0,"ps":0,"pa":0,"nv":0,"vm":192,"s":[],"p":[]}]}`; SONG=JSON.parse(aaa);
 
 function initStyle(){element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;}
