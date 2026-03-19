@@ -44,7 +44,7 @@ function vu(){let r=(currS+1)*(SC+1)+1;for(let i=0,t=0;i<SC;i++){if(cols[i]){Q.c
 function point(){[[prevP,"remove"],[currP,"add"]].forEach(([x,m])=>piano.cells[x*PC]?.classList[m]("row-playing"));}
 function gradient(a){return "linear-gradient(#000 "+(100-a*100)+"%,#0000 0),linear-gradient(in hsl,red,lime)"}
 function source(s){return Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(s)});}
-function active(){let c=0,r=0;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>{if(v){c=max(c,i);r=max(r,j);}}));return {maxcol:c,maxrow:r,all:rows.slice(0,r+1).every(Boolean)&&cols.slice(0,c+1).every(Boolean)};}
+function active(){let c=0,r=0;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(c=max(c,i),r=max(r,j))));return {maxcol:c,maxrow:r,all:rows.slice(0,r+1).every(Boolean)&&cols.slice(0,c+1).every(Boolean)};}
 function grid(e,cols,rows,classname="cell"){
   e.style.gridTemplateColumns="repeat("+cols+",1fr)";
   e.cells=Array(cols*rows).fill().map((_,i)=>{
