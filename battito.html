@@ -135,11 +135,11 @@ let o={init,presets};instruments=()=>o;return o;
 function style(){element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;}
 body{background:silver;display:flex;font:bold 8px monospace;}
-.piano, .sequencer{display:grid;} .side{background:black;color:white;}
-.sliders{display:flex;flex-direction:column;justify-content:space-evenly;background:black;} .sliders > * {display:flex;flex-direction:column;align-items:center;} .slider{height:1px;} input::-webkit-slider-thumb{opacity:0;}
+.piano, .sequencer, .sliders, .cell{display:grid;} .side{background:black;color:white;}
+.sliders{place-items:center;background:black;} .slider{height:1px} input::-webkit-slider-thumb{opacity:0;}
 .sequencer{height:50%;aspect-ratio:1/1;overflow-y:scroll;}
 .col-header{position:sticky;top:0;background:black;z-index:1;}
-.cell{display:grid;place-items:center;border:1px solid silver;aspect-ratio:1/1;}
+.cell{place-items:center;border:1px solid silver;aspect-ratio:1/1;}
 .row-playing{border-left:3px solid orange !important;}
 .text, .canvas{height:25%;aspect-ratio:2/1;border:1px solid silver;}
 .text{padding:10px;white-space:pre;overflow:auto;background:transparent;color:white;outline:none;}
