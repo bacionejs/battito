@@ -134,19 +134,16 @@ let o={init,presets};instruments=()=>o;return o;
 
 function style(){element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;}
-body{background:silver;display:flex;font-weight:bold;font-family:monospace;}
+body{background:silver;display:flex;font:bold 8px monospace;}
 .piano, .sequencer{display:grid;} .side{background:black;color:white;}
-.sliders{display:flex;flex-direction:column;justify-content:space-evenly;font-size:8px;background:black;}
-.sliders > * {display:flex;flex-direction:column;align-items:center;}
-.sliders .slider{height:1px;} .sliders input[type="range"]::-webkit-slider-thumb{opacity:0;}
-.sequencer{height:50%;aspect-ratio:1/1;overflow-y:scroll;} .sequencer > :first-child{grid-auto-flow:column;place-items:end stretch;}
+.sliders{display:flex;flex-direction:column;justify-content:space-evenly;background:black;} .sliders > * {display:flex;flex-direction:column;align-items:center;} .slider{height:1px;} input::-webkit-slider-thumb{opacity:0;}
+.sequencer{height:50%;aspect-ratio:1/1;overflow-y:scroll;}
 .col-header{position:sticky;top:0;background:black;z-index:1;}
 .cell{display:grid;place-items:center;border:1px solid silver;aspect-ratio:1/1;}
 .row-playing{border-left:3px solid orange !important;}
-.text{padding:10px;font-size:8px;white-space:pre;overflow:auto;background:transparent;color:white;outline:none;}
 .text, .canvas{height:25%;aspect-ratio:2/1;border:1px solid silver;}
-.fullscreen{line-height:0;position:relative;bottom:1rem;z-index:1;}
-.fullscreen{font-size:1rem;text-align:right;color:orange;right:0.5rem;} :fullscreen .fullscreen{display:none;}
+.text{padding:10px;font-size:8px;white-space:pre;overflow:auto;background:transparent;color:white;outline:none;}
+.fullscreen{line-height:0;position:relative;bottom:1rem;z-index:1;} .fullscreen{font-size:1rem;text-align:right;color:orange;right:0.5rem;} :fullscreen .fullscreen{display:none;}
 .piano{background:repeating-linear-gradient(90deg,#0000 0,#0000 calc(100%/48*11.9),#000 calc(100%/48*12)),repeating-linear-gradient(#0000 0,#0000 calc(100%/32*3.9),#000 calc(100%/32*4)),white;}
 `;}
 
