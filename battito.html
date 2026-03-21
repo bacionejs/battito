@@ -23,7 +23,7 @@ let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,{max,abs}=Math,LT=0,cols=Array(SC).fil
 let sequences,vustep,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets;
 let widgets=[piano,sliders,Q,text],update=()=>widgets.forEach(o=>o.update());
 grid(piano,PC,PR);grid(Q,SC+1,SR+1);
-instruments().init(sliders); initStyle(); tutorial(); compatibility();
+instruments().init(sliders); style(); tutorial(); compatibility();
 
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="⚠ Rendering error<br>This app requires a modern chromium-based browser";},200);}
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
@@ -75,7 +75,7 @@ function preview(note){try{
   c.clearRect(0,0,w,h);c.lineWidth=2;c.strokeStyle="blue";c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.stroke();//see
 }catch(e){}}
 
-function initStyle(){element("style").textContent=`
+function style(){element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;}
 body{background:silver;display:flex;font-weight:bold;font-family:monospace;}
 .piano, .sequencer{display:grid;} .side{background:black;color:white;}
