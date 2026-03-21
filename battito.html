@@ -17,13 +17,11 @@ Q              .onclick=click;
 sliders        .oninput=e=>(track()[e.target.key]=+e.target.value,update(),preview());
 text           .oninput=()=>{try{let song=JSON.parse(text.value);SONG=song;update();preview();}catch(e){}};
 fullscreen     .onclick=document.documentElement.requestFullscreen.bind(document.documentElement);
-makeLongPress(canvas,download);
-oncontextmenu=e=>e.target.tagName=="TEXTAREA";
+makeLongPress(canvas,download);oncontextmenu=e=>e.target.tagName=="TEXTAREA";
 let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,{max,abs}=Math,LT=0,cols=Array(SC).fill(0),rows=Array(SR).fill(0);rows[-1]=cols[-1]=1;
 let sequences,vustep,json,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,PLAYER=Battito(C),SONG=instruments().presets;
 let widgets=[piano,sliders,Q,text],update=()=>widgets.forEach(o=>o.update());
-grid(piano,PC,PR);grid(Q,SC+1,SR+1);
-instruments().init(sliders); style(); tutorial(); compatibility();
+grid(piano,PC,PR);grid(Q,SC+1,SR+1);instruments().init(sliders); style(); tutorial(); compatibility();
 
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="⚠ Rendering error<br>This app requires a modern chromium-based browser";},200);}
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
