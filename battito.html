@@ -41,7 +41,7 @@ function activecols(){let a=SONG.tracks.filter((_,c)=>cols[c]);return a.length?a
 function activerows(c){let a=sequences=[...Array(SR).keys()].filter(r=>rows[r]&&c.some(t=>t.s[r]));return a.length?a:null;}
 function range(){let c,r;return (c=activecols())&&(r=activerows(c))&&{bpm:SONG.bpm,tracks:c.map(t=>({...t,s:r.map(s=>t.s[s]),p:t.p}))};}
 function point(){[[prevP,"remove"],[currP,"add"]].forEach(([x,m])=>piano.cells[x*PC]?.classList[m]("row-playing"));}
-function active(){let c=0,r=0;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(c=max(c,i),r=max(r,j))));return {maxcol:c,maxrow:r,all:rows.slice(0,r+1).every(Boolean)&&cols.slice(0,c+1).every(Boolean)};}
+function active(){let c=0,r=0;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(c=max(c,i),r=max(r,j))));return (rows.slice(0,r+1).every(Boolean)&&cols.slice(0,c+1).every(Boolean))||{maxcol:c,maxrow:r};}
 function pattern(){let t=track();return t&&(row=ends(rows,Boolean),!Array.isArray(row))&&t.s[row]&&(t.p[t.s[row]-1]??=Array(PR).fill(0));}
 function ends(a,f){let s=a.findIndex(f),e=a.findLastIndex(f);return s==e?s:[s,e];}
 function grid(e,cols,rows,classname="cell"){
@@ -51,7 +51,7 @@ function grid(e,cols,rows,classname="cell"){
     if(r==-1){cell.classList.add("col-header");if(c!=-1){cell.textContent=String.fromCharCode(65+c);cell.style.color=color(c);}}else if(c==-1){cell.textContent=r+1;}return cell;
 });}
 function click({target:{row,col}}){
-  if(row==-1&&col==-1){let a=active();rows.fill(0);cols.fill(0);if(!a.all){rows.fill(1,0,a.maxrow+1);cols.fill(1,0,a.maxcol+1);}}//corner-toggleall
+  if(row==-1&&col==-1){let all=active();rows.fill(0);cols.fill(0);if(all!=true){rows.fill(1,0,all.maxrow+1);cols.fill(1,0,all.maxcol+1);}}//corner-toggleall
   else if(row==-1){cols[col]^=1;LT=col;preview();}//column-headers
   else if(col==-1){rows[row]^=1;}//row-headers
   else{let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;if(np)t.p[np-1]??=Array(PR).fill(0);}//grid-body
