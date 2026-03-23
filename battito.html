@@ -32,7 +32,7 @@ function track(){return cols[LT]&&SONG.tracks[LT]||null;}
 function toggle(cell){cell.style.background=rows[cell.row]&&cols[cell.col]?"gray":"";}
 function scroll(n){let t=Q.cells[(n+1)*(SC+1)],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
 function hasnotes(){return range()?.tracks.some(t=>t.s.some(s=>s&&t.p[s-1]?.some(Boolean)));}
-function pattern(){let t=track(),[s,e]=ends(rows,Boolean);return t&&s==e&&t.s[s]&&(t.p[t.s[s]-1]??=Array(PR).fill(0));}
+function pattern(){let t=track(),[start,end]=ends(rows,Boolean);return t&&start==end&&t.s[start]&&(t.p[t.s[start]-1]??=Array(PR).fill(0));}
 function phrase(){let P=Array(PC*PR).fill(null),t,d=i=>cols[i]&&(t=SONG.tracks[i]).p[t.s[currS]-1]?.map((n,s)=>n&&(P[s*PC+n-C3]=i));for(let i=0;i<SC;i++)d(i);d(LT);return P;}
 function activecols(){let a=SONG.tracks.filter((_,c)=>cols[c]);return a.length?a:null;}
 function activerows(t){let a=sequences=[...Array(SR).keys()].filter(r=>rows[r]&&t.some(t=>t.s[r]));return a.length?a:null;}
