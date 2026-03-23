@@ -32,7 +32,7 @@ function track(){return cols[LT]&&SONG.tracks[LT]||null;}
 function toggle(cell){cell.style.background=rows[cell.row]&&cols[cell.col]?"gray":"";}
 function scroll(n){let t=Q.cells[(n+1)*(SC+1)],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
 function hasnotes(){return range()?.tracks.some(t=>t.s.some(s=>s&&t.p[s-1]?.some(Boolean)));}
-function pattern(){let t=track(),a=rows.indexOf(1);return t&&a==rows.lastIndexOf(1)&&t.s[a]&&(t.p[t.s[a]-1]??=Array(PR).fill(0));}
+function pattern(){let t=track(),[s,e]=ends(rows,Boolean);return t&&s==e&&t.s[s]&&(t.p[t.s[s]-1]??=Array(PR).fill(0));}
 function phrase(){let P=Array(PC*PR).fill(null);let t,d=i=>cols[i]&&(t=SONG.tracks[i],t.p[t.s[currS]-1]?.forEach((n,s)=>n&&(P[s*PC+n-C3]=i)));for(let i=0;i<SC;i++)d(i);d(LT);return P;}
 function activecols(){let a=SONG.tracks.filter((_,c)=>cols[c]);return a.length?a:null;}
 function activerows(t){let a=sequences=[...Array(SR).keys()].filter(r=>rows[r]&&t.some(t=>t.s[r]));return a.length?a:null;}
@@ -43,6 +43,7 @@ function point(){[[prevP,"remove"],[currP,"add"]].forEach(([x,m])=>piano.cells[x
 function gradient(a){return "linear-gradient(#000 "+(100-a*100)+"%,#0000 0),linear-gradient(in hsl,red,lime)"}
 function source(s){return Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(s)});}
 function active(){let c=0,r=0;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(c=max(c,i),r=max(r,j))));return {maxcol:c,maxrow:r,all:rows.slice(0,r+1).every(Boolean)&&cols.slice(0,c+1).every(Boolean)};}
+function ends(a,f){return[a.findIndex(f),a.findLastIndex(f)];}
 function grid(e,cols,rows,classname="cell"){
   e.style.gridTemplateColumns="repeat("+cols+",1fr)";
   e.cells=Array(cols*rows).fill().map((_,i)=>{
@@ -69,7 +70,7 @@ function loop(){
 function preview(note){try{
   P?.stop();let threshold=0.5,t;if(!(t=track()))return;
   P=source({bpm:SONG.bpm,tracks:[{...t,s:[1],p:[{length:PR,0:note||t?.p?.[0]?.find(Boolean)||147}]}]});P.connect(C.destination);P.start();//hear
-  let d=P.buffer.getChannelData(0),c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2,start=d.findIndex(v=>abs(v)>=threshold),end=d.findLastIndex(v=>abs(v)>=threshold);
+  let d=P.buffer.getChannelData(0),c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2,[start,end]=ends(d,v=>abs(v)>=threshold);
   c.clearRect(0,0,w,h);c.lineWidth=2;c.strokeStyle="blue";c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.stroke();//see
 }catch(e){}}
 
