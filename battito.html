@@ -31,16 +31,16 @@ function format(data){return JSON.stringify(data).replace(/({)/g,'\n$1');}
 function track(){return cols[LT]&&SONG.tracks[LT]||null;}
 function toggle(cell){cell.style.background=rows[cell.row]&&cols[cell.col]?"gray":"";}
 function scroll(n){let t=Q.cells[(n+1)*(SC+1)],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
+function next(){if(!S?.buffer)return null;let s=(C.currentTime-S.startTime)*((SONG.bpm/60)*4)/PR;if(s>=sequences.length)return null;currS=sequences[s|0];currP=(s%1)*PR|0;vustep=s*PR|0;return true;}
+function vu(){let r=(currS+1)*(SC+1)+1;for(let i=0,t=0;i<SC;i++){if(cols[i]){Q.cells[r+i].style.background=gradient(S.buffer.vu[t++][vustep]);}}}
+function gradient(a){return "linear-gradient(#000 "+(100-a*100)+"%,#0000 0),linear-gradient(in hsl,red,lime)"}
+function source(s){return Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(s)});}
 function hasnotes(){return range()?.tracks.some(t=>t.s.some(s=>s&&t.p[s-1]?.some(Boolean)));}
 function phrase(){let P=Array(PC*PR).fill(null),t,d=i=>cols[i]&&(t=SONG.tracks[i]).p[t.s[currS]-1]?.map((n,s)=>n&&(P[s*PC+n-C3]=i));for(let i=0;i<SC;i++)d(i);d(LT);return P;}
 function activecols(){let a=SONG.tracks.filter((_,c)=>cols[c]);return a.length?a:null;}
-function activerows(t){let a=sequences=[...Array(SR).keys()].filter(r=>rows[r]&&t.some(t=>t.s[r]));return a.length?a:null;}
+function activerows(c){let a=sequences=[...Array(SR).keys()].filter(r=>rows[r]&&c.some(t=>t.s[r]));return a.length?a:null;}
 function range(){let c,r;return (c=activecols())&&(r=activerows(c))&&{bpm:SONG.bpm,tracks:c.map(t=>({...t,s:r.map(s=>t.s[s]),p:t.p}))};}
-function next(){if(!S?.buffer)return null;let s=(C.currentTime-S.startTime)*((SONG.bpm/60)*4)/PR;if(s>=sequences.length)return null;currS=sequences[s|0];currP=(s%1)*PR|0;vustep=s*PR|0;return true;}
-function vu(){let r=(currS+1)*(SC+1)+1;for(let i=0,t=0;i<SC;i++){if(cols[i]){Q.cells[r+i].style.background=gradient(S.buffer.vu[t++][vustep]);}}}
 function point(){[[prevP,"remove"],[currP,"add"]].forEach(([x,m])=>piano.cells[x*PC]?.classList[m]("row-playing"));}
-function gradient(a){return "linear-gradient(#000 "+(100-a*100)+"%,#0000 0),linear-gradient(in hsl,red,lime)"}
-function source(s){return Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(s)});}
 function active(){let c=0,r=0;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(c=max(c,i),r=max(r,j))));return {maxcol:c,maxrow:r,all:rows.slice(0,r+1).every(Boolean)&&cols.slice(0,c+1).every(Boolean)};}
 function pattern(){let t=track();return t&&(row=ends(rows,Boolean),!Array.isArray(row))&&t.s[row]&&(t.p[t.s[row]-1]??=Array(PR).fill(0));}
 function ends(a,f){let s=a.findIndex(f),e=a.findLastIndex(f);return s==e?s:[s,e];}
