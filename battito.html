@@ -15,7 +15,7 @@ piano          .update=function(){phrase().forEach((v,i)=>this.cells[i].style.ba
 Q              .update=function(){for(let i=1,c;(c=this.cells[i]);i++){toggle(c);if(c.row!=-1&&c.col!=-1)c.textContent=SONG.tracks[c.col].s[c.row]||"";}}
 sliders        .update=function(){let t=track();this.cells.forEach(s=>{if(t!=null){s.disabled=false;s.value=t[s.key];}else{s.disabled=true;s.value=0;}});}
 text           .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s);}
-piano          .onclick=({target:{row:r,col}})=>{let n=col+C3,p;preview(n);if(!(p=pattern()))return;p[r]=p[r]==n?0:n;update();};
+piano          .onclick=({target:{row,col}})=>{let n=col+C3,p;preview(n);if(!(p=pattern()))return;p[row]=p[row]==n?0:n;update();};
 Q              .onclick=click;
 sliders        .oninput=({target:{key,value}})=>(track()[key]=+value,update(),preview());
 text           .oninput=()=>{try{let song=JSON.parse(text.value);SONG=song;update();preview();}catch(e){}};
