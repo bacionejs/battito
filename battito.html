@@ -51,7 +51,7 @@ function grid(e,cols,rows,classname="cell"){
     if(r==-1){cell.classList.add("col-header");if(c!=-1){cell.textContent=String.fromCharCode(65+c);cell.style.color=color(c);}}else if(c==-1){cell.textContent=r+1;}return cell;
 });}
 function click({target:{row,col}}){
-  if(row==-1&&col==-1){let all=active();rows.fill(0);cols.fill(0);if(all!=true){rows.fill(1,0,all.maxrow+1);cols.fill(1,0,all.maxcol+1);}}//corner-toggleall
+  if(row==-1&&col==-1){let a=active();rows.fill(0);cols.fill(0);if(typeof a=="object"){rows.fill(1,0,a.maxrow+1);cols.fill(1,0,a.maxcol+1);}}//corner-toggleall
   else if(row==-1){cols[col]^=1;LT=col;preview();}//column-headers
   else if(col==-1){rows[row]^=1;}//row-headers
   else{let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;if(np)t.p[np-1]??=Array(PR).fill(0);}//grid-body
