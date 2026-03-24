@@ -138,11 +138,9 @@ function style(){element("style").textContent=`
 body{background:silver;display:flex;font:bold 8px monospace;}
 .piano,.sequencer,.sliders,.cell{display:grid;} .side{position:relative;background:black;color:white;}
 .sliders{place-items:center;background:black;} .slider{height:1px} input::-webkit-slider-thumb{opacity:0;}
-.sequencer{height:50%;aspect-ratio:1/1;overflow-y:scroll;}
-.col-header{position:sticky;top:0;background:black;z-index:1;}
-.cell{place-items:center;border:1px solid silver;aspect-ratio:1/1;}
-.row-playing{border-left:3px solid orange !important;}
-.text,.canvas{height:25%;aspect-ratio:2/1;border:1px solid silver;}
+.col-header{position:sticky;top:0;background:black;z-index:1;} .row-playing{border-left:3px solid orange !important;}
+.cell{place-items:center;aspect-ratio:1/1;border:1px solid silver;}
+.sequencer{height:50%;aspect-ratio:1/1;overflow-y:scroll;} .text,.canvas{height:25%;aspect-ratio:2/1;}
 .text{padding:1rem;white-space:pre;overflow:auto;background:transparent;color:inherit;font:inherit;}
 .fullscreen{position:absolute;bottom:0;right:0;z-index:1;font-size:1rem;color:orange;} :fullscreen .fullscreen{display:none;}
 .piano{background:repeating-linear-gradient(90deg,#0000 0,#0000 calc(100%/48*11.9),#000 calc(100%/48*12)),repeating-linear-gradient(#0000 0,#0000 calc(100%/32*3.9),#000 calc(100%/32*4)),white;}
