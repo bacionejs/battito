@@ -44,10 +44,10 @@ function point(){[[prevP,"remove"],[currP,"add"]].forEach(([x,m])=>piano.cells[x
 function active(){let c=0,r=0;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(c=max(c,i),r=max(r,j))));return (rows.slice(0,r+1).every(Boolean)&&cols.slice(0,c+1).every(Boolean))||{maxcol:c,maxrow:r};}
 function pattern(){let t=track();return t&&(row=ends(rows,Boolean),!Array.isArray(row))&&t.s[row]&&(t.p[t.s[row]-1]??=Array(PR).fill(0));}
 function ends(a,f){let s=a.findIndex(f),e=a.findLastIndex(f);return s==e?s:[s,e];}
-function grid(e,cols,rows,classname="cell"){
+function grid(e,cols,rows){
   e.style.gridTemplateColumns="repeat("+cols+",1fr)";
   e.cells=Array(cols*rows).fill().map((_,i)=>{
-    let cell=element("div",e,classname);cell.col=i%cols,cell.row=(i/cols)|0;if(cols%2==0)return cell; let r=--cell.row,c=--cell.col;
+    let cell=element("div",e,"cell");cell.col=i%cols,cell.row=(i/cols)|0;if(cols%2==0)return cell; let r=--cell.row,c=--cell.col;
     if(r==-1){cell.classList.add("col-header");if(c!=-1){cell.textContent=String.fromCharCode(65+c);cell.style.color=color(c);}}else if(c==-1){cell.textContent=r+1;}return cell;
 });}
 function click({target:{row,col}}){
