@@ -164,7 +164,7 @@ function createbuffer(json){
       for(let b=P,j=0;b<end;b++,j++){
         let lfoR,e=1,f,rs,high,t,t1=o1fb,t2=o2fb; lfo+=lfostep;pan+=panstep;lfoR=W(mw,lfo)*ma+0.5;
         if(j<ea)e=j*ai;else if(j>=ea+es)e-=(j-ea-es)*ri;if(m1)t1+=lfoR;if(e1)t1*=e*e;c1+=t1;rs=W(w1,c1)*v1;if(e2)t2*=e*e;c2+=t2;rs+=W(w2,c2)*v2;if(nv)rs+=(rnd()*2-1)*nv*e;rs*=e*vm;
-        f=ca*(mc?lfoR:1);low+=f*band;high=cr*(rs-band)-low;band+=f*high; rs=ct==1?high:ct==2?low:ct==3?band:ct==4?low+high:rs;t=W(0,pan)*pa+0.5;L[b]+=rs*(1-t);R[b]+=rs*t;
+        f=ca*(mc?lfoR:1);low+=f*band;high=cr*(rs-band)-low;band+=f*high; rs=ct==1?high:ct==2?low:ct==3?band:ct==4?low+high:rs; t=W(0,pan)*pa+0.5;L[b]+=rs*(1-t);R[b]+=rs*t;
       }
     }
     let DS=Math.floor(ds*rowlen/2);if(DS>0){let DA=da/255;for(let b=0;b<S-DS;b++){L[b+DS]+=R[b]*DA;R[b+DS]+=L[b]*DA;}}
