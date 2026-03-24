@@ -155,8 +155,7 @@ function createbuffer(json){
   let rowlen=Math.ceil(SAMPLERATE*((60/json.bpm)/4)),TR=SR*PR,S=TR*rowlen,LL=new Float32Array(S),RR=new Float32Array(S),L=new Float32Array(S),R=new Float32Array(S);
   let vu=VU(TR,rowlen);
   for(let T of json.tracks){
-    let {v1,w1,o1,s1,d1,v2,w2,o2,s2,d2,ea,es,er,e1,e2,ct,ca,cr,mw,ms,ma,m1,mc,ds,da,ps,pa,nv,vm}=T;
-    let envlen=ea+es+er,ai=1/ea,ri=1/er,lfostep=2**(ms-8)/rowlen,panstep=2**(ps-8)/rowlen;
+    let {v1,w1,o1,s1,d1,v2,w2,o2,s2,d2,ea,es,er,e1,e2,ct,ca,cr,mw,ms,ma,m1,mc,ds,da,ps,pa,nv,vm}=T,envlen=ea+es+er,ai=1/ea,ri=1/er,lfostep=2**(ms-8)/rowlen,panstep=2**(ps-8)/rowlen;
     L.fill(0);R.fill(0);ca*=FBASE;vm*=0.006;ma/=512;pa/=512;v1/=255;v2/=255;nv/=255;cr/=255;s1+=(o1-8)*12;d1=1+0.2*d1/255;s2+=(o2-8)*12;d2=1+0.2*d2/255;
     for(let row=0;row<TR;row++){
       let n=T.p?.[T.s[row/PR|0]-1]?.[row%PR],P=row*rowlen;if(!n)continue;
