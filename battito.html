@@ -149,7 +149,7 @@ body{background:silver;display:flex;font:bold 8px monospace;}
 `;}
 
 function Battito(audiocontext){
-let SAMPLERATE=44100,FBASE=1.5*Math.PI/SAMPLERATE,R_S=1,rnd=()=>((R_S=Math.imul(R_S,0x15a4e35))>>>0)/2**32,NOTE=new Float32Array(256);for(let n=0;n<256;n++)NOTE[n]=0.00390625*1.059463094**(n-128);
+let SAMPLERATE=44100,FBASE=1.5*Math.PI/SAMPLERATE,R_S=1,rnd=()=>((R_S=Math.imul(R_S,0x15a4e35))>>>0)/2**32,NOTE=new Float32Array(256);for(n=256;n--;)NOTE[n]=2**((n-128)/12)/256;
 let VU=(n,r)=>{let o=[];return{add:c=>{let p=new Float32Array(n);for(let i=0,m,s,j;i<n;i++){m=0;s=i*r;for(j=0;j<r;j++){let a=Math.abs(c[s+j]);if(a>m)m=a}p[i]=m}o.push(p)},out:o}}
 let WS=1024,[SIN,SQUARE,SAW,TRI]=WAVES=Array.from({length:4},()=>new Float32Array(WS)),W=(t,v)=>(WAVES[t]||SIN)[((v*WS)&(WS-1))>>>0];
 for(let i=0;i<WS;i++)SIN[i]=Math.sin(i*2*Math.PI/WS); for(let i=0;i<WS;i++){let p=i/WS;SQUARE[i]=p<0.5?-1:1;SAW[i]=p-0.5;let v2=p*4;TRI[i]=v2<2?v2-1:3-v2;}
