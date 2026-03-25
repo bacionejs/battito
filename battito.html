@@ -44,6 +44,7 @@ function point(){[[prevP,"remove"],[currP,"add"]].forEach(([x,m])=>piano.cells[x
 function active(){let c=0,r=0;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(c=max(c,i),r=max(r,j))));return (rows.slice(0,r+1).every(Boolean)&&cols.slice(0,c+1).every(Boolean))||{maxcol:c,maxrow:r};}
 function pattern(){let t=track();return t&&(row=ends(rows,Boolean),!Array.isArray(row))&&t.s[row]&&(t.p[t.s[row]-1]??=Array(PR).fill(0));}
 function ends(a,f){let s=a.findIndex(f),e=a.findLastIndex(f);return s==e?s:[s,e];}
+function ctx(){let c=canvas.getContext("2d"),w=canvas.width,h=canvas.height;c.clearRect(0,0,w,h);c.lineWidth=2;c.strokeStyle="blue";return [c,w,h/2];}
 function grid(e,cols,rows){
   e.style.gridTemplateColumns="repeat("+cols+",1fr)";
   e.cells=Array(cols*rows).fill().map((_,i)=>{
@@ -68,10 +69,8 @@ function loop(){
   requestAnimationFrame(loop);
 }
 function preview(note){try{
-  P?.stop();let threshold=0.5,t;if(!(t=track()))return;
-  P=source({bpm:SONG.bpm,tracks:[{...t,s:[1],p:[{length:PR,0:note||t?.p?.[0]?.find(Boolean)||147}]}]});P.connect(C.destination);P.start();//hear
-  let d=P.buffer.getChannelData(0),c=canvas.getContext("2d"),w=canvas.width,h=canvas.height,m=h/2,[start,end]=ends(d,v=>abs(v)>=threshold);
-  c.clearRect(0,0,w,h);c.lineWidth=2;c.strokeStyle="blue";c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[start+(x*(end-start)/(w-1)|0)]*m);}c.stroke();//see
+  P?.stop();let t=track();if(!t)return; P=source({bpm:SONG.bpm,tracks:[{...t,s:[1],p:[{length:PR,0:note||t?.p?.[0]?.find(Boolean)||147}]}]});P.connect(C.destination);P.start();//hear
+  let d=P.buffer.getChannelData(0),[s,e]=ends(d,v=>abs(v)>=0.5),[c,w,m]=ctx();c.beginPath();for(let x=0;x<w;x++){c.lineTo(x,m+d[s+(x*(e-s)/(w-1)|0)]*m);}c.stroke();//see
 }catch(e){}}
 
 function download(){try{
