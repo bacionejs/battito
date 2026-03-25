@@ -24,7 +24,7 @@ makeLongPress(canvas,download);oncontextmenu=e=>e.target.tagName=="TEXTAREA";
 grid(piano,PC,PR); naturals(piano); grid(Q,SC+1,SR+1); instruments().init(sliders); style(); tutorial(); compatibility();
 
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="⚠ Rendering error<br>Requires a modern chromium-based browser";},200);}
-function naturals(p){p.cells.forEach(c=>c.textContent=(c.row%4==0)?["C","","D","","E","F","","G","","A","","B"].at(c.col%12):"");}
+function naturals(p){p.cells.forEach(c=>c.textContent=(c.row%4==0)?["C","","D","","E","F","","G","","A","","B"][c.col%12]:"");}
 function label(k,v,m){return k+String(m==4?["Off","High","Low","Band","Notch"][v]:(m==3?["Sine","Square","Saw","Tri"][v]:(m==1?(v?"On":"Off"):v))).padStart(10," ");}
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
 function color(i){if(i==null)return "";return "hsl("+(120+(i*(360/8)))+",100%,50%)";}
