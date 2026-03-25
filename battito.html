@@ -21,9 +21,10 @@ sliders        .oninput=({target:{key,value}})=>(track()[key]=+value,update(),pr
 text           .oninput=()=>{try{let song=JSON.parse(text.value);SONG=song;update();preview();}catch(e){}};
 fullscreen     .onclick=()=>document.documentElement.requestFullscreen();
 makeLongPress(canvas,download);oncontextmenu=e=>e.target.tagName=="TEXTAREA";
-grid(piano,PC,PR);grid(Q,SC+1,SR+1);instruments().init(sliders);style();tutorial();compatibility();
+grid(piano,PC,PR); naturals(piano); grid(Q,SC+1,SR+1); instruments().init(sliders); style(); tutorial(); compatibility();
 
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="⚠ Rendering error<br>Requires a modern chromium-based browser";},200);}
+function naturals(p){p.cells.forEach(c=>c.textContent=(c.row%4==0)?["C","","D","","E","F","","G","","A","","B"].at(c.col%12):"");}
 function label(k,v,m){return k+String(m==4?["Off","High","Low","Band","Notch"][v]:(m==3?["Sine","Square","Saw","Tri"][v]:(m==1?(v?"On":"Off"):v))).padStart(10," ");}
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
 function color(i){if(i==null)return "";return "hsl("+(120+(i*(360/8)))+",100%,50%)";}
@@ -134,15 +135,15 @@ let o={init,presets};instruments=()=>o;return o;
 }
 
 function style(){element("style").textContent=`
-*{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;font:bold 8px monospace;} body{background:black;display:flex;}
-.piano,.sequencer,.sliders,.cell{display:grid;} .side{position:relative;color:white;}
+*{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;} body{background:black;display:flex;}
+.piano,.sequencer,.sliders{display:grid;font:bold 8px monospace;} .side{position:relative;color:white;}
 .sliders{place-items:center;white-space:pre;} .slider{height:1px;accent-color:green;} input::-webkit-slider-thumb{opacity:0;}
 .col-header{position:sticky;top:0;z-index:1;} .row-playing{border-left:3px solid orange !important;}
-.cell{place-items:center;aspect-ratio:1/1;border:1px solid silver;}
+.cell{display:grid;place-items:center;aspect-ratio:1/1;border:1px solid silver;}
 .sequencer{height:50%;aspect-ratio:1/1;overflow-y:scroll;} .text,.canvas{height:25%;aspect-ratio:2/1;}
 .text{padding:1rem;white-space:pre;overflow:auto;background:transparent;color:inherit;}
 .fullscreen{position:absolute;bottom:0;right:0;z-index:1;font-size:1rem;color:orange;} :fullscreen .fullscreen{display:none;}
-.piano{background:repeating-linear-gradient(90deg,#0000 0,#0000 calc(100%/48*11.9),#000 calc(100%/48*12)),repeating-linear-gradient(#0000 0,#0000 calc(100%/32*3.9),#000 calc(100%/32*4)),white;}
+.piano{background:white;color:silver;line-height:0;}
 `;}
 
 function Battito(audiocontext){
