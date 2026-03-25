@@ -13,7 +13,7 @@ let fullscreen =element("div",side,"fullscreen","⛶");
 let widgets=[piano,sliders,Q,text],update=()=>widgets.forEach(o=>o.update());
 piano          .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v));}
 Q              .update=function(){for(let i=1,c;(c=this.cells[i]);i++){toggle(c);if(c.row!=-1&&c.col!=-1)c.textContent=SONG.tracks[c.col].s[c.row]||"";}}
-sliders        .update=function(){let t=track();this.cells.forEach(s=>{s.disabled=!t;s.value=t?t[s.key]:0;s.previousSibling.textContent=label(s.key,s.value,s.max);});}
+sliders        .update=function(){let t=track();this.cells.forEach(s=>{s.disabled=!t;s.value=t?t[s.key]:0;s.previousSibling.textContent=label(s.key,+s.value,s.max);});}
 text           .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s);}
 piano          .onclick=({target:{row,col}})=>{let n=col+C3,p;preview(n);if(!(p=pattern()))return;p[row]=p[row]==n?0:n;update();};
 Q              .onclick=click;
