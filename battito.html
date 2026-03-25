@@ -72,7 +72,7 @@ function loop(){
 }
 function preview(note){try{
   P?.stop();let t=track();if(!t)return; P=source({bpm:SONG.bpm,tracks:[{...t,s:[1],p:[{length:PR,0:note||t?.p?.[0]?.find(Boolean)||147}]}]}); P.connect(C.destination);P.start();
-  let d=P.buffer.getChannelData(0),len=t.ea+t.es+t.er,[c,w,m]=ctx();c.beginPath();for(let x=0;x<w;x++)c.lineTo(x,m+d[(x*len/(w-1)|0)]*m);c.stroke();
+  let d=P.buffer.getChannelData(0),len=Math.min(t.ea+t.es+t.er,d.length),[c,w,m]=ctx();c.beginPath();for(let x=0;x<w;x++)c.lineTo(x,m+d[(x*len/(w-1)|0)]*m);c.stroke();
 }catch(e){}}
 
 function download(){try{
