@@ -44,7 +44,7 @@ function activerows(c){let a=sequences=[...Array(SR).keys()].filter(r=>rows[r]&&
 function range(){let c,r;return (c=activecols())&&(r=activerows(c))&&{bpm:SONG.bpm,tracks:c.map(t=>({...t,s:r.map(s=>t.s[s]),p:t.p}))};}
 function point(){[[prevP,"remove"],[currP,"add"]].forEach(([x,m])=>piano.cells[x*PC]?.classList[m]("row-playing"));}
 function active(){let c=0,r=0;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(c=max(c,i),r=max(r,j))));return (rows.slice(0,r+1).every(Boolean)&&cols.slice(0,c+1).every(Boolean))||{maxcol:c,maxrow:r};}
-function pattern(){let t,s;return (t=track())&&~(s=rows.indexOf(1))&&s==rows.lastIndexOf(1)&&t.s[row=s]&&(t.p[t.s[row]-1]??=Array(PR).fill(0));}
+function pattern(){let t,s;return (t=track())&&~(s=rows.indexOf(1))&&s==rows.lastIndexOf(1)&&t.s[s]&&(t.p[t.s[s]-1]??=Array(PR).fill(0));}
 function ctx(){let c=canvas.getContext("2d"),w=canvas.width,h=canvas.height;c.clearRect(0,0,w,h);c.lineWidth=2;c.strokeStyle="blue";return [c,w,h/2];}
 function grid(e,cols,rows){
   e.style.gridTemplateColumns="repeat("+cols+",1fr)";
