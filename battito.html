@@ -12,7 +12,7 @@ let canvas     =element("canvas",side,"canvas");
 let fullscreen =element("div",side,"fullscreen","⛶");
 let widgets=[piano,sliders,Q,text],update=()=>widgets.forEach(o=>o.update());
 piano          .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v));}
-Q              .update=function(){for(let i=1,c;(c=this.cells[i]);i++){toggle(c);if(c.row!=-1&&c.col!=-1)c.textContent=SONG.tracks[c.col].s[c.row]||"";}}
+Q              .update=function(){for(let i=1,c;(c=this.cells[i]);i++){toggle(c);if(~c.row&~c.col)c.textContent=SONG.tracks[c.col].s[c.row]||"";}}
 sliders        .update=function(){let t=track();this.cells.forEach(s=>{s.disabled=!t;s.value=t?t[s.key]:0;s.previousSibling.textContent=label(s.key,+s.value,s.max);});}
 text           .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s);}
 piano          .onclick=({target:{row,col}})=>{let n=col+C3,p;preview(n);if(!(p=pattern()))return;p[row]=p[row]==n?0:n;update();};
@@ -50,12 +50,12 @@ function grid(e,cols,rows){
   e.style.gridTemplateColumns="repeat("+cols+",1fr)";
   e.cells=Array(cols*rows).fill().map((_,i)=>{
     let cell=element("div",e,"cell");cell.col=i%cols,cell.row=(i/cols)|0;if(cols%2==0)return cell; let r=--cell.row,c=--cell.col;
-    if(r==-1){cell.classList.add("col-header");if(c!=-1){cell.textContent=String.fromCharCode(65+c);cell.style.color=color(c);}}else if(c==-1){cell.textContent=r+1;}return cell;
+    if(!~r){cell.classList.add("col-header");if(~c){cell.textContent=String.fromCharCode(65+c);cell.style.color=color(c);}}else if(!~c){cell.textContent=r+1;}return cell;
 });}
 function click({target:{row,col}}){
-  if(row==-1&&col==-1){let a=active();rows.fill(0);cols.fill(0);if(typeof a=="object"){rows.fill(1,0,a.maxrow+1);cols.fill(1,0,a.maxcol+1);}}//corner-toggleall
-  else if(row==-1){cols[col]^=1;LT=col;preview();}//column-headers
-  else if(col==-1){rows[row]^=1;}//row-headers
+  if(!~row&!~col){let a=active();rows.fill(0);cols.fill(0);if(typeof a=="object"){rows.fill(1,0,a.maxrow+1);cols.fill(1,0,a.maxcol+1);}}//corner-toggleall
+  else if(!~row){cols[col]^=1;LT=col;preview();}//column-headers
+  else if(!~col){rows[row]^=1;}//row-headers
   else{let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;if(np)t.p[np-1]??=Array(PR).fill(0);}//grid-body
   update();start();
 }
