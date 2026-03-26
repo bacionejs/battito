@@ -56,10 +56,10 @@ function loop(){
 }
 function click({target:{row,col}}){
   let m=!~row<<1|!~col,t,np,x;
-  m==3&&(x=active(),rows.fill(0),cols.fill(0),typeof x=="object"&&(rows.fill(1,0,x.maxrow+1),cols.fill(1,0,x.maxcol+1)))||
-  m==2&&(cols[col]^=1,LT=col,preview())||
-  m==1&&(rows[row]^=1)||
-  (t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10,np&&(t.p[np-1]??=Array(PR).fill(0)));
+  if(m==3){x=active();rows.fill(0);cols.fill(0);if(typeof x=="object"){rows.fill(1,0,x.maxrow+1);cols.fill(1,0,x.maxcol+1);}}
+  else if(m==2){cols[col]^=1;LT=col;preview();}
+  else if(m==1){rows[row]^=1;}
+  else{t=SONG.tracks[col];np=t.s[row]=((t.s[row]??0)+1)%10;if(np)t.p[np-1]??=Array(PR).fill(0);}
   update();start();
 }
 function grid(e,cols,rows){
