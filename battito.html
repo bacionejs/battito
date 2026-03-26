@@ -49,11 +49,12 @@ function ctx(){let c=canvas.getContext("2d"),w=canvas.width,h=canvas.height;c.cl
 function start(){try{S&&(S.onended=null,S.stop(),S.disconnect(),S=null); (S=source(range()))&&(S.onended=start,S.connect(C.destination),S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
 
 function loop(){
-  if(!next())return;
-  if(currS!=prevS){prevS=currS;piano.update();Q.update();scroll(currS);}
-  if(currP!=prevP){vu();point();prevP=currP;}
-  requestAnimationFrame(loop);
+if(!next())return;
+if(currS!=prevS){prevS=currS;piano.update();Q.update();scroll(currS);}
+if(currP!=prevP){vu();point();prevP=currP;}
+requestAnimationFrame(loop);
 }
+
 function click({target:{row,col}}){
 let ROW=!~col,COL=!~row,CORNER=ROW&COL,t,np,x,A=ROW?rows:cols,i=ROW?row:col;
 if(CORNER){x=active();rows.fill(0);cols.fill(0);x&&(rows.fill(1,0,x.maxrow+1),cols.fill(1,0,x.maxcol+1));}
@@ -61,15 +62,17 @@ else if(ROW|COL){A[i]^=1;COL&&(LT=col,preview());}
 else{t=SONG.tracks[col];np=t.s[row]=((t.s[row]??0)+1)%10;if(np)t.p[np-1]??=Array(PR).fill(0);}
 update();start();
 }
+
 function grid(e,cols,rows){
-  e.style.gridTemplateColumns="repeat("+cols+",1fr)";
-  e.cells=Array(cols*rows).fill().map((_,i)=>{
-    let cell=element("div",e,"cell");cell.col=i%cols,cell.row=(i/cols)|0;if(cols%2==0)return cell; let r=--cell.row,c=--cell.col;
-    if(!~r){cell.classList.add("col-header");if(~c){cell.textContent=String.fromCharCode(65+c);cell.style.color=color(c);}}else if(!~c){cell.textContent=r+1;}return cell;
+e.style.gridTemplateColumns="repeat("+cols+",1fr)";
+e.cells=Array(cols*rows).fill().map((_,i)=>{
+  let cell=element("div",e,"cell");cell.col=i%cols,cell.row=(i/cols)|0;if(cols%2==0)return cell; let r=--cell.row,c=--cell.col;
+  if(!~r){cell.classList.add("col-header");if(~c){cell.textContent=String.fromCharCode(65+c);cell.style.color=color(c);}}else if(!~c){cell.textContent=r+1;}return cell;
 });}
+
 function preview(note){try{
-  P?.stop();let t=track();if(!t)return; P=source({bpm:SONG.bpm,tracks:[{...t,s:[1],p:[{length:PR,0:note||t?.p?.[0]?.find(Boolean)||147}]}]}); P.connect(C.destination);P.start();
-  let d=P.buffer.getChannelData(0),len=t.ea+t.es+t.er,[c,w,m]=ctx();c.beginPath();for(let x=0;x<w;x++)c.lineTo(x,m+d[(x*len/(w-1)|0)]*m);c.stroke();
+P?.stop();let t=track();if(!t)return; P=source({bpm:SONG.bpm,tracks:[{...t,s:[1],p:[{length:PR,0:note||t?.p?.[0]?.find(Boolean)||147}]}]}); P.connect(C.destination);P.start();
+let d=P.buffer.getChannelData(0),len=t.ea+t.es+t.er,[c,w,m]=ctx();c.beginPath();for(let x=0;x<w;x++)c.lineTo(x,m+d[(x*len/(w-1)|0)]*m);c.stroke();
 }catch(e){}}
 
 function download(){try{
