@@ -47,6 +47,7 @@ function active(){let c=0,r=0;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(
 function pattern(){let t,s;return (t=track())&&~(s=rows.indexOf(1))&&s==rows.lastIndexOf(1)&&t.s[s]&&(t.p[t.s[s]-1]??=Array(PR).fill(0));}
 function ctx(){let c=canvas.getContext("2d"),w=canvas.width,h=canvas.height;c.clearRect(0,0,w,h);c.lineWidth=2;c.strokeStyle="blue";return [c,w,h/2];}
 function start(){try{S&&(S.onended=null,S.stop(),S.disconnect(),S=null); (S=source(range()))&&(S.onended=start,S.connect(C.destination),S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
+
 function loop(){
   if(!next())return;
   if(currS!=prevS){prevS=currS;piano.update();Q.update();scroll(currS);}
