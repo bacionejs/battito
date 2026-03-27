@@ -20,7 +20,7 @@ Q              .onclick=click;
 sliders        .oninput=({target:{key,value}})=>(track()[key]=+value,update(),preview());
 text           .oninput=()=>{try{let song=JSON.parse(text.value);SONG=song;update();preview();}catch(e){}};
 fullscreen     .onclick=()=>document.documentElement.requestFullscreen();
-makeLongPress(canvas,download);oncontextmenu=e=>e.target.tagName=="TEXTAREA";
+makelongpress(canvas,download);oncontextmenu=e=>e.target.tagName=="TEXTAREA";
 grid(piano,PC,PR); naturals(piano); grid(Q,SC+1,SR+1); instruments().init(sliders); style(); tutorial(); compatibility();
 
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="⚠ Rendering error<br>Requires a modern chromium-based browser";},200);}
@@ -28,7 +28,7 @@ function naturals(p){p.cells.forEach(c=>c.textContent=c.row%4&&" "||"C,,D,,E,F,,
 function label(k,v,m){return k+String(m==4?["Off","High","Low","Band","Notch"][v]:(m==3?["Sine","Square","Saw","Tri"][v]:(m==1?(v?"On":"Off"):v))).padStart(10," ");}
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
 function color(i){if(i==null)return "";return "hsl("+(120+(i*(360/8)))+",100%,50%)";}
-function makeLongPress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
+function makelongpress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
 function format(data){return JSON.stringify(data).replace(/({)/g,'\n$1');}
 function track(){return cols[LT]&&SONG.tracks[LT]||null;}
 function toggle(cell){cell.style.background=rows[cell.row]&&cols[cell.col]?"gray":"";}
