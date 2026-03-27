@@ -87,10 +87,16 @@ function bufferToWav(){
 function tutorial(){
 element("style").textContent=".tut-pointer,.tut-message{position:fixed;z-index:2;transition:transform .1s;} .tut-message{padding:1rem;}";
 let p,clicks,m=element("button",document.body,"tut-message","Click here to watch a 25 second tutorial"),wait=ms=>new Promise(r=>setTimeout(r,ms)); setTimeout(()=>m?.remove(),3000);
-m.onclick=async()=>{m.remove();p=element("div",document.body,"tut-pointer","👉");init();for(let f of clicks){let e=f(),r=e.getBoundingClientRect();Object.assign(p.style,{top:r.top+"px",left:r.left+"px"});
-await wait(100);p.style.transform="scale(.5)";e.click();await wait(100);p.style.transform="";await wait(100);}p.remove()};
-let make=(o,c,r)=>()=>o.cells.find(x=>x.row==r&&x.col==c),toggle=(c,r)=>[...Array(2)].flatMap(()=>[make(Q,c,-1),make(Q,-1,r)]);
+m.onclick=async()=>{
+  m.remove();p=element("div",document.body,"tut-pointer","👉");init();
+  for(let f of clicks){
+    let e=f(),r=e.getBoundingClientRect();Object.assign(p.style,{top:r.top+"px",left:r.left+"px"});
+    await wait(100);p.style.transform="scale(.5)";e.click();await wait(100);p.style.transform="";await wait(100);
+  }
+  p.remove();
+};
 function init(){
+  let make=(o,c,r)=>()=>o.cells.find(x=>x.row==r&&x.col==c),toggle=(c,r)=>[...Array(2)].flatMap(()=>[make(Q,c,-1),make(Q,-1,r)]);
   let n=new Map(),s=[
     [[1,1,1,1],[[123,,,,123,,,,123,,,,123,,,,123,,,,123,,,,123,,,,123]]],
     [[1,1,1,1],[[,,124,,,,,,,,,,,,124,,124]]],
