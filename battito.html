@@ -61,13 +61,10 @@ else{t=SONG.tracks[col];np=t.s[row]=((t.s[row]??0)+1)%10;if(np)t.p[np-1]??=Array
 update();start();
 }
 
-function download(){try{
-if (!hasnotes()) return alert("Nothing to save. Please select song or range");
-let a=element("a"),file="battito_song_"+Date.now();
-a.href=URL.createObjectURL(bufferToWav());a.download=file+".wav";a.click();
-a.href=URL.createObjectURL(new File([jsonToHtml()],""));a.download=file+".html";a.click();
-URL.revokeObjectURL(a.href);a.remove();
-}catch(e){alert(e.message);}
+function download(){
+if(!hasnotes())return alert("Nothing to save. Please select song or range");let name="battito_song_"+Date.now()+".";
+try{save(bufferToWav(),"wav");save(new File([jsonToHtml()],""),"html");}catch(e){alert(e.message);}
+function save(blob,ext){let a=document.createElement("a"),url=URL.createObjectURL(blob);a.href=url;a.download=name+ext;a.click();URL.revokeObjectURL(url);}
 function jsonToHtml(){return `
   <\script>onload=()=>{document.body.textContent='Click to play'; addEventListener('click',song().play,{once:true});
   function song(){let json=${JSON.stringify(range())};
