@@ -123,9 +123,9 @@ let o={init,presets};instruments=()=>o;return o;
 function style(){element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;} body{background:black;display:flex;font:bold 8px monospace;}
 .piano,.sequencer,.sliders,.cell{display:grid;} .side{position:relative;color:white;}
-.piano{background:white;color:silver;line-height:0;} .piano .cell:nth-child(12n+1){color:gray;}
+.piano{background:white;color:silver;line-height:0;} .piano>.cell:nth-child(12n+1){color:gray;}
 .sliders{place-items:center;white-space:pre;} .slider{height:1px;accent-color:green;} input::-webkit-slider-thumb{opacity:0;} label{pointer-events:none;}
-.sequencer .cell:nth-child(-n + 9){position:sticky;top:0;} .row-playing{border-left:3px solid orange !important;}
+.sequencer>.cell:nth-child(-n+9){position:sticky;top:0;} .row-playing{border-left:3px solid orange !important;}
 .cell{place-items:center;aspect-ratio:1/1;border:1px solid silver;}
 .sequencer{height:50%;aspect-ratio:1/1;overflow-y:scroll;} .text,.canvas{height:25%;aspect-ratio:2/1;}
 .text{padding:1rem;white-space:pre;overflow:auto;background:transparent;color:inherit;font:inherit;}
