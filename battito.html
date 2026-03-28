@@ -63,17 +63,17 @@ update();start();
 
 function download(){
 if(!hasnotes())return alert("Nothing to save. Please select song or range");let name="battito_song_"+Date.now()+".";
-try{save(bufferToWav(),"wav");save(new File([jsonToHtml()],""),"html");}catch(e){alert(e.message);}
+try{save(bufferToWav(S.buffer),"wav");save(new File([jsonToHtml(Battito,JSON.stringify(range()))],""),"html");}catch(e){alert(e.message);}
 function save(blob,ext){let a=document.createElement("a"),url=URL.createObjectURL(blob);a.href=url;a.download=name+ext;a.click();URL.revokeObjectURL(url);}
-function jsonToHtml(){return `
+function jsonToHtml(player,json){return `
   <\script>onload=()=>{document.body.textContent='Click to play'; addEventListener('click',song().play,{once:true});
-  function song(){let json=${JSON.stringify(range())};
+  function song(){let json=${json};
   function play(){let S=C.createBufferSource();S.buffer=buffer;S.connect(C.destination);S.loop=true;S.start();}
   let C=new AudioContext(),buffer=Battito(C).createbuffer(json);
-  ${Battito}; return {play}}}</\script>
+  ${player}; return {play}}}</\script>
 `;}
-function bufferToWav(){
-  let os=44,b=S.buffer,d=b.length*4,o=new ArrayBuffer(d+os),v=new DataView(o),u8=new Uint8Array(o);
+function bufferToWav(b){
+  let os=44,d=b.length*4,o=new ArrayBuffer(d+os),v=new DataView(o),u8=new Uint8Array(o);
   u8.set([82,73,70,70,0,0,0,0,87,65,86,69,102,109,116,32,16,0,0,0,1,0,2,0,68,172,0,0,16,177,2,0,4,0,16,0,100,97,116,97,0,0,0,0]);
   v.setUint32(4,d+36,1); v.setUint32(40,d,1); for(let j=0,i,s;j<b.length;j++)for(i=0;i<2;i++,os+=2)v.setInt16(os,(s=b.getChannelData(i)[j])*32767-(s<0),1);
   return new Blob([o],{type:"audio/wav"});
