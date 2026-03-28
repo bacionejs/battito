@@ -49,7 +49,7 @@ function preview(n){try{let t=track();if(!t)return;hear(n,t);see(t);}catch(e){}}
 function hear(n,t){P?.stop();P=source({bpm:SONG.bpm,tracks:[{...t,s:[1],p:[{length:PR,0:n||t?.p?.[0]?.find(Boolean)||147}]}]});P.connect(C.destination);P.start();}
 function see(t){let d=P?.buffer?.getChannelData(0),l=t.ea+t.es+t.er,[c,w,m]=ctx();c.beginPath();for(let x=0;x<w;x++)c.lineTo(x,m+d[(x*l/(w-1)|0)]*m);c.stroke();}
 function grid(e,c,r){e.style.gridTemplateColumns="repeat("+c+",1fr)";e.cells=Array(c*r).fill().map((_,i)=>(cell=element("div",e,"cell"),cell.col=i%c,cell.row=i/c|0,c&1?header(cell):cell));}
-function header(c){let r=--c.row,t=--c.col;if(!~r){c.classList.add("col-header");~t&&(c.textContent=String.fromCharCode(65+t),c.style.color=color(t));}else if(!~t)c.textContent=r+1;return c;}
+function header(c){let r=--c.row,t=--c.col;if(!~r){~t&&(c.textContent=String.fromCharCode(65+t),c.style.color=color(t));}else if(!~t)c.textContent=r+1;return c;}
 function start(){try{S&&(S.onended=null,S.stop(),S.disconnect(),S=null); (S=source(range()))&&(S.onended=start,S.connect(C.destination),S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
 function loop(){if(!next())return;if(currS!=prevS){prevS=currS;piano.update();Q.update();scroll(currS);}if(currP!=prevP){vu();point();prevP=currP;}requestAnimationFrame(loop);}
 
@@ -125,7 +125,7 @@ function style(){element("style").textContent=`
 .piano,.sequencer,.sliders,.cell{display:grid;} .side{position:relative;color:white;}
 .piano{background:white;color:silver;line-height:0;} .piano .cell:nth-child(12n+1){color:gray;}
 .sliders{place-items:center;white-space:pre;} .slider{height:1px;accent-color:green;} input::-webkit-slider-thumb{opacity:0;} label{pointer-events:none;}
-.col-header{position:sticky;top:0;z-index:1;} .row-playing{border-left:3px solid orange !important;}
+.sequencer .cell:nth-child(-n + 9){position:sticky;top:0;} .row-playing{border-left:3px solid orange !important;}
 .cell{place-items:center;aspect-ratio:1/1;border:1px solid silver;}
 .sequencer{height:50%;aspect-ratio:1/1;overflow-y:scroll;} .text,.canvas{height:25%;aspect-ratio:2/1;}
 .text{padding:1rem;white-space:pre;overflow:auto;background:transparent;color:inherit;font:inherit;}
