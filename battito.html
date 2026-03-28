@@ -12,7 +12,7 @@ let canvas     =element("canvas",side,"canvas");
 let fullscreen =element("div",side,"fullscreen","⛶");
 let widgets=[piano,sliders,Q,text],update=()=>widgets.forEach(o=>o.update());
 piano          .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v));}
-Q              .update=function(){for(let i=1,c;(c=this.cells[i]);i++){toggle(c);if(~c.row&&~c.col)c.textContent=SONG.tracks[c.col].s[c.row]||"";}}
+Q              .update=function(){for(let i=1,c;(c=this.cells[i]);i++){c.style.background=rows[c.row]&&cols[c.col]?"gray":"";if(~c.row&&~c.col)c.textContent=SONG.tracks[c.col].s[c.row]||"";}}
 sliders        .update=function(){let t=track();this.cells.forEach(s=>{s.disabled=!t;s.value=t?t[s.key]:0;s.previousSibling.textContent=label(s.key,+s.value,s.max);});}
 text           .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s);}
 piano          .onclick=({target:{row,col}})=>{let n=col+C3,p;preview(n);if(!(p=pattern()))return;p[row]=p[row]==n?0:n;update();};
@@ -31,7 +31,6 @@ function color(i){if(i==null)return "";return "hsl("+(120+(i*(360/8)))+",100%,50
 function makelongpress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
 function format(data){return JSON.stringify(data).replace(/({)/g,'\n$1');}
 function track(){return cols[LT]&&SONG.tracks[LT]||null;}
-function toggle(cell){cell.style.background=rows[cell.row]&&cols[cell.col]?"gray":"";}
 function scroll(n){let t=Q.cells[(n+1)*(SC+1)],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
 function next(){if(!S?.buffer)return null;let s=(C.currentTime-S.startTime)*((SONG.bpm/60)*4)/PR;if(s>=sequences.length)return null;currS=sequences[s|0];currP=(s%1)*PR|0;vustep=s*PR|0;return true;}
 function vu(){let r=(currS+1)*(SC+1)+1;for(let i=0,t=0;i<SC;i++)(cols[i])&&(Q.cells[r+i].style.background=gradient(S.buffer.vu[t++][vustep]));}
