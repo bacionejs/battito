@@ -71,8 +71,8 @@ URL.revokeObjectURL(a.href);a.remove();
 function jsonToHtml(){return `
   <\script>onload=()=>{document.body.textContent='Click to play'; addEventListener('click',song().play,{once:true});
   function song(){let json=${JSON.stringify(range())};
-  let C=new AudioContext(),buffer=Battito(C).createbuffer(json);
   function play(){let S=C.createBufferSource();S.buffer=buffer;S.connect(C.destination);S.loop=true;S.start();}
+  let C=new AudioContext(),buffer=Battito(C).createbuffer(json);
   ${Battito}; return {play}}}</\script>
 `;}
 function bufferToWav(){
