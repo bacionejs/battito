@@ -70,7 +70,7 @@ function jsonToHtml(player,song){return `
   function music(){let json=${song};
   function play(){let S=C.createBufferSource();S.buffer=buffer;S.connect(C.destination);S.loop=true;S.start();}
   let C=new AudioContext(),buffer=Battito(C).createbuffer(json);
-  ${player}; return {play}}}</\script>
+  ${player.toString().replace(/^.*vu.*$/gmi,"")}; return {play}}}</\script>
 `;}
 function bufferToWav(b){
   let os=44,d=b.length*4,o=new ArrayBuffer(d+os),v=new DataView(o),u8=new Uint8Array(o);
