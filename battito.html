@@ -70,7 +70,7 @@ function jsonToHtml(player,song){return `
   function music(){let json=${song};
   function play(){let S=C.createBufferSource();S.buffer=buffer;S.connect(C.destination);S.loop=true;S.start();}
   let C=new AudioContext(),buffer=Battito(C).createbuffer(json);
-  ${player.toString().replace(/^.*vu.*$/gmi,"")}; return {play}}}</\script>
+  ${player.toString().replace(/^.*vu.*\n/gmi,"")}; return {play}}}</\script>
 `;}
 function bufferToWav(b){
   let os=44,d=b.length*4,o=new ArrayBuffer(d+os),v=new DataView(o),u8=new Uint8Array(o);
@@ -130,7 +130,7 @@ function style(){element("style").textContent=`
 function Battito(audiocontext){
 let SAMPLERATE=44100,FBASE=1.5*Math.PI/SAMPLERATE,R_S=1,rnd=()=>((R_S=Math.imul(R_S,0x15a4e35))>>>0)/2**32,NOTE=new Float32Array(256);for(let n=256;n--;)NOTE[n]=2**((n-128)/12)/256;
 let VU=(n,r)=>{let o=[];return{add:c=>{let p=new Float32Array(n);for(let i=0,m,s,j;i<n;i++){m=0;s=i*r;for(j=0;j<r;j++){let a=Math.abs(c[s+j]);if(a>m)m=a}p[i]=m}o.push(p)},out:o}}
-let WS=1024,[SIN,SQUARE,SAW,TRI]=WAVES=Array.from({length:4},()=>new Float32Array(WS)),W=(t,v)=>(WAVES[t]||SIN)[((v*WS)&(WS-1))>>>0];
+let WS=2048,[SIN,SQUARE,SAW,TRI]=WAVES=Array.from({length:4},()=>new Float32Array(WS)),W=(t,v)=>(WAVES[t]||SIN)[((v*WS)&(WS-1))>>>0];
 for(let i=0,p,v;i<WS;i++)SIN[i]=Math.sin((p=i/WS)*2*Math.PI),SQUARE[i]=p<.5?-1:1,SAW[i]=p-.5,TRI[i]=(v=p*4)<2?v-1:3-v;
 function createbuffer(json){
   let SR=Math.max(...json.tracks.map(t=>t.s.length)),PR=Math.max(...json.tracks.flatMap(t=>t.p.map(p=>p.length)));
@@ -152,8 +152,7 @@ function createbuffer(json){
     for(let b=0;b<S;b++){LL[b]+=L[b];RR[b]+=R[b];}
     vu.add(L);
   }
-  let X=0;for(let i=0;i<S;i++){X=Math.max(X,Math.abs(LL[i]),Math.abs(RR[i]));}
-  if(X>0){let scale=1/X;for(let i=0;i<S;i++){LL[i]*=scale;RR[i]*=scale;}}
+  let X=0;for(let i=0;i<S;i++){X=Math.max(X,Math.abs(LL[i]),Math.abs(RR[i]));} if(X>0){let scale=1/X;for(let i=0;i<S;i++){LL[i]*=scale;RR[i]*=scale;}}
   let buffer=audiocontext.createBuffer(2,LL.length,SAMPLERATE);[LL,RR].forEach((data,i)=>buffer.copyToChannel(data,i));
   buffer.vu=vu.out;
   return buffer;
