@@ -66,11 +66,11 @@ if(!hasnotes())return alert("Nothing to save. Please select song or range");let 
 try{save(bufferToWav(S.buffer),"wav");save(new File([jsonToHtml(Battito,JSON.stringify(range()))],""),"html");}catch(e){alert(e.message);}
 function save(blob,ext){let a=document.createElement("a"),url=URL.createObjectURL(blob);a.href=url;a.download=name+ext;a.click();URL.revokeObjectURL(url);}
 function jsonToHtml(player,song){return `
-  <\script>onload=()=>{document.body.textContent='Click to play'; addEventListener('click',music().play,{once:true});
-  function music(){let json=${song};
-  function play(){let S=C.createBufferSource();S.buffer=buffer;S.connect(C.destination);S.loop=true;S.start();}
-  let C=new AudioContext(),buffer=Battito(C).createbuffer(json);
-  ${player.toString().replace(/^.*vu.*\n/gmi,"")}; return {play}}}</\script>
+  <\script>onload=()=>{document.body.textContent='Click to play'; addEventListener('click',music().play,{once:true});function music(){
+    let json=${song}; let C=new AudioContext(),buffer=Battito(C).createbuffer(json);
+    ${player.toString().replace(/^.*vu.*\n/gmi,"")}; return {play};
+    function play(){let S=C.createBufferSource();S.buffer=buffer;S.connect(C.destination);S.loop=true;S.start();}
+  }}</\script>
 `;}
 function bufferToWav(b){
   let os=44,d=b.length*4,o=new ArrayBuffer(d+os),v=new DataView(o),u8=new Uint8Array(o);
