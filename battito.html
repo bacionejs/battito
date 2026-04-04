@@ -55,8 +55,8 @@ function source(s){let n;return s&&(n=Object.assign(C.createBufferSource(),{buff
 function download(){if(!hasnotes())return;let name="battito_song_"+Date.now()+".";try{save(new File([html()],""),name+"html");save(wave(),name+"wav");}catch(e){alert(e.message);}}
 function hasnotes(){let b=range()?.tracks.some(t=>t.s.some(s=>s&&t.p[s-1]?.some(Boolean)));if(!b)alert("Nothing to save. Please select song or range"); return b;}
 function save(blob,name){let a=document.createElement("a"),url=URL.createObjectURL(blob);a.href=url;a.download=name;a.click();URL.revokeObjectURL(url);}
-function html(){return `<\script>onload=()=>{document.body.textContent='Click to play'; addEventListener('click',music(),{once:true}); ${music()}}</\script>`;}
-function music(){return `function music(){let C=new AudioContext(),PLAYER=Battito(C),S=source(${json()});\n${player()} ${source} return ()=>{S.loop=true;S.start()}}`}
+function html(){return `<\script>onload=()=>{\ndocument.body.textContent='Click to play';addEventListener('click',music(),{once:true});\n\n${music()}\n\n}</\script>`;}
+function music(){return `function music(){\nlet C=new AudioContext(),PLAYER=Battito(C),S=source(${json()});\n${player()}\n${source}\nreturn ()=>{S.loop=true;S.start()}\n}`}
 function json(){return JSON.stringify(range()).replace(/"/g,"")}
 function player(){return Battito.toString().replace(/^.*vu.*\n/gmi,"")}
 function wave(){let os=44,d=S.buffer.length*4,o=new ArrayBuffer(d+os),v=new DataView(o);riff(o);v.setUint32(4,d+36,1);v.setUint32(40,d,1);pcm(v,os);return new Blob([o],{type:"audio/wav"});}
