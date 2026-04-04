@@ -48,12 +48,10 @@ function hear(n,t){P?.stop();P=source({bpm:SONG.bpm,tracks:[{...t,s:[1],p:[{leng
 function see(t){let d=P?.buffer?.getChannelData(0),l=t.ea+t.es+t.er,[c,w,m]=ctx();c.beginPath();for(let x=0;x<w;x++)c.lineTo(x,m+d[(x*l/(w-1)|0)]*m);c.stroke();}
 function grid(e,c,r){e.style.gridTemplateColumns="repeat("+c+",1fr)";e.cells=Array(c*r).fill().map((_,i)=>(cell=element("div",e,"cell"),cell.col=i%c,cell.row=i/c|0,c&1?header(cell):cell));}
 function header(c){let r=--c.row,t=--c.col,v;if(!~r){~t&&(v=String.fromCharCode(65+t),c.style.color=color(t));}else!~t&&(v=r+1);c.textContent=v;return c;}
-function loop(){if(!next())return;if(currS!=prevS){prevS=currS;piano.update();Q.update();scroll(currS);}if(currP!=prevP){vu();point();prevP=currP;}requestAnimationFrame(loop);}
 function active(){let c=0,r=0;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(c=max(c,i),r=max(r,j))));return(rows.slice(0,r+1).some(v=>!v)||cols.slice(0,c+1).some(v=>!v))&&{col:c+1,row:r+1};}
 function toggleall(){let x=active();rows.fill(0),cols.fill(0);x&&(rows.fill(1,0,x.row),cols.fill(1,0,x.col));}
 function incrementid(row,col){let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;if(np)t.p[np-1]??=Array(PR).fill(0);}
 function click({target:{row,col}}){let R=!~col,C=!~row;R&C?toggleall():(R|C?((R?rows:cols)[R?row:col]^=1,C&&(LT=col,preview())):incrementid(row,col));update();start();}
-function start(){try{S&&(S.onended=null,S.stop(),S.disconnect(),S=null); (S=source(range()))&&(S.onended=start,S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
 function source(s){let n;return s&&(n=Object.assign(C.createBufferSource(),{buffer:PLAYER.createbuffer(s)}),n.connect(C.destination),n);}
 function music(){return `function music(){let C=new AudioContext(),PLAYER=Battito(C),S=source(${JSON.stringify(range())}); ${Battito} ${source} return ()=>{S.loop=true;S.start()}}`}
 function download(){if(!hasnotes())return;let name="battito_song_"+Date.now()+".";try{save(new File([html()],""),name+"html");save(wave(),name+"wav");}catch(e){alert(e.message);}}
@@ -62,6 +60,8 @@ function html(){return `<\script>onload=()=>{document.body.textContent='Click to
 function riff(o){new Uint8Array(o).set([82,73,70,70,0,0,0,0,87,65,86,69,102,109,116,32,16,0,0,0,1,0,2,0,68,172,0,0,16,177,2,0,4,0,16,0,100,97,116,97,0,0,0,0]);}
 function pcm(v,os){for(let j=0,i,s;j<S.buffer.length;j++)for(i=0;i<2;i++,os+=2)v.setInt16(os,(s=S.buffer.getChannelData(i)[j])*32767-(s<0),1);}
 function wave(){let os=44,d=S.buffer.length*4,o=new ArrayBuffer(d+os),v=new DataView(o);riff(o);v.setUint32(4,d+36,1);v.setUint32(40,d,1);pcm(v,os);return new Blob([o],{type:"audio/wav"});}
+function loop(){if(!next())return;if(currS!=prevS){prevS=currS;piano.update();Q.update();scroll(currS);}if(currP!=prevP){vu();point();prevP=currP;}requestAnimationFrame(loop);}
+function start(){try{S&&(S.onended=null,S.stop(),S.disconnect(),S=null); (S=source(range()))&&(S.onended=start,S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
 
 function tutorial(){
 element("style").textContent=".tut-pointer,.tut-message{position:fixed;z-index:2;} .tut-message{padding:1rem;}"
