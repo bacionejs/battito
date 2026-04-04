@@ -56,8 +56,8 @@ function download(){if(!hasnotes())return;let name="battito_song_"+Date.now()+".
 function hasnotes(){let b=range()?.tracks.some(t=>t.s.some(s=>s&&t.p[s-1]?.some(Boolean)));if(!b)alert("Nothing to save. Please select song or range"); return b;}
 function save(blob,name){let a=document.createElement("a"),url=URL.createObjectURL(blob);a.href=url;a.download=name;a.click();URL.revokeObjectURL(url);}
 function html(){return `<\script>onload=()=>{\ndocument.body.textContent='Click to play';addEventListener('click',music(),{once:true});\n\n${music()}\n\n}</\script>`;}
-function music(){return `function music(){\nlet C=new AudioContext(),PLAYER=Battito(C),S;${funs()}return ()=>{S.loop=true;S.start()}\n}`}
-function funs(){return`S=source(${JSON.stringify(range()).replace(/"/g,"")});\n${Battito.toString().replace(/^.*vu.*\n/gmi,"")}\n${source}\n`}
+function music(){return `function music(){\nlet S,C=new AudioContext(),PLAYER=Battito(C);${funs()}return ()=>{S.loop=true;S.start()}\n}`}
+function funs(){return`\nS=source(${JSON.stringify(range()).replace(/"/g,"")});\n${Battito.toString().replace(/^.*vu.*\n/gmi,"")}\n${source}\n`}
 function wave(){let os=44,d=S.buffer.length*4,o=new ArrayBuffer(d+os),v=new DataView(o);riff(o);v.setUint32(4,d+36,1);v.setUint32(40,d,1);pcm(v,os);return new Blob([o],{type:"audio/wav"});}
 function riff(o){new Uint8Array(o).set([82,73,70,70,0,0,0,0,87,65,86,69,102,109,116,32,16,0,0,0,1,0,2,0,68,172,0,0,16,177,2,0,4,0,16,0,100,97,116,97,0,0,0,0]);}
 function pcm(v,os){for(let j=0,i,s;j<S.buffer.length;j++)for(i=0;i<2;i++,os+=2)v.setInt16(os,(s=S.buffer.getChannelData(i)[j])*32767-(s<0),1);}
