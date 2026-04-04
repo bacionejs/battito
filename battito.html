@@ -51,8 +51,8 @@ function grid(e,c,r){e.style.gridTemplateColumns="repeat("+c+",1fr)";e.cells=Arr
 function header(c){let r=--c.row,t=--c.col,v;if(!~r){~t&&(v=String.fromCharCode(65+t),c.style.color=color(t));}else!~t&&(v=r+1);c.textContent=v;return c;}
 function start(){try{S&&(S.onended=null,S.stop(),S.disconnect(),S=null); (S=source(range()))&&(S.onended=start,S.connect(C.destination),S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
 function loop(){if(!next())return;if(currS!=prevS){prevS=currS;piano.update();Q.update();scroll(currS);}if(currP!=prevP){vu();point();prevP=currP;}requestAnimationFrame(loop);}
-function active(){let c=0,r=0;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(c=max(c,i),r=max(r,j))));return(rows.slice(0,r+1).some(v=>!v)||cols.slice(0,c+1).some(v=>!v))&&{c:c+1,r:r+1};}
-function toggleall(){let x=active();rows.fill(0),cols.fill(0);x&&(rows.fill(1,0,x.r),cols.fill(1,0,x.c));}
+function active(){let c=0,r=0;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(c=max(c,i),r=max(r,j))));return(rows.slice(0,r+1).some(v=>!v)||cols.slice(0,c+1).some(v=>!v))&&{col:c+1,row:r+1};}
+function toggleall(){let x=active();rows.fill(0),cols.fill(0);x&&(rows.fill(1,0,x.row),cols.fill(1,0,x.col));}
 function incrementid(row,col){let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;if(np)t.p[np-1]??=Array(PR).fill(0);}
 function click({target:{row,col}}){let R=!~col,C=!~row;R&C?toggleall():(R|C?((R?rows:cols)[R?row:col]^=1,C&&(LT=col,preview())):incrementid(row,col));update();start();}
 
