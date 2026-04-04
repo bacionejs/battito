@@ -54,7 +54,7 @@ function loop(){if(!next())return;if(currS!=prevS){prevS=currS;piano.update();Q.
 function active(){let c=0,r=0;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(c=max(c,i),r=max(r,j))));return(rows.slice(0,r+1).some(v=>!v)||cols.slice(0,c+1).some(v=>!v))&&{c:c+1,r:r+1};}
 function toggleall(){let x=active();rows.fill(0),cols.fill(0);x&&(rows.fill(1,0,x.r),cols.fill(1,0,x.c));}
 function incrementid(row,col){let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;if(np)t.p[np-1]??=Array(PR).fill(0);}
-function click({target:{row,col}}){let R=!~col,C=!~row;R&C?toggleall():(R|C?((R?rows:cols)[R?row:col]^=1,C&&(LT=col,preview())):incrementid(row,col));update();start()}
+function click({target:{row,col}}){let R=!~col,C=!~row;R&C?toggleall():(R|C?((R?rows:cols)[R?row:col]^=1,C&&(LT=col,preview())):incrementid(row,col));update();start();}
 
 function download(){
 if(!hasnotes())return alert("Nothing to save. Please select song or range");let name="battito_song_"+Date.now()+".";
