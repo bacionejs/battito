@@ -29,7 +29,7 @@ function label(v,m){return String(m==4?["Off","High","Low","Band","Notch"][v]:(m
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
 function color(i){if(i==null)return "";return "hsl("+(120+(i*(360/8)))+",100%,50%)";}
 function makelongpress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
-function format(data){if(typeof data=="object")return JSON.stringify(data).replace(/({)/g,'\n$1').replace(/\x22/g,""); return JSON.parse(data.replace(/[a-z][^:]*/g,'"$&"'));}
+function format(data){return (typeof data=="object")?JSON.stringify(data).replace(/({)/g,'\n$1').replace(/\x22/g,""):JSON.parse(data.replace(/[a-z][^:]*/g,'"$&"'));}
 function track(){return cols[LT]&&SONG.tracks[LT]||null;}
 function scroll(n){let t=Q.cells[(n+1)*(SC+1)],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
 function vu(){let r=(currS+1)*(SC+1)+1;for(let i=0,t=0;i<SC;i++)(cols[i])&&(Q.cells[r+i].style.background=gradient(S.buffer.vu[t++][vustep]));}
