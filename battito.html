@@ -37,9 +37,8 @@ function scroll(n){let t=Q.cells[(n+1)*(SC+1)],c=t.parentElement;c.scrollTo({top
 function vu(){let r=(currS+1)*(SC+1)+1;for(let i=0,t=0;i<SC;i++)(cols[i])&&(Q.cells[r+i].style.background=gradient(S.buffer.vu[t++][vustep]));}
 function gradient(a){return "linear-gradient(black "+(100-a*100)+"%,transparent 0),linear-gradient(in hsl,red,lime)"}
 function phrase(){let P=Array(PC*PR).fill(null),t,d=i=>cols[i]&&(t=SONG.tracks[i]).p[t.s[currS]-1]?.map((n,s)=>n&&(P[s*PC+n-C3]=i));for(let i=0;i<SC;i++)d(i);d(LT);return P;}
-function activecols(){let a=SONG.tracks.filter((_,c)=>cols[c]);return a.length?a:null;}
-function activerows(c){let a=sequences=[...Array(SR).keys()].filter(r=>rows[r]&&c?.some(t=>t.s[r]));return a.length?a:null;}
-function range(){let c,r;return (c=activecols())&&(r=activerows(c))&&{bpm:SONG.bpm,tracks:c.map(t=>({...t,s:r.map(s=>t.s[s]),p:t.p}))};}
+function* activerows(c){for(let r=0;r<SR;r++){if(rows[r]&&c.some(t=>t.s[r]))yield r;}}
+function range(){let r,c=SONG.tracks.filter((_,t)=>cols[t]);return c[0]&&(r=sequences=[...activerows(c)]).length?{bpm:SONG.bpm,tracks:c.map(t=>({...t,s:r.map(s=>t.s[s])}))}:null}
 function point(){[[prevP,"remove"],[currP,"add"]].forEach(([x,m])=>piano.cells[x*PC]?.classList[m]("row-playing"));}
 function pattern(){let t,s;return (t=track())&&~(s=rows.indexOf(1))&&s==rows.lastIndexOf(1)&&t.s[s]&&(t.p[t.s[s]-1]??=Array(PR).fill(0));}
 function ctx(){let c=canvas.getContext("2d"),w=canvas.width,h=canvas.height;c.clearRect(0,0,w,h);c.lineWidth=2;c.strokeStyle="blue";return {c,w,m:h/2};}
