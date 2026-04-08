@@ -60,7 +60,6 @@ function pcm(v,os){for(let j=0,i,s;j<S.buffer.length;j++)for(i=0;i<2;i++,os+=2)v
 function source(s){let n;return s&&(n=Object.assign(C.createBufferSource(),{buffer:Battito(C).createbuffer(s)}),n.connect(C.destination),n);}
 function next(){if(!S?.buffer)return null;let s=(C.currentTime-S.startTime)*((SONG.bpm/60)*4)/PR;if(s>=sequences.length)return null;currS=sequences[s|0];currP=(s%1)*PR|0;vustep=s*PR|0;return true;}
 function loop(){if(!next())return;if(currS!=prevS){prevS=currS;piano.update();Q.update();scroll(currS);}if(currP!=prevP){vu();point();prevP=currP;}requestAnimationFrame(loop);}
-
 function start(){try{S&&(S.onended=null,S.stop(),S.disconnect(),S=null); (S=source(range()))&&(S.onended=start,S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
 
 function tutorial(){
