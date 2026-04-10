@@ -60,7 +60,7 @@ function source(s){let n;return s&&(n=Object.assign(C.createBufferSource(),{buff
 function next(){if(!S)return;let s=(C.currentTime-S.startTime)*((SONG.bpm/60)*4)/PR;if(s>=sequences.length)return;currS=sequences[s|0];currP=(s%1)*PR|0;vustep=s*PR|0;return true;}
 function loop(){if(!next())return;if(currS!=prevS){prevS=currS;piano.update();Q.update();scroll(currS);}if(currP!=prevP){pulse();vu();point();prevP=currP;}requestAnimationFrame(loop);}
 function start(){try{S&&(S.onended=null,S.stop(),S.disconnect(),S=null); (S=source(range()))&&(S.onended=start,S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
-function ctx(candy){let {width:w,height:h}=canvas;X.fillStyle=candy?"#0005":"#000";X.fillRect(0,0,w,h);X.strokeStyle=candy?`hsl(${currP*60%360},100%,50%)`:"blue";return {w,m:h/2};}
+function ctx(candy){let {width:w,height:h}=canvas;X.fillStyle=candy?"#0005":"#000";X.fillRect(0,0,w,h);X.strokeStyle=candy?`hsl(${currP*90},100%,50%)`:"blue";return {w,m:h/2};}
 function pulse(){let{w,m}=ctx(1),l=SPB/SONG.bpm|0,d=S.buffer.getChannelData(0);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[vustep*l+(x*l/w|0)]||0)*m);X.stroke()}
 
 function tutorial(){
