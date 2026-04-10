@@ -1,7 +1,7 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width"><script> onload=()=>{
 
 document.title="🎼 Battito Beats";//https://github.com/bacionejs/battito
-let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,LT=0,cols=Array(SC).fill(0),rows=Array(SR).fill(0);rows[-1]=cols[-1]=1;
+let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SPB=(44100*60)/4,LT=0,cols=Array(SC).fill(0),rows=Array(SR).fill(0);rows[-1]=cols[-1]=1;
 let sequences,vustep,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,B=Battito.toString().replace(/^.*vu.*\n/gmi,"");SONG=instruments().presets;
 let piano      =element("div",document.body,"piano");
 let sliders    =element("div",document.body,"sliders");
@@ -61,7 +61,7 @@ function next(){if(!S)return;let s=(C.currentTime-S.startTime)*((SONG.bpm/60)*4)
 function loop(){if(!next())return;if(currS!=prevS){prevS=currS;piano.update();Q.update();scroll(currS);}if(currP!=prevP){pulse();vu();point();prevP=currP;}requestAnimationFrame(loop);}
 function start(){try{S&&(S.onended=null,S.stop(),S.disconnect(),S=null); (S=source(range()))&&(S.onended=start,S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
 function ctx(candy){let {width:w,height:h}=canvas;X.fillStyle=candy?"#0005":"#000";X.fillRect(0,0,w,h);X.strokeStyle=candy?`hsl(${currP*60%360},100%,50%)`:"blue";return {w,m:h/2};}
-function pulse(){let{w,m}=ctx(1),l=661500/SONG.bpm|0,d=S.buffer.getChannelData(0);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[vustep*l+(x*l/w|0)]||0)*m);X.stroke()}
+function pulse(){let{w,m}=ctx(1),l=SPB/SONG.bpm|0,d=S.buffer.getChannelData(0);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[vustep*l+(x*l/w|0)]||0)*m);X.stroke()}
 
 function tutorial(){
 element("style").textContent=".tut-pointer,.tut-message{position:fixed;z-index:2;} .tut-message{padding:1rem;}"
