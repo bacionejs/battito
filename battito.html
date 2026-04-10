@@ -65,9 +65,8 @@ function pulse(){let{w,m}=ctx(1),l=SPB/SONG.bpm|0,d=S.buffer.getChannelData(0);X
 
 function tutorial(){
 element("style").textContent=".tut-pointer,.tut-message{position:fixed;z-index:2;} .tut-message{padding:1rem;}"
-let ci=0,p,song,clicks;let m=element("button",document.body,"tut-message","Click here to watch a 25 second tutorial");
-m.onclick=init;addEventListener("click",e=>{if(e.target!==m)m?.remove();},{once:true});
-function init(){m.remove();p=element("div",document.body,"tut-pointer","👉");p.style.transition="transform .1s ease";initSong();initClicks();move();}
+let ci=0,p,song,clicks,m=element("button",document.body,"tut-message","Click here to watch a 25 second tutorial"); addEventListener("click",e=>{m.remove();if(e.target==m)init();},{once:true});
+function init(){p=element("div",document.body,"tut-pointer","👉");p.style.transition="transform .1s ease";initSong();initClicks();move();}
 function move(){if(ci>=clicks.length)return p.remove();let e=clicks[ci++]();let r=e.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;click(e);}
 function click(e){setTimeout(()=>{p.style.transform="scale(.5)";e.click();setTimeout(()=>{p.style.transform="";setTimeout(move,100);},100);},100);}
 function make(clickon,c,r){return ()=>clickon.cells.find(x=>x.row==r&&x.col==c);}
