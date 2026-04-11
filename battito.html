@@ -41,7 +41,6 @@ function* activerows(c){for(let r=0;r<SR;r++){if(rows[r]&&c.some(t=>t.s[r]))yiel
 function range(){let r,c;return (c=SONG.tracks.filter((_,t)=>cols[t])).length&&(r=sequences=[...activerows(c)]).length&&{bpm:SONG.bpm,tracks:c.map(t=>({...t,s:r.map(s=>t.s[s])}))}}
 function point(){[[prevP,"remove"],[currP,"add"]].forEach(([x,m])=>piano.cells[x*PC]?.classList[m]("row-playing"));}
 function pattern(){let t,s;return (t=track())&&~(s=rows.indexOf(1))&&s==rows.lastIndexOf(1)&&t.s[s]&&(t.p[t.s[s]-1]??=Array(PR).fill(0));}
-function preview(n){try{let t=track();if(!t)return;hear(t,n);see(t);}catch(e){}}
 function hear(t,n){P?.stop();P=source({bpm:SONG.bpm,tracks:[{...t,s:[1],p:[{length:PR,0:n||t?.p?.[0]?.find(Boolean)||147}]}]});P.start();}
 function active(){let c=0,r=0;return SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(c=c>i?c:i,r=r>j?r:j))),rows.some((v,i)=>i<=r&!v)|cols.some((v,i)=>i<=c&!v)&&{col:c+1,row:r+1}}
 function toggleall(){let x=active();rows.fill(0),cols.fill(0);x&&(rows.fill(1,0,x.row),cols.fill(1,0,x.col));}
@@ -57,12 +56,11 @@ function riff(o){new Uint8Array(o).set([82,73,70,70,0,0,0,0,87,65,86,69,102,109,
 function pcm(v,os){for(let j=0,i,s;j<S.buffer.length;j++)for(i=0;i<2;i++,os+=2)v.setInt16(os,(s=S.buffer.getChannelData(i)[j])*32767-(s<0),1);}
 function source(s){let n;return s&&(n=Object.assign(C.createBufferSource(),{buffer:Battito(C).createbuffer(s)}),n.connect(C.destination),n);}
 function next(){if(!S)return;let s=(C.currentTime-S.startTime)*((SONG.bpm/60)*4)/PR;if(s>=sequences.length)return;currS=sequences[s|0];currP=(s%1)*PR|0;vustep=s*PR|0;return true;}
-function loop(){if(!next())return;if(currS!=prevS){prevS=currS;piano.update();Q.update();scroll(currS);}if(currP!=prevP){pulse();vu();point();prevP=currP;}requestAnimationFrame(loop);}
 function start(){try{S&&(S.onended=null,S.stop(),S.disconnect(),S=null); (S=source(range()))&&(S.onended=start,S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
+function preview(n){try{let t=track();if(!t)return;hear(t,n);wave(0,P,t.ea+t.es+t.er,0);}catch(e){}}
+function loop(){if(!next())return;if(currS!=prevS){prevS=currS;piano.update();Q.update();scroll(currS);}if(currP!=prevP){wave();vu();point();prevP=currP;}requestAnimationFrame(loop);}
 function candy(c){let {width:w,height:h}=canvas;X.fillStyle=c?"#0005":"#000";X.fillRect(0,0,w,h);X.strokeStyle=c?`hsl(${currP*90},100%,50%)`:"blue";return {w,m:h/2};}
-function draw(d,l,o=0,c){let{w,m}=candy(c);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)]||0)*m);X.stroke();}
-function see(t){let d=P?.buffer?.getChannelData(0),l=t.ea+t.es+t.er;draw(d,l,0);}
-function pulse(){let d=S.buffer.getChannelData(0),l=SPB/SONG.bpm|0;draw(d,l,vustep*l,1);}
+function wave(c=1,s=S,l=SPB/SONG.bpm|0,o=vustep*l){let d=s?.buffer?.getChannelData(0),{w,m}=candy(c);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)]||0)*m);X.stroke();}
 
 function tutorial(){
 element("style").textContent=".tut-pointer,.tut-message{position:fixed;z-index:2;} .tut-message{padding:1rem;}"
