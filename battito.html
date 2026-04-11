@@ -57,10 +57,10 @@ function pcm(v,os){for(let j=0,i,s;j<S.buffer.length;j++)for(i=0;i<2;i++,os+=2)v
 function source(s){let n;return s&&(n=Object.assign(C.createBufferSource(),{buffer:Battito(C).createbuffer(s)}),n.connect(C.destination),n);}
 function next(){if(!S)return;let s=(C.currentTime-S.startTime)*((SONG.bpm/60)*4)/PR;if(s>=sequences.length)return;currS=sequences[s|0];currP=(s%1)*PR|0;vustep=s*PR|0;return true;}
 function start(){try{S&&(S.onended=null,S.stop(),S.disconnect(),S=null); (S=source(range()))&&(S.onended=start,S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
-function preview(n){try{let t=track();if(!t)return;hear(t,n);wave(0,P,t.ea+t.es+t.er,0);}catch(e){}}
-function loop(){if(!next())return;if(currS!=prevS){prevS=currS;piano.update();Q.update();scroll(currS);}if(currP!=prevP){wave();vu();point();prevP=currP;}requestAnimationFrame(loop);}
+function preview(n){try{let t=track();if(!t)return;hear(t,n);draw(0,P,t.ea+t.es+t.er,0);}catch(e){}}
+function loop(){if(!next())return;if(currS!=prevS){prevS=currS;piano.update();Q.update();scroll(currS);}if(currP!=prevP){draw();vu();point();prevP=currP;}requestAnimationFrame(loop);}
 function candy(c){let {width:w,height:h}=canvas;X.fillStyle=c?"#0005":"#000";X.fillRect(0,0,w,h);X.strokeStyle=c?`hsl(${currP*90},100%,50%)`:"blue";return {w,m:h/2};}
-function wave(c=1,s=S,l=SPB/SONG.bpm|0,o=vustep*l){let d=s?.buffer?.getChannelData(0),{w,m}=candy(c);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)]||0)*m);X.stroke();}
+function draw(c=1,s=S,l=SPB/SONG.bpm|0,o=vustep*l){let d=s?.buffer?.getChannelData(0),{w,m}=candy(c);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)]||0)*m);X.stroke();}
 
 function tutorial(){
 element("style").textContent=".tut-pointer,.tut-message{position:fixed;z-index:2;} .tut-message{padding:1rem;}"
