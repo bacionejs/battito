@@ -2,7 +2,7 @@
 
 document.title="🎼 Battito Beats";//https://github.com/bacionejs/battito
 let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SPB=(44100*60)/4,LT=0,cols=Array(SC).fill(0),rows=Array(SR).fill(0);rows[-1]=cols[-1]=1;
-let sequences,vustep,currS,prevS,currP,prevP,C=new AudioContext(),S=null,P=null,B=Battito.toString().replace(/^.*vu.*\n/gmi,"");SONG=instruments().presets;
+let sequences,vustep,currS,prevS,currP,prevP,C=new AudioContext(),S,P,B=Battito.toString().replace(/^.*vu.*\n/gmi,"");SONG=instruments().presets;
 let piano      =element("div",document.body,"piano");
 let sliders    =element("div",document.body,"sliders");
 let side       =element("div",document.body,"side");
@@ -57,7 +57,7 @@ function range(){let r,c;return (c=SONG.tracks.filter((_,t)=>cols[t])).length&&(
 function candy(c){let {width:w,height:h}=canvas;X.fillStyle=c?"#0005":"#000";X.fillRect(0,0,w,h);X.strokeStyle=c?`hsl(${currP*90},100%,50%)`:"blue";return {w,m:h/2};}
 function draw(c=1,s=S,l=SPB/SONG.bpm|0,o=vustep*l){let d=s?.buffer?.getChannelData(0),{w,m}=candy(c);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)]||0)*m);X.stroke();}
 function source(s){let n;return s&&(n=Object.assign(C.createBufferSource(),{buffer:Battito(C).createbuffer(s)}),n.connect(C.destination),n);}
-function start(){try{S&&S.stop(); (S=source(range()))&&(S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
+function start(){try{S?.stop?.(); (S=source(range()))&&(S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
 function next(){let s=(C.currentTime-S.startTime)*((SONG.bpm/60)*4)/PR;if(s>=sequences.length){start();return;}currS=sequences[s|0];currP=(s%1)*PR|0;vustep=s*PR|0;return true;}
 function loop(){if(!S||!next())return;if(currS!=prevS){prevS=currS;piano.update();Q.update();scroll(currS);}if(currP!=prevP){draw();vu();point();prevP=currP;}requestAnimationFrame(loop);}
 
