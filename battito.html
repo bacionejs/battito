@@ -60,7 +60,6 @@ function start(){try{S&&(S.onended=null,S.stop(),S.disconnect(),S=null); (S=sour
 function preview(n){try{let t=track();if(!t)return;hear(t,n);draw(0,P,t.ea+t.es+t.er,0);}catch(e){}}
 function loop(){if(!next())return;if(currS!=prevS){prevS=currS;piano.update();Q.update();scroll(currS);}if(currP!=prevP){draw();vu();point();prevP=currP;}requestAnimationFrame(loop);}
 function candy(c){let {width:w,height:h}=canvas;X.fillStyle=c?"#0005":"#000";X.fillRect(0,0,w,h);X.strokeStyle=c?`hsl(${currP*90},100%,50%)`:"blue";return {w,m:h/2};}
-
 function draw(c=1,s=S,l=SPB/SONG.bpm|0,o=vustep*l){let d=s?.buffer?.getChannelData(0),{w,m}=candy(c);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)]||0)*m);X.stroke();}
 
 function tutorial(){
