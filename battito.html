@@ -42,7 +42,7 @@ function toggleall(){let x=active();rows.fill(0),cols.fill(0);x&&(rows.fill(1,0,
 function incrementid(row,col){let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;if(np)t.p[np-1]??=Array(PR).fill(0);}
 function click({target:{row,col}}){let R=!~col,C=!~row;R&C?toggleall():(R|C?((R?rows:cols)[R?row:col]^=1,C&&(LT=col,preview())):incrementid(row,col));update();start();}
 function hasnotes(){return range()?.tracks?.some(t=>t.s.some(s=>s&&t.p[s-1]?.some(Boolean)))||alert("Nothing to save. Please select song or range")}
-function download(){if(!hasnotes())return;let name="battito_song_"+Date.now()+".";try{save(wave(),name+"wav");save(new File([html()],""),name+"html");}catch(e){alert(e.message);}}
+function download(){if(!hasnotes())return;let name="battito_song_"+Date.now();try{save(wave(),name+".wav");save(new File([html()],""),name+".html");}catch(e){alert(e.message);}}
 function save(blob,name){let a=document.createElement("a"),url=URL.createObjectURL(blob);a.href=url;a.download=name;a.click();URL.revokeObjectURL(url);}
 function html(){return `<\script>onload=()=>{\ndocument.body.textContent='Click to play';addEventListener('click',music(),{once:true});\n\n${music()}\n\n}</\script>`;}
 function music(){return `function music(){\nlet S,C=new AudioContext();\nS=source(${format(range())});\n${B}\n${source}\nreturn ()=>{S.loop=true;S.start()}\n}`}
