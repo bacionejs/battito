@@ -1,8 +1,8 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width"><script> onload=()=>{
 
 document.title="🎼 Battito Beats";//https://github.com/bacionejs/battito
-let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SPB=44100*60/4,K=PR*60/4,LT=0,cols=Array(SC).fill(0),rows=Array(SR).fill(0);rows[-1]=cols[-1]=1;
-let sequences,vustep,currS,prevS,currP,prevP,V,C=new AudioContext(),S,P,B=Battito.toString().replace(/^.*vu.*\n/gmi,"");SONG=instruments().presets;
+let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SAMPLERATE=44100*60/4,STEPRATE=PR*60/4,C=new AudioContext(),B=Battito.toString().replace(/^.*vu.*\n/gmi,"");
+let cP,pP,pS,cS,cSs,cSi,cV,S,P,LT=0;SONG=instruments().presets,cols=Array(SC).fill(0),rows=Array(SR).fill(0);rows[-1]=cols[-1]=1;
 let piano      =element("div",document.body,"piano");
 let sliders    =element("div",document.body,"sliders");
 let side       =element("div",document.body,"side");
@@ -33,7 +33,7 @@ function naturals(p){p.cells.forEach(c=>c.textContent=c.row%4==0&&"C,,D,,E,F,,G,
 function label(v,m){return String(m==4?["Off","High","Low","Band","Notch"][v]:(m==3?["Sine","Square","Saw","Tri"][v]:(m==1?(v?"On":"Off"):v))).padStart(10," ");}
 function format(data){return (typeof data=="object")?JSON.stringify(data).replace(/({)/g,"\n$1").replace(/\x22/g,""):JSON.parse(data.replace(/(\w+):/g,'"$1":'));}
 function track(){return cols[LT]&&SONG.tracks[LT]||null;}
-function phrase(){let P=Array(PC*PR).fill(-1),t,d=i=>cols[i]&&(t=SONG.tracks[i]).p[t.s[currS]-1]?.map((n,s)=>n&&(P[s*PC+n-C3]=i));for(let i=0;i<SC;i++)d(i);d(LT);return P;}
+function phrase(){let p=Array(PC*PR).fill(-1),t,d=i=>cols[i]&&(t=SONG.tracks[i]).p[t.s[cS]-1]?.map((n,s)=>n&&(p[s*PC+n-C3]=i));for(let i=0;i<SC;i++)d(i);d(LT);return p;}
 function* activerows(c){for(let r=0;r<SR;r++){if(rows[r]&&c.some(t=>t.s[r]))yield r;}}
 function pattern(){let t,s;return (t=track())&&~(s=rows.indexOf(1))&&s==rows.lastIndexOf(1)&&t.s[s]&&(t.p[t.s[s]-1]??=Array(PR).fill(0));}
 function active(){let c=0,r=0;return SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(c=c>i?c:i,r=r>j?r:j))),rows.some((v,i)=>i<=r&!v)|cols.some((v,i)=>i<=c&!v)&&{col:c+1,row:r+1}}
@@ -49,16 +49,16 @@ function wave(){let os=44,d=S.buffer.length*4,o=new ArrayBuffer(d+os),v=new Data
 function riff(o){new Uint8Array(o).set([82,73,70,70,0,0,0,0,87,65,86,69,102,109,116,32,16,0,0,0,1,0,2,0,68,172,0,0,16,177,2,0,4,0,16,0,100,97,116,97,0,0,0,0]);}
 function pcm(v,os){for(let j=0,i,s;j<S.buffer.length;j++)for(i=0;i<2;i++,os+=2)v.setInt16(os,(s=S.buffer.getChannelData(i)[j])*32767-(s<0),1);}
 function preview(n){try{let t=track();t&&(P?.stop(),P=source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:n||t.p?.[0]?.find(Boolean)||147}]}]}),P.start(),draw(0,P,t.ea+t.es+t.er,0))}catch(e){}}
-function candy(c){let {width:w,height:h}=canvas;X.fillStyle=c?"#0005":"#000";X.fillRect(0,0,w,h);X.strokeStyle=c?`hsl(${currP*90},100%,50%)`:"blue";return {w,m:h/2};}
-function draw(c=1,s=S,l=SPB/SONG.bpm|0,o=vustep*l){let d=s?.buffer?.getChannelData(0),{w,m}=candy(c);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)]||0)*m);X.stroke();}
+function candy(c){let {width:w,height:h}=canvas;X.fillStyle=c?"#0005":"#000";X.fillRect(0,0,w,h);X.strokeStyle=c?`hsl(${cP*90},100%,50%)`:"blue";return {w,m:h/2};}
+function draw(c=1,l=SAMPLERATE/SONG.bpm|0,o=cV*l){let d=S?.buffer?.getChannelData(0),{w,m}=candy(c);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)]||0)*m);X.stroke();}
 function source(s){let n;return s&&(n=Object.assign(C.createBufferSource(),{buffer:Battito(C).createbuffer(s)}),n.connect(C.destination),n);}
-function range(){let r,c;return (c=SONG.tracks.filter((_,t)=>cols[t])).length&&(r=sequences=[...activerows(c)]).length&&{...SONG,tracks:c.map(t=>({...t,s:r.map(s=>t.s[s])}))}}
+function range(){let r,c;return (c=SONG.tracks.filter((_,t)=>cols[t])).length&&(r=cSs=[...activerows(c)]).length&&{...SONG,tracks:c.map(t=>({...t,s:r.map(s=>t.s[s])}))}}
 function start(){try{S?.stop?.(); (S=source(range()))&&(S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
-function scroll(){let t=Q.cells[V],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
-function vu(){for(let i=0,t=0;i<SC;i++)(cols[i])&&(Q.cells[V+i].style.background="linear-gradient(black "+(100-(S.buffer.vu[t++][vustep])*100)+"%,transparent 0),linear-gradient(in hsl,red,lime)");}
-function next(){let s=(C.currentTime-S.startTime)*SONG.bpm/K;if(s>=sequences.length)return start();currS=sequences[s|0];currP=(vustep=s*PR|0)%PR;V=1+(currS+1)*(SC+1);return 1;}
-function loop(){if(!S||!next())return;if(currS!=prevS){prevS=currS;piano.update();Q.update();scroll();}if(currP!=prevP){draw();vu();point();prevP=currP;}requestAnimationFrame(loop);}
-function point(){[[prevP,"remove"],[currP,"add"]].forEach(([x,m])=>piano.cells.slice(x*PC,x*PC+PC).forEach(c=>c?.classList[m]("row-playing")));}
+function scroll(){let t=Q.cells[cSi],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
+function vu(){for(let i=0,t=0;i<SC;i++)(cols[i])&&(Q.cells[cSi+i].style.background="linear-gradient(black "+(100-(S.buffer.vu[t++][cV])*100)+"%,transparent 0),linear-gradient(in hsl,red,lime)");}
+function next(){let s=(C.currentTime-S.startTime)*SONG.bpm/STEPRATE;if(s>=cSs.length)return start();cS=cSs[s|0];cP=(cV=s*PR|0)%PR;cSi=1+(cS+1)*(SC+1);return 1;}
+function loop(){if(!S||!next())return;if(cS!=pS){pS=cS;piano.update();Q.update();scroll();}if(cP!=pP){draw();vu();point();pP=cP;}requestAnimationFrame(loop);}
+function point(){[[pP,"remove"],[cP,"add"]].forEach(([r,m])=>piano.cells.slice(r*PC,r*PC+PC).forEach(c=>c?.classList[m]("row-playing")));}
 
 function tutorial(){
 element("style").textContent=".tut-pointer,.tut-message{position:fixed;z-index:2;} .tut-message{padding:1rem;}"
