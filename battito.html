@@ -28,7 +28,7 @@ function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.cre
 function makelongpress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
 function grid(e,c,r){e.style.gridTemplateColumns="repeat("+c+",1fr)";e.cells=Array(c*r).fill().map((_,i)=>(cell=element("div",e,"cell"),cell.col=i%c,cell.row=i/c|0,c&1?header(cell):cell));}
 function header(c){let r=--c.row,t=--c.col,v;!~r?(~t&&(v=String.fromCharCode(65+t),c.style.color=color(t))):!~t&&(v=r+1);c.textContent=v;return c}
-function color(i){return ~i&&"hsl("+((i*(360/8)))+",100%,50%)"||"";}
+function color(i){return ~i?"hsl("+((i*(360/8)))+",100%,50%)":"";}
 function naturals(p){p.cells.forEach(c=>c.textContent=c.row%4==0&&"C,,D,,E,F,,G,,A,,B".split(",")[c.col%12]||"");}
 function label(v,m){return String(m==4?["Off","High","Low","Band","Notch"][v]:(m==3?["Sine","Square","Saw","Tri"][v]:(m==1?(v?"On":"Off"):v))).padStart(10," ");}
 function format(data){return (typeof data=="object")?JSON.stringify(data).replace(/({)/g,"\n$1").replace(/\x22/g,""):JSON.parse(data.replace(/(\w+):/g,'"$1":'));}
