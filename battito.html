@@ -2,7 +2,7 @@
 
 document.title="🎼 Battito Beats";//https://github.com/bacionejs/battito
 let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SAMPLERATE=44100*60/4,STEPRATE=PR*60/4,C=new AudioContext(),B=Battito.toString().replace(/^.*vu.*\n/gmi,"");
-let cP,pP,pS,cS,cSs,cSi,cV,S,P,LT=0;SONG=instruments().presets,cols=Array(SC).fill(0),rows=Array(SR).fill(0);rows[-1]=cols[-1]=1;
+let cP,pP,pS,cS,cSs,cSi,cVi,S,P,LT=0;SONG=instruments().presets,cols=Array(SC).fill(0),rows=Array(SR).fill(0);rows[-1]=cols[-1]=1;
 let piano      =element("div",document.body,"piano");
 let sliders    =element("div",document.body,"sliders");
 let side       =element("div",document.body,"side");
@@ -50,13 +50,13 @@ function riff(o){new Uint8Array(o).set([82,73,70,70,0,0,0,0,87,65,86,69,102,109,
 function pcm(v,os){for(let j=0,i,s;j<S.buffer.length;j++)for(i=0;i<2;i++,os+=2)v.setInt16(os,(s=S.buffer.getChannelData(i)[j])*32767-(s<0),1);}
 function preview(n){try{let t=track();t&&(P?.stop(),P=source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:n||t.p?.[0]?.find(Boolean)||147}]}]}),P.start(),draw(0,P,t.ea+t.es+t.er,0))}catch(e){}}
 function candy(c){let {width:w,height:h}=canvas;X.fillStyle=c?"#0005":"#000";X.fillRect(0,0,w,h);X.strokeStyle=c?`hsl(${cP*90},100%,50%)`:"blue";return {w,m:h/2};}
-function draw(c=1,l=SAMPLERATE/SONG.bpm|0,o=cV*l){let d=S?.buffer?.getChannelData(0),{w,m}=candy(c);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)]||0)*m);X.stroke();}
+function draw(c=1,l=SAMPLERATE/SONG.bpm|0,o=cVi*l){let d=S?.buffer?.getChannelData(0),{w,m}=candy(c);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)]||0)*m);X.stroke();}
 function source(s){let n;return s&&(n=Object.assign(C.createBufferSource(),{buffer:Battito(C).createbuffer(s)}),n.connect(C.destination),n);}
 function range(){let r,c;return (c=SONG.tracks.filter((_,t)=>cols[t])).length&&(r=cSs=[...activerows(c)]).length&&{...SONG,tracks:c.map(t=>({...t,s:r.map(s=>t.s[s])}))}}
 function start(){try{S?.stop?.(); (S=source(range()))&&(S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
 function scroll(){let t=Q.cells[cSi],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
-function vu(){for(let i=0,t=0;i<SC;i++)(cols[i])&&(Q.cells[cSi+i].style.background="linear-gradient(black "+(100-(S.buffer.vu[t++][cV])*100)+"%,transparent 0),linear-gradient(in hsl,red,lime)");}
-function next(){let s=(C.currentTime-S.startTime)*SONG.bpm/STEPRATE;if(s>=cSs.length)return start();cS=cSs[s|0];cP=(cV=s*PR|0)%PR;cSi=1+(cS+1)*(SC+1);return 1;}
+function vu(){for(let i=0,t=0;i<SC;i++)(cols[i])&&(Q.cells[cSi+i].style.background="linear-gradient(black "+(100-(S.buffer.vu[t++][cVi])*100)+"%,transparent 0),linear-gradient(in hsl,red,lime)");}
+function next(){let s=(C.currentTime-S.startTime)*SONG.bpm/STEPRATE;if(s>=cSs.length)return start();cS=cSs[s|0];cP=(cVi=s*PR|0)%PR;cSi=1+(cS+1)*(SC+1);return 1;}
 function loop(){if(!S||!next())return;if(cS!=pS){pS=cS;piano.update();Q.update();scroll();}if(cP!=pP){draw();vu();point();pP=cP;}requestAnimationFrame(loop);}
 function point(){[[pP,"remove"],[cP,"add"]].forEach(([r,m])=>piano.cells.slice(r*PC,r*PC+PC).forEach(c=>c?.classList[m]("row-playing")));}
 
