@@ -31,7 +31,7 @@ function header(c){let r=--c.row,t=--c.col,v;!~r?(~t&&(v=String.fromCharCode(65+
 function color(i){return ~i?"hsl("+((i*(360/SC)))+",100%,50%)":"";}
 function naturals(p){p.cells.forEach(c=>c.textContent=c.row%4?"":"C,,D,,E,F,,G,,A,,B".split(",")[c.col%12]);}
 function label(v,m){return String(m==4?["Off","High","Low","Band","Notch"][v]:(m==3?["Sine","Square","Saw","Tri"][v]:(m==1?(v?"On":"Off"):v))).padStart(10," ");}
-function format(data){return (typeof data=="object")?JSON.stringify(data).replace(/({)/g,"\n$1").replace(/\x22/g,""):JSON.parse(data.replace(/(\w+):/g,'"$1":'));}
+function format(data){return (typeof data=="object")?JSON.stringify(data).replace(/{/g,"\n$&").replace(/\x22/g,""):JSON.parse(data.replace(/(\w+):/g,'"$1":'));}
 function track(){return cols[LT]&&SONG.tracks[LT];}
 function phrase(){let p=Array(PC*PR).fill(-1),t,d=i=>cols[i]&&(t=SONG.tracks[i]).p[t.s[cS]-1]?.map((n,s)=>n&&(p[s*PC+n-C3]=i));for(let i=0;i<SC;i++)d(i);d(LT);return p;}
 function* activerows(c){for(let r=0;r<SR;r++){if(rows[r]&&c.some(t=>t.s[r]))yield r;}}
