@@ -32,13 +32,13 @@ function color(i){return ~i?"hsl("+((i*(360/SC)))+",100%,50%)":"";}
 function naturals(p){p.cells.forEach(c=>c.textContent=c.row%4?"":"C,,D,,E,F,,G,,A,,B".split(",")[c.col%12]);}
 function label(v,m){return String(m==4?["Off","High","Low","Band","Notch"][v]:(m==3?["Sine","Square","Saw","Tri"][v]:(m==1?(v?"On":"Off"):v))).padStart(10," ");}
 function format(data){return (typeof data=="object")?JSON.stringify(data).replace(/({)/g,"\n$1").replace(/\x22/g,""):JSON.parse(data.replace(/(\w+):/g,'"$1":'));}
-function track(){return cols[LT]?SONG.tracks[LT]:null;}
+function track(){return cols[LT]&&SONG.tracks[LT];}
 function phrase(){let p=Array(PC*PR).fill(-1),t,d=i=>cols[i]&&(t=SONG.tracks[i]).p[t.s[cS]-1]?.map((n,s)=>n&&(p[s*PC+n-C3]=i));for(let i=0;i<SC;i++)d(i);d(LT);return p;}
 function* activerows(c){for(let r=0;r<SR;r++){if(rows[r]&&c.some(t=>t.s[r]))yield r;}}
 function pattern(){let t,s;return (t=track())&&~(s=rows.indexOf(1))&&s==rows.lastIndexOf(1)&&t.s[s]&&(t.p[t.s[s]-1]??=Array(PR).fill(0));}
-function active(){let c=0,r=0;return SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(c=c>i?c:i,r=r>j?r:j))),rows.some((v,i)=>i<=r&!v)|cols.some((v,i)=>i<=c&!v)&&{col:c+1,row:r+1}}
+function active(){let c=0,r=0;return SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(i>c&&(c=i),j>r&&(r=j)))),rows.some((v,i)=>i<=r&!v)|cols.some((v,i)=>i<=c&!v)&&{col:c+1,row:r+1}}
 function toggleall(){let x=active();rows.fill(0),cols.fill(0);x&&(rows.fill(1,0,x.row),cols.fill(1,0,x.col));}
-function incrementid(row,col){let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;if(np)t.p[np-1]??=Array(PR).fill(0);}
+function incrementid(row,col){let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;np&&(t.p[np-1]??=Array(PR).fill(0));}
 function click({target:{row,col}}){let R=!~col,C=!~row;R&C?toggleall():(R|C?((R?rows:cols)[R?row:col]^=1,C&&(LT=col,preview())):incrementid(row,col));update();start();}
 function hasnotes(){return range()?.tracks?.some(t=>t.s.some(s=>s&&t.p[s-1]?.some(Boolean)))||alert("Nothing to save. Please select song or range")}
 function download(){if(!hasnotes())return;let name="battito_song_"+Date.now();try{save(wave(),name+".wav");save(new File([html()],""),name+".html");}catch(e){alert(e.message);}}
