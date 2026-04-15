@@ -26,13 +26,13 @@ grid(piano,PC,PR); naturals(piano); grid(Q,SC+1,SR+1); instruments().init(slider
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="⚠ Rendering error<br>Requires a modern chromium-based browser";},200);}
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
 function makelongpress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
-function grid(e,c,r){e.style.gridTemplateColumns="repeat("+c+",1fr)";e.cells=Array(c*r).fill().map((_,i)=>(cell=element("div",e,"cell"),cell.col=i%c,cell.row=i/c|0,c&1?header(cell):cell));}
+function grid(e,c,r){e.style.gridTemplateColumns="repeat("+c+",1fr)";e.cells=Array.from({length:c*r},(_,i)=>(cell=element("div",e,"cell"),cell.col=i%c,cell.row=i/c|0,c&1?header(cell):cell));}
 function header(c){let r=--c.row,t=--c.col,v;!~r?(~t&&(v=String.fromCharCode(65+t),c.style.color=color(t))):!~t&&(v=r+1);c.textContent=v;return c}
-function color(i){return ~i?"hsl("+((i*(360/8)))+",100%,50%)":"";}
-function naturals(p){p.cells.forEach(c=>c.textContent=c.row%4==0&&"C,,D,,E,F,,G,,A,,B".split(",")[c.col%12]||"");}
+function color(i){return ~i?"hsl("+((i*(360/SC)))+",100%,50%)":"";}
+function naturals(p){p.cells.forEach(c=>c.textContent=c.row%4?"":"C,,D,,E,F,,G,,A,,B".split(",")[c.col%12]);}
 function label(v,m){return String(m==4?["Off","High","Low","Band","Notch"][v]:(m==3?["Sine","Square","Saw","Tri"][v]:(m==1?(v?"On":"Off"):v))).padStart(10," ");}
 function format(data){return (typeof data=="object")?JSON.stringify(data).replace(/({)/g,"\n$1").replace(/\x22/g,""):JSON.parse(data.replace(/(\w+):/g,'"$1":'));}
-function track(){return cols[LT]&&SONG.tracks[LT]||null;}
+function track(){return cols[LT]?SONG.tracks[LT]:null;}
 function phrase(){let p=Array(PC*PR).fill(-1),t,d=i=>cols[i]&&(t=SONG.tracks[i]).p[t.s[cS]-1]?.map((n,s)=>n&&(p[s*PC+n-C3]=i));for(let i=0;i<SC;i++)d(i);d(LT);return p;}
 function* activerows(c){for(let r=0;r<SR;r++){if(rows[r]&&c.some(t=>t.s[r]))yield r;}}
 function pattern(){let t,s;return (t=track())&&~(s=rows.indexOf(1))&&s==rows.lastIndexOf(1)&&t.s[s]&&(t.p[t.s[s]-1]??=Array(PR).fill(0));}
@@ -50,7 +50,7 @@ function riff(o){new Uint8Array(o).set([82,73,70,70,0,0,0,0,87,65,86,69,102,109,
 function pcm(v,os){for(let j=0,i,s;j<S.buffer.length;j++)for(i=0;i<2;i++,os+=2)v.setInt16(os,(s=S.buffer.getChannelData(i)[j])*32767-(s<0),1);}
 function preview(n){try{let t=track();t&&(P?.stop(),P=source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:n||t.p?.[0]?.find(Boolean)||147}]}]}),P.start(),draw(0,P,t.ea+t.es+t.er,0))}catch(e){}}
 function candy(c){let {width:w,height:h}=canvas;X.fillStyle=c?"#0005":"#000";X.fillRect(0,0,w,h);X.strokeStyle=c?`hsl(${cP*90},100%,50%)`:"blue";return {w,m:h/2};}
-function draw(c=1,s=S,l=SAMPLERATE/SONG.bpm|0,o=cVi*l){let d=s?.buffer?.getChannelData(0),{w,m}=candy(c);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)]||0)*m);X.stroke();}
+function draw(c=1,s=S,l=SAMPLERATE/SONG.bpm|0,o=cVi*l){let d=s?.buffer?.getChannelData(0),{w,m}=candy(c);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)])*m);X.stroke();}
 function source(s){let n;return s&&(n=Object.assign(C.createBufferSource(),{buffer:Battito(C).createbuffer(s)}),n.connect(C.destination),n);}
 function range(){let r,c;return (c=SONG.tracks.filter((_,t)=>cols[t])).length&&(r=cSs=[...activerows(c)]).length&&{...SONG,tracks:c.map(t=>({...t,s:r.map(s=>t.s[s])}))}}
 function start(){try{S?.stop?.(); (S=source(range()))&&(S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
