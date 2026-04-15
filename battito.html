@@ -81,8 +81,7 @@ function initSong(){song=[
 }
 
 function instruments(){
-let schema=[{v1:255,w1:3,o1:16,s1:11,d1:255},{v2:255,w2:3,o2:16,s2:11,d2:255},{ea:2e5,es:2e5,er:2e5,e1:1,e2:1},{ct:4,ca:11025,cr:255},{mw:3,ms:16,ma:255,m1:1,mc:1},{ds:16,da:248,ps:16,pa:255},{nv:255,vm:255}
-].flatMap((group,color)=>Object.entries(group).map(([key,max])=>[key,max,color]));
+let schema={v1:255,w1:3,o1:16,s1:11,d1:255,v2:255,w2:3,o2:16,s2:11,d2:255,ea:2e5,es:2e5,er:2e5,e1:1,e2:1,ct:4,ca:11025,cr:255,mw:3,ms:16,ma:255,m1:1,mc:1,ds:16,da:248,ps:16,pa:255,nv:255,vm:255};
 let presets={bpm:130,tracks:[
   [255,0,9,0,0,     255,0,7,0,0,     100,0,5970,1,1,         2,500,254,     0,0,0,0,0,      1,31,4,21,      0,171],
   [255,2,6,11,0,    255,2,6,11,4,    88,2000,7505,0,0,       2,3144,51,     0,7,179,0,1,    6,60,4,64,      0,255],
@@ -92,8 +91,8 @@ let presets={bpm:130,tracks:[
   [255,2,7,0,0,     154,2,7,0,9,     2418,1075,10614,0,0,    3,2962,255,    0,5,124,0,1,    6,117,3,73,     0,240],
   [192,3,7,0,0,     201,3,7,0,7,     789,1234,13636,0,0,     2,5839,254,    0,6,195,0,1,    6,121,6,147,    0,191],
   [192,2,7,0,0,     192,2,7,0,0,     0,0,20000,0,0,          0,0,0,         0,0,0,0,0,      0,0,0,0,        0,192]
-].map(t=>{let o={};schema.forEach(([key],i)=>o[key]=t[i]);o.s=[];o.p=[];return o;})};
-function init(s){s.cells=schema.map(([key,max,i])=>(element("label",s,"",key).style.color=color(i+20),Object.assign(element("input",s,"slider"),{type:"range",key,max,disabled:true})));}
+].map(t=>{let o={};Object.entries(schema).forEach(([k],i)=>o[k]=t[i]);o.s=[];o.p=[];return o;})};
+function init(s){s.cells=Object.entries(schema).map(([k,max])=>(element("label",s,"",k),Object.assign(element("input",s,"slider"),{type:"range",key:k,max,disabled:true})));}
 let o={init,presets};instruments=()=>o;return o;
 }
 
@@ -101,7 +100,7 @@ function style(){element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;} body{background:black;display:flex;font:bold 8px monospace;}
 .piano,.sequencer,.sliders,.cell{display:grid;} .side{position:relative;color:white;} .cell{place-items:center;aspect-ratio:1/1;border:1px solid silver;}
 .piano{background:white;color:silver;line-height:0;} .piano>.cell:nth-child(12n+1){color:gray;} .row-playing{background:yellow}
-.sliders{place-items:center;white-space:pre;} .slider{height:1px;accent-color:blue;} input::-webkit-slider-thumb{opacity:0;} label{pointer-events:none;}
+.sliders{place-items:center;white-space:pre;color:white;} .slider{height:1px;accent-color:blue;} input::-webkit-slider-thumb{opacity:0;} label{pointer-events:none;}
 .sequencer>.cell:nth-child(-n+9){position:sticky;top:0;} .sequencer{height:50%;aspect-ratio:1/1;overflow-y:scroll;}
 .text{padding:1rem;white-space:pre;overflow:auto;background:transparent;color:inherit;font:inherit;} .text,.canvas{height:25%;aspect-ratio:2/1;}
 .fullscreen{position:absolute;bottom:0;right:0;z-index:1;font-size:1rem;color:orange;} :fullscreen .fullscreen{display:none;}
