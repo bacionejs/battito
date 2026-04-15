@@ -92,7 +92,7 @@ let presets={bpm:120,tracks:[
   [192,3,7,0,0,     201,3,7,0,7,     789,1234,13636,0,0,     2,5839,254,    0,6,195,0,1,    6,121,6,147,    0,191],
   [192,2,7,0,0,     192,2,7,0,0,     0,0,20000,0,0,          0,0,0,         0,0,0,0,0,      0,0,0,0,        0,192]
 ].map(t=>({...Object.keys(schema).reduce((o,k,i)=>(o[k]=t[i],o),{}),s:[],p:[]}))};
-function init(s){s.cells=Object.entries(schema).map(([k,max])=>(element("label",s,"",k),Object.assign(element("input",s,"slider"),{type:"range",key:k,max,disabled:true})));}
+function init(s){s.cells=Object.entries(schema).map(([key,max])=>(element("label",s,"",key),Object.assign(element("input",s,"slider"),{type:"range",key,max,disabled:true})));}
 let o={init,presets};instruments=()=>o;return o;
 }
 
