@@ -8,9 +8,9 @@ let sliders    =element("div",document.body,"sliders");
 let side       =element("div",document.body,"side");
 let Q          =element("div",side,"sequencer");
 let text       =element("textarea",side,"text");
-let canvas     =element("canvas",side,"canvas");
+let X          =element("canvas",side,"canvas").getContext("2d");
 let fullscreen =element("div",side,"fullscreen","⛶");
-let widgets=[piano,sliders,Q,text], update=()=>widgets.forEach(o=>o.update()), X=canvas.getContext("2d");X.lineWidth=2;
+let widgets=[piano,sliders,Q,text], update=()=>widgets.forEach(o=>o.update());
 piano          .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v));}
 Q              .update=function(){for(let i=1,c;(c=this.cells[i]);i++){c.style.background=rows[c.row]&&cols[c.col]?"gray":"";if(~c.row&&~c.col)c.textContent=SONG.tracks[c.col].s[c.row]||"";}}
 sliders        .update=function(){let t=track();this.cells.forEach(s=>{s.disabled=!t;s.value=t?t[s.key]:0;s.previousSibling.textContent=s.key+label(+s.value,s.max);});}
@@ -20,7 +20,7 @@ Q              .onclick=click;
 sliders        .oninput=({target:{key,value}})=>(track()[key]=+value,update(),preview());
 text           .oninput=()=>{try{let song=format(text.value);SONG=song;update();preview();}catch(e){}};
 fullscreen     .onclick=()=>document.documentElement.requestFullscreen();
-makelongpress(canvas,download); oncontextmenu=e=>e.target.tagName=="TEXTAREA";
+makelongpress(X.canvas,download); oncontextmenu=e=>e.target.tagName=="TEXTAREA";
 grid(piano,PC,PR); naturals(piano); grid(Q,SC+1,SR+1); instruments().init(sliders); style(); tutorial(); compatibility();
 
 function click({target:{row,col}}){let R=!~col,C=!~row;R&C?toggleall():(R|C?((R?rows:cols)[R?row:col]^=1,C&&(LT=col,preview())):incrementid(row,col));update();start();}
@@ -35,7 +35,7 @@ function loop(){if(!S||!next())return;if(cS!=pS){pS=cS;piano.update();Q.update()
 function next(){let s=(C.currentTime-S.startTime)*SONG.bpm/STEPRATE;if(s>=cSs.length)return start();cS=cSs[s|0];cP=(cVi=s*PR|0)%PR;cSi=1+(cS+1)*(SC+1);return 1;}
 function scroll(){let t=Q.cells[cSi],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
 function draw(c=1,s=S,l=SAMPLERATE/SONG.bpm|0,o=cVi*l){let d=s?.buffer?.getChannelData(0),{w,m}=candy(c);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)])*m);X.stroke();}
-function candy(c){let {width:w,height:h}=canvas;X.fillStyle=c?"#0005":"#000";X.fillRect(0,0,w,h);X.strokeStyle=c?`hsl(${cP*90},100%,50%)`:"blue";return {w,m:h/2};}
+function candy(c){let {width:w,height:h}=X.canvas;X.lineWidth=2;X.fillStyle=c?"#0005":"#000";X.fillRect(0,0,w,h);X.strokeStyle=c?`hsl(${cP*90},100%,50%)`:"blue";return {w,m:h/2};}
 function vu(){for(let i=0,t=0;i<SC;i++)(cols[i])&&(Q.cells[cSi+i].style.background="linear-gradient(black "+(100-(S.buffer.vu[t++][cVi])*100)+"%,transparent 0),linear-gradient(in hsl,red,lime)");}
 function point(){[[pP,"remove"],[cP,"add"]].forEach(([r,m])=>piano.cells.slice(r*PC,r*PC+PC).forEach(c=>c?.classList[m]("row-playing")));}
 function download(){if(!hasnotes())return;let name="battito_song_"+Date.now();try{save(wave(),name+".wav");save(new File([html()],""),name+".html");}catch(e){alert(e.message);}}
