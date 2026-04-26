@@ -23,16 +23,16 @@ fullscreen     .onclick=()=>document.documentElement.requestFullscreen();
 makelongpress(X.canvas,download); oncontextmenu=e=>e.target.tagName=="TEXTAREA";
 grid(piano,PC,PR); naturals(piano); grid(Q,SC+1,SR+1); instruments().init(sliders); style(); tutorial(); compatibility();
 
+function start(){try{S?.stop?.(); (S=source(range()))&&(S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
+function loop(){if(!S||!next())return;if(cS!=pS){pS=cS;piano.update();Q.update();scroll();}if(cP!=pP){draw();vu();point();pP=cP;}requestAnimationFrame(loop);}
+function next(){let s=(C.currentTime-S.startTime)*SONG.bpm/STEPRATE;if(s>=cSs.length)return start();cS=cSs[s|0];cP=(cVi=s*PR|0)%PR;cSi=1+(cS+1)*(SC+1);return 1;}
 function click({target:{row,col}}){let R=!~col,C=!~row;R&C?toggleall():(R|C?((R?rows:cols)[R?row:col]^=1,C&&(LT=col,preview())):incrementid(row,col));update();start();}
 function toggleall(){let x=active();rows.fill(0),cols.fill(0);x&&(rows.fill(1,0,x.row),cols.fill(1,0,x.col));}
 function active(){let c=0,r=0;return SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(i>c&&(c=i),j>r&&(r=j)))),rows.some((v,i)=>i<=r&!v)|cols.some((v,i)=>i<=c&!v)&&{col:c+1,row:r+1}}
 function incrementid(row,col){let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;np&&(t.p[np-1]??=Array(PR).fill(0));}
-function start(){try{S?.stop?.(); (S=source(range()))&&(S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
 function source(s){let n;return s&&(n=Object.assign(C.createBufferSource(),{buffer:Battito(C).createbuffer(s)}),n.connect(C.destination),n);}
 function range(){let r,c;return (c=SONG.tracks.filter((_,t)=>cols[t])).length&&(r=cSs=[...activerows(c)]).length&&{...SONG,tracks:c.map(t=>({...t,s:r.map(s=>t.s[s])}))}}
 function* activerows(c){for(let r=0;r<SR;r++){if(rows[r]&&c.some(t=>t.s[r]))yield r;}}
-function loop(){if(!S||!next())return;if(cS!=pS){pS=cS;piano.update();Q.update();scroll();}if(cP!=pP){draw();vu();point();pP=cP;}requestAnimationFrame(loop);}
-function next(){let s=(C.currentTime-S.startTime)*SONG.bpm/STEPRATE;if(s>=cSs.length)return start();cS=cSs[s|0];cP=(cVi=s*PR|0)%PR;cSi=1+(cS+1)*(SC+1);return 1;}
 function scroll(){let t=Q.cells[cSi],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
 function draw(c=1,s=S,l=SAMPLERATE/SONG.bpm|0,o=cVi*l){let d=s?.buffer?.getChannelData(0),{w,m}=candy(c);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)])*m);X.stroke();}
 function candy(c){let {width:w,height:h}=X.canvas;X.lineWidth=2;X.fillStyle=c?"#0005":"#000";X.fillRect(0,0,w,h);X.strokeStyle=c?`hsl(${cP*90},100%,50%)`:"blue";return {w,m:h/2};}
