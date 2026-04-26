@@ -40,7 +40,7 @@ function vu(){for(let i=0,t=0;i<SC;i++)(cols[i])&&(Q.cells[cSi+i].style.backgrou
 function point(){[[pP,"remove"],[cP,"add"]].forEach(([r,m])=>piano.cells.slice(r*PC,r*PC+PC).forEach(c=>c?.classList[m]("row-playing")));}
 function download(){if(!hasnotes())return;let name="battito_song_"+Date.now();try{save(wave(),name+".wav");save(new File([html()],""),name+".html");}catch(e){alert(e.message);}}
 function hasnotes(){return range()?.tracks?.some(t=>t.s.some(s=>s&&t.p[s-1]?.some(Boolean)))||alert("Nothing to save. Please select song or range")}
-function save(blob,name){let a=document.createElement("a"),url=URL.createObjectURL(blob);a.href=url;a.download=name;a.click();URL.revokeObjectURL(url);}
+function save(blob,name){Object.assign(document.querySelector("a")||element("a"),{href:URL.createObjectURL(blob),download:name}).click();}
 function html(){return `<\script>onload=()=>{\ndocument.body.textContent='Click to play';addEventListener('click',music(),{once:true});\n\n${music()}\n\n}</\script>`;}
 function music(){return `function music(){\nlet S,C=new AudioContext();\nS=source(${format(range())});\n${B}\n${source}\nreturn ()=>{S.loop=true;S.start()}\n}`}
 function wave(){let os=44,d=S.buffer.length*4,o=new ArrayBuffer(d+os),v=new DataView(o);riff(o);v.setUint32(4,d+36,1);v.setUint32(40,d,1);pcm(v,os);return new Blob([o],{type:"audio/wav"});}
