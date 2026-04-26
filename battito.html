@@ -38,8 +38,8 @@ function draw(c=1,s=S,l=SAMPLERATE/SONG.bpm|0,o=cVi*l){let d=s?.buffer?.getChann
 function candy(c){let {width:w,height:h}=X.canvas;X.lineWidth=2;X.fillStyle=c?"#0005":"#000";X.fillRect(0,0,w,h);X.strokeStyle=c?`hsl(${cP*90},100%,50%)`:"blue";return {w,m:h/2};}
 function vu(){for(let i=0,t=0;i<SC;i++)(cols[i])&&(Q.cells[cSi+i].style.background="linear-gradient(black "+(100-(S.buffer.vu[t++][cVi])*100)+"%,transparent 0),linear-gradient(in hsl,red,lime)");}
 function point(){[[pP,"remove"],[cP,"add"]].forEach(([r,m])=>piano.cells.slice(r*PC,r*PC+PC).forEach(c=>c?.classList[m]("row-playing")));}
-function download(){if(!hasnotes())return;let name="battito_song_"+Date.now();try{save(wave(),name+".wav");save(new File([html()],""),name+".html");}catch(e){alert(e.message);}}
 function hasnotes(){return range()?.tracks?.some(t=>t.s.some(s=>s&&t.p[s-1]?.some(Boolean)))||alert("Nothing to save. Please select song or range")}
+function download(){if(!hasnotes())return;let name="battito_song_"+Date.now();try{save(wave(),name+".wav");save(new File([html()],""),name+".html");}catch(e){alert(e.message);}}
 function save(blob,name){Object.assign(document.querySelector("a")||element("a"),{href:URL.createObjectURL(blob),download:name}).click();}
 function html(){return `<\script>onload=()=>{\ndocument.body.textContent='Click to play';addEventListener('click',music(),{once:true});\n\n${music()}\n\n}</\script>`;}
 function music(){return `function music(){\nlet S,C=new AudioContext();\nS=source(${format(range())});\n${B}\n${source}\nreturn ()=>{S.loop=true;S.start()}\n}`}
