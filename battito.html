@@ -3,30 +3,29 @@
 document.title="🎼 Battito Beats";//https://github.com/bacionejs/battito
 let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SAMPLERATE=44100*60/4,STEPRATE=PR*60/4,C=new AudioContext(),B=Battito.toString().replace(/^.*vu.*\n/gmi,"");
 let cP,pP,pS,cS,cSs,cSi,cVi,S,P,LT=0,SONG=instruments().presets,cols=Array(SC).fill(0),rows=Array(SR).fill(0);rows[-1]=cols[-1]=1;
-let piano      =element("div",document.body,"piano");
-let sliders    =element("div",document.body,"sliders");
-let side       =element("div",document.body,"side");
-let Q          =element("div",side,"sequencer");
-let text       =element("textarea",side,"text");
-let X          =element("canvas",side,"canvas").getContext("2d");
-let fullscreen =element("div",side,"fullscreen","⛶");
-let widgets=[piano,sliders,Q,text], update=()=>widgets.forEach(o=>o.update());
-piano          .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v));}
-Q              .update=function(){for(let i=1,c;(c=this.cells[i]);i++){c.style.background=rows[c.row]&&cols[c.col]?"gray":"";if(~c.row&&~c.col)c.textContent=SONG.tracks[c.col].s[c.row]||"";}}
-sliders        .update=function(){let t=track();this.cells.forEach(s=>{s.disabled=!t;s.value=t?t[s.key]:0;s.previousSibling.textContent=s.key+label(+s.value,s.max);});}
-text           .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s);}
-piano          .onclick=({target:{row,col}})=>{let n=col+C3,p;preview(n);if(!(p=pattern()))return;p[row]=p[row]==n?0:n;update();};
-Q              .onclick=click;
-sliders        .oninput=({target:{key,value}})=>(track()[key]=+value,update(),preview());
-text           .oninput=()=>{try{let song=format(text.value);SONG=song;update();preview();}catch(e){}};
-fullscreen     .onclick=()=>document.documentElement.requestFullscreen();
+let piano      =element("div",document.body,"piano")
+let sliders    =element("div",document.body,"sliders")
+let side       =element("div",document.body,"side")
+let Q          =element("div",side,"sequencer")
+let text       =element("textarea",side,"text")
+let X          =element("canvas",side,"canvas").getContext("2d")
+let fullscreen =element("div",side,"fullscreen","⛶")
+let widgets=[piano,sliders,Q,text], update=()=>widgets.forEach(o=>o.update())
+piano          .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v))}
+Q              .update=function(){for(let i=1,c;(c=this.cells[i]);i++){c.style.background=rows[c.row]&&cols[c.col]?"gray":"";if(~c.row&&~c.col)c.textContent=SONG.tracks[c.col].s[c.row]||""}}
+sliders        .update=function(){let t=track();this.cells.forEach(s=>{s.disabled=!t;s.value=t?t[s.key]:0;s.previousSibling.textContent=s.key+label(+s.value,s.max);})}
+text           .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s)}
+piano          .onclick=function({target:{row,col}}){let n=col+C3,p;preview(n);if(!(p=pattern()))return;p[row]=p[row]==n?0:n;update()}
+Q              .onclick=function({target:{row,col}}){let R=!~col,C=!~row;R&C?toggleall():(R|C?((R?rows:cols)[R?row:col]^=1,C&&(LT=col,preview())):incrementid(row,col));update();start()}
+sliders        .oninput=function({target:{key,value}}){(track()[key]=+value,update(),preview())}
+text           .oninput=function(){try{let song=format(text.value);SONG=song;update();preview()}catch(e){}}
+fullscreen     .onclick=function(){document.documentElement.requestFullscreen()}
 makelongpress(X.canvas,download); oncontextmenu=e=>e.target.tagName=="TEXTAREA";
 grid(piano,PC,PR); naturals(piano); grid(Q,SC+1,SR+1); instruments().init(sliders); style(); tutorial(); compatibility();
 
 function start(){try{S?.stop?.(); (S=source(range()))&&(S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
 function loop(){if(!S||!next())return;if(cS!=pS){pS=cS;piano.update();Q.update();scroll();}if(cP!=pP){draw();vu();point();pP=cP;}requestAnimationFrame(loop);}
 function next(){let s=(C.currentTime-S.startTime)*SONG.bpm/STEPRATE;if(s>=cSs.length)return start();cS=cSs[s|0];cP=(cVi=s*PR|0)%PR;cSi=1+(cS+1)*(SC+1);return 1;}
-function click({target:{row,col}}){let R=!~col,C=!~row;R&C?toggleall():(R|C?((R?rows:cols)[R?row:col]^=1,C&&(LT=col,preview())):incrementid(row,col));update();start();}
 function toggleall(){let x=active();rows.fill(0),cols.fill(0);x&&(rows.fill(1,0,x.row),cols.fill(1,0,x.col));}
 function active(){let c=0,r=0;return SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(i>c&&(c=i),j>r&&(r=j)))),rows.some((v,i)=>i<=r&!v)|cols.some((v,i)=>i<=c&!v)&&{col:c+1,row:r+1}}
 function incrementid(row,col){let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;np&&(t.p[np-1]??=Array(PR).fill(0));}
