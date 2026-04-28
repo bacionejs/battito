@@ -6,58 +6,58 @@ let cP,pP,pS,cS,cSs,cSi,cVi,S,P,LT=0,SONG=instruments().presets,cols=Array(SC).f
 let piano      =element("div",document.body,"piano")
 let sliders    =element("div",document.body,"sliders")
 let side       =element("div",document.body,"side")
-let Q          =element("div",side,"sequencer")
+let sequencer  =element("div",side,"sequencer")
 let text       =element("textarea",side,"text")
 let X          =element("canvas",side,"canvas").getContext("2d")
 let fullscreen =element("div",side,"fullscreen","⛶")
-let widgets=[piano,sliders,Q,text], update=()=>widgets.forEach(o=>o.update())
+let widgets=[piano,sliders,sequencer,text], update=()=>widgets.forEach(o=>o.update())
 piano          .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v))}
-Q              .update=function(){for(let i=1,c;(c=this.cells[i]);i++){c.style.background=rows[c.row]&&cols[c.col]?"gray":"";if(~c.row&&~c.col)c.textContent=SONG.tracks[c.col].s[c.row]||""}}
+sequencer      .update=function(){for(let i=1,c;(c=this.cells[i]);i++){c.style.background=rows[c.row]&&cols[c.col]?"gray":"";if(~c.row&&~c.col)c.textContent=SONG.tracks[c.col].s[c.row]||""}}
 sliders        .update=function(){let t=track();this.cells.forEach(s=>{s.disabled=!t;s.value=t?t[s.key]:0;s.previousSibling.textContent=s.key+label(+s.value,s.max);})}
 text           .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s)}
 piano          .onclick=function({target:{row,col}}){let n=col+C3,p;preview(n);if(!(p=pattern()))return;p[row]=p[row]==n?0:n;update()}
-Q              .onclick=function({target:{row,col}}){let R=!~col,C=!~row;R&C?toggleall():(R|C?((R?rows:cols)[R?row:col]^=1,C&&(LT=col,preview())):incrementid(row,col));update();start()}
+sequencer      .onclick=function({target:{row,col}}){let R=!~col,C=!~row;R&C?toggleall():(R|C?((R?rows:cols)[R?row:col]^=1,C&&(LT=col,preview())):incrementid(row,col));update();start()}
 sliders        .oninput=function({target:{key,value}}){(track()[key]=+value,update(),preview())}
 text           .oninput=function(){try{let song=format(text.value);SONG=song;update();preview()}catch(e){}}
 fullscreen     .onclick=function(){document.documentElement.requestFullscreen()}
 makelongpress(X.canvas,download); oncontextmenu=e=>e.target.tagName=="TEXTAREA";
-grid(piano,PC,PR); naturals(piano); grid(Q,SC+1,SR+1); instruments().init(sliders); style(); tutorial(); compatibility();
+grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); style(); tutorial(); compatibility();
 
 function start(){try{S?.stop?.(); (S=source(range()))&&(S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
-function loop(){if(!S||!next())return;if(cS!=pS){pS=cS;piano.update();Q.update();scroll();}if(cP!=pP){draw();vu();point();pP=cP;}requestAnimationFrame(loop);}
+function source(s){let n;return s&&(n=Object.assign(C.createBufferSource(),{buffer:Battito(C).createbuffer(s)}),n.connect(C.destination),n);}
+function loop(){if(!S||!next())return;if(cS!=pS){pS=cS;piano.update();sequencer.update();scroll();}if(cP!=pP){draw();vu();point();pP=cP;}requestAnimationFrame(loop);}
+function scroll(){let t=sequencer.cells[cSi],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
+function vu(){for(let i=0,t=0;i<SC;i++)(cols[i])&&(sequencer.cells[cSi+i].style.background="linear-gradient(black "+(100-(S.buffer.vu[t++][cVi])*100)+"%,transparent 0),linear-gradient(in hsl,red,lime)");}
 function next(){let s=(C.currentTime-S.startTime)*SONG.bpm/STEPRATE;if(s>=cSs.length)return start();cS=cSs[s|0];cP=(cVi=s*PR|0)%PR;cSi=1+(cS+1)*(SC+1);return 1;}
-function toggleall(){let x=active();rows.fill(0),cols.fill(0);x&&(rows.fill(1,0,x.row),cols.fill(1,0,x.col));}
+function track(){return cols[LT]&&SONG.tracks[LT];}
+function phrase(){let p=Array(PC*PR).fill(-1),t,d=i=>cols[i]&&(t=SONG.tracks[i]).p[t.s[cS]-1]?.map((n,s)=>n&&(p[s*PC+n-C3]=i));for(let i=0;i<SC;i++)d(i);d(LT);return p;}
+function pattern(){let t,s;return (t=track())&&~(s=rows.indexOf(1))&&s==rows.lastIndexOf(1)&&t.s[s]&&(t.p[t.s[s]-1]??=Array(PR).fill(0));}
+function preview(n){try{let t=track();t&&(P?.stop(),P=source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:n||t.p?.[0]?.find(Boolean)||147}]}]}),P.start(),draw(0,P,t.ea+t.es+t.er,0))}catch(e){}}
 function active(){let c=0,r=0;return SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(i>c&&(c=i),j>r&&(r=j)))),rows.some((v,i)=>i<=r&!v)|cols.some((v,i)=>i<=c&!v)&&{col:c+1,row:r+1}}
 function incrementid(row,col){let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;np&&(t.p[np-1]??=Array(PR).fill(0));}
-function source(s){let n;return s&&(n=Object.assign(C.createBufferSource(),{buffer:Battito(C).createbuffer(s)}),n.connect(C.destination),n);}
 function range(){let r,c;return (c=SONG.tracks.filter((_,t)=>cols[t])).length&&(r=cSs=[...activerows(c)]).length&&{...SONG,tracks:c.map(t=>({...t,s:r.map(s=>t.s[s])}))}}
 function* activerows(c){for(let r=0;r<SR;r++){if(rows[r]&&c.some(t=>t.s[r]))yield r;}}
-function scroll(){let t=Q.cells[cSi],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
 function draw(c=1,s=S,l=SAMPLERATE/SONG.bpm|0,o=cVi*l){let d=s?.buffer?.getChannelData(0),{w,m}=candy(c);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)])*m);X.stroke();}
 function candy(c){let {width:w,height:h}=X.canvas;X.lineWidth=2;X.fillStyle=c?"#0005":"#000";X.fillRect(0,0,w,h);X.strokeStyle=c?`hsl(${cP*90},100%,50%)`:"blue";return {w,m:h/2};}
-function vu(){for(let i=0,t=0;i<SC;i++)(cols[i])&&(Q.cells[cSi+i].style.background="linear-gradient(black "+(100-(S.buffer.vu[t++][cVi])*100)+"%,transparent 0),linear-gradient(in hsl,red,lime)");}
 function point(){[[pP,"remove"],[cP,"add"]].forEach(([r,m])=>piano.cells.slice(r*PC,r*PC+PC).forEach(c=>c?.classList[m]("row-playing")));}
-function hasnotes(){return range()?.tracks?.some(t=>t.s.some(s=>s&&t.p[s-1]?.some(Boolean)))||alert("Nothing to save. Please select song or range")}
 function download(){if(!hasnotes())return;let name="battito_song_"+Date.now();try{save(wave(),name+".wav");save(new File([html()],""),name+".html");}catch(e){alert(e.message);}}
+function hasnotes(){return range()?.tracks?.some(t=>t.s.some(s=>s&&t.p[s-1]?.some(Boolean)))||alert("Nothing to save. Please select song or range")}
 function save(blob,name){Object.assign(document.querySelector("a")||element("a"),{href:URL.createObjectURL(blob),download:name}).click();}
 function html(){return `<\script>onload=()=>{\ndocument.body.textContent='Click to play';addEventListener('click',music(),{once:true});\n\n${music()}\n\n}</\script>`;}
 function music(){return `function music(){\nlet S,C=new AudioContext();\nS=source(${format(range())});\n${B}\n${source}\nreturn ()=>{S.loop=true;S.start()}\n}`}
 function wave(){let os=44,d=S.buffer.length*4,o=new ArrayBuffer(d+os),v=new DataView(o);riff(o);v.setUint32(4,d+36,1);v.setUint32(40,d,1);pcm(v,os);return new Blob([o],{type:"audio/wav"});}
 function riff(o){new Uint8Array(o).set([82,73,70,70,0,0,0,0,87,65,86,69,102,109,116,32,16,0,0,0,1,0,2,0,68,172,0,0,16,177,2,0,4,0,16,0,100,97,116,97,0,0,0,0]);}
 function pcm(v,os){for(let j=0,i,s;j<S.buffer.length;j++)for(i=0;i<2;i++,os+=2)v.setInt16(os,(s=S.buffer.getChannelData(i)[j])*32767-(s<0),1);}
-function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
-function makelongpress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
+function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="Rendering error<br>Requires a modern chromium-based browser";},200);}
+function toggleall(){let x=active();rows.fill(0),cols.fill(0);x&&(rows.fill(1,0,x.row),cols.fill(1,0,x.col));}
 function grid(e,c,r){e.style.gridTemplateColumns="repeat("+c+",1fr)";e.cells=Array.from({length:c*r},(_,i)=>(cell=element("div",e,"cell"),cell.col=i%c,cell.row=i/c|0,c&1?header(cell):cell));}
 function header(c){let r=--c.row,t=--c.col,v;!~r?(~t&&(v=String.fromCharCode(65+t),c.style.color=color(t))):!~t&&(v=r+1);c.textContent=v;return c}
 function color(i){return ~i?"hsl("+((i*(360/SC)))+",100%,50%)":"";}
 function naturals(p){p.cells.forEach(c=>c.textContent=c.row%4?"":"C,,D,,E,F,,G,,A,,B".split(",")[c.col%12]);}
 function label(v,m){return String(m==4?["Off","High","Low","Band","Notch"][v]:(m==3?["Sine","Square","Saw","Tri"][v]:(m==1?(v?"On":"Off"):v))).padStart(10," ");}
 function format(data){return (typeof data=="object")?JSON.stringify(data).replace(/{/g,"\n$&").replace(/\x22/g,""):JSON.parse(data.replace(/(\w+):/g,'"$1":'));}
-function track(){return cols[LT]&&SONG.tracks[LT];}
-function phrase(){let p=Array(PC*PR).fill(-1),t,d=i=>cols[i]&&(t=SONG.tracks[i]).p[t.s[cS]-1]?.map((n,s)=>n&&(p[s*PC+n-C3]=i));for(let i=0;i<SC;i++)d(i);d(LT);return p;}
-function pattern(){let t,s;return (t=track())&&~(s=rows.indexOf(1))&&s==rows.lastIndexOf(1)&&t.s[s]&&(t.p[t.s[s]-1]??=Array(PR).fill(0));}
-function preview(n){try{let t=track();t&&(P?.stop(),P=source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:n||t.p?.[0]?.find(Boolean)||147}]}]}),P.start(),draw(0,P,t.ea+t.es+t.er,0))}catch(e){}}
-function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="⚠ Rendering error<br>Requires a modern chromium-based browser";},200);}
+function makelongpress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
+function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
 
 function tutorial(){
 element("style").textContent=".tut-pointer,.tut-message{position:fixed;z-index:2;} .tut-message{padding:1rem;}"
@@ -66,11 +66,11 @@ function init(){p=element("div",document.body,"tut-pointer","👉");p.style.tran
 function move(){if(ci>=clicks.length)return p.remove();let e=clicks[ci++]();let r=e.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;click(e);}
 function click(e){setTimeout(()=>{p.style.transform="scale(.5)";e.click();setTimeout(()=>{p.style.transform="";setTimeout(move,100);},100);},100);}
 function make(clickon,c,r){return ()=>clickon.cells.find(x=>x.row==r&&x.col==c);}
-function toggle(c,r){return Array(2).fill(0).flatMap(()=>[make(Q,c,-1),make(Q,-1,r)]);}
+function toggle(c,r){return Array(2).fill(0).flatMap(()=>[make(sequencer,c,-1),make(sequencer,-1,r)]);}
 function initClicks(){let notes=new Map();
-  let sequencerclicks=song.flatMap((t,c)=>t[0].flatMap((pid,r)=>(notes.set(c+"-"+pid,{c,r,a:t[1][pid-1]}),Array(pid).fill(0).map(()=>make(Q,c,r)))));
+  let sequencerclicks=song.flatMap((t,c)=>t[0].flatMap((pid,r)=>(notes.set(c+"-"+pid,{c,r,a:t[1][pid-1]}),Array(pid).fill(0).map(()=>make(sequencer,c,r)))));
   let pianoclicks=[...notes.values()].flatMap(({c,r,a})=>toggle(c,r).toSpliced(2,0,...a.flatMap((n,r)=>n?[make(piano,n-123,r)]:[])));
-  clicks=[...sequencerclicks,...pianoclicks,make(Q,-1,-1)];
+  clicks=[...sequencerclicks,...pianoclicks,make(sequencer,-1,-1)];
 }
 function initSong(){song=[
   [[1,1,1,1],[[123,,,,123,,,,123,,,,123,,,,123,,,,123,,,,123,,,,123]]],
