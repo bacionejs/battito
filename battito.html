@@ -1,6 +1,6 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width"><script> onload=()=>{
 
-document.title="🎼 Battito Beats";//https://github.com/bacionejs/battito
+document.title="\u{1F3BC} Battito Beats";//https://github.com/bacionejs/battito
 let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SAMPLERATE=44100*60/4,STEPRATE=PR*60/4,C=new AudioContext(),B=Battito.toString().replace(/^.*vu.*\n/gmi,"");
 let cP,pP,pS,cS,cSs,cSi,cVi,S,P,LT=0,SONG=instruments().presets,cols=Array(SC).fill(0),rows=Array(SR).fill(0);rows[-1]=cols[-1]=1;
 let piano      =element("div",document.body,"piano")
@@ -62,7 +62,7 @@ function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.cre
 function tutorial(){
 element("style").textContent=".tut-pointer,.tut-message{position:fixed;z-index:2;} .tut-message{padding:1rem;}"
 let ci=0,p,song,clicks,m=element("button",document.body,"tut-message","Click here to watch a 25 second tutorial"); addEventListener("click",e=>{m.remove();if(e.target==m)init();},{once:true});
-function init(){p=element("div",document.body,"tut-pointer","👉");p.style.transition="transform .1s ease";initSong();initClicks();move();}
+function init(){p=element("div",document.body,"tut-pointer","\u{1F449}");p.style.transition="transform .1s ease";initSong();initClicks();move();}
 function move(){if(ci>=clicks.length)return p.remove();let e=clicks[ci++]();let r=e.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;click(e);}
 function click(e){setTimeout(()=>{p.style.transform="scale(.5)";e.click();setTimeout(()=>{p.style.transform="";setTimeout(move,100);},100);},100);}
 function make(clickon,c,r){return ()=>clickon.cells.find(x=>x.row==r&&x.col==c);}
