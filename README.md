@@ -2,6 +2,8 @@
 
 Battito Beats is a tablet-centric music tracker with piano-roll, live-loop editing and a small Sonant-class[^1] synth engine for size-constrained games
 
+**🪶 only 150 lines of code**
+
 <details><summary>Guide</summary>
 
 ---
