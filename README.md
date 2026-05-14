@@ -1,10 +1,12 @@
 <a href="//bacionejs.github.io/battito/battito.html" target="_blank"><img src="https://repository-images.githubusercontent.com/1048415375/5420aaef-7338-48b6-a817-3660165a012c" width="100%" /></a>
 
-Battito Beats is a tablet-centric music tracker with piano-roll, live-loop editing and a small Sonant-class[^1] synth engine for size-constrained games
-
-**🪶 only 150 lines of code**
+🎼 Battito Beats is the easiest music tracker in its class. Only 150 lines of code 🪶
 
 <details><summary>Guide</summary>
+
+---
+
+The app is great on a **tablet**, but on a phone, it's very difficult. You can try to click the full screen icon in the lower right and use it in portrait, first setting your sequencer values and then scrolling to the left to lay down your notes.
 
 ---
 
@@ -23,7 +25,6 @@ Optional
 - To change the tempo, edit the `bpm` value in the **textarea**.
 - Besides clicking sequencer column headers to preview instruments, you can also click the piano to hear what their **pitch** sounds like.
 - The piano roll is only 4 octaves wide but you can compensate by setting the oscillator **octave**.
-- The app is great on a tablet, but on a phone, it's very difficult. You can try to click the full screen icon in the lower right and use it in portrait, first setting your sequencer values and then scrolling to the left to lay down your notes.
 
 ---
 
@@ -31,11 +32,11 @@ Optional
 
 ---
 
+The synth[^1] is a **2-oscillator subtractive synthesizer**. This means it starts with harmonically rich sounds (from oscillators) and then carves away parts of the sound to shape the final timbre.
+
 To configure an instrument, click on one of the sequencer columns and manipulate the sliders. And like any other value, including sequences and patterns, you can configure the instruments from the **textarea**.
 
 Understanding these settings is the key to sound design, allowing you to create everything from deep basses and soaring leads to percussive hits and evolving soundscapes.
-
-This synth is a **2-oscillator subtractive synthesizer**. This means it starts with harmonically rich sounds (from oscillators) and then carves away parts of the sound to shape the final timbre.
 
 ---
 
@@ -106,5 +107,5 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 
 </details>
 
-[^1]: The synth part of this tracker is a port of Jake Taylor's [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant.
+[^1]: The synth part of this tracker is a port of Jake Taylor's [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant, designed for size-constrained games.
 
