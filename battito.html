@@ -59,52 +59,6 @@ function format(data){return (typeof data=="object")?JSON.stringify(data).replac
 function makelongpress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
 
-function tutorial(){
-element("style").textContent=".tut-pointer,.tut-message{position:fixed;z-index:2;} .tut-message{padding:1rem;}"
-let ci=0,p,song,clicks,m=element("button",document.body,"tut-message","Click here to watch a 25 second tutorial"); addEventListener("click",e=>{m.remove();if(e.target==m)init();},{once:true});
-function init(){p=element("div",document.body,"tut-pointer","\u{1F449}");p.style.transition="transform .1s ease";initSong();initClicks();move();}
-function move(){if(ci>=clicks.length)return p.remove();let e=clicks[ci++]();let r=e.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;click(e);}
-function click(e){setTimeout(()=>{p.style.transform="scale(.5)";e.click();setTimeout(()=>{p.style.transform="";setTimeout(move,100);},100);},100);}
-function make(clickon,c,r){return ()=>clickon.cells.find(x=>x.row==r&&x.col==c);}
-function toggle(c,r){return Array(2).fill(0).flatMap(()=>[make(sequencer,c,-1),make(sequencer,-1,r)]);}
-function initClicks(){let notes=new Map();
-  let sequencerclicks=song.flatMap((t,c)=>t[0].flatMap((pid,r)=>(notes.set(c+"-"+pid,{c,r,a:t[1][pid-1]}),Array(pid).fill(0).map(()=>make(sequencer,c,r)))));
-  let pianoclicks=[...notes.values()].flatMap(({c,r,a})=>toggle(c,r).toSpliced(2,0,...a.flatMap((n,r)=>n?[make(piano,n-123,r)]:[])));
-  clicks=[...sequencerclicks,...pianoclicks,make(sequencer,-1,-1)];
-}
-function initSong(){song=[
-  [[1,1,1,1],[[123,,,,123,,,,123,,,,123,,,,123,,,,123,,,,123,,,,123]]],
-  [[1,1,1,1],[[,,124,,,,,,,,,,,,124,,124]]],
-  [[1,1,2,3],[[135,,,,,,,,159,,157,,159,,,,,,,,,,,,147,154,,159],[138,,,,,,,,150,,159,,162,,,,,,,,,,150,,162,150,,159],[149,,,,,,,,149,,150,,154,,,,,,,,,,,,147,157,,159]]]];
-}
-}
-
-function instruments(){
-let schema={v1:255,w1:3,o1:16,s1:11,d1:255,v2:255,w2:3,o2:16,s2:11,d2:255,ea:2e5,es:2e5,er:2e5,e1:1,e2:1,ct:4,ca:11025,cr:255,mw:3,ms:16,ma:255,m1:1,mc:1,ds:16,da:248,ps:16,pa:255,nv:255,vm:255};
-let presets={bpm:120,tracks:[
-  [255,0,9,0,0,     255,0,7,0,0,     100,0,5970,1,1,         2,500,254,     0,0,0,0,0,      1,31,4,21,      0,171],
-  [255,2,6,11,0,    255,2,6,11,4,    88,2000,7505,0,0,       2,3144,51,     0,7,179,0,1,    6,60,4,64,      0,255],
-  [192,2,7,0,0,     201,3,7,0,0,     100,150,7505,0,0,       2,5839,254,    0,6,195,0,1,    6,121,6,147,    0,191],
-  [255,0,9,0,0,     255,0,9,0,12,    100,0,14545,0,0,        0,0,240,       0,0,0,0,0,      2,157,3,47,     0,70],
-  [255,3,7,0,0,     255,0,8,0,0,     22,22,2193,0,0,         3,4067,176,    0,3,96,0,1,     4,12,2,84,      127,255],
-  [255,2,7,0,0,     154,2,7,0,9,     2418,1075,10614,0,0,    3,2962,255,    0,5,124,0,1,    6,117,3,73,     0,240],
-  [192,3,7,0,0,     201,3,7,0,7,     789,1234,13636,0,0,     2,5839,254,    0,6,195,0,1,    6,121,6,147,    0,191],
-  [192,2,7,0,0,     192,2,7,0,0,     0,0,20000,0,0,          0,0,0,         0,0,0,0,0,      0,0,0,0,        0,192]
-].map(t=>({...Object.keys(schema).reduce((o,k,i)=>(o[k]=t[i],o),{}),s:[],p:[]}))};
-function init(s){s.cells=Object.entries(schema).map(([key,max])=>(element("label",s,"",key),Object.assign(element("input",s,"slider"),{type:"range",key,max,disabled:true})));}
-let o={init,presets};instruments=()=>o;return o;
-}
-
-function style(){element("style").textContent=`
-*{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;} body{background:black;display:flex;font:bold 8px monospace;} html{overscroll-behavior:none}
-.piano,.sequencer,.sliders,.cell{display:grid;} .side{position:relative;color:white;} .cell{place-items:center;aspect-ratio:1/1;border:1px solid silver;}
-.piano{background:white;color:silver;line-height:0;} .piano>.cell:nth-child(12n+1){color:gray;} .row-playing{background:yellow}
-.sliders{place-items:center;white-space:pre;color:white;} .slider{height:1px;accent-color:blue;} input::-webkit-slider-thumb{opacity:0;} label{pointer-events:none;}
-.sequencer>.cell:nth-child(-n+9){position:sticky;top:0;} .sequencer{height:50%;aspect-ratio:1/1;overflow-y:scroll;}
-.text{padding:1rem;white-space:pre;overflow:auto;background:transparent;color:inherit;font:inherit;} .text,.canvas{height:25%;aspect-ratio:2/1;}
-.fullscreen{position:absolute;bottom:0;right:0;z-index:1;font-size:1rem;color:orange;} :fullscreen .fullscreen{display:none;}
-`;}
-
 function Battito(audiocontext){
 let SAMPLERATE=44100,FBASE=1.5*Math.PI/SAMPLERATE,R_S=1,rnd=()=>((R_S=Math.imul(R_S,0x15a4e35))>>>0)/2**32,NOTE=new Float32Array(256);for(let n=256;n--;)NOTE[n]=2**((n-128)/12)/256;
 let VU=(n,r)=>{let o=[];return{add:c=>{let p=new Float32Array(n);for(let i=0,m,s,j;i<n;i++){m=0;s=i*r;for(j=0;j<r;j++){let a=Math.abs(c[s+j]);if(a>m)m=a}p[i]=m}o.push(p)},out:o}}
@@ -136,6 +90,52 @@ function createbuffer(song){
   return buffer;
 }
 let o={createbuffer};Battito=()=>o;return o;
+}
+
+function instruments(){
+let schema={v1:255,w1:3,o1:16,s1:11,d1:255,v2:255,w2:3,o2:16,s2:11,d2:255,ea:2e5,es:2e5,er:2e5,e1:1,e2:1,ct:4,ca:11025,cr:255,mw:3,ms:16,ma:255,m1:1,mc:1,ds:16,da:248,ps:16,pa:255,nv:255,vm:255};
+let presets={bpm:120,tracks:[
+  [255,0,9,0,0,     255,0,7,0,0,     100,0,5970,1,1,         2,500,254,     0,0,0,0,0,      1,31,4,21,      0,171],
+  [255,2,6,11,0,    255,2,6,11,4,    88,2000,7505,0,0,       2,3144,51,     0,7,179,0,1,    6,60,4,64,      0,255],
+  [192,2,7,0,0,     201,3,7,0,0,     100,150,7505,0,0,       2,5839,254,    0,6,195,0,1,    6,121,6,147,    0,191],
+  [255,0,9,0,0,     255,0,9,0,12,    100,0,14545,0,0,        0,0,240,       0,0,0,0,0,      2,157,3,47,     0,70],
+  [255,3,7,0,0,     255,0,8,0,0,     22,22,2193,0,0,         3,4067,176,    0,3,96,0,1,     4,12,2,84,      127,255],
+  [255,2,7,0,0,     154,2,7,0,9,     2418,1075,10614,0,0,    3,2962,255,    0,5,124,0,1,    6,117,3,73,     0,240],
+  [192,3,7,0,0,     201,3,7,0,7,     789,1234,13636,0,0,     2,5839,254,    0,6,195,0,1,    6,121,6,147,    0,191],
+  [192,2,7,0,0,     192,2,7,0,0,     0,0,20000,0,0,          0,0,0,         0,0,0,0,0,      0,0,0,0,        0,192]
+].map(t=>({...Object.keys(schema).reduce((o,k,i)=>(o[k]=t[i],o),{}),s:[],p:[]}))};
+function init(s){s.cells=Object.entries(schema).map(([key,max])=>(element("label",s,"",key),Object.assign(element("input",s,"slider"),{type:"range",key,max,disabled:true})));}
+let o={init,presets};instruments=()=>o;return o;
+}
+
+function style(){element("style").textContent=`
+*{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;} body{background:black;display:flex;font:bold 8px monospace;} html{overscroll-behavior:none}
+.piano,.sequencer,.sliders,.cell{display:grid;} .side{position:relative;color:white;} .cell{place-items:center;aspect-ratio:1/1;border:1px solid silver;}
+.piano{background:white;color:silver;line-height:0;} .piano>.cell:nth-child(12n+1){color:gray;} .row-playing{background:yellow}
+.sliders{place-items:center;white-space:pre;color:white;} .slider{height:1px;accent-color:blue;} input::-webkit-slider-thumb{opacity:0;} label{pointer-events:none;}
+.sequencer>.cell:nth-child(-n+9){position:sticky;top:0;} .sequencer{height:50%;aspect-ratio:1/1;overflow-y:scroll;}
+.text{padding:1rem;white-space:pre;overflow:auto;background:transparent;color:inherit;font:inherit;} .text,.canvas{height:25%;aspect-ratio:2/1;}
+.fullscreen{position:absolute;bottom:0;right:0;z-index:1;font-size:1rem;color:orange;} :fullscreen .fullscreen{display:none;}
+`;}
+
+function tutorial(){
+element("style").textContent=".tut-pointer,.tut-message{position:fixed;z-index:2;} .tut-message{padding:1rem;}"
+let ci=0,p,song,clicks,m=element("button",document.body,"tut-message","Click here to watch a 25 second tutorial"); addEventListener("click",e=>{m.remove();if(e.target==m)init();},{once:true});
+function init(){p=element("div",document.body,"tut-pointer","\u{1F449}");p.style.transition="transform .1s ease";initSong();initClicks();move();}
+function move(){if(ci>=clicks.length)return p.remove();let e=clicks[ci++]();let r=e.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;click(e);}
+function click(e){setTimeout(()=>{p.style.transform="scale(.5)";e.click();setTimeout(()=>{p.style.transform="";setTimeout(move,100);},100);},100);}
+function make(clickon,c,r){return ()=>clickon.cells.find(x=>x.row==r&&x.col==c);}
+function toggle(c,r){return Array(2).fill(0).flatMap(()=>[make(sequencer,c,-1),make(sequencer,-1,r)]);}
+function initClicks(){let notes=new Map();
+  let sequencerclicks=song.flatMap((t,c)=>t[0].flatMap((pid,r)=>(notes.set(c+"-"+pid,{c,r,a:t[1][pid-1]}),Array(pid).fill(0).map(()=>make(sequencer,c,r)))));
+  let pianoclicks=[...notes.values()].flatMap(({c,r,a})=>toggle(c,r).toSpliced(2,0,...a.flatMap((n,r)=>n?[make(piano,n-123,r)]:[])));
+  clicks=[...sequencerclicks,...pianoclicks,make(sequencer,-1,-1)];
+}
+function initSong(){song=[
+  [[1,1,1,1],[[123,,,,123,,,,123,,,,123,,,,123,,,,123,,,,123,,,,123]]],
+  [[1,1,1,1],[[,,124,,,,,,,,,,,,124,,124]]],
+  [[1,1,2,3],[[135,,,,,,,,159,,157,,159,,,,,,,,,,,,147,154,,159],[138,,,,,,,,150,,159,,162,,,,,,,,,,150,,162,150,,159],[149,,,,,,,,149,,150,,154,,,,,,,,,,,,147,157,,159]]]];
+}
 }
 
 }</script>
