@@ -2,8 +2,6 @@
 
 Battito Beats is the easiest music tracker in its class
 
-[live tutorial](https://bacionejs.github.io/battito/battito.html?tut)
-
 <details><summary>Guide</summary>
 
 ---

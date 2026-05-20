@@ -21,7 +21,7 @@ sliders        .oninput=function({target:{key,value}}){(track()[key]=+value,upda
 text           .oninput=function(){try{let song=format(text.value);SONG=song;update();preview()}catch(e){}}
 fullscreen     .onclick=function(){document.documentElement.requestFullscreen()}
 makelongpress(X.canvas,download); oncontextmenu=e=>e.target.tagName=="TEXTAREA";
-grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); style(); compatibility(); location.search&&fetch('tutorial.js').then(r=>r.text()).then(c=>eval(c+"tutorial()"));
+grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); style(); compatibility(); fetch('tutorial.js').then(r=>r.text()).then(c=>eval(c+"tutorial()"));
 
 function start(){try{S?.stop?.(); (S=source(range()))&&(S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
 function source(s){let n;return s&&(n=Object.assign(C.createBufferSource(),{buffer:Battito(C).createbuffer(s)}),n.connect(C.destination),n);}
