@@ -1,4 +1,4 @@
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width"><script> onload=()=>{
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width"><script>onload=()=>{
 
 document.title="\u{1F3BC} Battito Beats";//https://github.com/bacionejs/battito
 let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SAMPLERATE=44100*60/4,STEPRATE=PR*60/4,C=new AudioContext(),B=Battito.toString().replace(/^.*vu.*\n/gmi,"");
@@ -21,7 +21,7 @@ sliders        .oninput=function({target:{key,value}}){(track()[key]=+value,upda
 text           .oninput=function(){try{let song=format(text.value);SONG=song;update();preview()}catch(e){}}
 fullscreen     .onclick=function(){document.documentElement.requestFullscreen()}
 makelongpress(X.canvas,download); oncontextmenu=e=>e.target.tagName=="TEXTAREA";
-grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); style(); compatibility();
+grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); style(); compatibility(); location.search&&fetch('tutorial.js').then(r=>r.text()).then(c=>eval(c+"tutorial()"));
 
 function start(){try{S?.stop?.(); (S=source(range()))&&(S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
 function source(s){let n;return s&&(n=Object.assign(C.createBufferSource(),{buffer:Battito(C).createbuffer(s)}),n.connect(C.destination),n);}
@@ -117,7 +117,5 @@ function style(){element("style").textContent=`
 .text{padding:1rem;white-space:pre;overflow:auto;background:transparent;color:inherit;font:inherit;} .text,.canvas{height:25%;aspect-ratio:2/1;}
 .fullscreen{position:absolute;bottom:0;right:0;z-index:1;font-size:1rem;color:orange;} :fullscreen .fullscreen{display:none;}
 `;}
-
-{let p=new URLSearchParams(location.search).get('t');if(p)window.addEventListener('DOMContentLoaded',()=>(0,eval)(decodeURIComponent(p)))}
 
 }</script>
