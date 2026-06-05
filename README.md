@@ -6,10 +6,8 @@
 [Open file and download](https://github.com/bacionejs/battito/raw/main/battito.html)
 
 > [!WARNING]
-> Only works on modern chromium browsers
-
-> [!TIP]
-> The app is great on a **tablet**, but on a phone it is a tight squeeze, but you can try to click the full screen icon in the lower right and use it in portrait, first setting your sequencer values and then scrolling to the left to lay down your notes.
+> 1. Only works on modern chromium browsers
+> 1. The app is great on a **tablet**, but on a phone it is a tight squeeze, but you can try to click the full screen icon in the lower right and use it in portrait, first setting your sequencer values and then scrolling to the left to lay down your notes.
 
 <details><summary>Guide</summary>
 
