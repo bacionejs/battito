@@ -1,82 +1,64 @@
 <script>
-function element(tag,c="",p,o){
-  let e=(p||document.body).appendChild(document.createElement(tag));
-  if(c) e.className=c;
-  if(o) Object.assign(e,o);
-  return e;
+onload=()=>{
+let url=new URL(location.href); let file=url.searchParams.get("file"); if(!file)return;
+fetch(file).then(r=>r.text()).then(init).catch(e=>console.error(e));
+
+function init(raw){
+
+document.body.appendChild(document.createElement("style")).textContent=`
+*{box-sizing:border-box;margin:0;padding:0}
+pre{padding:5;margin:10px;font-size:4px}
+.pairs{color:purple;}
+.keywords{color:teal;}
+button{margin:10px;padding:5px;cursor:pointer}
+@page{margin:0}
+`;
+
+function pretty(text){
+  let c={},m=/[a-z]+\b|[(){}[\]]|</g; 
+  for(let [v,k] of color(text))c[v]=`<x class=${k}>${v}</x>`; 
+  return text.replace(m,x=>x=="<"?"&lt;":c[x]||x); 
 }
 
-onload=()=>{
-  let url = new URL(location.href);
-  let file = url.searchParams.get("file");
-  if(!file) return;
-
-  fetch(file)
-    .then(r => r.text())
-    .then(init)
-    .catch(console.error);
-
-  function init(raw){
-
-    element("style","",null,`
-      *{box-sizing:border-box;margin:0;padding:0}
-      pre{padding:5px;margin:10px;font-size:4px}
-      .pairs{color:purple;}
-      .keywords{color:teal;}
-      button{margin:10px;padding:5px;cursor:pointer}
-      @page{margin:0}
-    `);
-
-    function pretty(text){
-      let c={}, m=/[a-z]+\b|[(){}[\]]|</g;
-      for(let [v,k] of color(text))
-        c[v]=`<x class=${k}>${v}</x>`;
-      return text.replace(m,x=>x=="<"?"&lt;":c[x]||x);
-    }
-
-    function* color(text){
-      for(let v of "(){}[]") yield [v,"pairs"];
-      for(let w of new Set(text.match(/[a-z]+\b/g)||[])){
-        try{ eval("let "+w); }
-        catch{ yield [w,"keywords"]; }
-      }
-    }
-
-    function render(){
-      let filename = file.split('/').pop();
-
-      // Download button
-      element("button","",null,{
-        textContent:"Download",
-        onclick:()=>{
-          let a = document.createElement("a");
-          a.href = URL.createObjectURL(
-            new Blob([raw],{type:"text/html"})
-          );
-          a.download = filename;
-          a.click();
-        }
-      });
-
-      // Back button
-      element("button","",null,{
-        textContent:"Main Page",
-        onclick:()=>{
-          location.href="https://github.com/bacionejs/battito";
-        }
-      });
-
-      let lines = pretty(raw).split("\n");
-      if(lines.at(-1)==="") lines.pop();
-
-      let pre = element("pre");
-
-      pre.innerHTML = lines.map((l,i)=>
-        `<span style="color:gray">${String(i+1).padStart(3,'0')}: </span>${l}`
-      ).join("\n");
-    }
-
-    render();
+function* color(text){
+  for(let v of "(){}[]")yield [v,"pairs"];
+  for(let w of new Set(text.match(/[a-z]+\b/g)||[])){
+    try{eval("let "+w)}catch{yield [w,"keywords"]}
   }
 }
-</script>
+
+function render(){
+let filename = file.split('/').pop();
+
+let btnHome=document.createElement("button");
+btnHome.textContent="Back to Main Page";
+btnHome.onclick=()=>{
+  location.href=url.origin + url.pathname;
+};
+document.body.appendChild(btnHome);
+
+let btn=document.createElement("button");
+btn.textContent=`Download`;
+btn.onclick=()=>{
+  let a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([raw],{type:"text/html"}));
+  a.download=filename;
+  a.click();
+};
+document.body.appendChild(btn);
+
+let lines=pretty(raw).split('\n');
+if(lines.length && lines[lines.length-1]==='')lines.pop();
+let pre=document.createElement("pre");
+pre.innerHTML=lines.map((l,i)=>{
+return `<span style="color:gray">${String(i+1).padStart(3,'0')}: </span>${l}`;
+}).join('\n');
+document.body.appendChild(pre);
+}
+
+render();
+
+}
+
+}</script>
+
