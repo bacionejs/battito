@@ -5,10 +5,6 @@
 
 [Open and download](https://github.com/bacionejs/battito/raw/main/battito.html)
 
-> [!WARNING]
-> 1. Only works on modern chromium browsers
-> 1. The app is great on a **tablet**, but on a phone it is a tight squeeze, but you can try to click the full screen icon in the lower right and use it in portrait, first setting your sequencer values and then scrolling to the left to lay down your notes.
-
 <details><summary>Guide</summary>
 
 ---
@@ -20,7 +16,7 @@ Steps
 ---
 
 Optional
-- There are 8 preset instruments, but you can also select a track and configure the **synth** (see the Instruments section)
+- There are 8 preset instruments, but you can also select a track and configure the **synth** (see the Instruments section below)
 - To **export** html/wav, long-press the waveform visualizer. Use the html file for your game and the wav file for whatever else. It will export whatever is selected: whole song or ranges. The exported game-ready html file (engine+song) is 2k zipped, thousands of times smaller than a wav file.
 - To **export** a sound effect, like an explosion, create one note on the first row of the piano, and export a range.
 - To save your work for future use, copy the **textarea** to a separate text editor. To **import**, paste in the textarea.
@@ -109,6 +105,10 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 ---
 
 </details>
+
+> [!WARNING]
+> 1. Only works on modern chromium browsers
+> 1. The app is great on a **tablet**, but on a phone it is a tight squeeze, but you can try to click the full screen icon in the lower right and use it in portrait, first setting your sequencer values and then scrolling to the left to lay down your notes.
 
 [^1]: The synth engine part of this sequencer is a port of Jake Taylor's [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant, designed for size-constrained games.
 
