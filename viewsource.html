@@ -31,7 +31,7 @@ function render(){
 let filename = file.split('/').pop() || "battito.html";
 
 let btn=document.createElement("button");
-btn.textContent=`Download ${filename}`;
+btn.textContent=`Download app: ${filename}`;
 btn.onclick=()=>{
   let a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob([raw],{type:"text/html"}));
