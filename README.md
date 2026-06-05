@@ -108,3 +108,5 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 
 [^1]: The synth engine part of this sequencer is a port of Jake Taylor's [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant, designed for size-constrained games.
 
+[Download battito.html](https://raw.githubusercontent.com/bacionejs/battito/main/battito.html?download=)
+
