@@ -12,7 +12,7 @@
 
 ---
 
-The app is great on a **tablet**, but on a phone, it's very difficult. You can try to click the full screen icon in the lower right and use it in portrait, first setting your sequencer values and then scrolling to the left to lay down your notes.
+The app is great on a **tablet**, but on a phone, it's very difficult, but you can try to click the full screen icon in the lower right and use it in portrait, first setting your sequencer values and then scrolling to the left to lay down your notes.
 
 ---
 
