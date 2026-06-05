@@ -1,15 +1,13 @@
 <a href="//bacionejs.github.io/battito/battito.html" target="_blank"><img src="https://repository-images.githubusercontent.com/1048415375/5420aaef-7338-48b6-a817-3660165a012c" width="100%" /></a>
 
 
-> [!WARNING]
-> Only works on modern chromium browsers
-
 [Tutorial](https://bacionejs.github.io/battito/battito.html)  
 
 [Open file and download](https://github.com/bacionejs/battito/raw/main/battito.html)
 
-> [!TIP]
-> The app is great on a **tablet**, but on a phone it is a tight squeeze, but you can try to click the full screen icon in the lower right and use it in portrait, first setting your sequencer values and then scrolling to the left to lay down your notes.
+> [!WARNING] Only works on modern chromium browsers
+
+> [!TIP] The app is great on a **tablet**, but on a phone it is a tight squeeze, but you can try to click the full screen icon in the lower right and use it in portrait, first setting your sequencer values and then scrolling to the left to lay down your notes.
 
 <details><summary>Guide</summary>
 
