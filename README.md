@@ -5,6 +5,8 @@
 
 [Open and download](https://github.com/bacionejs/battito/raw/main/battito.html)
 
+---
+
 <details><summary>Guide</summary>
 
 ---
@@ -105,6 +107,8 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 ---
 
 </details>
+
+---
 
 > [!WARNING]
 > 1. Only works on modern chromium browsers
