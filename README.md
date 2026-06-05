@@ -1,9 +1,9 @@
 <a href="//bacionejs.github.io/battito/battito.html" target="_blank"><img src="https://repository-images.githubusercontent.com/1048415375/5420aaef-7338-48b6-a817-3660165a012c" width="100%" /></a>
 
 
-[Live Action Tutorial](https://bacionejs.github.io/battito/battito.html)  
-
 [View source and download app](https://bacionejs.github.io/battito/viewsource.html?file=./battito.html)
+
+[Live Action Tutorial](https://bacionejs.github.io/battito/battito.html)  
 
 ---
 
