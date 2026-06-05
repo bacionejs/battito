@@ -3,7 +3,7 @@
 
 [Live Tutorial](https://bacionejs.github.io/battito/battito.html)  
 
-[View source and download](https://github.com/bacionejs/battito/raw/main/battito.html)
+[View source and download](https://bacionejs.github.io/battito/viewsource.html?file=battito.html)
 
 ---
 

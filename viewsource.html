@@ -1,0 +1,58 @@
+<script>
+onload=()=>{
+let url=new URL(location.href); let file=url.searchParams.get("file"); if(!file)return;
+fetch(file).then(r=>r.text()).then(init).catch(e=>console.error(e));
+
+function init(raw){
+
+document.body.appendChild(document.createElement("style")).textContent=`
+*{box-sizing:border-box;margin:0;padding:0}
+pre{padding:5;margin:10px;font-size:4px}
+.pairs{color:purple;}
+.keywords{color:teal;}
+button{margin:10px;padding:5px;cursor:pointer}
+@page{margin:0}
+`;
+
+function pretty(text){
+  let c={},m=/[a-z]+\b|[(){}[\]]|</g; 
+  for(let [v,k] of color(text))c[v]=`<x class=${k}>${v}</x>`; 
+  return text.replace(m,x=>x=="<"?"&lt;":c[x]||x); 
+}
+
+function* color(text){
+  for(let v of "(){}[]")yield [v,"pairs"];
+  for(let w of new Set(text.match(/[a-z]+\b/g)||[])){
+    try{eval("let "+w)}catch{yield [w,"keywords"]}
+  }
+}
+
+function render(){
+let filename = file.split('/').pop() || "battito.html";
+
+let btn=document.createElement("button");
+btn.textContent=`Download ${filename}`;
+btn.onclick=()=>{
+  let a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([raw],{type:"text/html"}));
+  a.download=filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+document.body.appendChild(btn);
+
+let lines=pretty(raw).split('\n');
+if(lines.length && lines[lines.length-1]==='')lines.pop();
+let pre=document.createElement("pre");
+pre.innerHTML=lines.map((l,i)=>{
+return `<span style="color:gray">${String(i+1).padStart(3,'0')}: </span>${l}`;
+}).join('\n');
+document.body.appendChild(pre);
+}
+
+render();
+
+}
+
+}</script>
+
