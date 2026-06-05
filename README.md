@@ -3,7 +3,7 @@
 
 [Tutorial](https://bacionejs.github.io/battito/battito.html)  
 
-[Open file and download](https://github.com/bacionejs/battito/raw/main/battito.html)
+[Open and download](https://github.com/bacionejs/battito/raw/main/battito.html)
 
 > [!WARNING]
 > 1. Only works on modern chromium browsers
