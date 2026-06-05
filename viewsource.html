@@ -3,16 +3,18 @@ onload=()=>{
 let url=new URL(location.href); let file=url.searchParams.get("file"); if(!file)return;
 fetch(file).then(r=>r.text()).then(init).catch(e=>console.error(e));
 
+function element(tag,c="",p,o){let e=(p||document.body).appendChild(document.createElement(tag));if(c)e.className=c;if(o)Object.assign(e,o);return e}
+
 function init(raw){
 
-document.body.appendChild(document.createElement("style")).textContent=`
+element("style", "", document.head, { textContent: `
 *{box-sizing:border-box;margin:0;padding:0}
 pre{padding:5;margin:10px;font-size:4px}
 .pairs{color:purple;}
 .keywords{color:teal;}
 button{margin:10px;padding:5px;cursor:pointer}
 @page{margin:0}
-`;
+`});
 
 function pretty(text){
   let c={},m=/[a-z]+\b|[(){}[\]]|</g; 
@@ -30,30 +32,29 @@ function* color(text){
 function render(){
 let filename = file.split('/').pop();
 
-let btnHome=document.createElement("button");
-btnHome.textContent="Back to Main Page";
-btnHome.onclick=()=>{
-  location.href="https://github.com/bacionejs/battito";
-};
-document.body.appendChild(btnHome);
+element("button", "", document.body, {
+  textContent: "Back to Main Page",
+  onclick: () => { location.href = "https://github.com/bacionejs/battito"; }
+});
 
-let btn=document.createElement("button");
-btn.textContent=`Download`;
-btn.onclick=()=>{
-  let a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([raw],{type:"text/html"}));
-  a.download=filename;
-  a.click();
-};
-document.body.appendChild(btn);
+element("button", "", document.body, {
+  textContent: "Download",
+  onclick: () => {
+    let a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([raw], {type: "text/html"}));
+    a.download = filename;
+    a.click();
+  }
+});
 
 let lines=pretty(raw).split('\n');
 if(lines.length && lines[lines.length-1]==='')lines.pop();
-let pre=document.createElement("pre");
-pre.innerHTML=lines.map((l,i)=>{
-return `<span style="color:gray">${String(i+1).padStart(3,'0')}: </span>${l}`;
-}).join('\n');
-document.body.appendChild(pre);
+
+element("pre", "", document.body, {
+  innerHTML: lines.map((l,i)=>{
+    return `<span style="color:gray">${String(i+1).padStart(3,'0')}: </span>${l}`;
+  }).join('\n')
+});
 }
 
 render();
