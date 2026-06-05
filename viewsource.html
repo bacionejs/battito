@@ -28,16 +28,15 @@ function* color(text){
 }
 
 function render(){
-let filename = file.split('/').pop() || "battito.html";
+let filename = file.split('/').pop();
 
 let btn=document.createElement("button");
-btn.textContent=`Download app: ${filename}`;
+btn.textContent=`Download`;
 btn.onclick=()=>{
   let a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob([raw],{type:"text/html"}));
   a.download=filename;
   a.click();
-  URL.revokeObjectURL(a.href);
 };
 document.body.appendChild(btn);
 
