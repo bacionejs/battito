@@ -1,6 +1,6 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width"><script>onload=()=>{document.title="🎼 Battito Beats";//https://github.com/bacionejs/battito
 let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SAMPLERATE=44100*60/4,STEPRATE=PR*60/4,C=new AudioContext(),B=Battito.toString().replace(/^.*vu.*\n/gmi,"");
-let cP,pP,pS,cS,cSs,cSi,cVi,S,P,LT=0,SONG=instruments().presets,cols=Array(SC).fill(0),rows=Array(SR).fill(0);rows[-1]=cols[-1]=1;
+let cP,pP,pS,cS,cSs,cSi,cVi,S,P,LT=0,SONG=instruments().presets,cols=Array(SC).fill(0),rows=Array(SR).fill(0);rows[-1]=cols[-1]=1,PA=Array(PC*PR);
 let piano      =element("div",document.body,"piano")
 let playhead   =element("div",piano,"playhead");
 let sliders    =element("div",document.body,"sliders")
@@ -10,7 +10,7 @@ let text       =element("textarea",side,"text")
 let X          =element("canvas",side,"canvas").getContext("2d")
 let fullscreen =element("div",side,"fullscreen","⛶")
 let widgets=[piano,sliders,sequencer,text], update=()=>widgets.forEach(o=>o.update())
-piano          .update=function(){this.cells.forEach(c=>c.style.background="");for(let [i,v] of phrase()){this.cells[i].style.background=color(v);}}
+piano          .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v))}
 sequencer      .update=function(){for(let i=1,x;(x=this.cells[i]);i++){let r=x.row,c=x.col,a=rows[r]&&cols[c],b=~c&&~r; x.className="cell "+(a&&b&&r==cS?"vu":a?"active":"");b&&(x.textContent=SONG.tracks[c].s[r]||"");}}
 sliders        .update=function(){let t=track();this.cells.forEach(s=>{s.disabled=!t;s.value=t?t[s.key]:0;s.previousSibling.textContent=s.key+label(+s.value,s.max);})}
 text           .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s)}
@@ -30,8 +30,7 @@ function vu(){for(let i=0,t=0;i<SC;i++)(cols[i])&&(sequencer.cells[cSi+i].style.
 function next(){let s=(C.currentTime-S.startTime)*SONG.bpm/STEPRATE;if(s>=cSs.length)return start();cS=cSs[s|0];cP=(cVi=s*PR|0)%PR;cSi=1+(cS+1)*(SC+1);return 1;}
 function track(){return cols[LT]&&SONG.tracks[LT];}
 function pattern(){let t,s;return (t=track())&&~(s=rows.indexOf(1))&&s==rows.lastIndexOf(1)&&t.s[s]&&(t.p[t.s[s]-1]??=Array(PR).fill(0));}
-function* phrase(){for(let i=1;i<SC;i++)yield* scan(i);yield* scan(LT);}
-function* scan(i){let t=SONG.tracks[i],p;if(cols[i]&&t&&(p=t.p[t.s[cS]-1])){for(let s=0,n;s<p.length;s++){if(n=p[s])yield [s*PC+n-C3,i];}}}
+function phrase(){let t,d=i=>cols[i]&&(t=SONG.tracks[i]).p[t.s[cS]-1]?.map((n,s)=>n&&(PA[s*PC+n-C3]=i));PA.fill(-1);for(let i=0;i<SC;i++)d(i);d(LT);return PA;}
 function preview(n){try{let t=track();t&&(P?.stop(),P=source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:n||t.p?.[0]?.find(Boolean)||147}]}]}),P.start(),draw(0,P,t.ea+t.es+t.er,0))}catch(e){}}
 function active(){let c=0,r=0;return SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(i>c&&(c=i),j>r&&(r=j)))),rows.some((v,i)=>i<=r&!v)|cols.some((v,i)=>i<=c&!v)&&{col:c+1,row:r+1}}
 function incrementid(row,col){let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;np&&(t.p[np-1]??=Array(PR).fill(0));}
