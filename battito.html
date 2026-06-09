@@ -47,9 +47,8 @@ function riff(o){new Uint8Array(o).set([82,73,70,70,0,0,0,0,87,65,86,69,102,109,
 function pcm(v,os){for(let j=0,i,s;j<S.buffer.length;j++)for(i=0;i<2;i++,os+=2)v.setInt16(os,(s=S.buffer.getChannelData(i)[j])*32767-(s<0),1);}
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="Rendering error<br>Requires a modern chromium-based browser";},200);}
 function toggleall(){let x=active();rows.fill(0),cols.fill(0);x&&(rows.fill(1,0,x.row),cols.fill(1,0,x.col));}
-function grid(e,c,r){e.style.gridTemplateColumns="repeat("+c+",1fr)";e.cells=Array.from({length:c*r},(_,i)=>(el=place(element("div",e,"cell"),i,c),c&1?header(el):el));}
+function grid(p,c,r){p.style.gridTemplateColumns="repeat("+c+",1fr)";p.cells=Array.from({length:c*r},(_,i)=>{let e=element("div",p,"cell");e.col=i%c;e.row=i/c|0;return c&1?header(e):e});}
 function header(c){let r=--c.row,t=--c.col,v;!~r?(~t&&(v=String.fromCharCode(65+t),c.style.color=color(t))):!~t&&(v=r+1);c.textContent=v;return c}
-function place(c,i,w){c.style.gridColumn=(c.col=i%w)+1;c.style.gridRow=(c.row=i/w|0)+1;return c}
 function color(i){return ~i?"hsl("+((i*(360/SC)))+",100%,50%)":"";}
 function naturals(p){p.cells.forEach(c=>c.textContent=c.row%4?"":"C,,D,,E,F,,G,,A,,B".split(",")[c.col%12]);}
 function label(v,m){return String(m==4?["Off","High","Low","Band","Notch"][v]:(m==3?["Sine","Square","Saw","Tri"][v]:(m==1?(v?"On":"Off"):v))).padStart(10," ");}
