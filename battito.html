@@ -56,7 +56,7 @@ function format(data){return (typeof data=="object")?JSON.stringify(data).replac
 function makelongpress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointerleave=_=>clearTimeout(t)}
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e;}
 
-function Battito(audiocontext){//🚂
+function Battito(audiocontext){
 let SAMPLERATE=44100,FBASE=1.5*Math.PI/SAMPLERATE,R_S=1,rnd=()=>((R_S=Math.imul(R_S,0x15a4e35))>>>0)/2**32,NOTE=new Float32Array(256);for(let n=256;n--;)NOTE[n]=2**((n-128)/12)/256;
 let WS=2048,[SIN,SQUARE,SAW,TRI]=WAVES=Array.from({length:4},()=>new Float32Array(WS)),W=(t,v)=>(WAVES[t]||SIN)[((v*WS)&(WS-1))>>>0];
 for(let i=0,p,v;i<WS;i++){SIN[i]=Math.sin((p=i/WS)*2*Math.PI);SQUARE[i]=p<.5?-1:1;SAW[i]=p-.5;TRI[i]=(v=p*4)<2?v-1:3-v;}
