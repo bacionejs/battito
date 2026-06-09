@@ -10,7 +10,7 @@ let X          =element("canvas",side,"canvas").getContext("2d")
 let fullscreen =element("div",side,"fullscreen","⛶")
 let widgets=[piano,sliders,sequencer,text], update=()=>widgets.forEach(o=>o.update())
 piano          .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v))}
-sequencer      .update=function(){this.cells.forEach(e=>query(e,(a,n,b,s)=>{e.style.background=!a?"":n?color(e.col):"gray";b&&(e.textContent=s||"");}));}
+sequencer      .update=function(){this.cells.forEach(e=>query(e,(active,note,body,sequence)=>{e.style.background=!active?"":note?color(e.col):"gray";body&&(e.textContent=sequence||"");}));}
 sliders        .update=function(){let t=track();this.cells.forEach(s=>{s.disabled=!t;s.value=t?t[s.key]:0;s.previousSibling.textContent=s.key+label(+s.value,s.max);})}
 text           .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s)}
 piano          .onclick=function({target:{row,col}}){let n=col+C3,p;preview(n);if(!(p=pattern()))return;p[row]=p[row]==n?0:n;update()}
