@@ -1,5 +1,5 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width"><script>onload=()=>{document.title="🎼 Battito Beats";//https://github.com/bacionejs/battito
-let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SAMPLERATE=44100*60/4,STEPRATE=PR*60/4,C=new AudioContext(),BS=Battito.toString(),B=Battito(C);
+let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SAMPLERATE=44100*60/4,STEPRATE=PR*60/4,C=new AudioContext(),BS=Battito.toString();
 let cP,pP,pS,cS,cSs,cSi,cVi,S,P,LT=0,SONG=instruments().presets,cols=Array(SC).fill(0),rows=Array(SR).fill(0);rows[-1]=cols[-1]=1,PA=Array(PC*PR);
 let piano      =element("div",document.body,"piano")
 let sliders    =element("div",document.body,"sliders")
@@ -22,7 +22,7 @@ makelongpress(X.canvas,download); oncontextmenu=e=>e.target.tagName=="TEXTAREA";
 grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); style(); compatibility(); fetch('tutorial.js').then(r=>r.text()).then(c=>eval(c+"tutorial()"));
 
 function start(){try{S?.stop?.(); (S=source(range()))&&(S.start(S.startTime=C.currentTime),loop()); }catch(e){}}
-function source(s){let n;return s&&(n=Object.assign(C.createBufferSource(),{buffer:B.createbuffer(s)}),n.connect(C.destination),n);}
+function source(s){let n;return s&&(n=Object.assign(C.createBufferSource(),{buffer:Battito(C).createbuffer(s)}),n.connect(C.destination),n);}
 function loop(){if(!S||!next())return;if(cS!=pS){pS=cS;piano.update();scroll();}if(cP!=pP){draw();sequencer.update();pP=cP;}requestAnimationFrame(loop);}
 function scroll(){let t=sequencer.cells[cSi],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"});}
 function next(){let s=(C.currentTime-S.startTime)*SONG.bpm/STEPRATE;if(s>=cSs.length)return start();cS=cSs[s|0];cP=(cVi=s*PR|0)%PR;cSi=1+(cS+1)*(SC+1);return 1;}
