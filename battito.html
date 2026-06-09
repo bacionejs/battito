@@ -10,7 +10,7 @@ let X          =element("canvas",side,"canvas").getContext("2d")
 let fullscreen =element("div",side,"fullscreen","⛶")
 let widgets=[piano,sliders,sequencer,text], update=()=>widgets.forEach(o=>o.update())
 piano          .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v))}
-sequencer      .update=function(){this.cells.forEach(x=>{let {b,s}=pulse(x);b&&(x.textContent=s||"")})}
+sequencer      .update=function(){this.cells.forEach(e=>query(e,(a,n,b,s)=>{e.style.background=!a?"":n?color(e.col):"gray";b&&(e.textContent=s||"");}));}
 sliders        .update=function(){let t=track();this.cells.forEach(s=>{s.disabled=!t;s.value=t?t[s.key]:0;s.previousSibling.textContent=s.key+label(+s.value,s.max);})}
 text           .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s)}
 piano          .onclick=function({target:{row,col}}){let n=col+C3,p;preview(n);if(!(p=pattern()))return;p[row]=p[row]==n?0:n;update()}
@@ -36,7 +36,8 @@ function range(){let r,c;return (c=SONG.tracks.filter((_,t)=>cols[t])).length&&(
 function* activerows(c){for(let r=0;r<SR;r++){if(rows[r]&&c.some(t=>t.s[r]))yield r;}}
 function draw(c=1,s=S,l=SAMPLERATE/SONG.bpm|0,o=cVi*l){let d=s?.buffer?.getChannelData(0),{w,m}=candy(c);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)])*m);X.stroke();}
 function candy(c){let {width:w,height:h}=X.canvas;X.lineWidth=2;X.fillStyle=c?"#0005":"#000";X.fillRect(0,0,w,h);X.strokeStyle=c?`hsl(${cP*90},100%,50%)`:"blue";return {w,m:h/2};}
-function pulse(x){let r=x.row,c=x.col,b=~c&&~r,t=SONG.tracks[c],s=b&&t.s[r],a=(~r||~c)&&rows[r]&&cols[c];x.style.background=!a?"":(r==cS&&t?.p[s-1]?.[cP]?color(c):"gray");return {b,s}}
+function query(e,cb){let r=e.row,c=e.col,b=~c&&~r,t=SONG.tracks[c],s=b&&t.s[r];return cb((~r||~c)&&rows[r]&&cols[c],r==cS&&t?.p[s-1]?.[cP],b,s);}
+function color(i){return ~i?"hsl("+((i*(360/SC)))+",100%,50%)":"";}
 function download(){if(!hasnotes())return;let name="battito_song_"+Date.now();try{save(wave(),name+".wav");save(new File([html()],""),name+".html");}catch(e){alert(e.message);}}
 function hasnotes(){return range()?.tracks?.some(t=>t.s.some(s=>s&&t.p[s-1]?.some(Boolean)))||alert("Nothing to save. Please select song or range")}
 function save(blob,name){Object.assign(document.querySelector("a")||element("a"),{href:URL.createObjectURL(blob),download:name}).click();}
@@ -49,7 +50,6 @@ function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(
 function toggleall(){let x=active();rows.fill(0),cols.fill(0);x&&(rows.fill(1,0,x.row),cols.fill(1,0,x.col));}
 function grid(p,c,r){p.style.gridTemplateColumns="repeat("+c+",1fr)";p.cells=Array.from({length:c*r},(_,i)=>{let e=element("div",p,"cell");e.col=i%c;e.row=i/c|0;return c&1?header(e):e});}
 function header(c){let r=--c.row,t=--c.col,v;!~r?(~t&&(v=String.fromCharCode(65+t),c.style.color=color(t))):!~t&&(v=r+1);c.textContent=v;return c}
-function color(i){return ~i?"hsl("+((i*(360/SC)))+",100%,50%)":"";}
 function naturals(p){p.cells.forEach(c=>c.textContent=c.row%4?"":"C,,D,,E,F,,G,,A,,B".split(",")[c.col%12]);}
 function label(v,m){return String(m==4?["Off","High","Low","Band","Notch"][v]:(m==3?["Sine","Square","Saw","Tri"][v]:(m==1?(v?"On":"Off"):v))).padStart(10," ");}
 function format(data){return (typeof data=="object")?JSON.stringify(data).replace(/{/g,"\n$&").replace(/\x22/g,""):JSON.parse(data.replace(/(\w+):/g,'"$1":'));}
