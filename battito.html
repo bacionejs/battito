@@ -40,7 +40,7 @@ function query(e,cb){let r=e.row,c=e.col,b=~c&&~r,t=SONG.tracks[c],s=b&&t.s[r];r
 function color(i){return ~i?"hsl("+((i*(360/SC)))+",100%,50%)":"";}
 function download(){if(!hasnotes())return;let name="battito_song_"+Date.now();try{save(wave(),name+".wav");save(new File([html()],""),name+".html");}catch(e){alert(e.message);}}
 function hasnotes(){return range()?.tracks?.some(t=>t.s.some(s=>s&&t.p[s-1]?.some(Boolean)))||alert("Nothing to save. Please select song or range")}
-function save(blob,name){Object.assign(document.querySelector("a")||element("a"),{href:URL.createObjectURL(blob),download:name}).click();}
+function save(blob,name){Object.assign(save.a??=element("a"),{href:URL.createObjectURL(blob),download:name}).click();}
 function html(){return `<\script>onload=()=>{\ndocument.body.textContent='Click to play';addEventListener('click',music(),{once:true});\n\n${music()}\n\n}</\script>`;}
 function music(){return `function music(){\nlet S,C=new AudioContext();\nS=source(${format(range())});\n${BS}\n${source}\nreturn ()=>{S.loop=true;S.start()}\n}`}
 function wave(){let os=44,d=S.buffer.length*4,o=new ArrayBuffer(d+os),v=new DataView(o);riff(o);v.setUint32(4,d+36,1);v.setUint32(40,d,1);pcm(v,os);return new Blob([o],{type:"audio/wav"});}
@@ -60,30 +60,25 @@ function Battito(audiocontext){
 let SAMPLERATE=44100,FBASE=1.5*Math.PI/SAMPLERATE,R_S=1,rnd=()=>((R_S=Math.imul(R_S,0x15a4e35))>>>0)/2**32,NOTE=new Float32Array(256);for(let n=256;n--;)NOTE[n]=2**((n-128)/12)/256;
 let WS=2048,[SIN,SQUARE,SAW,TRI]=WAVES=Array.from({length:4},()=>new Float32Array(WS)),W=(t,v)=>(WAVES[t]||SIN)[((v*WS)&(WS-1))>>>0];
 for(let i=0,p,v;i<WS;i++){SIN[i]=Math.sin((p=i/WS)*2*Math.PI);SQUARE[i]=p<.5?-1:1;SAW[i]=p-.5;TRI[i]=(v=p*4)<2?v-1:3-v;}
-function createbuffer(song){
+return(Battito=(o=>()=>o)({createbuffer(song){
   let SR=Math.max(...song.tracks.map(t=>t.s.length)),PR=Math.max(...song.tracks.flatMap(t=>t.p.map(p=>p.length)));
   let rowlen=Math.ceil(SAMPLERATE*((60/song.bpm)/4)),TR=SR*PR,S=TR*rowlen,LL=new Float32Array(S),RR=new Float32Array(S),L=new Float32Array(S),R=new Float32Array(S);
   for(let T of song.tracks){
     let {v1,w1,o1,s1,d1,v2,w2,o2,s2,d2,ea,es,er,e1,e2,ct,ca,cr,mw,ms,ma,m1,mc,ds,da,ps,pa,nv,vm}=T,envlen=ea+es+er,ai=1/ea,ri=1/er,lfostep=2**(ms-8)/rowlen,panstep=2**(ps-8)/rowlen;
     L.fill(0);R.fill(0);ca*=FBASE;vm*=0.006;ma/=512;pa/=512;v1/=255;v2/=255;nv/=255;cr/=255;s1+=(o1-8)*12;d1=1+0.2*d1/255;s2+=(o2-8)*12;d2=1+0.2*d2/255;
     for(let row=0;row<TR;row++){
-      let n=T.p?.[T.s[row/PR|0]-1]?.[row%PR],P=row*rowlen;if(!n)continue;
-      let o1fb=NOTE[n+s1]*d1,o2fb=NOTE[n+s2]*d2,c1=0,c2=0,low=0,band=0,lfo=lfostep*P,pan=panstep*P,end=Math.min(P+envlen,S);
+      let n=T.p?.[T.s[row/PR|0]-1]?.[row%PR],P=row*rowlen;if(!n)continue; let o1fb=NOTE[n+s1]*d1,o2fb=NOTE[n+s2]*d2,c1=0,c2=0,low=0,band=0,lfo=lfostep*P,pan=panstep*P,end=Math.min(P+envlen,S);
       for(let b=P,j=0;b<end;b++,j++){
         let lfoR,e=1,f,rs,high,t,t1=o1fb,t2=o2fb; lfo+=lfostep;pan+=panstep;lfoR=W(mw,lfo)*ma+0.5;
         if(j<ea)e=j*ai;else if(j>=ea+es)e-=(j-ea-es)*ri;if(m1)t1+=lfoR;if(e1)t1*=e*e;c1+=t1;rs=W(w1,c1)*v1;if(e2)t2*=e*e;c2+=t2;rs+=W(w2,c2)*v2;if(nv)rs+=(rnd()*2-1)*nv*e;rs*=e*vm;
         f=ca*(mc?lfoR:1);low+=f*band;high=cr*(rs-band)-low;band+=f*high; rs=ct==1?high:ct==2?low:ct==3?band:ct==4?low+high:rs; t=W(0,pan)*pa+0.5;L[b]+=rs*(1-t);R[b]+=rs*t;
       }
     }
-    let DS=Math.floor(ds*rowlen/2);if(DS>0){let DA=da/255;for(let b=0;b<S-DS;b++){L[b+DS]+=R[b]*DA;R[b+DS]+=L[b]*DA;}}
-    for(let b=0;b<S;b++){LL[b]+=L[b];RR[b]+=R[b];}
+    let DS=Math.floor(ds*rowlen/2);if(DS>0){let DA=da/255;for(let b=0;b<S-DS;b++){L[b+DS]+=R[b]*DA;R[b+DS]+=L[b]*DA;}} for(let b=0;b<S;b++){LL[b]+=L[b];RR[b]+=R[b];}
   }
   let X=0;for(let i=0;i<S;i++){X=Math.max(X,Math.abs(LL[i]),Math.abs(RR[i]));} if(X>0){let scale=1/X;for(let i=0;i<S;i++){LL[i]*=scale;RR[i]*=scale;}}
-  let buffer=audiocontext.createBuffer(2,LL.length,SAMPLERATE);[LL,RR].forEach((data,i)=>buffer.copyToChannel(data,i));
-  return buffer;
-}
-let o={createbuffer};Battito=()=>o;return o;
-}
+  return[LL,RR].reduce((buffer,data,i)=>(buffer.copyToChannel(data,i),buffer),audiocontext.createBuffer(2,LL.length,SAMPLERATE));
+}}))()}
 
 function instruments(){
 let schema={v1:255,w1:3,o1:16,s1:11,d1:255,v2:255,w2:3,o2:16,s2:11,d2:255,ea:2e5,es:2e5,er:2e5,e1:1,e2:1,ct:4,ca:11025,cr:255,mw:3,ms:16,ma:255,m1:1,mc:1,ds:16,da:248,ps:16,pa:255,nv:255,vm:255};
@@ -98,7 +93,7 @@ let presets={bpm:120,tracks:[
   [192,2,7,0,0,     192,2,7,0,0,     0,0,20000,0,0,          0,0,0,         0,0,0,0,0,      0,0,0,0,        0,192]
 ].map(t=>({...Object.keys(schema).reduce((o,k,i)=>(o[k]=t[i],o),{}),s:[],p:[]}))};
 function init(s){s.cells=Object.entries(schema).map(([key,max])=>(element("label",s,"",key),Object.assign(element("input",s,"slider"),{type:"range",key,max,disabled:true})));}
-let o={init,presets};instruments=()=>o;return o;
+return {init,presets};
 }
 
 function style(){element("style").textContent=`
