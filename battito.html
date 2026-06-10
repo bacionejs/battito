@@ -14,7 +14,7 @@ sequencer      .update=function(){this.cells.forEach(e=>query(e,(active,note,bod
 sliders        .update=function(){let t=track();this.cells.forEach(s=>{s.disabled=!t;s.value=t?t[s.key]:0;s.previousSibling.textContent=s.key+label(+s.value,s.max)})}
 text           .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s)}
 piano          .onclick=function({target:{row,col}}){let n=col+C3,p;preview(n);if(!(p=pattern()))return;p[row]=p[row]==n?0:n;update()}
-sequencer      .onclick=function({target:{row,col}}){let R=!~col,C=!~row;R&C?toggleall():(R|C?((R?rows:cols)[R?row:col]^=1,C&&(LT=col,preview())):incrementid(row,col));update();start()}
+sequencer      .onclick=function({target:{row,col}}){let hr=!~col,hc=!~row;hr&hc?toggleall():hr|hc?((hr?rows:cols)[row+col+1]^=1,hc&&(LT=col,preview())):incrementid(row,col),update(),start()}
 sliders        .oninput=function({target:{key,value}}){(track()[key]=+value,update(),preview())}
 text           .oninput=function(){try{let song=format(text.value);SONG=song;update();preview()}catch{}}
 fullscreen     .onclick=function(){document.documentElement.requestFullscreen()}
