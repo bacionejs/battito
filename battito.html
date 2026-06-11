@@ -69,11 +69,8 @@ return(Battito=(o=>()=>o)({createbuffer(song){
       for(let b=P,j=0;b<end;b++,j++){
         let lfoR,e=1,f,rs,high,t,t1=o1fb,t2=o2fb; lfo+=lfostep;pan+=panstep;lfoR=W(mw,lfo)*ma+0.5;
         if(j<ea)e=j*ai;else if(j>=ea+es)e-=(j-ea-es)*ri;if(m1)t1+=lfoR;if(e1)t1*=e*e;c1+=t1;rs=W(w1,c1)*v1;if(e2)t2*=e*e;c2+=t2;rs+=W(w2,c2)*v2;if(nv)rs+=(rnd()*2-1)*nv*e;rs*=e*vm;
-        f=ca*(mc?lfoR:1);low+=f*band;high=cr*(rs-band)-low;band+=f*high; rs=ct==1?high:ct==2?low:ct==3?band:ct==4?low+high:rs; t=W(0,pan)*pa+0.5;L[b]+=rs*(1-t);R[b]+=rs*t;
-      }
-    }
-    let DS=Math.floor(ds*rowlen/2);if(DS>0){let DA=da/255;for(let b=0;b<S-DS;b++){L[b+DS]+=R[b]*DA;R[b+DS]+=L[b]*DA}} for(let b=0;b<S;b++){LL[b]+=L[b];RR[b]+=R[b]}
-  }
+        f=ca*(mc?lfoR:1);low+=f*band;high=cr*(rs-band)-low;band+=f*high; rs=ct==1?high:ct==2?low:ct==3?band:ct==4?low+high:rs; t=W(0,pan)*pa+0.5;L[b]+=rs*(1-t);R[b]+=rs*t;}}
+    let DS=Math.floor(ds*rowlen/2);if(DS>0){let DA=da/255;for(let b=0;b<S-DS;b++){L[b+DS]+=R[b]*DA;R[b+DS]+=L[b]*DA}} for(let b=0;b<S;b++){LL[b]+=L[b];RR[b]+=R[b]}}
   let X=0;for(let i=0;i<S;i++){X=Math.max(X,Math.abs(LL[i]),Math.abs(RR[i]))} if(X>0){let scale=1/X;for(let i=0;i<S;i++){LL[i]*=scale;RR[i]*=scale}}
   return[LL,RR].reduce((buffer,data,i)=>(buffer.copyToChannel(data,i),buffer),audiocontext.createBuffer(2,LL.length,SAMPLERATE));
 }}))()}
@@ -91,8 +88,7 @@ let presets={bpm:120,tracks:[
   [192,2,7,0,0,     192,2,7,0,0,     0,0,20000,0,0,          0,0,0,         0,0,0,0,0,      0,0,0,0,        0,192]
 ].map(t=>({...Object.keys(schema).reduce((o,k,i)=>(o[k]=t[i],o),{}),s:[],p:[]}))};
 function init(s){s.cells=Object.entries(schema).map(([key,max])=>(element("label",s,"",key),Object.assign(element("input",s,"slider"),{type:"range",key,max,disabled:true})))}
-return {init,presets};
-}
+return {init,presets}}
 
 function style(){element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation} body{background:black;display:flex;font:bold 8px monospace} html{overscroll-behavior:none}
@@ -101,7 +97,6 @@ function style(){element("style").textContent=`
 .sliders{place-items:center;white-space:pre;color:white} .slider{height:1px;accent-color:blue} input::-webkit-slider-thumb{opacity:0} label{pointer-events:none}
 .sequencer>.cell:nth-child(-n+9){position:sticky;top:0} .sequencer{height:50%;aspect-ratio:1/1;overflow-y:scroll}
 .text{padding:1rem;white-space:pre;overflow:auto;background:transparent;color:inherit;font:inherit} .text,.canvas{height:25%;aspect-ratio:2/1}
-.fullscreen{position:absolute;bottom:0;right:0;z-index:1;font-size:1rem;color:orange} :fullscreen .fullscreen{display:none}
-`}
+.fullscreen{position:absolute;bottom:0;right:0;z-index:1;font-size:1rem;color:orange} :fullscreen .fullscreen{display:none}`}
 
 }</script>
