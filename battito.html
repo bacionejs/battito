@@ -35,7 +35,7 @@ function state(e,cb){let r=e.row,c=e.col,b=~c&&~r,t=SONG.tracks[c],s=b&&t.s[r];r
 function hasnotes(){return range()?.tracks?.some(t=>t.s.some(s=>s&&t.p[s-1]?.some(Boolean)))||alert("Nothing to save. Please select song or range")}
 function preview(n){try{let t=track();t&&(P?.stop(),P=source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:n||t.p?.[0]?.find(Boolean)||147}]}]}),P.start(),draw(0,P,t.ea+t.es+t.er,0))}catch{}}
 function draw(c=1,s=S,l=SAMPLERATE/SONG.bpm|0,o=cVi*l){let d=s?.buffer?.getChannelData(0),{w,m}=candy(c);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)])*m);X.stroke()}
-function candy(c){let {width:w,height:h}=X.canvas;X.lineWidth=2;X.fillStyle=c?"#0005":"#000";X.fillRect(0,0,w,h);X.strokeStyle=c?`hsl(${cP*90},100%,50%)`:"blue";return {w,m:h/2}}
+function candy(c){let {width:w,height:h}=X.canvas;X.lineWidth=2;X.fillStyle=c?"#12121255":"#121212";X.fillRect(0,0,w,h);X.strokeStyle=c?`hsl(${cP*90},100%,50%)`:"blue";return {w,m:h/2}}
 function save(){if(!hasnotes())return;let s="song"+Date.now(),d=(b,z)=>{Object.assign(d.a??=element("a"),{href:URL.createObjectURL(b),download:s+z}).click()};d(wave(),".wav");d(html(),".html")}
 function html(){return new File([`<\script>onload=()=>{\ndocument.body.textContent='Click to play';addEventListener('click',music(),{once:true});\n\n${music()}\n\n}</\script>`],"")}
 function music(){return `function music(){\nlet A=new AudioContext(),S=source(${format(range())});\n${source}\n${BS}\nreturn ()=>{S.loop=true;S.start()}\n}`}
@@ -85,12 +85,12 @@ return {presets:{bpm:120,tracks:[
   init:(s)=>{s.cells=Object.entries(schema).map(([key,max])=>(element("label",s,"",key),Object.assign(element("input",s,"slider"),{type:"range",key,max,disabled:true})))}}}
 
 function style(){element("style").textContent=`
-*{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation} body{background:#121212;display:flex;font:bold 8px monospace} html{overscroll-behavior:none}
-.piano,.sequencer,.sliders,.cell{display:grid} .side{position:relative;color:white} .cell{place-items:center;aspect-ratio:1/1;border:1px solid #2a2a2a;transition: background 0.4s ease-out}
+*{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation} body{background:#121212;color:white;display:flex;font:bold 8px monospace} html{overscroll-behavior:none}
+.piano,.sequencer,.sliders,.cell{display:grid} .side{position:relative} .cell{place-items:center;aspect-ratio:1/1;border:1px solid #2a2a2a;transition: background 0.4s ease-out}
 .piano{color:#2a2a2a;line-height:0} .piano>.cell:nth-child(12n+1){color:gray}
-.sliders{place-items:center;white-space:pre;color:white} .slider{height:1px;accent-color:blue} input::-webkit-slider-thumb{opacity:0} label{pointer-events:none}
+.sliders{place-items:center;white-space:pre} .slider{height:1px;accent-color:blue} input::-webkit-slider-thumb{opacity:0} label{pointer-events:none}
 .sequencer>.cell:nth-child(-n+9){position:sticky;top:0} .sequencer{height:50%;aspect-ratio:1/1;overflow-y:scroll}
-.text{padding:1rem;white-space:pre;overflow:auto;background:transparent;color:inherit;font:inherit} .text,.canvas{height:25%;aspect-ratio:2/1}
+.text{padding:1rem;white-space:pre;overflow:auto;background:inherit;color:inherit;font:inherit} .text,.canvas{height:25%;aspect-ratio:2/1}
 .fullscreen{position:absolute;bottom:0;right:0;z-index:1;font-size:1rem;color:orange} :fullscreen .fullscreen{display:none}`}
 
 }</script>
