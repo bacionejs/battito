@@ -72,12 +72,11 @@ return(Battito=(o=>()=>o)({createbuffer(song){
         f=ca*(mc?lfoR:1);low+=f*band;high=cr*(rs-band)-low;band+=f*high; rs=ct==1?high:ct==2?low:ct==3?band:ct==4?low+high:rs; t=W(0,pan)*pa+0.5;L[b]+=rs*(1-t);R[b]+=rs*t;}}
     let DS=Math.floor(ds*rowlen/2);if(DS>0){let DA=da/255;for(let b=0;b<S-DS;b++){L[b+DS]+=R[b]*DA;R[b+DS]+=L[b]*DA}} for(let b=0;b<S;b++){LL[b]+=L[b];RR[b]+=R[b]}}
   let X=0;for(let i=0;i<S;i++){X=Math.max(X,Math.abs(LL[i]),Math.abs(RR[i]))} if(X>0){let scale=1/X;for(let i=0;i<S;i++){LL[i]*=scale;RR[i]*=scale}}
-  return[LL,RR].reduce((buffer,data,i)=>(buffer.copyToChannel(data,i),buffer),audiocontext.createBuffer(2,LL.length,SAMPLERATE));
-}}))()}
+  return[LL,RR].reduce((buffer,data,i)=>(buffer.copyToChannel(data,i),buffer),audiocontext.createBuffer(2,LL.length,SAMPLERATE))}}))()}
 
 function instruments(){
 let schema={v1:255,w1:3,o1:16,s1:11,d1:255,v2:255,w2:3,o2:16,s2:11,d2:255,ea:2e5,es:2e5,er:2e5,e1:1,e2:1,ct:4,ca:11025,cr:255,mw:3,ms:16,ma:255,m1:1,mc:1,ds:16,da:248,ps:16,pa:255,nv:255,vm:255};
-let presets={bpm:120,tracks:[
+return {presets:{bpm:120,tracks:[
   [255,0,9,0,0,     255,0,7,0,0,     100,0,5970,1,1,         2,500,254,     0,0,0,0,0,      1,31,4,21,      0,171],
   [255,2,6,11,0,    255,2,6,11,4,    88,2000,7505,0,0,       2,3144,51,     0,7,179,0,1,    6,60,4,64,      0,255],
   [192,2,7,0,0,     201,3,7,0,0,     100,150,7505,0,0,       2,5839,254,    0,6,195,0,1,    6,121,6,147,    0,191],
@@ -85,10 +84,8 @@ let presets={bpm:120,tracks:[
   [255,3,7,0,0,     255,0,8,0,0,     22,22,2193,0,0,         3,4067,176,    0,3,96,0,1,     4,12,2,84,      127,255],
   [255,2,7,0,0,     154,2,7,0,9,     2418,1075,10614,0,0,    3,2962,255,    0,5,124,0,1,    6,117,3,73,     0,240],
   [192,3,7,0,0,     201,3,7,0,7,     789,1234,13636,0,0,     2,5839,254,    0,6,195,0,1,    6,121,6,147,    0,191],
-  [192,2,7,0,0,     192,2,7,0,0,     0,0,20000,0,0,          0,0,0,         0,0,0,0,0,      0,0,0,0,        0,192]
-].map(t=>({...Object.keys(schema).reduce((o,k,i)=>(o[k]=t[i],o),{}),s:[],p:[]}))};
-function init(s){s.cells=Object.entries(schema).map(([key,max])=>(element("label",s,"",key),Object.assign(element("input",s,"slider"),{type:"range",key,max,disabled:true})))}
-return {init,presets}}
+  [192,2,7,0,0,     192,2,7,0,0,     0,0,20000,0,0,          0,0,0,         0,0,0,0,0,      0,0,0,0,        0,192]].map(t=>({...Object.keys(schema).reduce((o,k,i)=>(o[k]=t[i],o),{}),s:[],p:[]}))},
+  init:(s)=>{s.cells=Object.entries(schema).map(([key,max])=>(element("label",s,"",key),Object.assign(element("input",s,"slider"),{type:"range",key,max,disabled:true})))}}}
 
 function style(){element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation} body{background:black;display:flex;font:bold 8px monospace} html{overscroll-behavior:none}
