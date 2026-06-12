@@ -1,8 +1,10 @@
 <a href="//bacionejs.github.io/battito/battito.html" target="_blank"><img src="https://github.com/user-attachments/assets/71f17939-b7be-4454-8572-44b1b2a5f804" width="100%" /></a>
 
-[View source code and download app](https://bacionejs.github.io/bacionejs/viewsource.html?file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html)
+---
 
 [Try it](https://bacionejs.github.io/battito/battito.html) (includes tutorial)  
+
+[View source code and download app](https://bacionejs.github.io/bacionejs/viewsource.html?file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html)  
 
 ---
 
