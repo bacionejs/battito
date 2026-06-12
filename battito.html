@@ -8,7 +8,7 @@ let sequencer  =element("div",side,"sequencer")
 let text       =element("textarea",side,"text")
 let X          =element("canvas",side,"canvas").getContext("2d")
 let fullscreen =element("div",side,"fullscreen","⛶")
-let widgets=[piano,sliders,sequencer,text], update=()=>widgets.forEach(o=>o.update()), track=()=>{return C[LT]&&SONG.tracks[LT]}, color=i=>{return ~i?"hsl("+((i*(360/SC)))+",100%,50%)":""}
+let widgets=[piano,sliders,sequencer,text], update=()=>widgets.forEach(o=>o.update()), track=()=>{return C[LT]&&SONG.tracks[LT]}, color=i=>["#f55","#fc2","#cf0","#6fd","#4cf","#74f","#f48","#fa4"][i]||""
 piano          .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v))}
 sequencer      .update=function(){this.cells.forEach(e=>state(e,(active,note,body,sequence)=>{e.style.background=!active?"":!note?"gray":color(e.col);body&&(e.textContent=sequence||"")}))}
 sliders        .update=function(){let t=track();this.cells.forEach(s=>{s.disabled=!t;s.value=t?t[s.key]:0;s.previousSibling.textContent=s.key+label(+s.value,s.max)})}
@@ -18,8 +18,8 @@ sequencer      .onclick=function({target:{row,col}}){let hr=!~col,hc=!~row;hr&hc
 sliders        .oninput=function({target:{key,value}}){(track()[key]=+value,update(),preview())}
 text           .oninput=function(){try{let song=format(text.value);SONG=song;update();preview()}catch{}}
 fullscreen     .onclick=function(){document.documentElement.requestFullscreen()}
-makelongpress(X.canvas,save); oncontextmenu=e=>e.target.tagName=="TEXTAREA";
-grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); style(); compatibility(); fetch('tutorial.js').then(r=>r.text()).then(c=>eval(c+"tutorial()"))
+makelongpress(X.canvas,save); oncontextmenu=e=>e.target.tagName=="TEXTAREA"; grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); style()
+sliders.cells.forEach((v,i)=>v.previousSibling.style.color=color(i<5?0:i<10?1:i<15?2:i<18?3:i<23?4:i<25?5:i<27?6:7)); compatibility(); fetch('tutorial.js').then(r=>r.text()).then(c=>eval(c+"tutorial()"))
 
 function start(){try{S?.stop?.(); (S=source(range()))&&(S.start(S.startTime=A.currentTime),loop())}catch{}}
 function source(s){let n;return s&&(n=Object.assign(A.createBufferSource(),{buffer:Battito(A).createbuffer(s)}),n.connect(A.destination),n)}
