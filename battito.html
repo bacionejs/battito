@@ -18,8 +18,8 @@ sequencer      .onclick=function({target:{row,col}}){let hr=!~col,hc=!~row;hr&hc
 sliders        .oninput=function({target:{key,value}}){(track()[key]=+value,update(),preview())}
 text           .oninput=function(){try{let song=format(text.value);SONG=song;update();preview()}catch{}}
 fullscreen     .onclick=function(){document.documentElement.requestFullscreen()}
-makelongpress(X.canvas,save); oncontextmenu=e=>e.target.tagName=="TEXTAREA"; grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); style()
-sliders.cells.forEach((v,i)=>v.previousSibling.style.color=color(i<5?0:i<10?1:i<15?2:i<18?3:i<23?4:i<25?5:i<27?6:7)); compatibility(); fetch('tutorial.js').then(r=>r.text()).then(c=>eval(c+"tutorial()"))
+makelongpress(X.canvas,save); oncontextmenu=e=>e.target.tagName=="TEXTAREA"; grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); style(); compatibility()
+sliders.cells.forEach((v,i)=>v.previousSibling.style.color=color(i<5?0:i<10?1:i<15?2:i<18?3:i<23?4:i<25?5:i<27?6:7)); fetch('tutorial.js').then(r=>r.text()).then(c=>eval(c+"tutorial()"))
 
 function start(){try{S?.stop?.(); (S=source(range()))&&(S.start(S.startTime=A.currentTime),loop())}catch{}}
 function source(s){let n;return s&&(n=Object.assign(A.createBufferSource(),{buffer:Battito(A).createbuffer(s)}),n.connect(A.destination),n)}
