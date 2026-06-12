@@ -1,4 +1,4 @@
-<a href="//bacionejs.github.io/battito/battito.html" target="_blank"><img src="https://github.com/user-attachments/assets/dc7fe799-245b-4513-9200-2fa20008867a" width="100%" /></a>
+<a href="//bacionejs.github.io/battito/battito.html" target="_blank"><img src="https://github.com/user-attachments/assets/71f17939-b7be-4454-8572-44b1b2a5f804" width="100%" /></a>
 
 [View source code and download app](https://bacionejs.github.io/battito/viewsource.html?file=./battito.html)
 
