@@ -113,5 +113,4 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 > 1. Only works on modern chromium browsers
 > 1. The app is great on a **tablet**, but on a phone it is a tight squeeze, but you can try to click the fullscreen icon in the lower right and use it in portrait, first setting your sequencer values and then scrolling to the left to lay down your notes.
 
-[^1]: The synth engine part of this sequencer is a port of Jake Taylor's [public domain](https://github.com/parasyte/sonant-rs/issues/16#issuecomment-2979650137) Sonant, designed for size-constrained games.
-
+[^1]: The synth engine part of this sequencer is a port of Jake Taylor's [public domain](https://github.com/user-attachments/assets/e01812b1-4b97-47e0-81a8-49d157aa89bf) Sonant, designed for size-constrained games.
