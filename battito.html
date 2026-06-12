@@ -23,8 +23,8 @@ sliders.cells.forEach((v,i)=>v.previousSibling.style.color=color(i<5?0:i<10?1:i<
 
 function start(){try{S?.stop?.(); (S=source(range()))&&(S.start(S.startTime=A.currentTime),loop())}catch{}}
 function source(s){let n;return s&&(n=Object.assign(A.createBufferSource(),{buffer:Battito(A).createbuffer(s)}),n.connect(A.destination),n)}
-function loop(){if(!S||!next())return;if(cS!=pS){pS=cS;piano.update();scroll()}if(cP!=pP){draw();sequencer.update();playhead(pP,cP);pP=cP}requestAnimationFrame(loop)}
-function playhead(p,c){for(let i=PC;i--;)(PA[p*PC+i]>=0&&(piano.cells[p*PC+i].style.transform=""),PA[c*PC+i]>=0&&(piano.cells[c*PC+i].style.transform="scale(2)"))}
+function loop(){if(!S||!next())return;if(cS!=pS){pS=cS;piano.update();scroll()}if(cP!=pP){draw();sequencer.update();playhead(cP);pP=cP}requestAnimationFrame(loop)}
+function playhead(c){piano.cells.forEach(v=>v.style.transform="");for(let i=PC;i--;){PA[c*PC+i]>=0&&(piano.cells[c*PC+i].style.transform="scale(2)");}}
 function scroll(){let t=sequencer.cells[cSi],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"})}
 function next(){let s=(A.currentTime-S.startTime)*SONG.bpm/STEPRATE;if(s>=cSs.length)return start();cS=cSs[s|0];cP=(cVi=s*PR|0)%PR;cSi=1+(cS+1)*(SC+1);return 1}
 function toggleall(){let c=0,r=0,x;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(i>c&&(c=i),j>r&&(r=j))));x=R.some((v,i)=>i<=r&!v)|C.some((v,i)=>i<=c&!v);R.fill(x?1:0,0,r+1);C.fill(x?1:0,0,c+1);}
