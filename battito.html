@@ -77,5 +77,4 @@ return(Battito=(o=>()=>o)({createbuffer(song){
         f=ca*(mc?lfoR:1);low+=f*band;high=cr*(rs-band)-low;band+=f*high; rs=ct==1?high:ct==2?low:ct==3?band:ct==4?low+high:rs; t=W(0,pan)*pa+0.5;L[b]+=rs*(1-t);R[b]+=rs*t;}}
     let DS=Math.floor(ds*rowlen/2);if(DS>0){let DA=da/255;for(let b=0;b<S-DS;b++){L[b+DS]+=R[b]*DA;R[b+DS]+=L[b]*DA}} for(let b=0;b<S;b++){LL[b]+=L[b];RR[b]+=R[b]}}
   let X=0;for(let i=0;i<S;i++){X=Math.max(X,Math.abs(LL[i]),Math.abs(RR[i]))} if(X>0){let scale=1/X;for(let i=0;i<S;i++){LL[i]*=scale;RR[i]*=scale}}
-  return[LL,RR].reduce((buffer,data,i)=>(buffer.copyToChannel(data,i),buffer),audiocontext.createBuffer(2,LL.length,SAMPLERATE))}}))()}
-}</script>
+  return[LL,RR].reduce((buffer,data,i)=>(buffer.copyToChannel(data,i),buffer),audiocontext.createBuffer(2,LL.length,SAMPLERATE))}}))()}}</script>
