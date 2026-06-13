@@ -15,7 +15,6 @@ text           .oninput=function(){try{let song=format(text.value);SONG=song;upd
 fullscreen     .onclick=function(){document.documentElement.requestFullscreen()}
 makelongpress(X.canvas,save); oncontextmenu=e=>e.target.tagName=="TEXTAREA"; grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); style(); compatibility()
 sliders.cells.forEach((v,i)=>v.previousSibling.style.color=color(i<5?0:i<10?1:i<15?2:i<18?3:i<23?4:i<25?5:i<27?6:7)); fetch('tutorial.js').then(r=>r.text()).then(c=>eval(c+"tutorial()"))
-
 function start(){try{S?.stop?.(); (S=source(range()))&&(S.start(S.startTime=A.currentTime),loop())}catch{}}
 function source(s){let n;return s&&(n=Object.assign(A.createBufferSource(),{buffer:Battito(A).createbuffer(s)}),n.connect(A.destination),n)}
 function loop(){if(!S||!next())return;if(cS!=pS){pS=cS;piano.update();scroll()}if(cP!=pP){draw();sequencer.update();playhead(cP);pP=cP}requestAnimationFrame(loop)}
@@ -74,7 +73,6 @@ return {init:(s)=>{s.cells=Object.entries(schema).map(([key,max])=>(element("lab
 5839,254,0,6,195,0,1,6,121,6,147,0,191],[255,0,9,0,0,255,0,9,0,12,100,0,14545,0,0,0,0,240,0,0,0,0,0,2,157,3,47,0,70],[255,3,7,0,0,255,0,8,0,0,22,22,2193,0,0,3,4067,176,0,3,96,0,1,4,12,2,84,127,255],[255,2,
 7,0,0,154,2,7,0,9,2418,1075,10614,0,0,3,2962,255,0,5,124,0,1,6,117,3,73,0,240],[192,3,7,0,0,201,3,7,0,7,789,1234,13636,0,0,2,5839,254,0,6,195,0,1,6,121,6,147,0,191],
 [192,2,7,0,0,192,2,7,0,0,0,0,20000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,192]].map(t=>({...Object.keys(schema).reduce((o,k,i)=>(o[k]=t[i],o),{}),s:[],p:[]}))}}}
-
 function style(){element("style").textContent=`
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation} body{background:#121212;color:white;display:flex;font:bold .5rem monospace} html{overscroll-behavior:none}
 .piano,.sequencer,.sliders,.cell{display:grid} .side{position:relative} .cell{place-items:center;aspect-ratio:1/1;border:1px solid #2a2a2a;transition: background 0.4s ease-out}
