@@ -4,7 +4,7 @@
 
 [Try it](https://bacionejs.github.io/battito/battito.html) (includes tutorial)  
 
-[View source code and download app](https://bacionejs.github.io/bacionejs/viewsource.html?file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html)  
+[View source code and download app](https://bacionejs.github.io/bacionejs/viewsource.html?file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html) (source fits on a 3x5 card) 
 
 ---
 
