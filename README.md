@@ -21,7 +21,7 @@ Optional
 - To **export** html/wav, long-press the waveform visualizer. Use the html file for your game and the wav file for whatever else. It exports the **current selection**: whole song or ranges. The exported game-ready html file (engine+song) is 2k zipped, thousands of times smaller than a wav file.
 - To **export** a sound effect, like an explosion, create one note on the first row of the piano, and export a range.
 - To save your work for future use, copy the **textarea** to a separate text editor. To **import**, paste in the textarea.
-- The **textarea** can be edited. Changes are **live** just like the other components.
+- The **textarea** can be edited. Changes are **live** just like the other components. This is helpful when adjusting envelope values, as they have a large range.
 - To change the tempo, edit the `bpm` value in the **textarea**.
 - Besides clicking sequencer column headers to preview instruments, you can also click the piano to hear what their **pitch** sounds like.
 - The piano roll is only 4 octaves wide but you can compensate by setting the oscillator **octave**.
