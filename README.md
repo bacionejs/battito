@@ -2,7 +2,7 @@
 
 ---
 
-[Try it](https://bacionejs.github.io/battito/battito.html) (includes tutorial)  
+[Try it](https://bacionejs.github.io/battito/battito.html) (includes tutorial 🧑‍🎓)  
 
 ---
 
