@@ -7,7 +7,7 @@
 ---
 
 Entire app source code fits on a 3x5 card   
-<img width="50%" src="https://github.com/user-attachments/assets/af07b90e-e1ae-4470-bde8-e7995c29f323" />
+<img width="50%" src="https://github.com/user-attachments/assets/6eb95313-9c7a-4cf2-8120-393827f64188" />
 
 ---
 
