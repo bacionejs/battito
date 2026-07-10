@@ -6,13 +6,13 @@
 
 ---
 
-Entire app source code fits on a 3x5 card   
+Entire app source code fits on a 3x5 card 🤯  
 
 <a href="https://bacionejs.github.io/bacionejs/viewsource.html?b=1&file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html" target="_blank"><img width="50%" src="https://github.com/user-attachments/assets/6eb95313-9c7a-4cf2-8120-393827f64188" /></a>
 
 ---
 
-<details><summary>Guide</summary>
+<details><summary>Guide 📖</summary>
 
 ---
 
@@ -34,7 +34,7 @@ Optional
 
 ---
 
-</details><details><summary>Instruments</summary>
+</details><details><summary>Instruments 🎚️</summary>
 
 ---
 
