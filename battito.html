@@ -1,6 +1,6 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width"><script>onload=()=>{document.title="🎼 Battito Beats";//https://github.com/bacionejs/battito
-let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SAMPLERATE=44100*60/4,STEPRATE=PR*60/4,A=new AudioContext(),BS=Battito.toString();
-let cP,pP,pS,cS,cSs,cSi,cVi,S,P,LT=0,SONG=instruments().presets,C=Array(SC).fill(0),R=Array(SR).fill(0),RK=[...R.keys()],PA=Array(PC*PR);R[-1]=C[-1]=1;
+let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SAMPLERATE=44100*60/4,STEPRATE=PR*60/4,cP,pP,pS,cS,cSs,cSi,cVi,S,P,LT=0;
+let BS=Battito.toString(),A=new AudioContext(),SONG=instruments().presets,C=Array(SC).fill(0),R=Array(SR).fill(0),RK=[...R.keys()],PA=Array(PC*PR);R[-1]=C[-1]=1;
 let piano=element("div",document.body,"piano"),sliders=element("div",document.body,"sliders"),side=element("div",document.body,"side"),sequencer=element("div",side,"sequencer");
 let text=element("textarea",side,"text"),X=element("canvas",side,"canvas").getContext("2d"),fullscreen=element("div",side,"fullscreen","⛶");
 let widgets=[piano,sliders,sequencer,text], update=()=>widgets.forEach(o=>o.update()), track=()=>{return C[LT]&&SONG.tracks[LT]}, color=i=>["#f55","#fc2","#cf0","#6fd","#4cf","#74f","#f48","#fa4"][i]||""
