@@ -2,7 +2,7 @@
 
 ---
 
-👉 [Try it](https://bacionejs.github.io/battito/battito.html) (includes tutorial 🧑‍🎓 [^2])  
+👉 [Try it](https://bacionejs.github.io/battito/battito.html) (includes tutorial [^1] 🧑‍🎓)  
 
 ---
 
@@ -44,7 +44,7 @@ Optional
 
 ---
 
-The synth[^1] is a **2-oscillator subtractive synthesizer**. This means it starts with harmonically rich sounds (from oscillators) and then carves away parts of the sound to shape the final timbre.
+The synth[^2] is a **2-oscillator subtractive synthesizer**. This means it starts with harmonically rich sounds (from oscillators) and then carves away parts of the sound to shape the final timbre.
 
 To configure an instrument, click on one of the sequencer columns and manipulate the sliders. And like any other value, including sequences and patterns, you can configure the instruments from the **textarea**.
 
@@ -119,5 +119,5 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 
 </details>
 
-[^1]: The synth engine part of this sequencer is a port of Jake Taylor's [public domain Sonant](https://github.com/user-attachments/assets/e01812b1-4b97-47e0-81a8-49d157aa89bf), designed for size-constrained games and demos.
-[^2]: The tutorial song is a portion of Beatnic by mBitsnBites
+[^1]: The tutorial song is a portion of Beatnic by mBitsnBites
+[^2]: The synth engine part of this sequencer is a port of Jake Taylor's [public domain Sonant](https://github.com/user-attachments/assets/e01812b1-4b97-47e0-81a8-49d157aa89bf), designed for size-constrained games and demos.
