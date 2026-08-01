@@ -12,6 +12,12 @@ Source code fits on a 3x5 card 🤯
 
 ---
 
+> [!WARNING]
+> 1. Only works on modern chromium browsers
+> 1. The app is great on a **tablet**, but on a phone it is a tight squeeze, but you can try to click the fullscreen icon in the lower right and use it in portrait, first setting your sequencer values and then scrolling to the left to lay down your notes.
+
+---
+
 <details><summary>Guide 📖</summary>
 
 ---
@@ -112,12 +118,6 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 ---
 
 </details>
-
----
-
-> [!WARNING]
-> 1. Only works on modern chromium browsers
-> 1. The app is great on a **tablet**, but on a phone it is a tight squeeze, but you can try to click the fullscreen icon in the lower right and use it in portrait, first setting your sequencer values and then scrolling to the left to lay down your notes.
 
 [^1]: The synth engine part of this sequencer is a port of Jake Taylor's [public domain Sonant](https://github.com/user-attachments/assets/e01812b1-4b97-47e0-81a8-49d157aa89bf), designed for size-constrained games and demos.
 [^2]: The tutorial song is a portion of Beatnic by mBitsnBites
