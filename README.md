@@ -120,4 +120,4 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 </details>
 
 [^1]: The tutorial song is a portion of Beatnic by mBitsnBites
-[^2]: The synth engine part of this sequencer is a port of Jake Taylor's [public domain Sonant](https://github.com/user-attachments/assets/e01812b1-4b97-47e0-81a8-49d157aa89bf), designed for size-constrained games and demos.
+[^2]: The synth engine part of this sequencer is a port of Jake Taylor's [public domain Sonant](https://github.com/user-attachments/assets/e01812b1-4b97-47e0-81a8-49d157aa89bf), designed for size-constrained code.
