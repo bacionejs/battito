@@ -8,7 +8,7 @@
 
 Entire app source code fits on a 3x5 card 🤯  
 
-<a href="https://bacionejs.github.io/bacionejs/viewsource.html?b=1&file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html" target="_blank"><img width="200" src="https://github.com/user-attachments/assets/0c5f1b0d-f002-45db-a334-bd7244ab17ef" /></a>
+<a href="https://bacionejs.github.io/bacionejs/viewsource.html?b=1&file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html" target="_blank"><img width="200" src="https://github.com/user-attachments/assets/380622d1-74a4-44ef-9f0b-0db440cacc9d" /></a>
 
 ---
 
