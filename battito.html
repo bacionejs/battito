@@ -74,5 +74,4 @@ function Battito(audiocontext){
           if(j<ea)e=j*ai;else if(j>=ea+es)e-=(j-ea-es)*ri;if(m1)t1+=lfoR;if(e1)t1*=e*e;c1+=t1;rs=W1[((c1*WS)&(WMASK))>>>0]*v1;if(e2)t2*=e*e;c2+=t2;rs+=W2[((c2*WS)&(WMASK))>>>0]*v2;if(nv)rs+=(rnd()*2-1)*nv*e;rs*=e*vm;
           f=ca*(mc?lfoR:1);low+=f*band;high=cr*(rs-band)-low;band+=f*high; rs=ct==1?high:ct==2?low:ct==3?band:ct==4?low+high:rs; t=SIN[((pan*WS)&(WMASK))>>>0]*pa+0.5;L[b]+=rs*(1-t);R[b]+=rs*t;}}
       let DS=floor(ds*rowlen/2);if(DS>0){let DA=da/255;for(let b=0;b<S-DS;b++){L[b+DS]+=R[b]*DA;R[b+DS]+=L[b]*DA}} for(let b=0;b<S;b++){LL[b]+=L[b];RR[b]+=R[b]}}
-    let X=0;for(let i=0;i<S;i++){X=max(X,abs(LL[i]),abs(RR[i]))} if(X>0){let scale=1/X;for(let i=0;i<S;i++){LL[i]*=scale;RR[i]*=scale}}
     return[LL,RR].reduce((buffer,data,i)=>(buffer.copyToChannel(data,i),buffer),audiocontext.createBuffer(2,LL.length,SAMPLERATE))}}))()}}</script>
