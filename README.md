@@ -6,18 +6,6 @@
 
 ---
 
-Entire app source code fits on a 3x5 card 🤯  
-
-<a href="https://bacionejs.github.io/bacionejs/viewsource.html?b=1&file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html" target="_blank"><img width="200" src="https://github.com/user-attachments/assets/380622d1-74a4-44ef-9f0b-0db440cacc9d" /></a>
-
----
-
-> [!WARNING]
-> 1. Only works on modern chromium browsers
-> 1. The app is great on a **tablet**, but on a phone it is a tight squeeze, but you can try to click the fullscreen icon in the lower right and use it in portrait, first setting your sequencer values and then scrolling to the left to lay down your notes.
-
----
-
 <details><summary>Guide 📖</summary>
 
 ---
@@ -118,6 +106,19 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 ---
 
 </details>
+
+---
+
+Entire app source code fits on a 3x5 card 🤯  
+
+<a href="https://bacionejs.github.io/bacionejs/viewsource.html?b=1&file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html" target="_blank"><img width="200" src="https://github.com/user-attachments/assets/380622d1-74a4-44ef-9f0b-0db440cacc9d" /></a>
+
+---
+
+> [!WARNING]
+> 1. Only works on modern chromium browsers
+> 1. The app is great on a **tablet**, but on a phone it is a tight squeeze, but you can try to click the fullscreen icon in the lower right and use it in portrait, first setting your sequencer values and then scrolling to the left to lay down your notes.
+
 
 [^1]: The tutorial song is a portion of Beatnic by mBitsnBites
 [^2]: The synth engine portion of this sequencer is a port of Jake Taylor's [public domain Sonant](https://github.com/user-attachments/assets/e01812b1-4b97-47e0-81a8-49d157aa89bf), designed for size-constrained code.
