@@ -25,7 +25,7 @@ Optional
 - To change the tempo, edit the `bpm` value in the **textarea**.
 - Besides clicking sequencer column headers to preview instruments, you can also click the piano to hear what their **pitch** sounds like.
 - The piano roll is only 4 octaves wide but you can compensate by setting the oscillator **octave**.
--  To do **live jamming**, **double-click the waveform visualizer** to open the improv **four-octave keyboard** in a separate browser tab. You can select any of your **eight instruments** by **long-pressing a piano key (1–8)**. The improv tab automatically receives **real-time instrument setting updates** made in the main app. Note that there is **currently no support** to route your improv performance back into the sequencer.
+-  To do **live jamming**, **double-click the waveform visualizer** to open the improv **four-octave keyboard** in a separate browser tab. You can select any of your **eight instruments** by **long-pressing a piano key (1–8)**. The improv tab receives **real-time instrument setting updates** from the main app. Note that there is **currently no support** to route your improv performance back into the sequencer.
 
 ---
 
