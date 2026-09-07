@@ -9,19 +9,19 @@ let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SAMPLERATE=44100*60/4,STEPRATE=PR*60/4
 let BS=Battito.toString(),A=new AudioContext(),SONG=instruments().presets,C=Array(SC).fill(0),R=Array(SR).fill(0),RK=[...R.keys()],PA=Array(PC*PR);R[-1]=C[-1]=1;
 let piano=element("div",document.body,"piano"),sliders=element("div",document.body,"sliders"),side=element("div",document.body,"side"),sequencer=element("div",side,"sequencer");
 let text=element("textarea",side,"text"),X=element("canvas",side,"canvas").getContext("2d"),fullscreen=element("div",side,"fullscreen","⛶");
-let widgets=[piano,sliders,sequencer,text], update=()=>widgets.forEach(o=>o.update()), track=()=>{return C[LT]&&SONG.tracks[LT]}, color=i=>["#f55","#fc2","#cf0","#6fd","#4cf","#74f","#f48","#fa4"][i]||""
+let widgets=[piano,sliders,sequencer,text], update=()=>widgets.forEach(o=>o.update()), track=()=>SONG.tracks[LT], color=i=>["#f55","#fc2","#cf0","#6fd","#4cf","#74f","#f48","#fa4"][i]||""
 piano      .update=function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v))}
 sequencer  .update=function(){this.cells.forEach(e=>state(e,(active,note,body,sequence)=>{e.style.background=!active?"":!note?"gray":color(e.col);body&&(e.textContent=sequence||"")}))}
 sliders    .update=function(){let t=track();this.cells.forEach(s=>{s.disabled=!t;s.value=t?t[s.key]:0;s.previousSibling.textContent=s.key+label(+s.value,s.max)})}
 text       .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s)}
 piano      .onclick=function({target:{row,col}}){let n=col+C3,p;preview(n);if(!(p=pattern()))return;p[row]=p[row]==n?0:n;update()}
-sequencer  .onclick=function({target:{row,col}}){let hr=!~col,hc=!~row;hr&hc?toggleall():hr|hc?((hr?R:C)[row+col+1]^=1,hc&&(LT=col,preview())):incrementid(row,col),update(),start()}
+sequencer  .onclick=function({target:{row,col}}){let hr=!~col,hc=!~row;hc&&!hr&&improv();hr&hc?toggleall():hr|hc?((hr?R:C)[row+col+1]^=1,hc&&(LT=col,preview())):incrementid(row,col),update(),start()}
 sliders    .oninput=function({target:{key,value}}){(track()[key]=+value,update(),preview())}
 text       .oninput=function(){try{let song=format(text.value);SONG=song;update();preview()}catch{}}
 fullscreen .onclick=function(){document.documentElement.requestFullscreen()}
 makelongpress(X.canvas,save); oncontextmenu=e=>e.target.tagName=="TEXTAREA"; grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); compatibility()
 sliders.cells.forEach((v,i)=>v.previousSibling.style.color=color(i<5?0:i<10?1:i<15?2:i<18?3:i<23?4:i<25?5:i<27?6:7)); fetch('tutorial.js').then(r=>r.text()).then(c=>eval(c))
-function start(){try{S?.stop?.(); (S=source(range()))&&(S.start(S.startTime=A.currentTime),loop())}catch{}}
+function start(){try{if(S){S.onended=null;S.stop();}if(S=source(range())){S.onended=start;S.start(S.startTime=A.currentTime);loop();}}catch{}}
 function source(s){let n;return s&&(n=Object.assign(A.createBufferSource(),{buffer:Battito(A).createbuffer(s)}),n.connect(A.destination),n)}
 function loop(){if(!S||!next())return;if(cS!=pS){pS=cS;piano.update();scroll()}if(cP!=pP){draw();sequencer.update();playhead(cP);pP=cP}requestAnimationFrame(loop)}
 function playhead(c){piano.cells.forEach(v=>v.style.transform="");for(let i=PC;i--;){PA[c*PC+i]>=0&&(piano.cells[c*PC+i].style.transform="scale(2)");}}
@@ -49,8 +49,14 @@ function naturals(p){p.cells.forEach(c=>c.textContent=c.row%4?"":"C,,D,,E,F,,G,,
 function label(v,m){return String(m==4?["Off","High","Low","Band","Notch"][v]:m==3?["Sine","Square","Saw","Tri"][v]:m==1?["Off","On"][v]:v).padStart(10," ")}
 function format(data){return (typeof data=="object")?JSON.stringify(data).replace(/{/g,"\n$&").replace(/\x22/g,""):JSON.parse(data.replace(/(\w+):/g,'"$1":'))}
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="Rendering error<br>Requires a modern chromium-based browser"},200)}
-function makelongpress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,800)};e.onpointerup=e.onpointercancel=_=>clearTimeout(t)}
+function makelongpress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,500)};e.onpointerup=e.onpointercancel=_=>clearTimeout(t)}
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e}
+function improv(){
+  if(!improv.d){improv.d=window.open("","improv");setTimeout(()=>{let d=improv.d.document;d.open();d.write(`<title>Improv</title><style>
+  body{background:#121212;color:#888}.piano{display:grid;grid-template-columns:repeat(12,1fr);height:100%}.cell{border:1px solid #2a2a2a;place-items:center;display:grid}.cell:active{background:#f80}</style>
+  <div class="piano">${Array.from({length:48},(_,i)=>{let n=["C","","D","","E","F","","G","","A","","B"][i%12];return`<div class="cell" id="c${i}">${n}</div>`}).join("")}</div>`);d.close();
+  for(let i=0;i<48;i++)d.getElementById("c"+i).onpointerdown=()=>{let t=track();t&&(A.resume(),source({...SONG,tracks:[{...t,s:[1],p:[{length:1,0:(3-(i/12|0))*12+(i%12)+C3-12}]}]}).start())};},100);}
+}
 function instruments(){
   let schema={v1:255,w1:3,o1:16,s1:11,d1:255,v2:255,w2:3,o2:16,s2:11,d2:255,ea:2e5,es:2e5,er:2e5,e1:1,e2:1,ct:4,ca:11025,cr:255,mw:3,ms:16,ma:255,m1:1,mc:1,ds:16,da:248,ps:16,pa:255,nv:255,vm:255};
   return {init:(s)=>{s.cells=Object.entries(schema).map(([key,max])=>(element("label",s,"",key),Object.assign(element("input",s,"slider"),{type:"range",key,max,disabled:true})))},presets:{bpm:100,tracks:[
