@@ -55,7 +55,7 @@ function improv(){
   if(!improv.d){improv.d=window.open("","improv");setTimeout(()=>{let d=improv.d.document;d.open();d.write(`<title>Improv</title><style>body{background:#121212;color:#888;user-select:none}
   .piano{display:grid;grid-template-columns:repeat(12,1fr);height:100%}.cell{border:1px solid #2a2a2a;place-items:center;display:grid}.cell:active{background:#f80}</style>
   <div class="piano">${Array.from({length:48},(_,i)=>{let n=["C","","D","","E","F","","G","","A","","B"][i%12];return`<div class="cell" id="c${i}">${n}</div>`}).join("")}</div>`);d.close();
-  for(let i=0;i<48;i++)d.getElementById("c"+i).onpointerdown=()=>{let t=track();t&&(A.resume(),source({...SONG,tracks:[{...t,s:[1],p:[{length:1,0:(3-(i/12|0))*12+(i%12)+C3-12}]}]}).start())};},100);}
+  for(let i=0;i<48;i++)d.getElementById("c"+i).onpointerdown=()=>{let t=track();t&&(A.resume(),source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:(3-(i/12|0))*12+(i%12)+C3-12}]}]}).start())};},100);}
 }
 function instruments(){
   let schema={v1:255,w1:3,o1:16,s1:11,d1:255,v2:255,w2:3,o2:16,s2:11,d2:255,ea:2e5,es:2e5,er:2e5,e1:1,e2:1,ct:4,ca:11025,cr:255,mw:3,ms:16,ma:255,m1:1,mc:1,ds:16,da:248,ps:16,pa:255,nv:255,vm:255};
