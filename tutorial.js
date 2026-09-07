@@ -1,8 +1,10 @@
 function tutorial(){
 element("style").textContent=".tut-pointer,.tut-message{position:fixed;z-index:2;} .tut-message{padding:1rem;}"
+let origImprov=window.improv;
+window.improv=()=>{};
 let ci=0,p,song,clicks,m=element("button",document.body,"tut-message","Click here to watch a 25 second tutorial"); addEventListener("click",e=>{m.remove();if(e.target==m)init();},{once:true});
 function init(){p=element("div",document.body,"tut-pointer","👉");p.style.transition="transform .1s ease";initSong();initClicks();move();}
-function move(){if(ci>=clicks.length)return p.remove();let e=clicks[ci++]();let r=e.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;click(e);}
+function move(){if(ci>=clicks.length){window.improv=origImprov;return p.remove();}let e=clicks[ci++]();let r=e.getBoundingClientRect();p.style.top=r.top;p.style.left=r.left;click(e);}
 function click(e){setTimeout(()=>{p.style.transform="scale(.5)";e.click();setTimeout(()=>{p.style.transform="";setTimeout(move,100);},100);},100);}
 function make(clickon,c,r){return ()=>clickon.cells.find(x=>x.row==r&&x.col==c);}
 function toggle(c,r){return Array(2).fill(0).flatMap(()=>[make(sequencer,c,-1),make(sequencer,-1,r)]);}
