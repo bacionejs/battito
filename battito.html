@@ -5,8 +5,8 @@ element("style").textContent=`
   .piano{color:#2a2a2a;line-height:0} .piano>.cell:nth-child(12n+1){color:gray} .fullscreen{position:absolute;bottom:0;right:0;z-index:1;font-size:1rem;color:orange} :fullscreen .fullscreen{display:none}
   .sliders{place-items:center;white-space:pre} .slider{height:1px;accent-color:blue} input::-webkit-slider-thumb{opacity:0} label{pointer-events:none}
   .sequencer>.cell:nth-child(-n+9){position:sticky;top:0} .sequencer{aspect-ratio:1;overflow-y:scroll} .text{all:inherit;padding:1rem;white-space:pre;overflow:auto} .text,.canvas{height:25%;aspect-ratio:2/1}`;
-let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SAMPLERATE=44100*60/4,STEPRATE=PR*60/4,cP,pP,pS,cS,cSs,cSi,cVi,S,P,LT=0,BC=new BroadcastChannel("synth_presets"),sync=()=>BC.postMessage(SONG.tracks);
-let BS=Battito.toString(),A=new AudioContext(),SONG=instruments().presets,C=Array(SC).fill(0),R=Array(SR).fill(0),RK=[...R.keys()],PA=Array(PC*PR);R[-1]=C[-1]=1; window.SONG=SONG;window.Battito=Battito;
+let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SAMPLERATE=44100*60/4,STEPRATE=PR*60/4,cP,pP,pS,cS,cSs,cSi,cVi,S,P,LT=0;
+let BS=Battito.toString(),A=new AudioContext(),SONG=instruments().presets,C=Array(SC).fill(0),R=Array(SR).fill(0),RK=[...R.keys()],PA=Array(PC*PR);R[-1]=C[-1]=1;
 let piano=element("div",document.body,"piano"),sliders=element("div",document.body,"sliders"),side=element("div",document.body,"side"),sequencer=element("div",side,"sequencer");
 let text=element("textarea",side,"text"),X=element("canvas",side,"canvas").getContext("2d"),fullscreen=element("div",side,"fullscreen","⛶");
 let widgets=[piano,sliders,sequencer,text], update=()=>widgets.forEach(o=>o.update()), track=()=>{return C[LT]&&SONG.tracks[LT]}, color=i=>["#f55","#fc2","#cf0","#6fd","#4cf","#74f","#f48","#fa4"][i]||""
@@ -16,13 +16,12 @@ sliders    .update=function(){let t=track();this.cells.forEach(s=>{s.disabled=!t
 text       .update=function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s)}
 piano      .onclick=function({target:{row,col}}){let n=col+C3,p;preview(n);if(!(p=pattern()))return;p[row]=p[row]==n?0:n;update()}
 sequencer  .onclick=function({target:{row,col}}){let hr=!~col,hc=!~row;hr&hc?toggleall():hr|hc?((hr?R:C)[row+col+1]^=1,hc&&(LT=col,preview())):incrementid(row,col),update(),start()}
-sliders    .oninput=function({target:{key,value}}){(track()[key]=+value,update(),preview(),sync())}
-text       .oninput=function(){try{let song=format(text.value);SONG=song;update();preview();sync()}catch{}}
+sliders    .oninput=function({target:{key,value}}){(track()[key]=+value,update(),preview())}
+text       .oninput=function(){try{let song=format(text.value);SONG=song;update();preview()}catch{}}
 fullscreen .onclick=function(){document.documentElement.requestFullscreen()}
-X.canvas.ondblclick=()=>window.open('improv.html');
 makelongpress(X.canvas,save); oncontextmenu=e=>e.target.tagName=="TEXTAREA"; grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); compatibility()
 sliders.cells.forEach((v,i)=>v.previousSibling.style.color=color(i<5?0:i<10?1:i<15?2:i<18?3:i<23?4:i<25?5:i<27?6:7)); fetch('tutorial.js').then(r=>r.text()).then(c=>eval(c))
-function start(){try{if(S){S.onended=null;S.stop();}if(S=source(range())){S.onended=start;S.start(S.startTime=A.currentTime);loop();}}catch{}}
+function start(){try{S?.stop?.(); (S=source(range()))&&(S.start(S.startTime=A.currentTime),loop())}catch{}}
 function source(s){let n;return s&&(n=Object.assign(A.createBufferSource(),{buffer:Battito(A).createbuffer(s)}),n.connect(A.destination),n)}
 function loop(){if(!S||!next())return;if(cS!=pS){pS=cS;piano.update();scroll()}if(cP!=pP){draw();sequencer.update();playhead(cP);pP=cP}requestAnimationFrame(loop)}
 function playhead(c){piano.cells.forEach(v=>v.style.transform="");for(let i=PC;i--;){PA[c*PC+i]>=0&&(piano.cells[c*PC+i].style.transform="scale(2)");}}
