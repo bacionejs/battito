@@ -1,19 +1,12 @@
-<a href="//bacionejs.github.io/battito/battito.html" target="_blank"><img src="https://github.com/user-attachments/assets/71f17939-b7be-4454-8572-44b1b2a5f804" width="100%" /></a>
-
-
-
-
-https://github.com/user-attachments/assets/540efe2d-9d78-4db1-9964-facf07456204
-
-
+https://github.com/user-attachments/assets/81001211-50e8-4ca1-a4f5-a5a2bc267af7
 
 ---
 
-👉 [Try it](https://bacionejs.github.io/battito/battito.html) (includes tutorial [^1] 🧑‍🎓)  
+👉 [Try it](https://bacionejs.github.io/battito/battito.html)
 
 ---
 
-<details><summary>Guide 📖</summary>
+</details><details><summary>Guide 📖</summary>
 
 ---
 
