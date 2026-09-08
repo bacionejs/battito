@@ -1,8 +1,7 @@
 <a href="//bacionejs.github.io/battito/battito.html" target="_blank"><img src="https://github.com/user-attachments/assets/71f17939-b7be-4454-8572-44b1b2a5f804" width="100%" /></a>
 
 
-https://github.com/user-attachments/assets/e6283a33-8b63-4fe6-8920-0fd3de41b44d
-
+https://github.com/user-attachments/assets/06e92fb8-3c3e-4219-9138-54b6804117d4
 
 ---
 
