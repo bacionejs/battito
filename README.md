@@ -1,14 +1,14 @@
 https://github.com/user-attachments/assets/81001211-50e8-4ca1-a4f5-a5a2bc267af7
 
----
+
 
 [Try it](https://bacionejs.github.io/battito/battito.html)
 
----
+
 
 </details><details><summary>Guide</summary>
   
----
+
 
 Steps
 1. Click on the column headers in the **sequencer** to hear what the preset instruments sound like. You can select multiple columns/rows in the sequencer for **playback**, but when **editing**, select only one **row**. The last **column** selected is the one that will be edited. For example, select drum, bass and lastly lead to **hear** drum/bass and **edit** lead. The sequencer constantly loops over the selected sequencer columns/rows. Click the corner to toggle the whole song. Looping is **live**, meaning it regenerates every time, so changes you make are reflected in the next loop. This is helpful when editing a small section, as the changes are almost immediate. An **improv** browser tab will be created the first time you click a column. It can be ignored or closed and is useful for discovering a melody. For example, toggle your whole song on, toggle off an instrument, and improvise that instrument.
@@ -107,7 +107,7 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 
 </details>
 
----
+
 
 Entire app source code fits on a 3x5 card  
 
