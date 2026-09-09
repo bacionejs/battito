@@ -2,11 +2,11 @@ https://github.com/user-attachments/assets/81001211-50e8-4ca1-a4f5-a5a2bc267af7
 
 ---
 
-👉 [Try it](https://bacionejs.github.io/battito/battito.html)
+[Try it](https://bacionejs.github.io/battito/battito.html)
 
 ---
 
-</details><details><summary>Guide 📖</summary>
+</details><details><summary>Guide</summary>
   
 ---
 
@@ -28,7 +28,7 @@ Optional
 
 ---
 
-</details><details><summary>Instruments 🎚️</summary>
+</details><details><summary>Instruments</summary>
 
 ---
 
@@ -109,7 +109,7 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 
 ---
 
-Entire app source code fits on a 3x5 card 🤯  
+Entire app source code fits on a 3x5 card  
 
 <a href="https://bacionejs.github.io/bacionejs/viewsource.html?b=1&file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html" target="_blank"><img width="200" src="https://github.com/user-attachments/assets/380622d1-74a4-44ef-9f0b-0db440cacc9d" /></a>
 
