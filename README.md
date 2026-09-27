@@ -102,13 +102,17 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 </details><details><summary>Comparisons</summary>
 
 - **Fast** - Several time faster than [SonantLive](https://sonantlive.bitsnbites.eu) and comparable in speed to the [pl_synth](https://github.com/phoboslab/pl_synth) WASM solution
-- **Selection** - Has the most comprehensive selection mechanism
+- **Selection** - Comprehensive selection mechanism
 - **Export** - Exports a complete ready-to-run HTML page
 - **Scriptable** - Raw JSON can be edited live
 - **Improv** - Has a tab for live-jamming
-- **Pianoroll** - intuitive note input
-  
+- **Pianoroll** - Intuitive one-click note input
+- **Overdub** - Input while playing other tracks
+- **Live** - Regenerates every loop
+
 </details>
+
+
 
 
 
