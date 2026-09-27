@@ -107,7 +107,7 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 - **Scriptable** - Raw JSON can be edited live
 - **Improv** - Has a tab for live-jamming
 - **Pianoroll** - Intuitive one-click note input
-- **Overdub** - Input while playing other tracks
+- **Overdub** - Input notes while other tracks are playing
 - **Live** - Regenerates every loop
 
 </details>
