@@ -124,6 +124,8 @@ After opening a sample, click the sequencer corner to play it.
 
 </details>
 
+---
+
 Entire app source-code fits on a 3x5 card  
 
 <a href="https://bacionejs.github.io/bacionejs/viewsource.html?b=1&file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html" target="_blank"><img width="200" src="https://github.com/user-attachments/assets/61c7027d-f675-4e58-9675-f72c2b7c336b" /></a>
