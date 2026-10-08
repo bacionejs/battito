@@ -4,7 +4,7 @@ element("style").textContent=`
   .piano,.sequencer,.sliders,.cell{display:grid} .side{position:relative} .cell{place-items:center;aspect-ratio:1;border:1px solid #2a2a2a;transition: background 0.4s ease-out}
   .piano{color:#2a2a2a;line-height:0} .piano>.cell:nth-child(12n+1){color:gray} .fullscreen{position:absolute;bottom:0;right:0;z-index:1;font-size:1rem;color:orange} :fullscreen .fullscreen{display:none}
   .sliders{place-items:center;white-space:pre} .slider{height:1px;accent-color:blue} input::-webkit-slider-thumb{opacity:0} label{pointer-events:none}
-  .sequencer>.cell:nth-child(-n+9){position:sticky;top:0} .sequencer{aspect-ratio:1;overflow-y:scroll} .text{all:inherit;padding:1rem;white-space:pre;overflow:auto} .text,.canvas{height:25%;aspect-ratio:2/1}`
+  .sequencer>.cell:nth-child(-n+9){position:sticky;top:0} .sequencer{aspect-ratio:1;overflow-y:scroll} .text{all:inherit;padding:1rem;white-space:pre;overflow:auto} .text,.canvas{height:25%;aspect-ratio:2}`
 let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SAMPLERATE=44100*60/4,STEPRATE=PR*60/4,cP,pP,pS,cS,cSs,cSi,cVi,S,P,LT=0
 let BS=Battito.toString(),A=new AudioContext(),SONG=instruments().presets,C=Array(SC).fill(0),R=Array(SR).fill(0),RK=[...R.keys()],PA=Array(PC*PR);R[-1]=C[-1]=1
 let piano=element("div",document.body,"piano"),sliders=element("div",document.body,"sliders"),side=element("div",document.body,"side"),sequencer=element("div",side,"sequencer")
