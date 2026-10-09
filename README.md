@@ -103,9 +103,8 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 
 ---
 
-</details><details><summary>Comparisons</summary>
+</details><details><summary>Advantages</summary>
 
-- **Fast** - 75 times faster[^2] than [Sonant-X](https://github.com/nicolas-van/sonant-x-live) and comparable in speed to the [pl_synth](https://github.com/phoboslab/pl_synth) WASM solution
 - **Selection** - Comprehensive selection mechanism
 - **Export** - Exports your song as a complete ready-to-run HTML page or WAV file.
 - **Scriptable** - Raw JSON can be edited live
@@ -114,8 +113,11 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 - **Overdub** - Input notes while other tracks are playing
 - **Live** - Regenerates every loop
 
+</details><details><summary>Benchmark</summary>
+  
+Using the song Ambidumbi as a benchmark:  
 
-
+[Battito][ambidumbi] is 75 times faster than [Sonant-X][ambidumbisonantx] and comparable in speed to the [pl_synth][ambidumbiplsynth] WASM solution
 
 </details><details><summary>Samples</summary>
 
@@ -133,7 +135,6 @@ Entire app source-code fits on a 3x5 card
 <a href="https://bacionejs.github.io/bacionejs/viewsource.html?b=1&file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html" target="_blank"><img width="200" src="https://github.com/user-attachments/assets/8c96011f-4e8f-4a3f-bb7d-c9113754fa40" /></a>
 
 [^1]: The synth engine portion of this sequencer is a port of Jake Taylor's [public domain Sonant](https://github.com/user-attachments/assets/e01812b1-4b97-47e0-81a8-49d157aa89bf), **for size-constrained games and demos**
-[^2]: [Battito][ambidumbi] vs [Sonant-X][ambidumbisonantx] vs [pl_synth][ambidumbiplsynth] song generation speed comparison
 
 [beatnic]: https://bacionejs.github.io/battito/battito.html?song=eyJicG0iOjEwMCwidHJhY2tzIjpbeyJ2MSI6MjU1LCJ3MSI6MCwibzEiOjksInMxIjowLCJkMSI6MCwidjIiOjI1NSwidzIiOjAsIm8yIjo3LCJzMiI6MCwiZDIiOjAsImVhIjoxMDAsImVzIjowLCJlciI6NTk3MCwiZTEiOjEsImUyIjoxLCJjdCI6MiwiY2EiOjUwMCwiY3IiOjI1NCwibXciOjAsIm1zIjowLCJtYSI6MCwibTEiOjAsIm1jIjowLCJkcyI6MSwiZGEiOjMxLCJwcyI6NCwicGEiOjIxLCJudiI6MCwidm0iOjE3MSwicyI6WzEsMSwxLDFdLCJwIjpbWzEyMywwLDAsMCwxMjMsMCwwLDAsMTIzLDAsMCwwLDEyMywwLDAsMCwxMjMsMCwwLDAsMTIzLDAsMCwwLDEyMywwLDAsMCwxMjMsMCwwLDBdXX0seyJ2MSI6MjU1LCJ3MSI6MiwibzEiOjYsInMxIjoxMSwiZDEiOjAsInYyIjoyNTUsIncyIjoyLCJvMiI6NiwiczIiOjExLCJkMiI6NCwiZWEiOjg4LCJlcyI6MjAwMCwiZXIiOjc1MDUsImUxIjowLCJlMiI6MCwiY3QiOjIsImNhIjozMTQ0LCJjciI6NTEsIm13IjowLCJtcyI6NywibWEiOjE3OSwibTEiOjAsIm1jIjoxLCJkcyI6NiwiZGEiOjYwLCJwcyI6NCwicGEiOjY0LCJudiI6MCwidm0iOjI1NSwicyI6WzEsMSwxLDFdLCJwIjpbWzAsMCwxMjQsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDEyNCwwLDEyNCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMF1dfSx7InYxIjoxOTIsIncxIjoyLCJvMSI6NywiczEiOjAsImQxIjowLCJ2MiI6MjAxLCJ3MiI6MywibzIiOjcsInMyIjowLCJkMiI6MCwiZWEiOjEwMCwiZXMiOjE1MCwiZXIiOjc1MDUsImUxIjowLCJlMiI6MCwiY3QiOjIsImNhIjo1ODM5LCJjciI6MjU0LCJtdyI6MCwibXMiOjYsIm1hIjoxOTUsIm0xIjowLCJtYyI6MSwiZHMiOjYsImRhIjoxMjEsInBzIjo2LCJwYSI6MTQ3LCJudiI6MCwidm0iOjE5MSwicyI6WzEsMSwyLDNdLCJwIjpbWzEzNSwwLDAsMCwwLDAsMCwwLDE1OSwwLDE1NywwLDE1OSwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMTQ3LDE1NCwwLDE1OSwwLDAsMCwwXSxbMTM4LDAsMCwwLDAsMCwwLDAsMTUwLDAsMTU5LDAsMTYyLDAsMCwwLDAsMCwwLDAsMCwwLDE1MCwwLDE2MiwxNTAsMCwxNTksMCwwLDAsMF0sWzE0OSwwLDAsMCwwLDAsMCwwLDE0OSwwLDE1MCwwLDE1NCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMTQ3LDE1NywwLDE1OSwwLDAsMCwwXV19XX0%3D
 
