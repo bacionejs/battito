@@ -4,7 +4,7 @@ element("style").textContent=`
   .piano,.sequencer,.sliders,.cell{display:grid} .side{position:relative} .cell{place-items:center;aspect-ratio:1;border:1px solid #2a2a2a;transition: background 0.4s ease-out}
   .piano{color:#2a2a2a;line-height:0} .piano>.cell:nth-child(12n+1){color:gray} .fullscreen{position:absolute;bottom:0;right:0;z-index:1;font-size:1rem;color:orange} :fullscreen .fullscreen{display:none}
   .sliders{place-items:center;white-space:pre} .slider{height:1px;accent-color:blue} input::-webkit-slider-thumb{opacity:0} label{pointer-events:none}
-  .sequencer>.cell:nth-child(-n+9){position:sticky;top:0} .sequencer{aspect-ratio:1;overflow-y:scroll} .text{all:inherit;padding:1rem;white-space:pre;overflow:auto} .text,.canvas{height:25%;aspect-ratio:2}`
+  .sequencer>.cell:nth-child(-n+9){position:sticky;top:0;background:#111} .sequencer{aspect-ratio:1;overflow-y:scroll} .text{all:inherit;padding:1rem;white-space:pre;overflow:auto} .text,.canvas{height:25%;aspect-ratio:2}`
 let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SAMPLERATE=44100*60/4,STEPRATE=PR*60/4,cP,pP,pS,cS,cSs,cSi,cVi,S,P,LT=0,N="C,,D,,E,F,,G,,A,,B".split(",")
 let BS=Battito.toString(),A=new AudioContext(),SONG=instruments().presets,C=Array(SC).fill(0),R=Array(SR).fill(0),RK=[...R.keys()],PA=Array(PC*PR);R[-1]=C[-1]=1
 let piano=element("div",document.body,"piano"),sliders=element("div",document.body,"sliders"),side=element("div",document.body,"side"),sequencer=element("div",side,"sequencer")
@@ -26,7 +26,7 @@ function start(){try{S&&(S.onended=null,S.stop());S=source(range());S&&(S.onende
 function source(s){let n;return s&&(n=Object.assign(A.createBufferSource(),{buffer:Battito(A).createbuffer(s)}),n.connect(A.destination),n)}
 function loop(){if(S&&next()){if(cS!=pS){pS=cS;piano.update();scroll()}if(cP!=pP){X.fillStyle="#1115";X.strokeStyle=`hsl(${cP*90},100%,50%)`;draw();sequencer.update();playhead(cP);pP=cP}requestAnimationFrame(loop)}}
 function playhead(c){piano.cells.forEach(v=>v.style.transform="");for(let i=PC;i--;){PA[c*PC+i]>=0&&(piano.cells[c*PC+i].style.transform="scale(2)");}}
-function scroll(){let t=sequencer.cells[cSi],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"})}
+function scroll(){let t=sequencer.cells[cSi];sequencer.scrollTo({top:t.offsetTop+(t.clientHeight-sequencer.clientHeight)/2,behavior:"smooth"})}
 function next(){let s=(A.currentTime-S.startTime)*SONG.bpm/STEPRATE;if(s>=cSs.length)return start();cS=cSs[s|0];cP=(cVi=s*PR|0)%PR;cSi=1+(cS+1)*(SC+1);return 1}
 function toggleall(){let c=0,r=0,x;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(i>c&&(c=i),j>r&&(r=j))));x=R.some((v,i)=>i<=r&!v)|C.some((v,i)=>i<=c&!v);R.fill(x?1:0,0,r+1);C.fill(x?1:0,0,c+1);}
 function incrementid(row,col){let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;np&&(t.p[np-1]??=Array(PR).fill(0))}
@@ -38,11 +38,11 @@ function draw(s=S,l=SAMPLERATE/SONG.bpm|0,o=cVi*l){let d=s?.buffer?.getChannelDa
 function save(){if(!hasnotes())return;let s="song"+Date.now(),d=(b,z)=>{Object.assign(d.a??=element("a"),{href:URL.createObjectURL(b),download:s+z}).click()};d(wave(),".wav");d(html(),".html")}
 function html(){return new Blob([`<\script>onload=()=>{\ndocument.body.textContent='Click to play';addEventListener('click',music(),{once:true});\n\n${music()}\n\n}</\script>`])}
 function music(){return `function music(){\nlet A=new AudioContext(),S=source(${format(range())});\n${source}\n${BS}\nreturn ()=>{S.loop=true;S.start()}\n}`}
-function wave(){let os=44,d=S.buffer.length*4,o=new ArrayBuffer(d+os),v=new DataView(o);riff(o);v.setUint32(4,d+36,1);v.setUint32(40,d,1);pcm(v,os);return new Blob([o],{type:"audio/wav"})}
+function wave(b=Battito(A).createbuffer(range())){let os=44,d=b.length*4,o=new ArrayBuffer(d+os),v=new DataView(o);riff(o);v.setUint32(4,d+36,1);v.setUint32(40,d,1);pcm(v,os,b);return new Blob([o],{type:"audio/wav"})}
 function riff(o){new Uint8Array(o).set([82,73,70,70,0,0,0,0,87,65,86,69,102,109,116,32,16,0,0,0,1,0,2,0,68,172,0,0,16,177,2,0,4,0,16,0,100,97,116,97,0,0,0,0])}
-function pcm(v,os){for(let j=0,i,s;j<S.buffer.length;j++)for(i=0;i<2;i++,os+=2)v.setInt16(os,(s=S.buffer.getChannelData(i)[j])*32767-(s<0),1)}
-function grid(p,c,r){p.style.gridTemplateColumns="repeat("+c+",1fr)";p.cells=Array.from({length:c*r},(_,i)=>{let e=element("div",p,"cell");e.col=i%c;e.row=i/c|0;return c&1?header(e):e})}
-function header(c){let r=--c.row,t=--c.col,v;!~r?(~t&&(v="ABCDEFGH"[t],c.style.color=color(t))):!~t&&(v=r+1);c.textContent=v;return c}
+function pcm(v,os,b){let c=[0,1].map(i=>b.getChannelData(i));for(let j=0,i,s;j<b.length;j++)for(i=0;i<2;i++,os+=2)v.setInt16(os,(s=c[i][j])*32767-(s<0),1)}
+function grid(p,c,r){p.style.gridTemplateColumns=`repeat(${c},1fr)`;p.cells=Array.from({length:c*r},(_,i)=>{let e=element("div",p,"cell");e.col=i%c;e.row=i/c|0;return c&1&&header(e)||e})}
+function header(c){let r=--c.row,t=--c.col;c.textContent=!~r?(~t?(c.style.color=color(t),"ABCDEFGH"[t]):""):!~t?r+1:"";return c}
 function naturals(p){p.cells.forEach(c=>c.textContent=c.row%4?"":N[c.col%12])}
 function label(v,m){return String(m==4?["Off","High","Low","Band","Notch"][v]:m==3?["Sine","Square","Saw","Tri"][v]:m==1?["Off","On"][v]:v).padStart(10," ")}
 function format(data){return typeof data=="object"?JSON.stringify(data).replace(/{/g,"\n$&").replace(/\x22/g,""):JSON.parse(data.replace(/(\w+):/g,'"$1":'))}
