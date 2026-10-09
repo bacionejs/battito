@@ -1,7 +1,7 @@
   
 
 
-https://github.com/user-attachments/assets/2d5bebcc-a4ab-442e-a44f-e4c2e488d14d
+
 
 
 [Try it](https://bacionejs.github.io/battito/battito.html)
