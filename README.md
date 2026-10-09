@@ -121,7 +121,7 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 
 **After opening a sample, click the sequencer corner to play it**  
 
-[Beatnic by mBitsnBites (simplified)][beatnic]
+[Beatnic by mBitsnBites (simplified)][beatnic]  
 [Ambidumbi by Gargaj][ambidumbi]
 
 </details>
