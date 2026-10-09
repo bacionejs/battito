@@ -10,8 +10,8 @@ let BS=Battito.toString(),A=new AudioContext(),SONG=instruments().presets,C=Arra
 let piano=element("div",document.body,"piano"),sliders=element("div",document.body,"sliders"),side=element("div",document.body,"side"),sequencer=element("div",side,"sequencer")
 let text=element("textarea",side,"text"),X=element("canvas",side,"canvas").getContext("2d"),fullscreen=element("div",side,"fullscreen","⛶")
 let widgets=[piano,sliders,sequencer,text], update=()=>widgets.forEach(o=>o.update()), track=()=>SONG.tracks[LT], color=i=>i>=0?`hsl(${i*45},90%,60%)`:""
-piano      .update= function(){phrase().forEach((v,i)=>this.cells[i].style.background=color(v))}
-sequencer  .update= function(){this.cells.forEach(e=>state(e,(active,note,body,sequence)=>{e.style.background=!active?"":!note?"gray":color(e.col);body&&(e.textContent=sequence||"")}))}
+piano      .update= function(){let t,d=i=>C[i]&&(t=SONG.tracks[i]).p[t.s[cS]-1]?.map((n,s)=>n&&(PA[s*PC+n-C3]=i));PA.fill(-1);for(let i=0;i<SC;i++)d(i);d(LT);PA.forEach((v,i)=>this.cells[i].style.background=color(v))}
+sequencer  .update= function(){this.cells.forEach(e=>{let r=e.row,c=e.col,b=~c&&~r,t=SONG.tracks[c],s=b&&t.s[r],a=(~r||~c)&&R[r]&&C[c],n=r==cS&&t?.p[s-1]?.[cP];e.style.background=!a?"":!n?"gray":color(c);b&&(e.textContent=s||"")})}
 sliders    .update= function(){let t=track();this.cells.forEach(s=>{s.disabled=!t;s.value=t?t[s.key]:0;s.previousSibling.textContent=s.key+label(+s.value,s.max)})}
 text       .update= function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s)}
 piano      .onclick=function({target:{row,col}}){let n=col+C3,p;preview(n);if(!(p=pattern()))return;p[row]=p[row]==n?0:n;update()}
@@ -22,22 +22,19 @@ fullscreen .onclick=function(){document.documentElement.requestFullscreen()}
 makelongpress(X.canvas,save); oncontextmenu=e=>e.target.tagName=="TEXTAREA"; grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); compatibility()
 sliders.cells.forEach((v,i)=>v.previousSibling.style.color=color(i<5?0:i<10?1:i<15?2:i<18?3:i<23?4:i<25?5:i<27?6:7))
 try{let D=SONG.tracks;SONG=format(decodeURIComponent(location.search.match(/song=([^&]+)/)[1]));SONG.tracks=D.map((d,i)=>({...d,...SONG.tracks?.[i]}))}catch{};update()
-function start(){try{if(S){S.onended=null;S.stop();}if(S=source(range())){S.onended=start;S.start(S.startTime=A.currentTime);loop();}}catch{}}
+function start(){try{S&&(S.onended=null,S.stop());S=source(range());S&&(S.onended=start,S.start(S.startTime=A.currentTime),loop())}catch{}}
 function source(s){let n;return s&&(n=Object.assign(A.createBufferSource(),{buffer:Battito(A).createbuffer(s)}),n.connect(A.destination),n)}
-function loop(){if(!S||!next())return;if(cS!=pS){pS=cS;piano.update();scroll()}if(cP!=pP){draw();sequencer.update();playhead(cP);pP=cP}requestAnimationFrame(loop)}
+function loop(){if(S&&next()){if(cS!=pS){pS=cS;piano.update();scroll()}if(cP!=pP){X.fillStyle="#1115";X.strokeStyle=`hsl(${cP*90},100%,50%)`;draw();sequencer.update();playhead(cP);pP=cP}requestAnimationFrame(loop)}}
 function playhead(c){piano.cells.forEach(v=>v.style.transform="");for(let i=PC;i--;){PA[c*PC+i]>=0&&(piano.cells[c*PC+i].style.transform="scale(2)");}}
 function scroll(){let t=sequencer.cells[cSi],c=t.parentElement;c.scrollTo({top:t.offsetTop-(c.clientHeight/2)+(t.clientHeight/2),behavior:"smooth"})}
 function next(){let s=(A.currentTime-S.startTime)*SONG.bpm/STEPRATE;if(s>=cSs.length)return start();cS=cSs[s|0];cP=(cVi=s*PR|0)%PR;cSi=1+(cS+1)*(SC+1);return 1}
 function toggleall(){let c=0,r=0,x;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(i>c&&(c=i),j>r&&(r=j))));x=R.some((v,i)=>i<=r&!v)|C.some((v,i)=>i<=c&!v);R.fill(x?1:0,0,r+1);C.fill(x?1:0,0,c+1);}
 function incrementid(row,col){let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;np&&(t.p[np-1]??=Array(PR).fill(0))}
 function pattern(){let t,s;return (t=track())&&~(s=R.indexOf(1))&&s==R.lastIndexOf(1)&&t.s[s]&&(t.p[t.s[s]-1]??=Array(PR).fill(0))}
-function phrase(){let t,d=i=>C[i]&&(t=SONG.tracks[i]).p[t.s[cS]-1]?.map((n,s)=>n&&(PA[s*PC+n-C3]=i));PA.fill(-1);for(let i=0;i<SC;i++)d(i);d(LT);return PA}
-function range(){let c,r;return(c=SONG.tracks.filter((_,t)=>C[t])).length&&(r=cSs=RK.filter(i=>R[i]&&c.some(t=>t.s[i]))).length&&{...SONG,tracks:c.map(t=>({...t,s:r.map(s=>t.s[s])}))}}
-function state(e,cb){let r=e.row,c=e.col,b=~c&&~r,t=SONG.tracks[c],s=b&&t.s[r];return cb((~r||~c)&&R[r]&&C[c],r==cS&&t?.p[s-1]?.[cP],b,s)}
+function range(){let c=SONG.tracks.filter((_,t)=>C[t]),r=cSs=RK.filter(i=>R[i]&&c.some(t=>t.s[i]));return c[0]&&r.length&&{...SONG,tracks:c.map(t=>({...t,s:r.map(s=>t.s[s])}))}}
 function hasnotes(){return range()?.tracks?.some(t=>t.s.some(s=>s&&t.p[s-1]?.some(Boolean)))||alert("Nothing to save. Please select song or range")}
-function preview(n){try{let t=track();t&&(P?.stop(),P=source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:n||t.p?.[0]?.find(Boolean)||147}]}]}),P.start(),draw(0,P,t.ea+t.es+t.er,0))}catch{}}
-function draw(c=1,s=S,l=SAMPLERATE/SONG.bpm|0,o=cVi*l){let d=s?.buffer?.getChannelData(0),{w,m}=candy(c);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)])*m);X.stroke()}
-function candy(c){let {width:w,height:h}=X.canvas;X.lineWidth=2;X.fillStyle=c?"#12121255":"#121212";X.fillRect(0,0,w,h);X.strokeStyle=c?`hsl(${cP*90},100%,50%)`:"blue";return {w,m:h/2}}
+function preview(n){try{let t=track();if(t){P?.stop();P=source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:n||t.p?.[0]?.find(Boolean)||147}]}]});P.start();X.fillStyle="#111";X.strokeStyle="blue";draw(P,t.ea+t.es+t.er,0)}}catch{}}
+function draw(s=S,l=SAMPLERATE/SONG.bpm|0,o=cVi*l){let d=s?.buffer?.getChannelData(0),{width:w,height:h}=X.canvas,m=h/2;X.fillRect(0,0,w,h);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)])*m);X.stroke()}
 function save(){if(!hasnotes())return;let s="song"+Date.now(),d=(b,z)=>{Object.assign(d.a??=element("a"),{href:URL.createObjectURL(b),download:s+z}).click()};d(wave(),".wav");d(html(),".html")}
 function html(){return new Blob([`<\script>onload=()=>{\ndocument.body.textContent='Click to play';addEventListener('click',music(),{once:true});\n\n${music()}\n\n}</\script>`])}
 function music(){return `function music(){\nlet A=new AudioContext(),S=source(${format(range())});\n${source}\n${BS}\nreturn ()=>{S.loop=true;S.start()}\n}`}
