@@ -120,9 +120,7 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 
 </details><details><summary>Benchmark</summary>
   
-**Generating the song Ambidumbi:**  
-
-[Battito][ambidumbi] is 70 times faster than [Sonant-X][ambidumbisonantx] and slightly faster than the [pl_synth][ambidumbiplsynth] WASM solution
+Generating the song Ambidumbi, [Battito][ambidumbi] is 70 times faster than [Sonant-X][ambidumbisonantx] and slightly faster than the [pl_synth][ambidumbiplsynth] WASM solution
 
 </details><details><summary>Samples</summary>
 
