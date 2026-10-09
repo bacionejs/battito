@@ -1,4 +1,4 @@
-
+[Try it](https://bacionejs.github.io/battito/battito.html)
 
 https://github.com/user-attachments/assets/f5f007a1-a209-4f49-b666-134e0e5add8f
 
@@ -6,9 +6,17 @@ https://github.com/user-attachments/assets/f5f007a1-a209-4f49-b666-134e0e5add8f
 
 
 
+| Advantages ||
+|---|---|
+| Pianoroll | Intuitive note input and enhanced song visualization |
+| Selection | Comprehensive selection mechanism |
+| Scriptable | Raw JSON can be edited live |
+| Improv | Has a tab for live-jamming |
+| Overdub | Input notes while other tracks are playing |
+| Live | Regenerates every loop |
+| Export | Exports your song as a complete ready-to-run HTML page or WAV file |
 
 
-[Try it](https://bacionejs.github.io/battito/battito.html)
 
 </details><details><summary>Guide</summary>
 
@@ -107,17 +115,6 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 `a` Amount - The depth.  
 
 ---
-
-</details><details><summary>Advantages</summary>
-  
-- **Pianoroll** - Intuitive note input and enhanced song visualization
-- **Selection** - Comprehensive selection mechanism
-- **Scriptable** - Raw JSON can be edited live
-- **Improv** - Has a tab for live-jamming
-- **Overdub** - Input notes while other tracks are playing
-- **Live** - Regenerates every loop
-- **Export** - Exports your song as a complete ready-to-run HTML page or WAV file
-
 
 </details><details><summary>Benchmark</summary>
   
