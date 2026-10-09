@@ -8,13 +8,14 @@ https://github.com/user-attachments/assets/f5f007a1-a209-4f49-b666-134e0e5add8f
 
 | Advantages ||
 |---|---|
+| Export | Exports your song as a ready-to-run HTML page or WAV file |
 | Pianoroll | Intuitive note input and enhanced song visualization |
+| Overdub | Input notes while other tracks are playing |
 | Selection | Comprehensive selection mechanism |
 | Scriptable | Raw JSON can be edited live |
 | Improv | Has a tab for live-jamming |
-| Overdub | Input notes while other tracks are playing |
 | Live | Regenerates every loop |
-| Export | Exports your song as a complete ready-to-run HTML page or WAV file |
+
 
 **Entire app source-code fits on a 3x5 card**  
 
