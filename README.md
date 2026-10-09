@@ -131,9 +131,8 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 
 </details>
 
----
 
-Entire app source-code fits on a 3x5 card  
+**Entire app source-code fits on a 3x5 card**  
 
 <a href="https://bacionejs.github.io/bacionejs/viewsource.html?b=1&file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html" target="_blank"><img width="200" src="https://github.com/user-attachments/assets/8c96011f-4e8f-4a3f-bb7d-c9113754fa40" /></a>
 
