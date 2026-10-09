@@ -107,7 +107,7 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 
 - **Fast** - 75 times faster than [Sonant-X](https://github.com/nicolas-van/sonant-x-live) and comparable in speed to the [pl_synth](https://github.com/phoboslab/pl_synth) WASM solution
 - **Selection** - Comprehensive selection mechanism
-- **Export** - Exports a complete ready-to-run HTML page
+- **Export** - Exports your song as a complete ready-to-run HTML page or WAV file.
 - **Scriptable** - Raw JSON can be edited live
 - **Improv** - Has a tab for live-jamming
 - **Pianoroll** - Intuitive one-click note input
