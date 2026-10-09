@@ -109,7 +109,7 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 - **Export** - Exports your song as a complete ready-to-run HTML page or WAV file.
 - **Scriptable** - Raw JSON can be edited live
 - **Improv** - Has a tab for live-jamming
-- **Pianoroll** - Intuitive one-click note input
+- **Pianoroll** - Intuitive note input and enhanced song visualization
 - **Overdub** - Input notes while other tracks are playing
 - **Live** - Regenerates every loop
 
