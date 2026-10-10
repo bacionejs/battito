@@ -21,7 +21,7 @@ text       .oninput=function(){try{let song=format(text.value);SONG=song;update(
 fullscreen .onclick=function(){document.documentElement.requestFullscreen()}
 makelongpress(X.canvas,save); oncontextmenu=e=>e.target.tagName=="TEXTAREA"; grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); compatibility()
 sliders.cells.forEach((v,i)=>v.previousSibling.style.color=color(i<5?0:i<10?1:i<15?2:i<18?3:i<23?4:i<25?5:i<27?6:7))
-fetch("data:;base64,"+new URLSearchParams(location.search).get("song")).then(r=>new Response(r.body.pipeThrough(new DecompressionStream("deflate-raw"))).json()).then(v=>SONG={...SONG,...v,tracks:SONG.tracks.map((d,i)=>({...d,...v.tracks[i]}))}).finally(update)
+fetch("data:;base64,"+location.hash.slice(1)).then(r=>new Response(r.body.pipeThrough(new DecompressionStream("deflate"))).json()).then(v=>SONG={...SONG,...v,tracks:SONG.tracks.map((d,i)=>({...d,...v.tracks[i]}))}).catch(_=>0).then(update)
 function start(){try{S&&(S.onended=null,S.stop());S=source(range());S&&(S.onended=start,S.start(S.startTime=A.currentTime),loop())}catch{}}
 function source(s){let n;return s&&(n=Object.assign(A.createBufferSource(),{buffer:Battito(A).createbuffer(s)}),n.connect(A.destination),n)}
 function loop(){if(S&&next()){if(cS!=pS){pS=cS;piano.update();scroll()}if(cP!=pP){X.fillStyle="#1115";X.strokeStyle=`hsl(${cP*90},100%,50%)`;draw();sequencer.update();playhead(cP);pP=cP}requestAnimationFrame(loop)}}
