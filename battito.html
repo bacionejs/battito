@@ -24,7 +24,7 @@ sliders.cells.forEach((v,i)=>v.previousSibling.style.color=color(i<5?0:i<10?1:i<
 fetch("data:;base64,"+location.hash.slice(1)).then(r=>new Response(r.body.pipeThrough(new DecompressionStream("deflate"))).json()).then(v=>SONG={...SONG,...v,tracks:SONG.tracks.map((d,i)=>({...d,...v.tracks[i]}))}).catch(_=>0).then(update)
 function start(){try{S&&(S.onended=null,S.stop());S=source(range());S&&(S.onended=start,S.start(S.startTime=A.currentTime),loop())}catch{}}
 function source(s){let n;return s&&(n=Object.assign(A.createBufferSource(),{buffer:Battito().createbuffer(s)}),n.connect(A.destination),n)}
-function loop(){if(S&&next()){if(cS!=pS){pS=cS;piano.update();scroll()}if(cP!=pP){X.fillStyle="#1115";X.strokeStyle=`hsl(${cP*90},100%,50%)`;draw();sequencer.update();playhead(cP);pP=cP}requestAnimationFrame(loop)}}
+function loop(){if(S&&next()){if(cS!=pS){pS=cS;piano.update();scroll()}if(cP!=pP){draw("#1115",`hsl(${cP*90},100%,50%)`);sequencer.update();playhead(cP);pP=cP}requestAnimationFrame(loop)}}
 function playhead(c){piano.cells.forEach(v=>v.style.transform="");for(let i=PC;i--;){PA[c*PC+i]>=0&&(piano.cells[c*PC+i].style.transform="scale(2)");}}
 function scroll(){let t=sequencer.cells[cSi];sequencer.scrollTo({top:t.offsetTop+(t.clientHeight-sequencer.clientHeight)/2,behavior:"smooth"})}
 function next(){let s=(A.currentTime-S.startTime)*SONG.bpm/STEPRATE;if(s>=cSs.length)return start();cS=cSs[s|0];cP=(cVi=s*PR|0)%PR;cSi=1+(cS+1)*(SC+1);return 1}
@@ -33,8 +33,8 @@ function incrementid(row,col){let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+
 function pattern(){let t,s;return (t=track())&&~(s=R.indexOf(1))&&s==R.lastIndexOf(1)&&t.s[s]&&(t.p[t.s[s]-1]??=Array(PR).fill(0))}
 function range(){let c=SONG.tracks.filter((_,t)=>C[t]),r=cSs=RK.filter(i=>R[i]&&c.some(t=>t.s[i]));return c[0]&&r.length&&{...SONG,tracks:c.map(t=>({...t,s:r.map(s=>t.s[s])}))}}
 function hasnotes(){return range()?.tracks?.some(t=>t.s.some(s=>s&&t.p[s-1]?.some(Boolean)))||alert("Nothing to save. Please select song or range")}
-function preview(n){try{let t=track();if(t){P?.stop();P=source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:n||t.p?.[0]?.find(Boolean)||147}]}]});P.start();X.fillStyle="#111";X.strokeStyle="blue";draw(P,t.ea+t.es+t.er,0)}}catch{}}
-function draw(s=S,l=SAMPLERATE/SONG.bpm|0,o=cVi*l){let d=s?.buffer?.getChannelData(0),{width:w,height:h}=X.canvas,m=h/2;X.fillRect(0,0,w,h);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+(d[o+(x*l/w|0)])*m);X.stroke()}
+function preview(n){try{let t=track();if(t){P?.stop();P=source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:n||t.p?.[0]?.find(Boolean)||147}]}]});P.start();draw("#111","blue",P,t.ea+t.es+t.er,0)}}catch{}}
+function draw(f,k,s=S,l=SAMPLERATE/SONG.bpm|0,o=cVi*l){let d=s.buffer.getChannelData(0),{width:w,height:h}=X.canvas,m=h/2;X.fillStyle=f;X.strokeStyle=k;X.fillRect(0,0,w,h);X.beginPath();for(let x=w;x--;)X.lineTo(x,m+d[o+(x*l/w|0)]*m);X.stroke()}
 function save(){if(!hasnotes())return;let s="song"+Date.now(),d=(b,z)=>{Object.assign(d.a??=element("a"),{href:URL.createObjectURL(b),download:s+z}).click()};d(wave(),".wav");d(html(),".html")}
 function html(){return new Blob([`<\script>onload=()=>{\ndocument.body.textContent='Click to play';addEventListener('click',music(),{once:true});\n\n${music()}\n\n}</\script>`])}
 function music(){return `function music(){\nlet A=new AudioContext(),S=source(${format(range())});\n${source}\n${BS}\nreturn ()=>{S.loop=true;S.start()}\n}`}
@@ -65,8 +65,7 @@ function Battito(){
   let {PI,imul,sin,max,ceil,min,abs}=Math,SAMPLERATE=44100,FBASE=1.5*PI/SAMPLERATE,R_S=1,rnd=()=>((R_S=imul(R_S,0x15a4e35))>>>0)/2**32,NOTE=new Float32Array(256);for(let n=256;n--;)NOTE[n]=2**((n-128)/12)/256
   let WS=2048,W=Array.from({length:4},()=>new Float32Array(WS)),[SIN,SQUARE,SAW,TRI]=W;for(let i=0,p,v;i<WS;i++){SIN[i]=sin((p=i/WS)*2*PI);SQUARE[i]=p<.5?-1:1;SAW[i]=p-.5;TRI[i]=(v=p*4)<2?v-1:3-v}
   return(Battito=(o=>()=>o)({createbuffer(song){
-    let SR=max(...song.tracks.map(t=>t.s.length)),PR=max(...song.tracks.flatMap(t=>t.p.map(p=>p.length)))
-    let rowlen=ceil(SAMPLERATE*((60/song.bpm)/4)),TR=SR*PR,S=TR*rowlen,B=A.createBuffer(2,S,SAMPLERATE),[LL,RR]=[0,1].map(i=>B.getChannelData(i)),[L,R]=[0,0].map(_=>new Float32Array(S))
+    let SR=song.tracks[0].s.length,PR=32,rowlen=ceil(SAMPLERATE*((60/song.bpm)/4)),TR=SR*PR,S=TR*rowlen,B=A.createBuffer(2,S,SAMPLERATE),[LL,RR]=[0,1].map(i=>B.getChannelData(i)),[L,R]=[0,0].map(_=>new Float32Array(S))
     for(let T of song.tracks){
       let {v1,w1,o1,s1,d1,v2,w2,o2,s2,d2,ea,es,er,e1,e2,ct,ca,cr,mw,ms,ma,m1,mc,ds,da,ps,pa,nv,vm}=T,envlen=ea+es+er,ai=1/ea,ri=1/er,lfostep=2**(ms-8)/rowlen,panstep=2**(ps-8)/rowlen,MW=W[mw],W1=W[w1],W2=W[w2]
       L.fill(0);R.fill(0);ca*=FBASE;vm*=0.006;ma/=512;pa/=512;v1/=255;v2/=255;nv/=255;cr/=255;s1+=(o1-8)*12;d1=1+0.2*d1/255;s2+=(o2-8)*12;d2=1+0.2*d2/255
