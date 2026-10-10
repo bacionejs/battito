@@ -1,26 +1,17 @@
+https://github.com/user-attachments/assets/1b9c1c93-c284-4958-aac5-e2e40bde4b4f
+
 [Try it](https://bacionejs.github.io/battito/battito.html)
 
 
 
 
-https://github.com/user-attachments/assets/1b9c1c93-c284-4958-aac5-e2e40bde4b4f
+
 
 
   
 
-<table>
-<tr><td><b>Export</b></td><td>Exports your song as a ready-to-run HTML page or WAV file</td></tr>
-<tr><td><b>Pianoroll</b></td><td>Intuitive note input and enhanced song visualization</td></tr>
-<tr><td><b>Overdub</b></td><td>Input notes while other tracks are playing</td></tr>
-<tr><td><b>Selection</b></td><td>Comprehensive selection mechanism</td></tr>
-<tr><td><b>Scriptable</b></td><td>Raw JSON can be edited live</td></tr>
-<tr><td><b>Improv</b></td><td>Has a tab for live-jamming</td></tr>
-<tr><td><b>Live</b></td><td>Regenerates every loop</td></tr>
-</table>
 
-**Entire app source-code fits on a 3x5 card**  
 
-<a href="https://bacionejs.github.io/bacionejs/viewsource.html?b=1&file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html" target="_blank"><img width="200" src="https://github.com/user-attachments/assets/8c96011f-4e8f-4a3f-bb7d-c9113754fa40" /></a>
 
 </details><details><summary>Guide</summary>
 
@@ -120,9 +111,25 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 
 ---
 
+
+
+</details><details><summary>Advantages</summary>
+
+<table>
+<tr><td><b>Export</b></td><td>Exports your song as a ready-to-run HTML page or WAV file</td></tr>
+<tr><td><b>Pianoroll</b></td><td>Intuitive note input and enhanced song visualization</td></tr>
+<tr><td><b>Overdub</b></td><td>Input notes while other tracks are playing</td></tr>
+<tr><td><b>Selection</b></td><td>Comprehensive selection mechanism</td></tr>
+<tr><td><b>Scriptable</b></td><td>Raw JSON can be edited live</td></tr>
+<tr><td><b>Improv</b></td><td>Has a tab for live-jamming</td></tr>
+<tr><td><b>Live</b></td><td>Regenerates every loop</td></tr>
+</table>
+
 </details><details><summary>Benchmark</summary>
   
 Generating the song Ambidumbi, [Battito][ambidumbi] is 70 times faster than [Sonant-X][ambidumbisonantx] and slightly faster than the [pl_synth][ambidumbiplsynth] WASM solution
+
+
 
 </details><details><summary>Samples</summary>
 
@@ -133,6 +140,10 @@ Generating the song Ambidumbi, [Battito][ambidumbi] is 70 times faster than [Son
 
 </details>
 
+
+**Entire app source-code fits on a 3x5 card**  
+
+<a href="https://bacionejs.github.io/bacionejs/viewsource.html?b=1&file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html" target="_blank"><img width="200" src="https://github.com/user-attachments/assets/8c96011f-4e8f-4a3f-bb7d-c9113754fa40" /></a>
 
 [^1]: The synth engine portion of this sequencer is a port of Jake Taylor's [public domain Sonant](https://github.com/user-attachments/assets/e01812b1-4b97-47e0-81a8-49d157aa89bf), **for size-constrained games and demos**
 
