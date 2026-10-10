@@ -25,10 +25,10 @@ fetch("data:;base64,"+location.hash.slice(1)).then(r=>new Response(r.body.pipeTh
 function start(){try{S&&(S.onended=null,S.stop());S=source(range());S&&(S.onended=start,S.start(S.startTime=A.currentTime),loop())}catch{}}
 function source(s){let n;return s&&(n=Object.assign(A.createBufferSource(),{buffer:Battito().createbuffer(s)}),n.connect(A.destination),n)}
 function loop(){if(S&&next()){if(cS!=pS){pS=cS;piano.update();scroll()}if(cP!=pP){draw("#1115",`hsl(${cP*90},100%,50%)`);sequencer.update();playhead(cP);pP=cP}requestAnimationFrame(loop)}}
-function playhead(c){piano.cells.forEach(v=>v.style.transform="");for(let i=PC;i--;){PA[c*PC+i]>=0&&(piano.cells[c*PC+i].style.transform="scale(2)");}}
+function playhead(c){piano.cells.forEach(v=>v.style.transform="");for(let i=PC;i--;){PA[c*PC+i]>=0&&(piano.cells[c*PC+i].style.transform="scale(2)")}}
 function scroll(){let t=sequencer.cells[cSi];sequencer.scrollTo({top:t.offsetTop+(t.clientHeight-sequencer.clientHeight)/2,behavior:"smooth"})}
 function next(){let s=(A.currentTime-S.startTime)*SONG.bpm/STEPRATE;if(s>=cSs.length)return start();cS=cSs[s|0];cP=(cVi=s*PR|0)%PR;cSi=1+(cS+1)*(SC+1);return 1}
-function toggleall(){let c=0,r=0,x;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(i>c&&(c=i),j>r&&(r=j))));x=R.some((v,i)=>i<=r&!v)|C.some((v,i)=>i<=c&!v);R.fill(x?1:0,0,r+1);C.fill(x?1:0,0,c+1);}
+function toggleall(){let c=0,r=0,x;SONG.tracks.forEach((t,i)=>t.s.forEach((v,j)=>v&&(i>c&&(c=i),j>r&&(r=j))));x=R.some((v,i)=>i<=r&!v)|C.some((v,i)=>i<=c&!v);R.fill(x?1:0,0,r+1);C.fill(x?1:0,0,c+1)}
 function incrementid(row,col){let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+1)%10;np&&(t.p[np-1]??=Array(PR).fill(0))}
 function pattern(){let t,s;return (t=track())&&~(s=R.indexOf(1))&&s==R.lastIndexOf(1)&&t.s[s]&&(t.p[t.s[s]-1]??=Array(PR).fill(0))}
 function range(){let c=SONG.tracks.filter((_,t)=>C[t]),r=cSs=RK.filter(i=>R[i]&&c.some(t=>t.s[i]));return c[0]&&r.length&&{...SONG,tracks:c.map(t=>({...t,s:r.map(s=>t.s[s])}))}}
@@ -76,5 +76,5 @@ function Battito(){
           if(j<ea)e=j*ai;else if(j>=ea+es)e-=(j-ea-es)*ri;if(m1)t1+=lfoR;if(e1)t1*=e*e;c1+=t1;rs=W1[c1*WS&WS-1]*v1;if(e2)t2*=e*e;c2+=t2;rs+=W2[c2*WS&WS-1]*v2;if(nv)rs+=(rnd()*2-1)*nv*e;rs*=e*vm
           f=ca*(mc?lfoR:1);low+=f*band;high=cr*(rs-band)-low;band+=f*high; rs=ct==1?high:ct==2?low:ct==3?band:ct==4?low+high:rs; t=SIN[pan*WS&WS-1]*pa+.5;L[b]+=rs*(1-t);R[b]+=rs*t;}}
       let DS=ds*rowlen/2|0;if(DS>0){let DA=da/255;for(let b=0;b<S-DS;b++){L[b+DS]+=R[b]*DA;R[b+DS]+=L[b]*DA}} for(let b=0;b<S;b++){LL[b]+=L[b];RR[b]+=R[b]}}
-    let X=1;for(let i=0;i<S;i++)X=max(X,abs(LL[i]),abs(RR[i]));for(let i=0;i<S;i++)LL[i]/=X,RR[i]/=X
+    let M=1;for(let i=0;i<S;i++)M=max(M,abs(LL[i]),abs(RR[i]));for(let i=0;i<S;i++)LL[i]/=M,RR[i]/=M
     return B}}))()}}</script>
