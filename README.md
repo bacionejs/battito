@@ -36,6 +36,7 @@ Optional
 - Besides clicking sequencer column headers to preview instruments, you can also click the piano to hear what their **pitch** sounds like.
 - The piano roll is only 4 octaves wide but you can compensate by setting the oscillator **octave**.
 - Song **length** can be up to 4 minutes at 120 BPM and 8 minutes at 60 BPM.
+- To **hide the sliders**, long-press the sequencer corner.
 
 ---
 
