@@ -19,9 +19,8 @@ sequencer  .onclick=function({target:{row,col}}){let hr=!~col,hc=!~row;hc&&!hr&&
 sliders    .oninput=function({target:{key,value}}){(track()[key]=+value,update(),preview())}
 text       .oninput=function(){try{let song=format(text.value);SONG=song;update();preview()}catch{}}
 fullscreen .onclick=function(){document.documentElement.requestFullscreen()}
-makelongpress(X.canvas,save); oncontextmenu=e=>e.target.tagName=="TEXTAREA"; grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); compatibility()
-makelongpress(sequencer.cells[0],()=>{sliders.style.display=sliders.style.display?"":"none";sequencer.cells[0].addEventListener("click",e=>e.stopPropagation(),{once:true})})
-sliders.cells.forEach((v,i)=>v.previousSibling.style.color=color(i<5?0:i<10?1:i<15?2:i<18?3:i<23?4:i<25?5:i<27?6:7))
+grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); compatibility(); sliders.cells.forEach((v,i)=>v.previousSibling.style.color=color(i<5?0:i<10?1:i<15?2:i<18?3:i<23?4:i<25?5:i<27?6:7))
+makelongpress(X.canvas,save); makelongpress(sequencer.cells[0],()=>sliders.style.display=sliders.style.display?"":"none"); oncontextmenu=e=>e.target.tagName=="TEXTAREA";
 fetch("data:;base64,"+location.hash.slice(1)).then(r=>new Response(r.body.pipeThrough(new DecompressionStream("deflate"))).json()).then(v=>SONG={...SONG,...v,tracks:SONG.tracks.map((d,i)=>({...d,...v.tracks[i]}))}).catch(_=>0).then(update)
 function start(){try{S&&(S.onended=null,S.stop());S=source(range());S&&(S.onended=start,S.start(S.startTime=A.currentTime),loop())}catch{}}
 function source(s){let n;return s&&(n=Object.assign(A.createBufferSource(),{buffer:Battito().createbuffer(s)}),n.connect(A.destination),n)}
@@ -48,7 +47,7 @@ function naturals(p){p.cells.forEach(c=>c.textContent=c.row%4?"":N[c.col%12])}
 function label(v,m){return String(m==4?["Off","High","Low","Band","Notch"][v]:m==3?["Sine","Square","Saw","Tri"][v]:m==1?["Off","On"][v]:v).padStart(10," ")}
 function format(data){return typeof data=="object"?JSON.stringify(data).replace(/{/g,"\n$&").replace(/\x22/g,""):JSON.parse(data.replace(/(\w+):/g,'"$1":'))}
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="Rendering error<br>Requires a modern chromium-based browser"},200)}
-function makelongpress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(c,500)};e.onpointerup=e.onpointercancel=_=>clearTimeout(t)}
+function makelongpress(e,c){let t;e.onpointerdown=_=>{clearTimeout(t);t=setTimeout(()=>{c();e.addEventListener("click",v=>v.stopPropagation(),{once:true})},500)};e.onpointerup=e.onpointercancel=_=>clearTimeout(t)}
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e}
 function improv(){
   if(!improv.d){improv.d=window.open("","improv");setTimeout(()=>{let d=improv.d.document;d.open();d.write(`<title>Improv</title><style>body{background:#121212;color:#888;user-select:none}
