@@ -23,9 +23,9 @@ https://github.com/user-attachments/assets/1b9c1c93-c284-4958-aac5-e2e40bde4b4f
 1. Click on the column headers in the **sequencer** to hear what the preset instruments sound like. You can select multiple columns/rows in the sequencer for **playback**, but when **editing**, select only one **row**. The last **column** selected is the one that will be edited. For example, select drum, bass and lastly lead to **hear** drum/bass and **edit** lead. The sequencer constantly loops over the selected sequencer columns/rows. Click the corner to toggle the whole song. Looping is **live**, meaning it regenerates every time, so changes you make are reflected in the next loop. This is helpful when editing a small section, as the changes are almost immediate. An **improv** browser tab will be created the first time you click a column. It can be ignored or closed and is useful for discovering a melody. For example, toggle your whole song on, toggle off an instrument, and improvise that instrument.
 1. To enter a note on the **piano**, select a column/row in the **sequencer** and click the intersecting cell to select a pattern ID. Then you can edit that pattern on the piano. To advance the pattern ID number just keep clicking in the sequencer cell. You can reuse a pattern ID. When coming back to edit a pattern, don't click the sequencer cell as that will advance the pattern ID, just select a column/row.
 
----
 
-Optional
+</details><details><summary>Optional</summary>
+
 - There are 8 preset instruments, but you can also select a track and configure the **synth** (see the Instruments section below)
 - To **export** html/wav, long-press the waveform visualizer. Use the html file for your game and the wav file for whatever else. It exports the **current selection**: whole song or ranges. The exported game-ready html file (engine+song) is 2k zipped, thousands of times smaller than a wav file.
 - To **export** a sound effect, like an explosion, create one note on the first row of the piano, and export a range.
@@ -37,7 +37,6 @@ Optional
 - Song **length** can be up to 4 minutes at 120 BPM and 8 minutes at 60 BPM.
 - To **hide the sliders**, long-press the sequencer corner.
 
----
 
 </details><details><summary>Instruments</summary>
 
