@@ -45,7 +45,7 @@ function grid(p,c,r){p.style.gridTemplateColumns=`repeat(${c},1fr)`;p.cells=Arra
 function header(c){let r=--c.row,t=--c.col;c.textContent=!~r?(~t?(c.style.color=color(t),"ABCDEFGH"[t]):""):!~t?r+1:"";return c}
 function naturals(p){p.cells.forEach(c=>c.textContent=c.row%4?"":N[c.col%12])}
 function label(v,m){return String(m==4?["Off","High","Low","Band","Notch"][v]:m==3?["Sine","Square","Saw","Tri"][v]:m==1?["Off","On"][v]:v).padStart(10," ")}
-function format(data){return typeof data=="object"?JSON.stringify(data).replace(/{/g,"\n$&").replace(/\x22/g,""):JSON.parse(data.replace(/(\w+):/g,'"$1":'))}
+function format(data){return typeof data=="object"?JSON.stringify(data,(k,v)=>v??(isNaN(k)?v:0)).replace(/{/g,"\n$&").replace(/\x22/g,""):JSON.parse(data.replace(/(\w+):/g,'"$1":'))}
 function compatibility(){setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="Rendering error<br>Requires a modern chromium-based browser"},200)}
 function makelongpress(e,c){let t;e.onpointerdown=_=>t=setTimeout(c,500);e.onpointerup=e.onpointercancel=_=>clearTimeout(t)}
 function element(tag,p=document.body,c="",v=""){let e=p.appendChild(document.createElement(tag));if(c)e.className=c;if(v)e.textContent=v;return e}
