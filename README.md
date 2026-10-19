@@ -120,7 +120,7 @@ Depending on the cutoff type `t`, you must set `a` or `r` or there will be no so
 </details><details><summary>Advantages</summary>
 
 <table>
-<tr><td><b>Export</b></td><td>Exports your song as a ready-to-run HTML page or WAV file</td></tr>
+<tr><td><b>Export</b></td><td>Exports your song as a <b>ready-to-run HTML page</b> or WAV file</td></tr>
 <tr><td><b>Pianoroll</b></td><td>Intuitive note input and enhanced song visualization</td></tr>
 <tr><td><b>Overdub</b></td><td>Input notes while other tracks are playing</td></tr>
 <tr><td><b>Selection</b></td><td>Comprehensive selection mechanism</td></tr>
