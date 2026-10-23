@@ -9,7 +9,7 @@ let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SAMPLERATE=44100*60/4,STEPRATE=PR*60/4
 let BS=Battito.toString(),A=new AudioContext(),SONG=instruments().presets,C=Array(SC).fill(0),R=Array(SR).fill(0),RK=[...R.keys()],PA=Array(PC*PR);R[-1]=C[-1]=1
 let piano=element("div",document.body,"piano"),sliders=element("div",document.body,"sliders"),side=element("div",document.body,"side"),sequencer=element("div",side,"sequencer")
 let text=element("textarea",side,"text"),X=element("canvas",side,"canvas").getContext("2d"),fullscreen=element("div",side,"fullscreen","⛶")
-let widgets=[piano,sliders,sequencer,text], update=()=>widgets.forEach(o=>o.update()), track=()=>SONG.tracks[LT], color=i=>i>=0?`hsl(${i*45},90%,60%)`:""
+let widgets=[piano,sliders,sequencer,text], update=()=>widgets.forEach(o=>o.update()), track=()=>SONG.tracks[LT], color=i=>i>=0?["red","orange","yellow","lime","aqua","violet","magenta","purple"][i]:""
 piano      .update= function(){let t,d=i=>C[i]&&(t=SONG.tracks[i]).p[t.s[cS]-1]?.map((n,s)=>n&&(PA[s*PC+n-C3]=i));PA.fill(-1);for(let i=0;i<SC;i++)d(i);d(LT);PA.forEach((v,i)=>this.cells[i].style.background=color(v))}
 sequencer  .update= function(){this.cells.forEach(e=>{let r=e.row,c=e.col,b=~c&&~r,t=SONG.tracks[c],s=b&&t.s[r],a=(~r||~c)&&R[r]&&C[c],n=r==cS&&t?.p[s-1]?.[cP];e.style.background=!a?"":!n?"gray":color(c);b&&(e.textContent=s||"")})}
 sliders    .update= function(){let t=track();this.cells.forEach(s=>{s.disabled=!t;s.value=t?t[s.key]:0;s.previousSibling.textContent=s.key+label(+s.value,s.max)})}
