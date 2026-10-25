@@ -31,10 +31,9 @@ https://github.com/user-attachments/assets/1b9c1c93-c284-4958-aac5-e2e40bde4b4f
 - To **export** a sound effect, like an explosion, create one note on the first row of the piano, and export a range.
 - To save your work for future use, copy the **textarea** to a separate text editor. To **import**, paste in the textarea.
 - The **textarea** can be edited. Changes are **live** just like the other components. This is especially helpful when adjusting envelope values, as they have a large range.
-- To change the tempo, edit the `bpm` value in the **textarea**.
+- To change the tempo, edit the `bpm` value in the **textarea**. Song length can be up to 4 minutes at 120 BPM and 8 minutes at 60 BPM.  
 - Besides clicking sequencer column headers to preview instruments, you can also click the piano to hear what their **pitch** sounds like.
 - The piano roll is only 4 octaves wide but you can compensate by setting the oscillator **octave**.
-- Song **length** can be up to 4 minutes at 120 BPM and 8 minutes at 60 BPM.
 - To **hide the sliders**, long-press the sequencer corner.
 
 
