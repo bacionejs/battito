@@ -5,7 +5,7 @@ element("style").textContent=`
   .piano{color:#2a2a2a;line-height:0} .piano>.cell:nth-child(12n+1){color:gray} .fullscreen{position:absolute;bottom:0;right:0;z-index:1;font-size:1rem;color:orange} :fullscreen .fullscreen{display:none}
   .sliders{place-items:center;white-space:pre} .slider{height:1px;accent-color:blue;z-index:1} input::-webkit-slider-thumb{opacity:0} label{pointer-events:none}
   .sequencer>.cell:nth-child(-n+9){position:sticky;top:0;background:#111} .sequencer{aspect-ratio:1;overflow-y:scroll} .text{all:inherit;padding:1rem;white-space:pre;overflow:auto} .text,.canvas{height:25%;aspect-ratio:2}`
-let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SAMPLERATE=44100,STEPRATE=PR*60/4,pP,cP,pS,cS,cSl,cSc,cI,S,P,LT=0,N=i=>["C",,"D",,"E","F",,"G",,"A",,"B"][i%12]
+let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,SAMPLERATE=44100,STEPRATE=PR*60/4,pP,cP,pS,cS,cSl,cSc,cI,S,P,LT=0,N=i=>["C","","D","","E","F","","G","","A","","B"][i%12]
 let BS=Battito.toString(),A=new AudioContext(),SONG=instruments().presets,C=Array(SC).fill(0),R=Array(SR).fill(0),RK=[...R.keys()],PA=Array(PC*PR);R[-1]=C[-1]=1
 let piano=element("div",document.body,"piano"),sliders=element("div",document.body,"sliders"),side=element("div",document.body,"side"),sequencer=element("div",side,"sequencer")
 let text=element("textarea",side,"text"),X=element("canvas",side,"canvas").getContext("2d"),fullscreen=element("div",side,"fullscreen","⛶")
