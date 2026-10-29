@@ -6,7 +6,7 @@ element("style").textContent=`
   .sliders{place-items:center;white-space:pre} .slider{height:1px;accent-color:blue;z-index:1} input::-webkit-slider-thumb{opacity:0} label{pointer-events:none}
   .sequencer>.cell:nth-child(-n+9){position:sticky;top:0;background:#111} .sequencer{aspect-ratio:1;overflow-y:scroll} .text{all:inherit;padding:1rem;white-space:pre;overflow:auto} .text,.canvas{height:25%;aspect-ratio:2}`
 let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,rowSec=()=>15/SONG.bpm,rowSamples=()=>44100*rowSec(),pP,cP,pS,cS,cSl,cSc,cI,S,P,LT=0,N=i=>["C","","D","","E","F","","G","","A","","B"][i%12]
-let BS=Battito.toString(),A=new AudioContext(),SONG=instruments().presets,C=Array(SC).fill(0),R=Array(SR).fill(0),RK=[...R.keys()],PA=Array(PC*PR);R[-1]=C[-1]=1, tone=(t,n)=>source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:n}]}]})
+let BS=Battito.toString(),A=new AudioContext(),SONG=instruments().presets,C=Array(SC).fill(0),R=Array(SR).fill(0),RK=[...R.keys()],PA=Array(PC*PR), tone=(t,n)=>source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:n}]}]}); R[-1]=C[-1]=1
 let piano=element("div",document.body,"piano"),sliders=element("div",document.body,"sliders"),side=element("div",document.body,"side"),sequencer=element("div",side,"sequencer")
 let text=element("textarea",side,"text"),X=element("canvas",side,"canvas").getContext("2d"),fullscreen=element("div",side,"fullscreen","⛶")
 let widgets=[piano,sliders,sequencer,text], update=()=>widgets.forEach(o=>o.update()), track=()=>SONG.tracks[LT], color=i=>i>=0?["red","orange","yellow","lime","aqua","violet","magenta","purple"][i]:""
