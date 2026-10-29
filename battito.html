@@ -8,14 +8,14 @@ el("style").textContent=`
 let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,pP,cP,pS,cS,cSl,cSc,cI,S,P,LT=0,BS=Battito.toString(),A=new AudioContext(),SONG=instruments().presets,C=Array(SC).fill(0),R=Array(SR).fill(0),RK=[...R.keys()],PA=Array(PC*PR),LB=[,"○●",,"∿□⩘∧","-↑↓∩∪"],
   piano=el("div","","piano"),sliders=el("div","","sliders"),side=el("div","","side"),sequencer=el("div",side,"sequencer"),text=el("textarea",side,"text"),X=el("canvas",side,"canvas").getContext("2d"),fullscreen=el("div",side,"fullscreen","⛶"),
   widgets=[piano,sliders,sequencer,text],update=()=>widgets.forEach(o=>o.update()),track=()=>SONG.tracks[LT],rowSec=()=>15/SONG.bpm,rowSamples=()=>44100*rowSec(),tone=(t,n)=>source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:n}]}]}),
-  color=i=>"red orange yellow lime aqua violet magenta purple".split(" ")[i]||"",N=i=>"C D EF G A B"[i%12],hold=(e,c,t)=>{e.onpointerdown=_=>t=setTimeout(c,500);e.onpointerup=e.onpointercancel=_=>clearTimeout(t)};R[-1]=C[-1]=1
+  CL="red orange yellow lime aqua violet magenta purple".split(" "),color=i=>CL[i]||"",N=i=>"C D EF G A B"[i%12],hold=(e,c,t)=>{e.onpointerdown=_=>t=setTimeout(c,500);e.onpointerup=e.onpointercancel=_=>clearTimeout(t)};R[-1]=C[-1]=1
 piano      .update= function(){let t,d=i=>C[i]&&(t=SONG.tracks[i]).p[t.s[cS]-1]?.map((n,s)=>n&&(PA[s*PC+n-C3]=i));PA.fill(-1);for(let i=0;i<SC;i++)d(i);d(LT);PA.forEach((v,i)=>this.cells[i].style.background=color(v))}
 sequencer  .update= function(){this.cells.forEach(e=>{let r=e.row,c=e.col,b=~c&&~r,t=SONG.tracks[c],s=b&&t.s[r],a=(~r||~c)&&R[r]&&C[c],n=r==cS&&t?.p[s-1]?.[cP];e.style.background=!a?"":!n?"gray":color(c);b&&(e.textContent=s||"")})}
 sliders    .update= function(t=track()){this.cells.forEach(s=>{s.disabled=!t;s.value=t?t[s.key]:0;s.previousSibling.textContent=s.key+(LB[s.max]?.[s.value]??s.value).padStart(10)})}
 text       .update= function(){if(this==document.activeElement)return;let s=this.selectionStart;this.value=format(SONG);this.setSelectionRange(s,s)}
 piano      .onclick=function({target:{row,col}}){let n=col+C3,p;preview(n);if(!(p=pattern()))return;p[row]=p[row]==n?0:n;update()}
 sequencer  .onclick=function({target:{row,col}}){let hr=!~col,hc=!~row;hc&&!hr&&improv();hr&hc?toggleall():hr|hc?((hr?R:C)[row+col+1]^=1,hc&&(LT=col,preview())):incrementid(row,col),update(),start()}
-sliders    .oninput=function({target:{key,value}}){(track()[key]=+value,update(),preview())}
+sliders    .oninput=function({target:{key,value}}){track()[key]=+value;update();clearTimeout(sliders.t);sliders.t=setTimeout(preview,50)}
 text       .oninput=function(){try{SONG=format(text.value);update();preview()}catch{}}
 fullscreen .onclick=function(){document.documentElement.requestFullscreen()}
 grid(piano,PC,PR);grid(sequencer,SC+1,SR+1);piano.cells.forEach(c=>c.textContent=c.row%4?"":N(c.col));instruments().init(sliders);sliders.cells.forEach((v,i)=>v.previousSibling.style.color=color([5,10,15,18,23,25,27].filter(n=>n<=i).length))
