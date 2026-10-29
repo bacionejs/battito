@@ -1,10 +1,10 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width"><script>onload=()=>{document.title="🎼 Battito Beats";//https://github.com/bacionejs/battito
 el("style").textContent=`
-  *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation} body{background:#121212;color:white;display:flex;font:bold .5rem monospace} html{overscroll-behavior:none}
-  .piano,.sequencer,.sliders,.cell{display:grid} .side{position:relative} .cell{place-items:center;aspect-ratio:1;border:1px solid #2a2a2a;transition:background 0.4s}
-  .piano{color:#2a2a2a;line-height:0} .piano>.cell:nth-child(12n+1){color:gray} .fullscreen{position:absolute;bottom:0;right:0;z-index:1;font-size:1rem;color:orange} :fullscreen .fullscreen{display:none}
-  .sliders{place-items:center;white-space:pre} .slider{height:1px;accent-color:blue;z-index:1} input::-webkit-slider-thumb{opacity:0} label{pointer-events:none}
-  .sequencer>.cell:nth-child(-n+9){position:sticky;top:0;background:#111} .sequencer{aspect-ratio:1;overflow-y:scroll} .text{all:inherit;padding:1rem;white-space:pre;overflow:auto} .text,.canvas{height:25%;aspect-ratio:2}`
+  *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:none;user-select:none;touch-action:manipulation;overscroll-behavior:none} body{background:#121212;color:#fff;display:flex;font:bold .5rem monospace}
+  .piano,.sequencer,.sliders,.cell{display:grid} .side{position:relative} .cell{place-items:center;aspect-ratio:1;border:1px solid #2a2a2a;transition:background .4s}
+  .piano{color:#2a2a2a;line-height:0} .piano>:nth-child(12n+1){color:gray} .fullscreen{position:absolute;bottom:0;right:0;z-index:1;font-size:1rem;color:orange} :fullscreen .fullscreen{display:none}
+  .sliders{place-items:center;white-space:pre} input{height:1px;accent-color:blue;z-index:1} input::-webkit-slider-thumb{opacity:0} label{pointer-events:none}
+  .sequencer>:nth-child(-n+9){position:sticky;top:0;background:#111} .sequencer{aspect-ratio:1;overflow:auto} .text{all:inherit;padding:1rem;white-space:pre;overflow:auto} .text,.canvas{height:25%;aspect-ratio:2}`
 let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,pP,cP,pS,cS,cSl,cSc,cI,S,P,LT=0,BS=Battito.toString(),A=new AudioContext(),SONG=instruments().presets,C=Array(SC).fill(0),R=Array(SR).fill(0),RK=[...R.keys()],PA=Array(PC*PR),
   piano=el("div","","piano"),sliders=el("div","","sliders"),side=el("div","","side"),sequencer=el("div",side,"sequencer"),text=el("textarea",side,"text"),X=el("canvas",side,"canvas").getContext("2d"),fullscreen=el("div",side,"fullscreen","⛶"),
   widgets=[piano,sliders,sequencer,text],update=()=>widgets.forEach(o=>o.update()),track=()=>SONG.tracks[LT],rowSec=()=>15/SONG.bpm,rowSamples=()=>44100*rowSec(),tone=(t,n)=>source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:n}]}]}),
@@ -52,7 +52,7 @@ function improv(){
   d.body.onpointerdown=e=>{let t=track(),i=e.target.id.slice(1);t&&i&&(A.resume(),tone(t,C3+24-12*(i/12|0)+i%12).start())}},100)}}
 function instruments(){
   let schema={v1:255,w1:3,o1:16,s1:11,d1:255,v2:255,w2:3,o2:16,s2:11,d2:255,ea:2e5,es:2e5,er:2e5,e1:1,e2:1,ct:4,ca:11025,cr:255,mw:3,ms:16,ma:255,m1:1,mc:1,ds:16,da:248,ps:16,pa:255,nv:255,vm:255}
-  return {init:s=>s.cells=Object.entries(schema).map(([key,max])=>(el("label",s,"",key),Object.assign(el("input",s,"slider"),{type:"range",key,max,disabled:1}))),presets:{bpm:100,tracks:[
+  return {init:s=>s.cells=Object.entries(schema).map(([key,max])=>(el("label",s,"",key),Object.assign(el("input",s),{type:"range",key,max,disabled:1}))),presets:{bpm:100,tracks:[
   [255,,9,,,255,,7,,,100,,5970,1,1,2,500,254,,,,,,1,31,4,21,,171],[255,2,6,11,,255,2,6,11,4,88,2000,7505,,,2,3144,51,,7,179,,1,6,60,4,64,,255],[192,2,7,,,201,3,7,,,100,150,7505,,,2,5839,254,,6,195,,1,6,121,6,147,,191],
   [255,,9,,,255,,9,,12,100,,14545,,,,,240,,,,,,2,157,3,47,,70],[255,3,7,,,255,,8,,,22,22,2193,,,3,4067,176,,3,96,,1,4,12,2,84,127,255],[255,2,7,,,154,2,7,,9,2418,1075,10614,,,3,2962,255,,5,124,,1,6,117,3,73,,240],
   [192,3,7,,,201,3,7,,7,789,1234,13636,,,2,5839,254,,6,195,,1,6,121,6,147,,191],[192,2,7,,,192,2,7,,,,,20000,,,,,,,,,,,,,,,,192]].map(t=>({...Object.fromEntries(Object.keys(schema).map((k,i)=>[k,t[i]??0])),s:[],p:[]}))}}}
