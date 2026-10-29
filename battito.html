@@ -6,7 +6,7 @@ element("style").textContent=`
   .sliders{place-items:center;white-space:pre} .slider{height:1px;accent-color:blue;z-index:1} input::-webkit-slider-thumb{opacity:0} label{pointer-events:none}
   .sequencer>.cell:nth-child(-n+9){position:sticky;top:0;background:#111} .sequencer{aspect-ratio:1;overflow-y:scroll} .text{all:inherit;padding:1rem;white-space:pre;overflow:auto} .text,.canvas{height:25%;aspect-ratio:2}`
 let SC=8,SR=60,PC=48,PR=32,C3=12*7+12*3+3,rowSec=()=>15/SONG.bpm,rowSamples=()=>44100*rowSec(),pP,cP,pS,cS,cSl,cSc,cI,S,P,LT=0,N=i=>["C","","D","","E","F","","G","","A","","B"][i%12]
-let BS=Battito.toString(),A=new AudioContext(),SONG=instruments().presets,C=Array(SC).fill(0),R=Array(SR).fill(0),RK=[...R.keys()],PA=Array(PC*PR);R[-1]=C[-1]=1
+let BS=Battito.toString(),A=new AudioContext(),SONG=instruments().presets,C=Array(SC).fill(0),R=Array(SR).fill(0),RK=[...R.keys()],PA=Array(PC*PR);R[-1]=C[-1]=1, tone=(t,n)=>source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:n}]}]})
 let piano=element("div",document.body,"piano"),sliders=element("div",document.body,"sliders"),side=element("div",document.body,"side"),sequencer=element("div",side,"sequencer")
 let text=element("textarea",side,"text"),X=element("canvas",side,"canvas").getContext("2d"),fullscreen=element("div",side,"fullscreen","⛶")
 let widgets=[piano,sliders,sequencer,text], update=()=>widgets.forEach(o=>o.update()), track=()=>SONG.tracks[LT], color=i=>i>=0?["red","orange","yellow","lime","aqua","violet","magenta","purple"][i]:""
@@ -17,9 +17,9 @@ text       .update= function(){if(this==document.activeElement)return;let s=this
 piano      .onclick=function({target:{row,col}}){let n=col+C3,p;preview(n);if(!(p=pattern()))return;p[row]=p[row]==n?0:n;update()}
 sequencer  .onclick=function({target:{row,col}}){let hr=!~col,hc=!~row;hc&&!hr&&improv();hr&hc?toggleall():hr|hc?((hr?R:C)[row+col+1]^=1,hc&&(LT=col,preview())):incrementid(row,col),update(),start()}
 sliders    .oninput=function({target:{key,value}}){(track()[key]=+value,update(),preview())}
-text       .oninput=function(){try{let song=format(text.value);SONG=song;update();preview()}catch{}}
+text       .oninput=function(){try{SONG=format(text.value);update();preview()}catch{}}
 fullscreen .onclick=function(){document.documentElement.requestFullscreen()}
-grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); compatibility(); sliders.cells.forEach((v,i)=>v.previousSibling.style.color=color(i<5?0:i<10?1:i<15?2:i<18?3:i<23?4:i<25?5:i<27?6:7))
+grid(piano,PC,PR); naturals(piano); grid(sequencer,SC+1,SR+1); instruments().init(sliders); compatibility(); sliders.cells.forEach((v,i)=>v.previousSibling.style.color=color([5,10,15,18,23,25,27].filter(n=>n<=i).length))
 makelongpress(X.canvas,save); makelongpress(sequencer.cells[0],()=>sliders.style.display=sliders.style.display?"":"none"); oncontextmenu=e=>e.target.tagName=="TEXTAREA"
 fetch("data:;base64,"+location.hash.slice(1)).then(r=>new Response(r.body.pipeThrough(new DecompressionStream("deflate"))).json()).then(v=>SONG={...SONG,...v,tracks:SONG.tracks.map((d,i)=>({...d,...v.tracks[i]}))}).catch(_=>0).then(update)
 function start(){try{S&&(S.onended=null,S.stop());S=source(range());S&&(S.onended=start,S.start(S.startTime=A.currentTime),loop())}catch{}}
@@ -33,7 +33,7 @@ function incrementid(row,col){let t=SONG.tracks[col],np=t.s[row]=((t.s[row]??0)+
 function pattern(){let t,s;return (t=track())&&~(s=R.indexOf(1))&&s==R.lastIndexOf(1)&&t.s[s]&&(t.p[t.s[s]-1]??=Array(PR).fill(0))}
 function range(){let c=SONG.tracks.filter((_,t)=>C[t]),r=cSl=RK.filter(i=>R[i]&&c.some(t=>t.s[i]));return c[0]&&r.length&&{...SONG,tracks:c.map(t=>({...t,s:r.map(s=>t.s[s])}))}}
 function hasnotes(){return range()?.tracks?.some(t=>t.s.some(s=>s&&t.p[s-1]?.some(Boolean)))||alert("Nothing to save. Please select song or range")}
-function preview(n){try{let t=track();if(t){P?.stop();P=source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:n||t.p?.[0]?.find(Boolean)||147}]}]});P.start();draw("#111","blue",P,t.ea+t.es+t.er,0)}}catch{}}
+function preview(n){try{let t=track();if(t){P?.stop();P=tone(t,n||t.p?.[0]?.find(Boolean)||147);P.start();draw("#111","blue",P,t.ea+t.es+t.er,0)}}catch{}}
 function draw(f,k,s=S,len=rowSamples(),off=cI*len){let d=s.buffer.getChannelData(0),{width:w,height:h}=X.canvas;X.fillStyle=f;X.fillRect(0,0,w,h);X.strokeStyle=k;X.beginPath();for(let x=w;x--;)X.lineTo(x,h/2*(1+d[off+x*len/w|0]));X.stroke()}
 function save(){if(!hasnotes())return;let s="song"+Date.now(),d=(b,z)=>{Object.assign(d.a??=element("a"),{href:URL.createObjectURL(b),download:s+z}).click()};d(wave(),".wav");d(html(),".html")}
 function html(){return new Blob([`<\script>onload=()=>{\ndocument.body.textContent='Click to play';addEventListener('click',music(),{once:true});\n\n${music()}\n\n}</\script>`])}
@@ -52,7 +52,7 @@ function improv(){
   if(!improv.d){improv.d=window.open("","improv");setTimeout(()=>{let d=improv.d.document;d.open();d.write(`<title>Improv</title><style>body{background:#121212;color:#888;user-select:none}
   .piano{display:grid;grid-template-columns:repeat(12,1fr);height:100%}.cell{border:1px solid #2a2a2a;place-items:center;display:grid}.cell:active{background:#f80}</style>
   <div class="piano">${Array.from({length:48},(_,i)=>`<div class="cell" id="c${i}">${N(i)}</div>`).join("")}</div>`);d.close()
-  for(let i=0;i<48;i++)d.getElementById("c"+i).onpointerdown=()=>{let t=track();t&&(A.resume(),source({...SONG,tracks:[{...t,s:[1],p:[{length:PR,0:(3-(i/12|0))*12+(i%12)+C3-12}]}]}).start())}},100)}}
+  d.body.onpointerdown=e=>{let t=track(),i=e.target.id.slice(1);t&&i&&(A.resume(),tone(t,C3+24-12*(i/12|0)+i%12).start())}},100)}}
 function instruments(){
   let schema={v1:255,w1:3,o1:16,s1:11,d1:255,v2:255,w2:3,o2:16,s2:11,d2:255,ea:2e5,es:2e5,er:2e5,e1:1,e2:1,ct:4,ca:11025,cr:255,mw:3,ms:16,ma:255,m1:1,mc:1,ds:16,da:248,ps:16,pa:255,nv:255,vm:255}
   return {init:s=>s.cells=Object.entries(schema).map(([key,max])=>(element("label",s,"",key),Object.assign(element("input",s,"slider"),{type:"range",key,max,disabled:1}))),presets:{bpm:100,tracks:[
