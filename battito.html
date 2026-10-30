@@ -34,7 +34,7 @@ function pattern(){let t,s;return (t=track())&&~(s=R.indexOf(1))&&s==R.lastIndex
 function range(){let c=SONG.tracks.filter((_,t)=>C[t]),r=cSl=RK.filter(i=>R[i]&&c.some(t=>t.s[i]));return c[0]&&r.length&&{...SONG,tracks:c.map(t=>({...t,s:r.map(s=>t.s[s])}))}}
 function preview(n){try{let t=track();if(t){P?.stop();P=tone(t,n||t.p?.[0]?.find(Boolean)||147);P.start();draw("#111","blue",P,t.ea+t.es+t.er,0)}}catch{}}
 function draw(f,k,s=S,len=rowSamples(),off=cI*len){let d=s.buffer.getChannelData(0),{width:w,height:h}=X.canvas;X.fillStyle=f;X.fillRect(0,0,w,h);X.strokeStyle=k;X.beginPath();for(let x=w;x--;)X.lineTo(x,h/2*(1+d[off+x*len/w|0]));X.stroke()}
-function save(){let s="song"+Date.now(),d=(b,z)=>Object.assign(d.a??=el("a"),{href:URL.createObjectURL(b),download:s+z}).click();range()?(d(wave(),".wav"),d(html(),".html")):alert("select song/range")}
+function save(){let s="song"+Date.now(),d=(b,z)=>Object.assign(save.a??=el("a"),{href:URL.createObjectURL(b),download:s+z}).click();range()?(d(wave(),".wav"),d(html(),".html")):alert("select song/range")}
 function html(){return new Blob([`<\script>onload=()=>{\ndocument.body.textContent='Click to play';addEventListener('click',music(),{once:true});\n\n${music()}\n\n}</\script>`])}
 function music(){return `function music(){\nlet A=new AudioContext(),S=source(${format(range())});\n${source}\n${BS}\nreturn ()=>{S.loop=true;S.start()}\n}`}
 function wave(){let b=Battito().createbuffer(range()),d=b.length*4,o=new ArrayBuffer(d+44),p=new Int16Array(o,44);riff(o,d);for(let j=b.length*2;j--;)p[j]=b.getChannelData(j&1)[j>>1]*32767;return new Blob([o],{type:"audio/wav"})}
