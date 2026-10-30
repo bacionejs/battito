@@ -148,7 +148,7 @@ Generating the song Ambidumbi, [Battito][ambidumbi] is 70 times faster than [Son
 
 </details><details><summary>Why</summary>
   
-I made this app because there was no **mobile friendly** solution for producing music for size-constrained games.
+I made this app because there was no **mobile friendly** solution for producing music for size-constrained games
 
 </details>
 
