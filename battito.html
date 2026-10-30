@@ -22,7 +22,7 @@ grid(piano,PC,PR);grid(sequencer,SC+1,SR+1);piano.cells.forEach(c=>c.textContent
 hold(X.canvas,save);hold(sequencer.cells[0],()=>sliders.style.display=sliders.style.display?"":"none");oncontextmenu=e=>e.target.tagName=="TEXTAREA"
 fetch("data:;base64,"+location.hash.slice(1)).then(r=>new Response(r.body.pipeThrough(new DecompressionStream("deflate"))).json()).then(v=>SONG={...SONG,...v,tracks:SONG.tracks.map((d,i)=>({...d,...v.tracks[i]}))}).catch(_=>0).then(update)
 setTimeout(()=>{let r=piano.getBoundingClientRect();if(r.width/r.height<1)document.body.innerHTML="Rendering error<br>Requires a modern chromium-based browser"},200)
-function start(){try{S&&(S.onended=null,S.stop());S=source(range());S&&(S.onended=start,S.start(S.startTime=A.currentTime),loop())}catch{}}
+function start(){try{S&&(S.onended=null,S.stop());let t=performance.now();S=source(range());sequencer.cells[0].textContent=((performance.now()-t)/1000).toFixed(1);S&&(S.onended=start,S.start(S.startTime=A.currentTime),loop())}catch{}}
 function source(s){let n;return s&&(n=Object.assign(A.createBufferSource(),{buffer:Battito().createbuffer(s)}),n.connect(A.destination),n)}
 function loop(){if(S&&next()){if(cS!=pS){pS=cS;piano.update();scrollsequencer()}if(cP!=pP){draw("#1115",`hsl(${cP*90},100%,50%)`);sequencer.update();playhead(cP);pP=cP}requestAnimationFrame(loop)}}
 function playhead(c){piano.cells.forEach(v=>v.style.transform="");for(let i=PC;i--;){PA[c*PC+i]>=0&&(piano.cells[c*PC+i].style.transform="scale(2)")}}
