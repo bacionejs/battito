@@ -147,11 +147,11 @@ Generating the song Ambidumbi, [Battito][ambidumbi] is 70 times faster than [Son
 <a href="https://bacionejs.github.io/bacionejs/viewsource.html?b=1&file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html" target="_blank"><img width="200" src="https://github.com/user-attachments/assets/767aba76-fd6c-4d31-84fc-d6ed062a5c4b" /></a>
 
 </details><details><summary>Why</summary>
-I made this app because there was no mobile friendly solution 
+I made this app because there was no **mobile friendly** solution for producing music for size-constrained games.
 
 </details>
 
-[^1]: The synth engine portion of this sequencer is a port of Jake Taylor's [public domain Sonant](https://github.com/user-attachments/assets/e01812b1-4b97-47e0-81a8-49d157aa89bf), **for size-constrained games and demos**
+[^1]: The synth engine portion of this sequencer is a port of Jake Taylor's [public domain Sonant](https://github.com/user-attachments/assets/e01812b1-4b97-47e0-81a8-49d157aa89bf)
 
 
 [beatnic]: https://bacionejs.github.io/battito/battito.html#eJyt0s1ugzAMB/B3+Z99iJ0vklepODDa08SGStUeqr77REyrhtGphykSScAY54ev+BgHZDaGcDp2/eeEvLvizMjiPeHCyIbwzciJMOlur9NZ7kGiQYIcCZPu9joduiX7YdL9EdmnOK8YmQkHKVN/QhZC3yH7Obw/zskdYbiU9wZ9feh00gqGXj81lRT7DtkyYZyQHWHskIUJX2etdj5mZMJ8QqYyWsKIvNuxWDJl/MuqbW+0MhQ1DGrIvI0oihgUsURJOcus2DSKKMYsjtEbr45GHU3laNk5hfRcOUZ15JgqSVbJoJLBVJLBVZKl5A1JdXCLyHrok9fPzdqPk1R+cbMHDSuffacH2b+n5xubttswLHzJ/8HHsnRiUD92sW7F9NSKQvbRitav0Xwq1/hYb9K6SOxdHdPSjm3zK99T1iBbuTQiSBX7yOjWNeide+zLn18qXJ2ibW/t7QclFfsr
