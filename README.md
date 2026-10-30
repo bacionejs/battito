@@ -144,7 +144,7 @@ Generating the song Ambidumbi, [Battito][ambidumbi] is 70 times faster than [Son
 
 **The entire application source-code (interface + engine) fits on a 3x5 card**  
 
-<a href="https://bacionejs.github.io/bacionejs/viewsource.html?b=1&file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html" target="_blank"><img width="200" src="https://github.com/user-attachments/assets/b494f0fc-4126-46e9-a130-ef4f61581b02" /></a>
+<a href="https://bacionejs.github.io/bacionejs/viewsource.html?b=1&file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html" target="_blank"><img width="200" src="https://github.com/user-attachments/assets/15c3680a-b725-4e7a-a05e-ba7757063485" /></a>
 
 </details><details><summary>Why</summary>
   
