@@ -27,7 +27,7 @@ https://github.com/user-attachments/assets/1b9c1c93-c284-4958-aac5-e2e40bde4b4f
 </details><details><summary>Optional</summary>
 
 - There are 8 preset instruments, but you can also select a track and configure the **synth** (see the Instruments section below)
-- To **export** html/wav, long-press the waveform visualizer. Use the html file for your game and the wav file for whatever else. It exports the **current selection**: whole song or ranges. The exported game-ready html file (engine+song) is 2k zipped, thousands of times smaller than a wav file.
+- To **export** html/wav, long-press the waveform visualizer. Use the html file for your game and the wav file for whatever else. It exports the **current selection**: whole song or ranges. 
 - To **export** a sound effect, like an explosion, create one note on the first row of the piano, and export a range.
 - To save your work for future use, copy the **textarea** to a separate text editor. To **import**, paste in the textarea.
 - The **textarea** can be edited. Changes are **live** just like the other components. This is especially helpful when adjusting envelope values, as they have a large range.
@@ -139,10 +139,9 @@ Generating the song Ambidumbi, [Battito][ambidumbi] is 70 times faster than [Son
 
 </details><details><summary>Size</summary>
 
+The entire application source-code (interface + engine) fits on a **3x5 card**  
 
-
-
-**The entire application source-code (interface + engine) fits on a 3x5 card**  
+The exported game-ready html file (engine+song) is **2k zipped**, thousands of times smaller than a wav file  
 
 <a href="https://bacionejs.github.io/bacionejs/viewsource.html?b=1&file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html" target="_blank"><img width="200" src="https://github.com/user-attachments/assets/15c3680a-b725-4e7a-a05e-ba7757063485" /></a>
 
