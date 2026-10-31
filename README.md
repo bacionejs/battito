@@ -143,7 +143,8 @@ The game-ready html **export** (engine + song) is **2k zipped**, thousands of ti
 
 The entire **application** source-code (interface + engine) fits on a **3x5 card**  
 
-<a href="https://bacionejs.github.io/bacionejs/viewsource.html?b=1&file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html" target="_blank"><img width="200" src="https://github.com/user-attachments/assets/15c3680a-b725-4e7a-a05e-ba7757063485" /></a>
+<a href="https://bacionejs.github.io/bacionejs/viewsource.html?b=1&file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html" target="_blank"><img width="200" src="https://github.com/user-attachments/assets/3403ab6b-dc7d-4b35-9a76-f299739a0836" /></a>
+
 
 </details><details><summary>Why</summary>
   
