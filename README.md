@@ -139,9 +139,7 @@ Generating the song Ambidumbi, [Battito][ambidumbi] is 70 times faster than [Son
 
 </details><details><summary>Size</summary>
 
-The game-ready html **export** (engine + song) is **2k zipped**, thousands of times smaller than a wav file  
-
-The entire **application** source-code (interface + engine) fits on a **3x5 card**  
+The game-ready html **export** (engine + song) is **2k zipped**, thousands of times smaller than a wav file, and the entire **application** source-code (interface + engine) fits on a **3x5 card**  
 
 <a href="https://bacionejs.github.io/bacionejs/viewsource.html?b=1&file=https://raw.githubusercontent.com/bacionejs/battito/main/battito.html" target="_blank"><img width="200" src="https://github.com/user-attachments/assets/3403ab6b-dc7d-4b35-9a76-f299739a0836" /></a>
 
